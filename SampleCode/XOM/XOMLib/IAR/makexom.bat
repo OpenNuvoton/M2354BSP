@@ -1,0 +1,1 @@
+"C:\BSP\2020\0611_m2354_v2\bsp\SampleCode\XOM\XOMLib\IAR\..\xomconv.exe" "C:\BSP\2020\0611_m2354_v2\bsp\SampleCode\XOM\XOMLib\IAR\XOMLib.ewp"  ..\xomapi.h ..\lib\xomlib "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2_2" 

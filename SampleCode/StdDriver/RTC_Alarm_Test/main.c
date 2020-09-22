@@ -1,0 +1,205 @@
+/**************************************************************************//**
+ * @file     main.c
+ * @version  V3.00
+ * @brief    Demonstrate the RTC alarm function. It sets an alarm 10 seconds after execution.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ * @copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
+ ******************************************************************************/
+#include <stdio.h>
+#include "NuMicro.h"
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* Functions and variables declaration                                                                     */
+/*---------------------------------------------------------------------------------------------------------*/
+static volatile uint8_t g_u8IsAlarm = FALSE;
+
+void RTC_AlarmHandle(void);
+void RTC_IRQHandler(void);
+void SYS_Init(void);
+void UART_Init(void);
+
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* RTC Alarm Handle                                                                                        */
+/*---------------------------------------------------------------------------------------------------------*/
+void RTC_AlarmHandle(void)
+{
+    printf(" Alarm!!\n");
+    g_u8IsAlarm = TRUE;
+}
+
+/**
+ * @brief       IRQ Handler for RTC Interrupt
+ *
+ * @param       None
+ *
+ * @return      None
+ *
+ * @details     The RTC_IRQHandler is default IRQ of RTC, declared in startup_M2354.s.
+ */
+void RTC_IRQHandler(void)
+{
+    /* To check if RTC alarm interrupt occurred */
+    if(RTC_GET_ALARM_INT_FLAG(RTC) == 1)
+    {
+        /* Clear RTC alarm interrupt flag */
+        RTC_CLEAR_ALARM_INT_FLAG(RTC);
+
+        RTC_AlarmHandle();
+    }
+
+    if(RTC_GET_TICK_INT_FLAG(RTC) == 1)
+    {
+        /* Clear RTC tick interrupt flag */
+        RTC_CLEAR_TICK_INT_FLAG(RTC);
+    }
+}
+
+void SYS_Init(void)
+{
+    /* Enable all GPIO and SRAM clock */
+    CLK->AHBCLK |= (CLK_AHBCLK_TRACECKEN_Msk | CLK_AHBCLK_SRAM0CKEN_Msk | CLK_AHBCLK_SRAM1CKEN_Msk | CLK_AHBCLK_SRAM2CKEN_Msk |
+                    CLK_AHBCLK_GPACKEN_Msk | CLK_AHBCLK_GPBCKEN_Msk | CLK_AHBCLK_GPCCKEN_Msk | CLK_AHBCLK_GPDCKEN_Msk |
+                    CLK_AHBCLK_GPECKEN_Msk | CLK_AHBCLK_GPFCKEN_Msk | CLK_AHBCLK_GPGCKEN_Msk | CLK_AHBCLK_GPHCKEN_Msk);
+    SYS->GPE_MFPH = (SYS->GPE_MFPH & ~(TRACE_CLK_PE12_Msk | TRACE_DATA0_PE11_Msk | TRACE_DATA1_PE10_Msk | TRACE_DATA2_PE9_Msk | TRACE_DATA3_PE8_Msk)) |
+                    (TRACE_CLK_PE12 | TRACE_DATA0_PE11 | TRACE_DATA1_PE10 | TRACE_DATA2_PE9 | TRACE_DATA3_PE8);
+
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Enable HIRC clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
+
+    /* Waiting for HIRC clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+
+    /* Switch HCLK clock source to HIRC */
+    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
+
+    /* Enable HXT and LXT-32KHz */
+    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk | CLK_PWRCTL_LXTEN_Msk);
+
+    /* Waiting for clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk | CLK_STATUS_LXTSTB_Msk);
+
+    /* Enable PLL */
+    CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
+
+    /* Waiting for PLL stable */
+    CLK_WaitClockReady(CLK_STATUS_PLLSTB_Msk);
+    
+    /* Select HCLK clock source as PLL and HCLK source divider as 1 */
+    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_PLL, CLK_CLKDIV0_HCLK(1));
+
+    /* Set SysTick source to HCLK/2*/
+    CLK_SetSysTickClockSrc(CLK_CLKSEL0_STCLKSEL_HCLK_DIV2);
+
+    /* Enable UART module clock */
+    CLK_EnableModuleClock(UART0_MODULE);
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
+
+    /* Enable RTC module clock */
+    CLK_EnableModuleClock(RTC_MODULE);
+
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init I/O Multi-function                                                                                 */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Set multi-function pins for UART0 RXD and TXD */
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+}
+
+void UART_Init(void)
+{
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init UART                                                                                               */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Reset UART module */
+    SYS_ResetModule(UART0_RST);
+
+    /* Configure UART and set UART Baudrate */
+    UART_Open(DEBUG_PORT, 115200);
+}
+
+/*---------------------------------------------------------------------------------------------------------*/
+/*  MAIN function                                                                                          */
+/*---------------------------------------------------------------------------------------------------------*/
+int main(void)
+{
+    S_RTC_TIME_DATA_T sInitTime, sCurTime;
+
+    /* Unlock protected registers */
+    SYS_UnlockReg();
+
+    /* Init System, peripheral clock and multi-function I/O */
+    SYS_Init();
+
+    /* Init UART for printf */
+    UART_Init();
+
+    /* Lock protected registers */
+    SYS_LockReg();
+    
+    printf("\n\nCPU @ %dHz\n", SystemCoreClock);
+    printf("+----------------------------------+\n");
+    printf("|    RTC Alarm Test Sample Code    |\n");
+    printf("+----------------------------------+\n\n");
+
+    /* Set LXT as RTC clock source */
+    RTC_SetClockSource(RTC_CLOCK_SOURCE_LXT);
+    
+    /* Time Setting */
+    sInitTime.u32Year       = 2019;
+    sInitTime.u32Month      = 12;
+    sInitTime.u32Day        = 1;
+    sInitTime.u32Hour       = 13;
+    sInitTime.u32Minute     = 0;
+    sInitTime.u32Second     = 0;
+    sInitTime.u32DayOfWeek  = RTC_MONDAY;
+    sInitTime.u32TimeScale  = RTC_CLOCK_24;
+
+    RTC_Open(&sInitTime);
+
+    printf("\nRTC Alarm Test (Alarm after 10 seconds)\n\n");
+
+    g_u8IsAlarm = FALSE;
+
+    /* Get the current time */
+    RTC_GetDateAndTime(&sCurTime);
+
+    printf("Current Time: %d/%02d/%02d %02d:%02d:%02d\n",
+           sCurTime.u32Year, sCurTime.u32Month, sCurTime.u32Day,
+           sCurTime.u32Hour, sCurTime.u32Minute, sCurTime.u32Second);
+
+    /* The alarm time setting */
+    sCurTime.u32Second = sCurTime.u32Second + 10;
+
+    /* Set the alarm time */
+    RTC_SetAlarmDateAndTime(&sCurTime);
+
+    /* Clear RTC alarm interrupt flag */
+    RTC_CLEAR_ALARM_INT_FLAG(RTC);
+
+    /* Enable RTC Alarm Interrupt */
+    RTC_EnableInt(RTC_INTEN_ALMIEN_Msk);
+    NVIC_EnableIRQ(RTC_IRQn);
+
+    while(g_u8IsAlarm == FALSE) {}
+
+    /* Get the current time */
+    RTC_GetDateAndTime(&sCurTime);
+
+    printf("Current Time: %d/%02d/%02d %02d:%02d:%02d\n",
+           sCurTime.u32Year, sCurTime.u32Month, sCurTime.u32Day,
+           sCurTime.u32Hour, sCurTime.u32Minute, sCurTime.u32Second);
+
+    /* Disable RTC Alarm Interrupt */
+    RTC_DisableInt(RTC_INTEN_ALMIEN_Msk);
+    NVIC_DisableIRQ(RTC_IRQn);
+
+    printf("\nRTC Alarm Test End !!\n");
+
+    while(1) {}
+}
+
+/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/

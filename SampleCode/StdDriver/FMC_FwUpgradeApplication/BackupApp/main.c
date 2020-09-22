@@ -1,0 +1,210 @@
+/******************************************************************************
+ * @file     main.c
+ * @version  V1.00
+ * $Revision: 1 $
+ * $Date: 20/07/07
+ * @brief    Bank Swap sample code(Bank0 App).
+ *
+ * @note
+ * SPDX-License-Identifier: Apache-2.0
+ * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+*****************************************************************************/
+#include <stdio.h>
+#include "NuMicro.h"
+#include "NuDB_common.h"
+
+#define PLL_CLOCK    96000000
+#define TEST_MODE    0
+
+static volatile uint32_t s_u32ExecBank;
+static volatile uint32_t s_u32GetSum, s_u32KeepSum;
+
+void ResetCPU(void);
+void WDT_IRQHandler(void);
+void SYS_Init(void);
+int32_t  SelfTest(void);
+uint32_t  FuncCrc32(uint32_t u32Start, uint32_t u32Len);
+
+
+uint32_t  FuncCrc32(uint32_t u32Start, uint32_t u32Len)
+{
+    uint32_t  u32Idx, u32Data = 0UL;
+
+    /* WDTAT_RVS, CHECKSUM_RVS, CHECKSUM_COM */
+    for(u32Idx = 0; u32Idx < u32Len; u32Idx += 4)
+    {
+        u32Data += *(uint32_t *)(u32Start + u32Idx);
+    }
+    u32Data = 0xFFFFFFFF - u32Data + 1UL;
+
+    return u32Data;
+}
+
+
+void ResetCPU(void)
+{
+    SYS->IPRST0 |= SYS_IPRST0_CPURST_Msk;
+    SYS->IPRST0 &= ~SYS_IPRST0_CPURST_Msk;
+}
+
+void WDT_IRQHandler(void)
+{
+    WDT_RESET_COUNTER();
+
+    if(WDT_GET_TIMEOUT_INT_FLAG() == 1)
+    {
+        /* Clear WDT time-out interrupt flag */
+        WDT_CLEAR_TIMEOUT_INT_FLAG();
+    }
+
+}
+
+void SYS_Init(void)
+{
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
+
+    /* Enable HIRC clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
+
+    /* Wait for HIRC clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+
+    /* Select HCLK clock source as HIRC and HCLK source divider as 1 */
+    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
+
+    /* Enable HXT clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
+
+    /* Wait for HXT clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
+
+    /* Enable PLL */
+    CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
+
+    /* Waiting for PLL stable */
+    CLK_WaitClockReady(CLK_STATUS_PLLSTB_Msk);
+
+    /* Set power level to 0 */
+    SYS_SetPowerLevel(SYS_PLCTL_PLSEL_PL0);
+
+    /* Select HCLK clock source as PLL and HCLK source divider as 1 */
+    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_PLL, CLK_CLKDIV0_HCLK(2));
+
+    /* Enable UART module clock */
+    CLK_EnableModuleClock(UART0_MODULE);
+
+    /* Select UART module clock source as HIRC and UART module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
+
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init I/O Multi-function                                                                                 */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Set multi-function pins for UART0 RXD and TXD */
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+}
+
+
+int32_t  SelfTest(void)
+{
+#if TEST_MODE
+    uint8_t u8GetCh;
+
+    printf("\n Selt test pass? y/n \n");
+    u8GetCh = getchar();
+
+    if(u8GetCh == 'y')
+    {
+        printf("\n Self test pass!!! \n");
+        return 0;
+    }
+    else
+    {
+        printf("\n Self test fail!!! \n");
+        return -1;
+    }
+#else
+    s_u32GetSum = FMC_GetChkSum(APP_BASE+FMC_APROM_BANK0_END, APP_SIZE);
+    s_u32KeepSum = FMC_Read(BACKUP_FW_CRC_BASE);
+    printf("\n GetSum = 0x%x, Keep Sum = 0x%x \n", s_u32GetSum, s_u32KeepSum);
+
+    if(s_u32GetSum == s_u32KeepSum)
+    {
+        printf("\n Self test pass!!! \n\n");
+        return 0;
+    }
+    else
+    {
+        printf("\n Self test fail!!! \n\n");
+        return -1;
+    }
+#endif
+}
+
+
+int main()
+{
+    uint32_t i;
+    int32_t ret;
+
+    /* Disable register write-protection function */
+    SYS_UnlockReg();
+
+    /* Initial clocks and multi-functions */
+    SYS_Init();
+
+    /* Configure UART0: 115200, 8-bit word, no parity bit, 1 stop bit. */
+    UART_Open(UART0, 115200);
+    UART_Open(UART1, 115200);
+
+    /* Enable ISP and APROM update */
+    FMC_ENABLE_ISP();
+    FMC_ENABLE_AP_UPDATE();
+
+    /* Unlock protected registers */
+    SYS_UnlockReg();
+
+    NVIC_EnableIRQ(WDT_IRQn);
+
+    /* Configure WDT settings and start WDT counting */
+    WDT_Open(WDT_TIMEOUT_2POW18, WDT_RESET_DELAY_18CLK, 1, 0);
+
+    /* Enable WDT interrupt function */
+    WDT_EnableInt();
+
+    do
+    {
+        printf("\n\n");
+        printf("+------------------------+\n");
+        printf("|  Boot from 0x%08X  |\n", FMC_GetVECMAP());
+        printf("+------------------------+\n");
+
+        s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
+        printf("\n BANK%d APP processing (Backup firmware)\n", s_u32ExecBank);
+
+
+        ret = SelfTest();
+
+        if(ret == 0)
+        {
+            for(i = 0; i < 1000; i++)
+            {
+                printf(" Firmware processing....  cnt[%d]\r", i);
+                s_u32GetSum = FuncCrc32(APP_BASE, APP_SIZE);
+            }
+        }
+        else
+        {
+            printf("\n Enter power down...\n");
+
+            CLK_SysTickDelay(2000);
+            CLK_PowerDown();
+        }
+
+    } while(1);
+
+
+}
+
+/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/
