@@ -335,6 +335,11 @@ typedef struct
      * |        |          |1 = Transmit Break Control Enabled.
      * |        |          |Note: When this bit is set to logic 1, the serial data output (TX) is forced to the Spacing State (logic 0).
      * |        |          |This bit acts only on TX line and has no effect on the transmitter logic.
+     * |[30]    |DGE       |Deglitch Enable Bit
+     * |        |          |0 = Deglitch Disabled.
+     * |        |          |1 = Deglitch Enabled.
+     * |        |          |Note: When this bit is set to logic 1, any pulse width less than about 300 ns will be considered a glitch and will be removed in the serial data input (RX). 
+     * |        |          |This bit acts only on RX line and has no effect on the transmitter logic.              
      * |[31]    |PROTEN    |UART Protocol Enable Bit
      * |        |          |0 = UART Protocol Disabled.
      * |        |          |1 = UART Protocol Enabled.
@@ -609,6 +614,9 @@ typedef struct
 
 #define UUART_PROTCTL_BCEN_Pos           (29)                                              /*!< UUART_T::PROTCTL: BCEN Position        */
 #define UUART_PROTCTL_BCEN_Msk           (0x1ul << UUART_PROTCTL_BCEN_Pos)                 /*!< UUART_T::PROTCTL: BCEN Mask            */
+
+#define UUART_PROTCTL_DGE_Pos            (30)                                              /*!< UUART_T::PROTCTL: DGE Position         */
+#define UUART_PROTCTL_DGE_Msk            (0x1ul << UUART_PROTCTL_DGE_Pos)                  /*!< UUART_T::PROTCTL: DGE Mask             */
 
 #define UUART_PROTCTL_PROTEN_Pos         (31)                                              /*!< UUART_T::PROTCTL: PROTEN Position      */
 #define UUART_PROTCTL_PROTEN_Msk         (0x1ul << UUART_PROTCTL_PROTEN_Pos)               /*!< UUART_T::PROTCTL: PROTEN Mask          */
