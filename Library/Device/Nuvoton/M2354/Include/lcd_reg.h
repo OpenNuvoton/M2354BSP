@@ -98,22 +98,22 @@ typedef struct
  * |[27:24] |CPVTUNE   |LCD Operating Voltage (VLCD) Fine Tuning (For Charge Pump Only)
  * |        |          |This field is used to fine tune the LCD operating voltage.
  * |        |          |0 = No tuning
- * |        |          |1 = increase by 1 unit of voltage
- * |        |          |2 = increase by 2 unit of voltage
- * |        |          |3 = increase by 3 unit of voltage
- * |        |          |4 = increase by 4 unit of voltage
- * |        |          |5 = increase by 5 unit of voltage
- * |        |          |6 = increase by 6 unit of voltage
- * |        |          |7 = increase by 7 unit of voltage
- * |        |          |8 = decrease by 8 units of voltage
- * |        |          |9 = decrease by 7 units of voltage
- * |        |          |10 = decrease by 6 units of voltage
- * |        |          |11 = decrease by 5 units of voltage
- * |        |          |12 = decrease by 4 units of voltage
- * |        |          |13 = decrease by 3 units of voltage
- * |        |          |14 = decrease by 2 units of voltage
- * |        |          |15 = decrease by 1 units of voltage
- * |        |          |Note 1: a unit of voltage is about 0.03 V.
+ * |        |          |1 = decrease by 1 unit of voltage
+ * |        |          |2 = decrease by 2 unit of voltage
+ * |        |          |3 = decrease by 3 unit of voltage
+ * |        |          |4 = decrease by 4 unit of voltage
+ * |        |          |5 = decrease by 5 unit of voltage
+ * |        |          |6 = decrease by 6 unit of voltage
+ * |        |          |7 = decrease by 7 unit of voltage
+ * |        |          |8 = increase by 8 units of voltage
+ * |        |          |9 = increase by 7 units of voltage
+ * |        |          |10 = increase by 6 units of voltage
+ * |        |          |11 = increase by 5 units of voltage
+ * |        |          |12 = increase by 4 units of voltage
+ * |        |          |13 = increase by 3 units of voltage
+ * |        |          |14 = increase by 2 units of voltage
+ * |        |          |15 = increase by 1 unit of voltage
+ * |        |          |Note 1: A unit of voltage is about 0.03 V.
  * |        |          |Note 2: This field is meaningful only if the VLCD source is the charge pump. Otherwise, this field is ignored.
  * @var LCD_T::FCTL
  * Offset: 0x08  LCD Frame Control Register

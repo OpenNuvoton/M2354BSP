@@ -171,28 +171,45 @@ typedef struct
 #define LCD_SET_FREQDIV(div)        (LCD->PCTL = (LCD->PCTL & ~LCD_PCTL_FREQDIV_Msk) | (((div)-1) << LCD_PCTL_FREQDIV_Pos))
 
 /**
-  * @brief      Increase Charge Pump Voltage
+  * @brief      Set Charge Pump Voltage
   *
-  * @param[in]  unit        The tuning units, valid value is between 0 to 7.
-  *                         One unit of voltage is about 0.03V, and the charge pump voltage is increased (unit * 0.03)V.
+  * @param[in]  voltage     The target charge pump voltage. It could be one of the following voltage level
+  *                             - \ref LCD_CP_VOLTAGE_LV_0, 2.6 V
+  *                             - \ref LCD_CP_VOLTAGE_LV_1, 2.8 V
+  *                             - \ref LCD_CP_VOLTAGE_LV_2, 3.0 V
+  *                             - \ref LCD_CP_VOLTAGE_LV_3, 3.2 V
+  *                             - \ref LCD_CP_VOLTAGE_LV_4, 3.4 V
+  *                             - \ref LCD_CP_VOLTAGE_LV_5, 3.6 V
   *
   * @return     None
   *
-  * @details    This macro is used to increase charge pump voltage by specific units.
+  * @details    This macro is used to set charge pump voltage for VLCD.
   */
-#define LCD_CP_VOLTAGE_INCREASE(unit)   (LCD->PCTL = (LCD->PCTL & ~LCD_PCTL_CPVTUNE_Msk) | ((unit) << LCD_PCTL_CPVTUNE_Pos))
+#define LCD_SET_CP_VOLTAGE(voltage) (LCD->PCTL = (LCD->PCTL & ~LCD_PCTL_CPVSEL_Msk) | (voltage))
 
 /**
   * @brief      Decrease Charge Pump Voltage
   *
-  * @param[in]  unit        The tuning units, valid value is between 1 to 8.
+  * @param[in]  unit        The tuning units, valid value is between 0 to 7.
   *                         One unit of voltage is about 0.03V, and the charge pump voltage is decreased (unit * 0.03)V.
   *
   * @return     None
   *
   * @details    This macro is used to decrease charge pump voltage by specific units.
   */
-#define LCD_CP_VOLTAGE_DECREASE(unit)   (LCD->PCTL = (LCD->PCTL & ~LCD_PCTL_CPVTUNE_Msk) | ((16-(unit)) << LCD_PCTL_CPVTUNE_Pos))
+#define LCD_CP_VOLTAGE_DECREASE(unit)   (LCD->PCTL = (LCD->PCTL & ~LCD_PCTL_CPVTUNE_Msk) | ((unit) << LCD_PCTL_CPVTUNE_Pos))
+
+/**
+  * @brief      Increase Charge Pump Voltage
+  *
+  * @param[in]  unit        The tuning units, valid value is between 1 to 8.
+  *                         One unit of voltage is about 0.03V, and the charge pump voltage is increased (unit * 0.03)V.
+  *
+  * @return     None
+  *
+  * @details    This macro is used to increase charge pump voltage by specific units.
+  */
+#define LCD_CP_VOLTAGE_INCREASE(unit)   (LCD->PCTL = (LCD->PCTL & ~LCD_PCTL_CPVTUNE_Msk) | ((16-(unit)) << LCD_PCTL_CPVTUNE_Pos))
 
 /**
   * @brief      Set LCD Blinking ON
@@ -264,7 +281,7 @@ typedef struct
   *
   * @details    This macro is used to select LCD operation voltage source.
   */
-#define LCD_VOLTAGE_SOURCE(source)          (LCD->DCTL = (LCD->DCTL & ~LCD_DCTL_VSRC_Msk) | (source))
+#define LCD_VOLTAGE_SOURCE(source)  (LCD->DCTL = (LCD->DCTL & ~LCD_DCTL_VSRC_Msk) | (source))
 
 /**
   * @brief      Set LCD Driving Mode
@@ -280,7 +297,7 @@ typedef struct
   *
   * @details    This macro is used to set LCD operation drivig mode.
   */
-#define LCD_DRIVING_MODE(mode)              (LCD->DCTL = (LCD->DCTL & ~(LCD_DCTL_RESMODE_Msk | LCD_DCTL_BUFEN_Msk | LCD_DCTL_PSVEN_Msk)) | (mode))
+#define LCD_DRIVING_MODE(mode)      (LCD->DCTL = (LCD->DCTL & ~(LCD_DCTL_RESMODE_Msk | LCD_DCTL_BUFEN_Msk | LCD_DCTL_PSVEN_Msk)) | (mode))
 
 /**
   * @brief      Select Power Saving Mode
@@ -295,7 +312,7 @@ typedef struct
   *             When the timing of power saving mode is reversed, the original power saving period becomes no power saving,
   *             and the original no power saving period becomes power saving.
   */
-#define LCD_PWR_SAVING_MODE(mode)       (LCD->DCTL = (LCD->DCTL & ~LCD_DCTL_PSVREV_Msk) | (mode))
+#define LCD_PWR_SAVING_MODE(mode)   (LCD->DCTL = (LCD->DCTL & ~LCD_DCTL_PSVREV_Msk) | (mode))
 
 /**
   * @brief      Set Power Saving T1 Period
@@ -376,7 +393,7 @@ typedef struct
   *
   * @details    This macro is used to enable frame end interrupt function.
   */
-#define LCD_ENABLE_FRAME_END_INT()          (LCD->INTEN |= LCD_INTEN_FEIEN_Msk)
+#define LCD_ENABLE_FRAME_END_INT()      (LCD->INTEN |= LCD_INTEN_FEIEN_Msk)
 
 /**
   * @brief      Disable LCD Frame End Interrupt
@@ -387,7 +404,7 @@ typedef struct
   *
   * @details    This macro is used to disable frame end interrupt function.
   */
-#define LCD_DISABLE_FRAME_END_INT()         (LCD->INTEN &= ~LCD_INTEN_FEIEN_Msk)
+#define LCD_DISABLE_FRAME_END_INT()     (LCD->INTEN &= ~LCD_INTEN_FEIEN_Msk)
 
 /**
   * @brief      Enable Charging Timeout Interrupt
@@ -409,7 +426,7 @@ typedef struct
   *
   * @details    This macro is used to disable charge pump charging timeout interrupt function.
   */
-#define LCD_DISABLE_CHARGE_TIMEOUT_INT()        (LCD->INTEN &= ~LCD_INTEN_CTOIEN_Msk)
+#define LCD_DISABLE_CHARGE_TIMEOUT_INT()    (LCD->INTEN &= ~LCD_INTEN_CTOIEN_Msk)
 
 /**
   * @brief      Get LCD Frame Counting End Flag
@@ -421,7 +438,7 @@ typedef struct
   *
   * @details    This macro gets frame count end flag.
   */
-#define LCD_GET_FRAME_COUNTING_END_FLAG()       ((LCD->STS & LCD_STS_FCEF_Msk)? 1UL : 0UL)
+#define LCD_GET_FRAME_COUNTING_END_FLAG()   ((LCD->STS & LCD_STS_FCEF_Msk)? 1UL : 0UL)
 
 /**
   * @brief      Clear LCD Frame Counting End Flag
@@ -432,7 +449,7 @@ typedef struct
   *
   * @details    This macro clears frame count end flag.
   */
-#define LCD_CLEAR_FRAME_COUNTING_END_FLAG()     (LCD->STS = LCD_STS_FCEF_Msk)
+#define LCD_CLEAR_FRAME_COUNTING_END_FLAG() (LCD->STS = LCD_STS_FCEF_Msk)
 
 /**
   * @brief      Get LCD Frame End Flag
@@ -444,7 +461,7 @@ typedef struct
   *
   * @details    This macro gets frame end flag.
   */
-#define LCD_GET_FRAME_END_FLAG()                ((LCD->STS & LCD_STS_FEF_Msk)? 1UL : 0UL)
+#define LCD_GET_FRAME_END_FLAG()            ((LCD->STS & LCD_STS_FEF_Msk)? 1UL : 0UL)
 
 /**
   * @brief      Clear LCD Frame End Flag
@@ -455,7 +472,7 @@ typedef struct
   *
   * @details    This macro clears frame end flag.
   */
-#define LCD_CLEAR_FRAME_END_FLAG()              (LCD->STS = LCD_STS_FEF_Msk)
+#define LCD_CLEAR_FRAME_END_FLAG()          (LCD->STS = LCD_STS_FEF_Msk)
 
 /**
   * @brief      Get Charging Timeout Flag
@@ -467,7 +484,7 @@ typedef struct
   *
   * @details    This macro gets charge pump charging timeout flag.
   */
-#define LCD_GET_CHARGE_TIMEOUT_FLAG()           ((LCD->STS & LCD_STS_CTOF_Msk)? 1UL : 0UL)
+#define LCD_GET_CHARGE_TIMEOUT_FLAG()       ((LCD->STS & LCD_STS_CTOF_Msk)? 1UL : 0UL)
 
 /**
   * @brief      Clear Charging Timeout Flag
@@ -478,7 +495,7 @@ typedef struct
   *
   * @details    This macro clears charge pump charging timeout flag.
   */
-#define LCD_CLEAR_CHARGE_TIMEOUT_FLAG()         (LCD->STS = LCD_STS_CTOF_Msk)
+#define LCD_CLEAR_CHARGE_TIMEOUT_FLAG()     (LCD->STS = LCD_STS_CTOF_Msk)
 
 /**
   * @brief      Get Charging Time
