@@ -21,8 +21,8 @@ static S_LCD_CFG_T g_LCDCfg = {
     30,                         /*!< Operation frame rate */
     LCD_WAVEFORM_TYPE_A_NORMAL, /*!< Waveform type */
     LCD_FRAME_COUNTING_END_INT, /*!< Interrupt source */
-    LCD_LOW_DRIVING_AND_BUF_OFF,/*!< Driving mode */
-    LCD_VOLTAGE_SOURCE_VLCD,    /*!< Voltage source */
+    LCD_LOW_DRIVING_AND_BUF_ON, /*!< Driving mode */
+    LCD_VOLTAGE_SOURCE_CP,      /*!< Voltage source */
 };
 
 void LCD_IRQHandler(void);
@@ -224,6 +224,12 @@ int main(void)
     /* LCD Initialize and calculate real frame rate */
     u32ActiveFPS = LCD_Open(&g_LCDCfg);
     printf("Working frame rate is %dHz on Type-%c.\n\n", u32ActiveFPS, (g_LCDCfg.u32WaveformType==LCD_PCTL_TYPE_Msk)?'B':'A');
+
+    /* Enable charge pump clock MIRC and output voltage level 2 for 3.0V */
+    CLK_EnableXtalRC(CLK_PWRCTL_MIRCEN_Msk);
+    CLK_EnableModuleClock(LCDCP_MODULE);
+    CLK_SetModuleClock(LCDCP_MODULE, CLK_CLKSEL1_LCDCPSEL_MIRC, 0);
+    LCD_SET_CP_VOLTAGE(LCD_CP_VOLTAGE_LV_2);
 
     /* Enable LCD Interrupt */
     NVIC_EnableIRQ(LCD_IRQn);
