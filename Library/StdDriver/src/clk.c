@@ -463,7 +463,7 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
   * |\ref WWDT_MODULE    |\ref CLK_CLKSEL1_WWDTSEL_LIRC          | x                        |
   * |\ref LCD_MODULE     |\ref CLK_CLKSEL1_LCDSEL_LIRC           | x                        |
   * |\ref LCD_MODULE     |\ref CLK_CLKSEL1_LCDSEL_LXT            | x                        |
-  * |\ref LCDCP_MODULE   |\ref CLK_CLKSEL1_LCDCPSEL_HIRC         | x                        |
+  * |\ref LCDCP_MODULE   |\ref CLK_CLKSEL1_LCDCPSEL_MIRC1P2M     | x                        |
   * |\ref LCDCP_MODULE   |\ref CLK_CLKSEL1_LCDCPSEL_MIRC         | x                        |
   * |\ref EWDT_MODULE    |\ref CLK_CLKSEL1_EWDTSEL_LXT           | x                        |
   * |\ref EWDT_MODULE    |\ref CLK_CLKSEL1_EWDTSEL_HCLK_DIV2048  | x                        |
