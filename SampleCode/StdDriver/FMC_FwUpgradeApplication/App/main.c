@@ -115,6 +115,7 @@ int32_t  SelfTest(void)
     printf("\n Selt test pass? y/n \n");
     u8GetCh = (uint8_t)getchar();
 
+    /* Let user select to test pass or fail condition*/
     if(u8GetCh == 'y')
     {
         printf("\n Self test pass!!! \n\n");
@@ -180,14 +181,16 @@ int main()
         printf("|  Boot from 0x%08X  |\n", FMC_GetVECMAP());
         printf("+------------------------+\n");
 
+        /* Check CPU run at Bank0 or Bank1 */
         s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
         printf("\n BANK%d APP processing (Active firmware)\n", s_u32ExecBank);
 
-
+        /* Execute firmware self test */
         i32Ret = SelfTest();
 
         if(i32Ret == 0)
         {
+            /* Normal test condition*/
             for(i = 0; i < 1000; i++)
             {
                 printf(" Firmware processing....  cnt[%d]\r", i);
@@ -196,14 +199,11 @@ int main()
         }
         else
         {
+            /* Failure test condition, will reset by WDT and start from Bank0 loader */
             printf("\n Enter power down...\n");
-
             CLK_SysTickDelay(2000);
             CLK_PowerDown();
         }
-
-
-
 
     } while(1);
 

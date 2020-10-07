@@ -218,14 +218,17 @@ void Download(void)
 
     /* Dual bank background program address */
     s_u32DbAddr   = APP_BASE;
-    /* Dual bank background length */
+
+    /* Dual bank background program length */
     s_u32DbLength = APP_SIZE;
 
 
     EnableSysTick(1000);
     StartTimer0();
 
+    /* Use Xmodem to download firmware from PC*/
     i32Err = Xmodem(s_u32DbAddr);
+
     if(i32Err < 0)
     {
         printf("\nXmodem transfer fail!\n");
@@ -273,17 +276,21 @@ int main()
         printf("|  Boot from 0x%08X  |\n", FMC_GetVECMAP());
         printf("+------------------------+\n");
 
+        /* Check CPU run at Bank0 or Bank1*/
         s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
         printf("\n BANK%d Loader processing \n\n", s_u32ExecBank);
 
+        /* Get loader CRC */
         u32Loader0ChkSum = FMC_GetChkSum(FMC_APROM_BASE, LOADER_SIZE);
         u32Loader1ChkSum = FMC_GetChkSum(FMC_APROM_BANK0_END, LOADER_SIZE);
         printf(" Loader0 checksum: 0x%08x \n Loader1 checksum: 0x%08x\n", u32Loader0ChkSum, u32Loader1ChkSum);
 
+        /* Get app CRC */
         u32App0ChkSum = FMC_GetChkSum(FMC_APROM_BASE+APP_BASE, APP_SIZE);
         u32App1ChkSum = FMC_GetChkSum(FMC_APROM_BANK0_END+APP_BASE, APP_SIZE);
         printf(" App0 checksum: 0x%08x \n App1 checksum: 0x%08x\n", u32App0ChkSum, u32App1ChkSum);
 
+        /* Write firmware CRC in CRC base for following checking */
         printf("\n Firmware CRC in [0x%x] is [0x%x]\n", FW_CRC_BASE, FMC_Read(FW_CRC_BASE));
         if(FMC_Read(FW_CRC_BASE) == 0xFFFFFFFF) {
 
@@ -291,6 +298,7 @@ int main()
             printf("\n Update Firmware CRC in [0x%x] is [0x%x]\n", FW_CRC_BASE, FMC_Read(FW_CRC_BASE));
         }
 
+        /* Write backup firmware CRC in backup CRC base for following checking */
         printf("\n Backup Firmware CRC in [0x%x] is [0x%x]\n", BACKUP_FW_CRC_BASE, FMC_Read(BACKUP_FW_CRC_BASE));
         if(FMC_Read(BACKUP_FW_CRC_BASE) == 0xFFFFFFFF) {
 
@@ -298,6 +306,7 @@ int main()
             printf("\n Update Firmware CRC in [0x%x] is [0x%x]\n", BACKUP_FW_CRC_BASE, FMC_Read(BACKUP_FW_CRC_BASE));
         }
 
+        /* Create the other bank loader for executing bank swap */
         if( (s_u32ExecBank == 0) && ( u32Loader0ChkSum != u32Loader1ChkSum ) )
         {
             printf("\n Create BANK%d Loader... \n",  s_u32ExecBank^1);
@@ -341,9 +350,11 @@ int main()
             printf(" Any key to swap back to backup FW\n");
             getchar();
 
+            /* Swap to Bank1 to execute backup firmware */
             FMC_SwapBank(1);
             s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
             printf("\n BANK%d Loader after swap  \n\n", s_u32ExecBank);
+
             /* Remap to App */
             FMC_SetVectorPageAddr(APP_BASE);
             ResetCPU();
@@ -364,6 +375,7 @@ int main()
             u8GetCh = (uint8_t)getchar();
             if(u8GetCh == 'y')
             {
+                /* Download new firmware */
                 Download();
                 printf("\n Any key to execute new firmware \n");
                 getchar();
@@ -373,7 +385,6 @@ int main()
             }
             else
             {
-
                 /* Remap to Loader */
                 FMC_SetVectorPageAddr(LOADER_BASE);
                 ResetCPU();

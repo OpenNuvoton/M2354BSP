@@ -14,10 +14,9 @@
 #include "NuDB_common.h"
 
 #define PLL_CLOCK    96000000
-#define TEST_MODE    0
 
 static volatile uint32_t s_u32ExecBank;
-static volatile uint32_t s_u32GetSum, s_u32KeepSum;
+static volatile uint32_t s_u32GetSum;
 
 void ResetCPU(void);
 void WDT_IRQHandler(void);
@@ -108,38 +107,8 @@ void SYS_Init(void)
 
 int32_t  SelfTest(void)
 {
-#if TEST_MODE
-    uint8_t u8GetCh;
-
-    printf("\n Selt test pass? y/n \n");
-    u8GetCh = getchar();
-
-    if(u8GetCh == 'y')
-    {
-        printf("\n Self test pass!!! \n");
-        return 0;
-    }
-    else
-    {
-        printf("\n Self test fail!!! \n");
-        return -1;
-    }
-#else
-    s_u32GetSum = FMC_GetChkSum(APP_BASE+FMC_APROM_BANK0_END, APP_SIZE);
-    s_u32KeepSum = FMC_Read(BACKUP_FW_CRC_BASE);
-    printf("\n GetSum = 0x%x, Keep Sum = 0x%x \n", s_u32GetSum, s_u32KeepSum);
-
-    if(s_u32GetSum == s_u32KeepSum)
-    {
-        printf("\n Self test pass!!! \n\n");
-        return 0;
-    }
-    else
-    {
-        printf("\n Self test fail!!! \n\n");
-        return -1;
-    }
-#endif
+    printf("\n Self test pass!!! \n");
+    return 0;
 }
 
 
