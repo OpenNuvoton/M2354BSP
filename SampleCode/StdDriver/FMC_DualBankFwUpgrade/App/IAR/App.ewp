@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.30.1.17146</state>
+                    <state>8.32.1.18618</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -215,7 +215,7 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>34</version>
+                <version>35</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -349,6 +349,7 @@
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\Device\Nuvoton\M2354\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\StdDriver\inc</state>
                     <state>$PROJ_DIR$\..\..\common\inc</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\Library\NuMaker\common</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -465,6 +466,10 @@
                 <option>
                     <name>IccRTTI2</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>OICompilerExtraOption</name>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -686,7 +691,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>21</version>
+                <version>22</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1002,6 +1007,10 @@
                     <name>IlinkTrustzoneImportLibraryOut</name>
                     <state>App_import_lib.o</state>
                 </option>
+                <option>
+                    <name>OILinkExtraOption</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1057,14 +1066,14 @@
         <file>
             <name>$PROJ_DIR$\..\..\..\..\..\Library\StdDriver\src\uart.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\..\Library\NuMaker\common\xmodem.c</name>
+        </file>
     </group>
     <group>
         <name>User</name>
         <file>
             <name>$PROJ_DIR$\..\main.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\common\src\NuDB_common.c</name>
         </file>
     </group>
 </project>

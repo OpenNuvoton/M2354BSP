@@ -20,7 +20,6 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-static volatile uint32_t  s_u32ExecBank;             /* CPU executing in which Bank              */
 static volatile uint32_t  s_u32DbLength;             /* dual bank program remaining length       */
 static volatile uint32_t  s_u32DbAddr;               /* dual bank program current flash address  */
 static volatile uint32_t  s_u32TickCnt;              /* timer ticks - 100 ticks per second       */
@@ -214,6 +213,8 @@ int main()
 {
     uint32_t u32ch;
     int32_t  i32Err;
+    /* CPU executing in which Bank */
+    uint32_t  u32ExecBank = 0;
 
     /* Disable register write-protection function */
     SYS_UnlockReg();
@@ -240,21 +241,21 @@ int main()
         printf("|  Boot from 0x%08X  |\n", FMC_GetVECMAP());
         printf("+------------------------+\n");
 
-        s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
-        printf("\n BANK%d APP processing \n", s_u32ExecBank);
+        u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
+        printf("\n BANK%d APP processing \n", u32ExecBank);
 
 
         printf("\n Download new FW?[y/n]\n");
         u32ch = (uint32_t)getchar();
         if(u32ch == 'y')
         {
-            printf("\n Bank%d processing, downloaad data to Bank%d.\n", s_u32ExecBank, s_u32ExecBank^1);
+            printf("\n Bank%d processing, downloaad data to Bank%d.\n", u32ExecBank, u32ExecBank^1);
 
             EnableSysTick(1000);
             StartTimer0();
 
             /* Dual bank background program address */
-            s_u32DbAddr   = FMC_BANK_SIZE*(s_u32ExecBank^1)+APP_BASE;
+            s_u32DbAddr   = FMC_BANK_SIZE*(u32ExecBank^1)+APP_BASE;
             /* Dual bank background length */
             s_u32DbLength = APP_SIZE;
 
@@ -277,7 +278,7 @@ int main()
         }
         else
         {
-            printf("\n Reset from BANK%d Loader \n", s_u32ExecBank);
+            printf("\n Reset from BANK%d Loader \n", u32ExecBank);
             /* Remap to Loader */
             FMC_SetVectorPageAddr(0x0);
             ResetCPU();
