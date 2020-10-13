@@ -1043,6 +1043,8 @@ void RTC_DynamicTamperConfig(uint32_t u32ChangeRate, uint32_t u32SeedReload, uin
   */
 uint32_t RTC_SetClockSource(uint32_t u32ClkSrc)
 {
+    uint32_t u32TrimDefault = inpw(SYS_BASE + 0x14Cul);
+
     if(u32ClkSrc == RTC_CLOCK_SOURCE_LXT)
     {
         /* RTC clock source is external LXT */
@@ -1054,7 +1056,7 @@ uint32_t RTC_SetClockSource(uint32_t u32ClkSrc)
     else if(u32ClkSrc == RTC_CLOCK_SOURCE_LIRC32K)
     {
         /* Load LIRC32 trim setting */
-        RTC->LXTCTL = ((RTC->LXTCTL & ~(0x1FFul << 16)) | ((inpw(SYS_BASE+0x14Cul) & 0x1FFul) << 16));
+        RTC->LXTCTL = ((RTC->LXTCTL & ~(0x1FFul << 16)) | ((u32TrimDefault & 0x1FFul) << 16));
 
         /* RTC clock source is LIRC32K */
         RTC->LXTCTL |= RTC_LXTCTL_LIRC32KEN_Msk;

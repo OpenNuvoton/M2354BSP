@@ -15,8 +15,6 @@
 #include "usbh_lib.h"
 #include "usbh_hid.h"
 
-#define CLK_PLLCTL_192MHz_HXT   (CLK_PLLCTL_PLLSRC_HXT  | CLK_PLLCTL_NR(2) | CLK_PLLCTL_NF( 16) | CLK_PLLCTL_NO_1)
-
 
 HID_DEV_T   *g_hid_list[CONFIG_HID_MAX_DEV];
 uint8_t     g_buff_pool[1024] __attribute__((aligned(32)));

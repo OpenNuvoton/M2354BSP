@@ -40,9 +40,6 @@
 
 /* // @cond HIDDEN_SYMBOLS */
 
-static uint32_t g_AES_CTL[4];
-static uint32_t g_TDES_CTL[4];
-
 static char  hex_char_tbl[] = "0123456789abcdef";
 
 static void dump_ecc_reg(char *str, uint32_t volatile regs[], int32_t count);
@@ -145,12 +142,12 @@ void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[])
 void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec,
               uint32_t u32OpMode, uint32_t u32KeySize, uint32_t u32SwapType)
 {
-    crpt->AES_CTL = (u32Channel << CRPT_AES_CTL_CHANNEL_Pos) |
-                    (u32EncDec << CRPT_AES_CTL_ENCRPT_Pos) |
+    (void)u32Channel;
+
+    crpt->AES_CTL = (u32EncDec << CRPT_AES_CTL_ENCRPT_Pos) |
                     (u32OpMode << CRPT_AES_CTL_OPMODE_Pos) |
                     (u32KeySize << CRPT_AES_CTL_KEYSZ_Pos) |
                     (u32SwapType << CRPT_AES_CTL_OUTSWAP_Pos);
-    g_AES_CTL[u32Channel] = crpt->AES_CTL;
 }
 
 /**
@@ -165,7 +162,8 @@ void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec,
   */
 void AES_Start(CRPT_T *crpt, int32_t u32Channel, uint32_t u32DMAMode)
 {
-    crpt->AES_CTL = g_AES_CTL[u32Channel];
+    (void)u32Channel;
+
     crpt->AES_CTL |= CRPT_AES_CTL_START_Msk | (u32DMAMode << CRPT_AES_CTL_DMALAST_Pos);
 }
 
@@ -184,7 +182,9 @@ void AES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t
 {
     uint32_t  i, wcnt, key_reg_addr;
 
-    key_reg_addr = (uint32_t)&crpt->AES0_KEY[0] + (u32Channel * 0x3CUL);
+    (void) u32Channel;
+
+    key_reg_addr = (uint32_t)&crpt->AES_KEY[0];
     wcnt = 4UL + u32KeySize * 2UL;
 
     for(i = 0U; i < wcnt; i++)
@@ -227,7 +227,9 @@ void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32IV[])
 {
     uint32_t  i, key_reg_addr;
 
-    key_reg_addr = (uint32_t)&crpt->AES0_IV[0] + (u32Channel * 0x3CUL);
+    (void) u32Channel;
+
+    key_reg_addr = (uint32_t)&crpt->AES_IV[0];
 
     for(i = 0U; i < 4U; i++)
     {
@@ -248,138 +250,11 @@ void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32IV[])
 void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr,
                         uint32_t u32DstAddr, uint32_t u32TransCnt)
 {
-    uint32_t  reg_addr;
+    (void) u32Channel;
 
-    reg_addr = (uint32_t)&crpt->AES0_SADDR + (u32Channel * 0x3CUL);
-    outpw(reg_addr, u32SrcAddr);
-
-    reg_addr = (uint32_t)&crpt->AES0_DADDR + (u32Channel * 0x3CUL);
-    outpw(reg_addr, u32DstAddr);
-
-    reg_addr = (uint32_t)&crpt->AES0_CNT + (u32Channel * 0x3CUL);
-    outpw(reg_addr, u32TransCnt);
-}
-
-/**
-  * @brief  Open TDES encrypt/decrypt function.
-  * @param[in]  crpt         The pointer of CRYPTO module 
-  * @param[in]  u32Channel   TDES channel. Must be 0~3.
-  * @param[in]  u32EncDec    1: TDES encode; 0: TDES decode
-  * @param[in]  Is3DES       1: TDES; 0: DES
-  * @param[in]  Is3Key       1: TDES 3 key mode; 0: TDES 2 key mode
-  * @param[in]  u32OpMode    TDES operation mode, including:
-  *         - \ref TDES_MODE_ECB
-  *         - \ref TDES_MODE_CBC
-  *         - \ref TDES_MODE_CFB
-  *         - \ref TDES_MODE_OFB
-  *         - \ref TDES_MODE_CTR
-  * @param[in]  u32SwapType is TDES input/output data swap control and word swap control, including:
-  *         - \ref TDES_NO_SWAP
-  *         - \ref TDES_WHL_SWAP
-  *         - \ref TDES_OUT_SWAP
-  *         - \ref TDES_OUT_WHL_SWAP
-  *         - \ref TDES_IN_SWAP
-  *         - \ref TDES_IN_WHL_SWAP
-  *         - \ref TDES_IN_OUT_SWAP
-  *         - \ref TDES_IN_OUT_WHL_SWAP
-  * @return None
-  */
-void TDES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec, int32_t Is3DES, int32_t Is3Key,
-               uint32_t u32OpMode, uint32_t u32SwapType)
-{
-	  (void)crpt;
-    g_TDES_CTL[u32Channel] = (u32Channel << CRPT_TDES_CTL_CHANNEL_Pos) |
-                             (u32EncDec << CRPT_TDES_CTL_ENCRPT_Pos) |
-                             u32OpMode | (u32SwapType << CRPT_TDES_CTL_BLKSWAP_Pos);
-    if(Is3DES)
-    {
-        g_TDES_CTL[u32Channel] |= CRPT_TDES_CTL_TMODE_Msk;
-    }
-    if(Is3Key)
-    {
-        g_TDES_CTL[u32Channel] |= CRPT_TDES_CTL_3KEYS_Msk;
-    }
-}
-
-/**
-  * @brief  Start TDES encrypt/decrypt
-  * @param[in]  crpt        The pointer of CRYPTO module 
-  * @param[in]  u32Channel  TDES channel. Must be 0~3.
-  * @param[in]  u32DMAMode  TDES DMA control, including:
-  *         - \ref CRYPTO_DMA_ONE_SHOT   One shop TDES encrypt/decrypt.
-  *         - \ref CRYPTO_DMA_CONTINUE   Continuous TDES encrypt/decrypt.
-  *         - \ref CRYPTO_DMA_LAST       Last TDES encrypt/decrypt of a series of TDES_Start.
-  * @return None
-  */
-void TDES_Start(CRPT_T *crpt, int32_t u32Channel, uint32_t u32DMAMode)
-{
-    g_TDES_CTL[u32Channel] |= CRPT_TDES_CTL_START_Msk | (u32DMAMode << CRPT_TDES_CTL_DMALAST_Pos);
-    crpt->TDES_CTL = g_TDES_CTL[u32Channel];
-}
-
-/**
-  * @brief  Set TDES keys
-  * @param[in]  crpt        The pointer of CRYPTO module 
-  * @param[in]  u32Channel  TDES channel. Must be 0~3.
-  * @param[in]  au32Keys    The TDES keys. au32Keys[0][0] is Key0 high word and au32Keys[0][1] is key0 low word.
-  * @return None
-  */
-void TDES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[3][2])
-{
-    uint32_t   i, reg_addr;
-
-    reg_addr = (uint32_t)&crpt->TDES0_KEY1H + (0x40UL * u32Channel);
-
-    for(i = 0U; i < 3U; i++)
-    {
-        outpw(reg_addr, au32Keys[i][0]);   /* TDESn_KEYxH */
-        reg_addr += 4UL;
-        outpw(reg_addr, au32Keys[i][1]);   /* TDESn_KEYxL */
-        reg_addr += 4UL;
-    }
-}
-
-/**
-  * @brief  Set TDES initial vectors
-  * @param[in]  crpt        The pointer of CRYPTO module 
-  * @param[in]  u32Channel  TDES channel. Must be 0~3.
-  * @param[in]  u32IVH      TDES initial vector high word.
-  * @param[in]  u32IVL      TDES initial vector low word.
-  * @return None
-  */
-void TDES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32IVH, uint32_t u32IVL)
-{
-    uint32_t  reg_addr;
-
-    reg_addr = (uint32_t)&crpt->TDES0_IVH + (u32Channel * 0x40UL);
-    outpw(reg_addr, u32IVH);
-
-    reg_addr = (uint32_t)&crpt->TDES0_IVL + (u32Channel * 0x40UL);
-    outpw(reg_addr, u32IVL);
-}
-
-/**
-  * @brief  Set TDES DMA transfer configuration.
-  * @param[in]  crpt         The pointer of CRYPTO module 
-  * @param[in]  u32Channel   TDES channel. Must be 0~3.
-  * @param[in]  u32SrcAddr   TDES DMA source address
-  * @param[in]  u32DstAddr   TDES DMA destination address
-  * @param[in]  u32TransCnt  TDES DMA transfer byte count
-  * @return None
-  */
-void TDES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr,
-                         uint32_t u32DstAddr, uint32_t u32TransCnt)
-{
-    uint32_t  reg_addr;
-
-    reg_addr = (uint32_t)&crpt->TDES0_SADDR + (u32Channel * 0x40UL);
-    outpw(reg_addr, u32SrcAddr);
-
-    reg_addr = (uint32_t)&crpt->TDES0_DADDR + (u32Channel * 0x40UL);
-    outpw(reg_addr, u32DstAddr);
-
-    reg_addr = (uint32_t)&crpt->TDES0_CNT + (u32Channel * 0x40UL);
-    outpw(reg_addr, u32TransCnt);
+    crpt->AES_SADDR = u32SrcAddr;
+    crpt->AES_DADDR = u32DstAddr;
+    crpt->AES_CNT   = u32TransCnt;
 }
 
 /**
@@ -4434,224 +4309,6 @@ void ECC_Complete(CRPT_T *crpt)
         g_ECCERR_done = 1UL;
         crpt->INTSTS = CRPT_INTSTS_ECCEIF_Msk;
         printf("ECCEIF flag is set!!\n");
-    }
-}
-
-
-/*-----------------------------------------------------------------------------------------------*/
-/*                                                                                               */
-/*    RSA                                                                                        */
-/*                                                                                               */
-/*-----------------------------------------------------------------------------------------------*/
-
-/** @cond HIDDEN_SYMBOLS */
-
-static uint32_t au32RsaN[128]; /* The base of modulus operation word. */
-static uint32_t au32RsaE[128]; /* The exponent of exponentiation words. */
-static uint32_t au32RsaM[128]; /* The base of exponentiation words. */
-static uint32_t au32RsaP[128]; /* The Factor of Modulus Operation. */
-static uint32_t au32RsaQ[128]; /* The Factor of Modulus Operation. */
-static uint32_t au32RsaTmpCp[128]; /* The Temporary Value(Cp) of RSA CRT. */
-static uint32_t au32RsaTmpCq[128]; /* The Temporary Value(Cq) of RSA CRT. */
-static uint32_t au32RsaTmpDp[128]; /* The Temporary Value(Dp) of RSA CRT. */
-static uint32_t au32RsaTmpDq[128]; /* The Temporary Value(Dq) of RSA CRT. */
-static uint32_t au32RsaTmpRp[128]; /* The Temporary Value(Rp) of RSA CRT. */
-static uint32_t au32RsaTmpRq[128]; /* The Temporary Value(Rq) of RSA CRT. */
-static uint32_t au32RsaTmpBlindKey[128]; /* The Temporary Value(blind key) of RSA SCAP. */
-static uint32_t au32RsaOutput[128]; /* The RSA answer. */
-//static char RsaOutput[RSA_KBUF_HLEN];
-
-/** @endcond HIDDEN_SYMBOLS */
-
-
-/**
-  * @brief  Open RSA encrypt/decrypt function.
-  * @param[in]  crpt         The pointer of CRYPTO module
-  * @param[in]  u32OpMode    RSA operation mode, including:
-  *         - \ref RSA_MODE_NORMAL
-  *         - \ref RSA_MODE_CRT
-  *         - \ref RSA_MODE_CRTBYPASS
-  *         - \ref RSA_MODE_SCAP
-  *         - \ref RSA_MODE_CRT_SCAP
-  *         - \ref RSA_MODE_CRTBYPASS_SCAP
-  * @param[in]  u32KeySize is RSA key size, including:
-  *         - \ref RSA_KEY_SIZE_1024
-  *         - \ref RSA_KEY_SIZE_2048
-  *         - \ref RSA_KEY_SIZE_3072
-  *         - \ref RSA_KEY_SIZE_4096
-  * @return None
-  */
-void RSA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32KeySize)
-{
-    crpt->RSA_CTL = (u32OpMode) | (u32KeySize << CRPT_RSA_CTL_KEYLENG_Pos);
-}
-
-/**
-  * @brief  Set the RSA key
-  * @param[in]  crpt        The pointer of CRYPTO module
-  * @param[in]  Key         The private or public key.
-  * @return None
-  */
-void RSA_SetKey(CRPT_T *crpt, char *Key)
-{
-	  (void)crpt;
-    Hex2Reg(Key, (uint32_t *)&au32RsaE[0]);
-    CRPT->RSA_SADDR[2] = (uint32_t)&au32RsaE[0]; /* the public key or private key */
-}
-
-/**
-  * @brief  Set RSA DMA transfer configuration.
-  * @param[in]  crpt         The pointer of CRYPTO module
-  * @param[in]  u32OpMode    RSA operation mode, including:
-  *         - \ref RSA_MODE_NORMAL
-  *         - \ref RSA_MODE_CRT
-  *         - \ref RSA_MODE_CRTBYPASS
-  *         - \ref RSA_MODE_SCAP
-  *         - \ref RSA_MODE_CRT_SCAP
-  *         - \ref RSA_MODE_CRTBYPASS_SCAP
-  * @param[in]  Src   RSA DMA source data
-  * @param[in]  n     The modulus for both the public and private keys
-  * @param[in]  P     The factor of modulus operation(P) for CRT/SCAP mode
-  * @param[in]  Q     The factor of modulus operation(Q) for CRT/SCAP mode
-  * @return None
-  */
-void RSA_SetDMATransfer(CRPT_T *crpt, uint32_t u32OpMode, char *Src,
-                        char *n, char *P, char *Q)
-{
-	  (void)crpt;
-    Hex2Reg(Src, (uint32_t *)&au32RsaM[0]);
-    Hex2Reg(n, (uint32_t *)&au32RsaN[0]);
-
-    /* Assign the data to DMA */
-    CRPT->RSA_SADDR[0] = (uint32_t)&au32RsaM[0]; /* plaintext / encrypt data */
-    CRPT->RSA_SADDR[1] = (uint32_t)&au32RsaN[0]; /* the base of modulus operation */
-    CRPT->RSA_DADDR    = (uint32_t)&au32RsaOutput[0]; /* encrypt data / decrypt data */
-
-    if ((u32OpMode & CRPT_RSA_CTL_CRT_Msk) || (u32OpMode & CRPT_RSA_CTL_SCAP_Msk))
-    {
-        /* For RSA CRT/SCAP mode, two primes of private key */
-        Hex2Reg(P, (uint32_t *)&au32RsaP[0]);
-        Hex2Reg(Q, (uint32_t *)&au32RsaQ[0]);
-
-        CRPT->RSA_SADDR[3] = (uint32_t)&au32RsaP[0]; /* prime P */
-        CRPT->RSA_SADDR[4] = (uint32_t)&au32RsaQ[0]; /* prime Q */
-    }
-
-    if (u32OpMode & CRPT_RSA_CTL_CRT_Msk)
-    {
-        CRPT->RSA_MADDR[0] = (uint32_t)&au32RsaTmpCp[0]; /* for storing the intermediate temporary value(Cp) */
-        CRPT->RSA_MADDR[1] = (uint32_t)&au32RsaTmpCq[0]; /* for storing the intermediate temporary value(Cq) */
-        CRPT->RSA_MADDR[2] = (uint32_t)&au32RsaTmpDp[0]; /* for storing the intermediate temporary value(Dp) */
-        CRPT->RSA_MADDR[3] = (uint32_t)&au32RsaTmpDq[0]; /* for storing the intermediate temporary value(Dq) */
-        CRPT->RSA_MADDR[4] = (uint32_t)&au32RsaTmpRp[0]; /* for storing the intermediate temporary value(Rp) */
-        CRPT->RSA_MADDR[5] = (uint32_t)&au32RsaTmpRq[0]; /* for storing the intermediate temporary value(Rq) */
-    }
-
-    if (u32OpMode & CRPT_RSA_CTL_SCAP_Msk)
-    {
-        /* For SCAP mode to store the intermediate temporary value(blind key) */
-        CRPT->RSA_MADDR[6] = (uint32_t)&au32RsaTmpBlindKey[0];
-    }
-}
-
-/**
-  * @brief  Start RSA encrypt/decrypt
-  * @param[in]  crpt        The pointer of CRYPTO module
-  * @return None
-  */
-void RSA_Start(CRPT_T *crpt)
-{
-    crpt->RSA_CTL |= CRPT_RSA_CTL_START_Msk;
-}
-
-/**
-  * @brief  Read the RSA output.
-  * @param[in]   crpt       The pointer of CRYPTO module
-  * @param[out]  Output     The RSA operation output data.
-  * @return None
-  */
-void RSA_Read(CRPT_T *crpt, char *Output)
-{
-    uint32_t au32CntTbl[4] = {256, 512, 768, 1024}; /* count is key length divided by 4 */
-    uint32_t u32CntIdx = 0;
-
-    u32CntIdx = (crpt->RSA_CTL & CRPT_RSA_CTL_KEYLENG_Msk) >> CRPT_RSA_CTL_KEYLENG_Pos;
-    Reg2Hex((int32_t)au32CntTbl[u32CntIdx], (uint32_t *)au32RsaOutput, Output);
-}
-
-/**
-  * @brief  Set the RSA key is read from key store
-  * @param[in]  crpt           The pointer of CRYPTO module
-  * @param[in]  u32KeyNum      The number of private or public key in key store.
-  * @param[in]  u32KSMemType   The key is read from selected memory type of key store. It could be:
-                            \ref KS_SRAM
-                            \ref KS_FLASH
-                            \ref KS_OTP
-  * @return None
-  */
-void RSA_SetKeyAccessKeyStore(CRPT_T *crpt, uint32_t u32KeyNum, uint32_t u32KSMemType)
-{
-	  (void)crpt;
-    CRPT->RSA_KSCTL = (u32KSMemType << CRPT_RSA_KSCTL_RSSRC_Pos) | CRPT_RSA_KSCTL_RSRC_Msk | u32KeyNum;
-}
-
-/**
-  * @brief  Set RSA DMA transfer configuration while using key store.
-  * @param[in]  crpt         The pointer of CRYPTO module
-  * @param[in]  u32OpMode    RSA operation mode, including:
-  *         - \ref RSA_MODE_NORMAL
-  *         - \ref RSA_MODE_CRT
-  *         - \ref RSA_MODE_CRTBYPASS
-  *         - \ref RSA_MODE_SCAP
-  *         - \ref RSA_MODE_CRT_SCAP
-  *         - \ref RSA_MODE_CRTBYPASS_SCAP
-  * @param[in]  Src   RSA DMA source data
-  * @param[in]  n     The modulus for both the public and private keys
-  * @param[in]  u32PNum         The number of the factor of modulus operation(P) in SRAM of key store for CRT/SCAP mode
-  * @param[in]  u32QNum         The number of the factor of modulus operation(Q) in SRAM of key store for CRT/SCAP mode
-  * @param[in]  u32CpNum        The number of Cp in SRAM of key store for CRT mode
-  * @param[in]  u32CqNum        The number of Cq in SRAM of key store for CRT mode
-  * @param[in]  u32DpNum        The number of Dp in SRAM of key store for CRT mode
-  * @param[in]  u32DqNum        The number of Dq in SRAM of key store for CRT mode
-  * @param[in]  u32RpNum        The number of Rp in SRAM of key store for CRT mode
-  * @param[in]  u32RqNum        The number of Rq in SRAM of key store for CRT mode
-  * @param[in]  u32BlindKeyNum  The number of blind key in SRAM of key store for SCAP mode. This key is un-readable.
-  * @return None
-  * @note P, Q, Dp, Dq are equal to half key length. Cp, Cq, Rp, Rq, Blind key are equal to key length.
-  */
-void RSA_SetDMATransferAccessKeyStore(CRPT_T *crpt, uint32_t u32OpMode, char *Src, char *n, uint32_t u32PNum, 
-                           uint32_t u32QNum, uint32_t u32CpNum, uint32_t u32CqNum, uint32_t u32DpNum, 
-                           uint32_t u32DqNum, uint32_t u32RpNum, uint32_t u32RqNum, uint32_t u32BlindKeyNum)
-{
-	  (void)crpt;
-    Hex2Reg(Src, (uint32_t *)&au32RsaM[0]);
-    Hex2Reg(n, (uint32_t *)&au32RsaN[0]);
-
-    /* Assign the data to DMA */
-    CRPT->RSA_SADDR[0] = (uint32_t)&au32RsaM[0]; /* plaintext / encrypt data */
-    CRPT->RSA_SADDR[1] = (uint32_t)&au32RsaN[0]; /* the base of modulus operation */
-    CRPT->RSA_DADDR    = (uint32_t)&au32RsaOutput[0]; /* encrypt data / decrypt data */
-
-    if ((u32OpMode & CRPT_RSA_CTL_CRT_Msk) || (u32OpMode & CRPT_RSA_CTL_SCAP_Msk))
-    {
-        /* For RSA CRT/SCAP mode, two primes of private key */
-        CRPT->RSA_KSSTS[0] = (CRPT->RSA_KSSTS[0] & (~(CRPT_RSA_KSSTS0_NUM0_Msk | CRPT_RSA_KSSTS0_NUM1_Msk))) | \
-                             (u32PNum << CRPT_RSA_KSSTS0_NUM0_Pos) | (u32QNum << CRPT_RSA_KSSTS0_NUM1_Pos);
-    }
-
-    if (u32OpMode & CRPT_RSA_CTL_CRT_Msk)
-    {
-        /* For RSA CRT mode, Cp, Cq, Dp, Dq, Rp, Rq */
-        CRPT->RSA_KSSTS[0] = (CRPT->RSA_KSSTS[0] & (~(CRPT_RSA_KSSTS0_NUM2_Msk | CRPT_RSA_KSSTS0_NUM3_Msk))) | \
-                             (u32CpNum << CRPT_RSA_KSSTS0_NUM2_Pos) | (u32CqNum << CRPT_RSA_KSSTS0_NUM3_Pos);
-        CRPT->RSA_KSSTS[1] = (u32DpNum << CRPT_RSA_KSSTS1_NUM4_Pos) | (u32DqNum << CRPT_RSA_KSSTS1_NUM5_Pos) | \
-                             (u32RpNum << CRPT_RSA_KSSTS1_NUM6_Pos) | (u32RqNum << CRPT_RSA_KSSTS1_NUM7_Pos);
-    }
-
-    if (u32OpMode & CRPT_RSA_CTL_SCAP_Msk)
-    {
-        /* For SCAP mode to store the intermediate temporary value(blind key) */
-        CRPT->RSA_KSCTL = (CRPT->RSA_KSCTL & (~CRPT_RSA_KSCTL_BKNUM_Msk)) | (u32BlindKeyNum << 8); /* From SRAM in KS */
     }
 }
 
