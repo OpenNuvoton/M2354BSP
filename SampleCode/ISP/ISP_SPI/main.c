@@ -98,9 +98,6 @@ void SYS_Init(void)
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_PLL;
     CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | CLK_CLKDIV0_HCLK(1);
 
-    /* Set PCLK0 to HCLK/2 */
-    CLK->PCLKDIV = CLK_PCLKDIV_APB0DIV_HCLK_DIV2;
-
     /* Update System Core Clock */
     PllClock        = 96000000;
     SystemCoreClock = 96000000;
