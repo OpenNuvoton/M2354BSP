@@ -348,12 +348,12 @@ static int32_t _AES256Encrypt(uint32_t *in, uint32_t *out, uint32_t len, uint32_
     CLK->AHBCLK |= CLK_AHBCLK_CRPTCKEN_Msk;
 
     /* KEY and IV are byte order (32 bit) reversed, Swap32(x)) and stored in ISP_INFO_T */
-    memcpy((void *)&CRPT->AES0_KEY[0], KEY, (4 * 8));
-    memcpy((void *)&CRPT->AES0_IV[0], IV, (4 * 4));
+    memcpy((void *)&CRPT->AES_KEY[0], KEY, (4 * 8));
+    memcpy((void *)&CRPT->AES_IV[0], IV, (4 * 4));
 
-    CRPT->AES0_SADDR = (uint32_t)in;
-    CRPT->AES0_DADDR = (uint32_t)out;
-    CRPT->AES0_CNT   = len;
+    CRPT->AES_SADDR = (uint32_t)in;
+    CRPT->AES_DADDR = (uint32_t)out;
+    CRPT->AES_CNT   = len;
     CRPT->AES_CTL = ((AES_KEY_SIZE_256 << CRPT_AES_CTL_KEYSZ_Pos) | (AES_IN_OUT_SWAP << CRPT_AES_CTL_OUTSWAP_Pos));
     CRPT->AES_CTL |= (CRPT_AES_CTL_ENCRPT_Msk);
     CRPT->AES_CTL |= ((AES_MODE_CFB << CRPT_AES_CTL_OPMODE_Pos) | CRPT_AES_CTL_START_Msk | CRPT_AES_CTL_DMAEN_Msk);
@@ -374,12 +374,12 @@ static int32_t _AES256Decrypt(uint32_t *in, uint32_t *out, uint32_t len, uint32_
     CLK->AHBCLK |= CLK_AHBCLK_CRPTCKEN_Msk;
 
     /* KEY and IV are byte order (32 bit) reversed, Swap32(x)) and stored in ISP_INFO_T */
-    memcpy((void *)&CRPT->AES0_KEY[0], KEY, (4 * 8));
-    memcpy((void *)&CRPT->AES0_IV[0], IV, (4 * 4));
+    memcpy((void *)&CRPT->AES_KEY[0], KEY, (4 * 8));
+    memcpy((void *)&CRPT->AES_IV[0], IV, (4 * 4));
 
-    CRPT->AES0_SADDR = (uint32_t)in;
-    CRPT->AES0_DADDR = (uint32_t)out;
-    CRPT->AES0_CNT   = len;
+    CRPT->AES_SADDR = (uint32_t)in;
+    CRPT->AES_DADDR = (uint32_t)out;
+    CRPT->AES_CNT   = len;
     CRPT->AES_CTL = ((AES_KEY_SIZE_256 << CRPT_AES_CTL_KEYSZ_Pos) | (AES_IN_OUT_SWAP << CRPT_AES_CTL_OUTSWAP_Pos));
     CRPT->AES_CTL |= ((AES_MODE_CFB << CRPT_AES_CTL_OPMODE_Pos) | CRPT_AES_CTL_START_Msk | CRPT_AES_CTL_DMAEN_Msk);
     while(CRPT->AES_STS & CRPT_AES_STS_BUSY_Msk) {}
