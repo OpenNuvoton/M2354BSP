@@ -52,7 +52,7 @@
 		<link>
 			<name>Library/NuMaker</name>
 			<type>2</type>
-			<location>D:/MCU/M2354/M2354/bsp/Library/NuMaker/common</location>
+			<location>PARENT-4-PROJECT_LOC/Library/NuMaker/common</location>
 		</link>
 		<link>
 			<name>User/main.c</name>
