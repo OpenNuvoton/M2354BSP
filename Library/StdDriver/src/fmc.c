@@ -279,30 +279,6 @@ int32_t FMC_EraseXOM(uint32_t u32XomNum)
 }
 
 /**
-  * @brief    Get the current boot source
-  *
-  * @param    None
-  *
-  * @return   The current boot source.
-  * @retval   0 This chip is currently booting from APROM
-  * @retval   1 This chip is currently booting from LDROM
-  *
-  * @note     This function only show the boot source.
-  *           User need to read ISPSTA register to know if IAP mode supported or not in relative boot.
-  */
-int32_t FMC_GetBootSource(void)
-{
-    int32_t  ret = 0;
-
-    if(FMC->ISPCTL & FMC_ISPCTL_BS_Msk)
-    {
-        ret = 1;
-    }
-
-    return ret;
-}
-
-/**
   * @brief     Run CRC32 checksum calculation and get result.
   *
   * @param[in] u32addr   Starting flash address. It must be a page aligned address.
@@ -601,33 +577,6 @@ int32_t FMC_ReadConfig(uint32_t u32Config[], uint32_t u32Count)
     }
     return 0;
 }
-
-/**
-  * @brief      Set boot source from LDROM or APROM after next software reset
-  *
-  * @param[in]  i32BootSrc
-  *                1: Boot from LDROM
-  *                0: Boot from APROM
-  *
-  * @return    None
-  *
-  * @details   This function is used to switch APROM boot or LDROM boot. User need to call
-  *            FMC_SetBootSource to select boot source first, then use CPU reset or
-  *            System Reset Request to reset system.
-  *
-  */
-void FMC_SetBootSource(int32_t i32BootSrc)
-{
-    if(i32BootSrc)
-    {
-        FMC->ISPCTL |= FMC_ISPCTL_BS_Msk; /* Boot from LDROM */
-    }
-    else
-    {
-        FMC->ISPCTL &= ~FMC_ISPCTL_BS_Msk;/* Boot from APROM */
-    }
-}
-
 
 /**
   * @brief      Write a word bytes to flash.
