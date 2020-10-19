@@ -67,8 +67,6 @@ void SYS_Init(void)
 
 int32_t main(void)
 {
-    uint32_t u32Cfg;
-
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -96,13 +94,6 @@ int32_t main(void)
 
     /* Enable ISP function */
     FMC_Open();
-
-    /* Check IAP mode */
-    u32Cfg = FMC_Read(FMC_CONFIG_BASE);
-    if((u32Cfg & 0x80) == 0x80)
-        printf("Boot from APROM with IAP mode\n");
-    else
-        printf("Boot from LDROM with IAP mode\n");
 
     IAP_Func0(1);
     IAP_Func1(2);

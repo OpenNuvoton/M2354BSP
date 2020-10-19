@@ -582,7 +582,6 @@ extern int32_t FMC_ConfigXOM(uint32_t xom_num, uint32_t xom_base, uint8_t xom_pa
 extern int32_t FMC_Erase(uint32_t u32PageAddr);
 extern int32_t FMC_EraseBank(uint32_t u32BankAddr);
 extern int32_t FMC_EraseXOM(uint32_t xom_num);
-extern int32_t FMC_GetBootSource(void);
 extern uint32_t  FMC_GetChkSum(uint32_t u32addr, uint32_t u32count);
 extern int32_t FMC_IsOTPLocked(uint32_t otp_num);
 extern int32_t FMC_GetXOMState(uint32_t xom_num);
@@ -592,7 +591,6 @@ extern uint32_t FMC_Read(uint32_t u32Addr);
 extern int32_t FMC_Read64(uint32_t u32addr, uint32_t * u32data0, uint32_t * u32data1);
 extern int32_t FMC_ReadOTP(uint32_t otp_num, uint32_t *low_word, uint32_t *high_word);
 extern int32_t FMC_ReadConfig(uint32_t u32Config[], uint32_t u32Count);
-extern void FMC_SetBootSource(int32_t i32BootSrc);
 extern void FMC_Write(uint32_t u32Addr, uint32_t u32Data);
 extern int32_t FMC_Write8Bytes(uint32_t u32addr, uint32_t u32data0, uint32_t u32data1);
 extern int32_t FMC_WriteConfig(uint32_t au32Config[], uint32_t u32Count);

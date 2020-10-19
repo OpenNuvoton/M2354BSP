@@ -55,7 +55,7 @@
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../Library/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../Library/StdDriver/inc"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../../../Library/Device/Nuvoton/M2354/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../../../Library/LCDLib/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../../../Library/LCDLib/Include&quot;"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1746774901" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>

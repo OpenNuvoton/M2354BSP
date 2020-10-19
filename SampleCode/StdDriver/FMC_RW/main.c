@@ -174,17 +174,6 @@ int32_t main(void)
     /* Enable FMC ISP function */
     FMC_Open();
 
-    /* Read BS */
-    printf("  Boot Mode ............................. ");
-    if(FMC_GetBootSource() == 0)
-        printf("[APROM]\n");
-    else
-    {
-        printf("[LDROM]\n");
-        printf("  WARNING: The driver sample code must execute in AP mode!\n");
-        goto lexit;
-    }
-
     u32Data = FMC_ReadCID();
     printf("  Company ID ............................ [0x%08x]\n", u32Data);
 
