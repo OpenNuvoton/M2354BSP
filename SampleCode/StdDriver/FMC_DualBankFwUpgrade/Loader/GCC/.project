@@ -54,11 +54,6 @@
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/main.c</locationURI>
 		</link>
-		<link>
-			<name>User/NuDB_common.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/common/src/NuDB_common.c</locationURI>
-		</link>		
 	</linkedResources>
 	<filteredResources>
 		<filter>
