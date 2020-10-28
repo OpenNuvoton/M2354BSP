@@ -193,6 +193,12 @@ __Vectors:
     
     
 Reset_Handler:
+
+
+#ifndef __NO_SYSTEM_INIT
+    bl  SystemInit
+#endif
+
     /*  Firstly it copies data from read only memory to RAM. There are two schemes
      *  to copy. One can copy more than one sections. Another can only copy
      *  one section.  The former scheme needs more instructions and read-only
@@ -322,10 +328,6 @@ Reset_Handler:
 #endif /* __STARTUP_CLEAR_BSS_MULTIPLE || __STARTUP_CLEAR_BSS */
     
     
-    
-#ifndef __NO_SYSTEM_INIT
-    bl  SystemInit
-#endif
     
     
 #ifndef __START
