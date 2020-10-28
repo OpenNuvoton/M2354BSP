@@ -22,7 +22,7 @@
    It also apply to non-secure project of the TrustZone projects.
    
 */
-# error "Link to default partition_m2351.h in secure mode. Please check your include path."
+# error "Link to default partition_M2354.h in secure mode. Please check your include path."
 
 #endif
 
