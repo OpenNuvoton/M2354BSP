@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Product life cycle management
  *
- * @note
- * Copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __PLM_H__
 #define __PLM_H__
@@ -92,5 +92,4 @@ __STATIC_INLINE int32_t PLM_SetStage(PLM_STAGE_T stage)
 #endif
 
 #endif /* __PLM_H__ */
-
 

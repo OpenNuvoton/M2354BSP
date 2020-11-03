@@ -5,9 +5,8 @@
  * $Date: 16/07/07 7:50p $
  * @brief    M2355 series USCI I2C(UI2C) driver header file
  *
- * @note
- * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
- *
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USCI_I2C_H__
 #define __USCI_I2C_H__
@@ -317,4 +316,3 @@ uint32_t UI2C_ReadMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t 
 
 #endif
 
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/

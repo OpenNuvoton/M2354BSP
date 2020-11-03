@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Timer PWM Controller(Timer PWM) driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2019-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __TIMER_PWM_H__
 #define __TIMER_PWM_H__
@@ -875,5 +875,3 @@ void TPWM_SetBrakePinSource(TIMER_T *timer, uint32_t u32BrakePinNum);
 #endif
 
 #endif /* __TIMER_PWM_H__ */
-
-/*** (C) COPYRIGHT 2019-2020 Nuvoton Technology Corp. ***/

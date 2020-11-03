@@ -3,9 +3,9 @@
  * @version  V3.00
  * @brief    M2354 series SPI driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
-*****************************************************************************/
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ *****************************************************************************/
 #ifndef __SPI_H__
 #define __SPI_H__
 
@@ -580,5 +580,3 @@ void SPII2S_SetFIFO(SPI_T *i2s, uint32_t u32TxThreshold, uint32_t u32RxThreshold
 #endif
 
 #endif /* __SPI_H__ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

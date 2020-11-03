@@ -3,9 +3,8 @@
  * @version  V3.0
  * @brief    Peripheral Access Layer Header File
  *
- * @note
- * Copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
- *
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /**
@@ -22,9 +21,6 @@
   * operation, including without limitation any and all warranties of merchantability, fitness
   * for a particular purpose, and non-infringement of intellectual property rights.
   *
-  * <b>Copyright Notice</b>
-  *
-  * Copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
   */
 
 

@@ -3,9 +3,9 @@
  * @version  V3.00
  * @brief    Smartcard UART mode (SCUART) driver source file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2016-2020 Nuvoton Technology Corp. All rights reserved.
-*****************************************************************************/
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ *****************************************************************************/
 #include "NuMicro.h"
 
 
@@ -270,4 +270,3 @@ void SCUART_Write(SC_T* sc, uint8_t pu8TxBuf[], uint32_t u32WriteBytes)
 
 /**@}*/ /* end of group Standard_Driver */
 
-/*** (C) COPYRIGHT 2016-2020 Nuvoton Technology Corp. ***/

@@ -3,9 +3,8 @@
  * @version  V3.0
  * @brief    Clock Controller (CLK) driver header file
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __CLK_H__
 #define __CLK_H__
@@ -1069,6 +1068,3 @@ uint32_t CLK_GetModuleClockDivider(uint32_t u32ModuleIdx);
 
 #endif /* __CLK_H__ */
 
-
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Real Time Clock(RTC) driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2019-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __RTC_H__
 #define __RTC_H__
@@ -394,5 +394,3 @@ void RTC_SetGPIOLevel(uint32_t u32PFPin, uint32_t u32OutputLevel);
 #endif
 
 #endif /* __RTC_H__ */
-
-/*** (C) COPYRIGHT 2019-2020 Nuvoton Technology Corp. ***/

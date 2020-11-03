@@ -4,9 +4,9 @@
 
  * @brief    Enhanced Input Capture Timer (ECAP) driver source file
  *
- * @note
- * Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
-*****************************************************************************/
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ *****************************************************************************/
 #include "NuMicro.h"
 
 
@@ -117,5 +117,3 @@ void ECAP_DisableINT(ECAP_T* ecap, uint32_t u32Mask)
 
 /**@}*/ /* end of group Standard_Driver */
 
-
-/*** (C) COPYRIGHT 2017 Nuvoton Technology Corp. ***/

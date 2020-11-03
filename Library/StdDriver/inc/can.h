@@ -3,9 +3,8 @@
  * @version  V3.00
  * @brief    CAN Driver Header File
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
- *
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __CAN_H__
 #define __CAN_H__
@@ -187,5 +186,3 @@ int32_t CAN_ReadMsgObj(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8Release, STR_CAN
 #endif
 
 #endif /* __CAN_H__ */
-
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/

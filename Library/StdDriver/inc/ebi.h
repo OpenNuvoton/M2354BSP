@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    External Bus Interface(EBI) driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2016-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __EBI_H__
 #define __EBI_H__
@@ -367,5 +367,3 @@ void EBI_SetBusTiming(uint32_t u32Bank, uint32_t u32TimingConfig, uint32_t u32Mc
 #endif
 
 #endif /* __EBI_H__ */
-
-/*** (C) COPYRIGHT 2016-2020 Nuvoton Technology Corp. ***/

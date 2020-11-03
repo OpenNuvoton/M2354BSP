@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    M2354 series OTG driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __OTG_H__
 #define __OTG_H__
@@ -254,4 +254,3 @@ extern "C"
 
 #endif /* __OTG_H__ */
 
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

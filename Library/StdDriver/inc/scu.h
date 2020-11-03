@@ -3,9 +3,8 @@
  * @version  V3.00
  * @brief    Secure Configuration Unit Driver Header
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __SCU_H__
 #define __SCU_H__
@@ -357,4 +356,3 @@ __STATIC_INLINE void SCU_TimerConfig(uint32_t u32Ticks, uint32_t u32Prescale)
 
 #endif /* __SCU_H__ */
 
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/

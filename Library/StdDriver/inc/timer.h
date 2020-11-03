@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Timer Controller(Timer) driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2019-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __TIMER_H__
 #define __TIMER_H__
@@ -539,5 +539,3 @@ void TIMER_SetTriggerTarget(TIMER_T *timer, uint32_t u32Mask);
 #endif
 
 #endif /* __TIMER_H__ */
-
-/*** (C) COPYRIGHT 2019-2020 Nuvoton Technology Corp. ***/

@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Window Watchdog Timer(WWDT) driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2019-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __WWDT_H__
 #define __WWDT_H__
@@ -149,4 +149,3 @@ void WWDT_Open(uint32_t u32PreScale, uint32_t u32CmpValue, uint32_t u32EnableInt
 
 #endif /* __WWDT_H__ */
 
-/*** (C) COPYRIGHT 2019-2020 Nuvoton Technology Corp. ***/

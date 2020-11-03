@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Extra Window Watchdog Timer(EWWDT) driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2019-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __EWWDT_H__
 #define __EWWDT_H__
@@ -148,5 +148,3 @@ void EWWDT_Open(uint32_t u32PreScale, uint32_t u32CmpValue, uint32_t u32EnableIn
 #endif
 
 #endif /* __EWWDT_H__ */
-
-/*** (C) COPYRIGHT 2019-2020 Nuvoton Technology Corp. ***/

@@ -5,9 +5,8 @@
  * $Date: 16/07/07 7:50p $
  * @brief    M2355 series I2C Serial Interface Controller(I2C) driver header file
  *
- * @note
- * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
- *
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __I2C_H__
 #define __I2C_H__
@@ -522,5 +521,3 @@ void I2C_SMBusClockLoTimeout(I2C_T *i2c, uint32_t ms, uint32_t u32Pclk);
 #endif
 
 #endif
-
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/

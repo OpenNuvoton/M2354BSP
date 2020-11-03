@@ -5,9 +5,8 @@
  * $Date: 19/11/27 3:11p $
  * @brief    M2355 Series Flash Memory Controller(FMC) driver header file
  *
- * @note
- * Copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
- *
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __FMC_H__
 #define __FMC_H__
@@ -610,6 +609,4 @@ extern int32_t FMC_SwapBank(uint32_t u32Bank);
 #endif
 
 #endif /* __FMC_H__ */
-
-/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/
 

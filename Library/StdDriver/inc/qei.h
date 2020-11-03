@@ -3,9 +3,9 @@
  * @version  V3.00
  * @brief    Quadrature Encoder Interface (QEI) driver header file
  *
- * @note
- * Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
-*****************************************************************************/
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ *****************************************************************************/
 #ifndef __QEI_H__
 #define __QEI_H__
 
@@ -386,5 +386,3 @@ void QEI_Stop(QEI_T* qei);
 #endif
 
 #endif /*__QEI_H__*/
-
-/*** (C) COPYRIGHT 2017 Nuvoton Technology Corp. ***/

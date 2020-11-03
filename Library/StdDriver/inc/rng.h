@@ -3,9 +3,8 @@
  * @version  V3.00
  * @brief    Random Number Generator Interface Controller (rng) driver header file
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __RNG_H__
 #define __RNG_H__
@@ -55,6 +54,4 @@ int32_t RNG_ECDH(uint32_t u32KeySize);
 #endif
 
 #endif /* __RNG_H__ */
-
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
 

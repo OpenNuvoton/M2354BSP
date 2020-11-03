@@ -3,9 +3,8 @@
  * @version  V3.00
  * @brief    Firmware Version Counter Driver Header
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __FVC_H__
 #define __FVC_H__
@@ -60,5 +59,3 @@ int32_t FVC_SetUDFVer(uint32_t u32Ver);
 #endif
 
 #endif /* __FVC_H__ */
-
-/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/

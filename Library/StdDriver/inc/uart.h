@@ -3,9 +3,8 @@
  * @version  V3.00
  * @brief    M2354 series UART Interface Controller (UART) driver header file
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __UART_H__
 #define __UART_H__
@@ -514,5 +513,3 @@ void UART_SelectSingleWireMode(UART_T *uart);
 #endif
 
 #endif /* __UART_H__ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

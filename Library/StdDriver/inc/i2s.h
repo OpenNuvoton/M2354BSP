@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    M2354 series I2S driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #ifndef __I2S_H__
 #define __I2S_H__
@@ -351,5 +351,3 @@ void I2S_ConfigureTDM(I2S_T *i2s, uint32_t u32ChannelWidth, uint32_t u32ChannelN
 #endif
 
 #endif /* __I2S_H__ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

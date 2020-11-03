@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Smartcard(SC) driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2016-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __SC_H__
 #define __SC_H__
@@ -303,5 +303,3 @@ uint32_t SC_GetInterfaceClock(SC_T *sc);
 #endif
 
 #endif /* __SC_H__ */
-
-/*** (C) COPYRIGHT 2016-2020 Nuvoton Technology Corp. ***/

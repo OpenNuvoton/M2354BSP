@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Watchdog Timer(WDT) driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2019-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __WDT_H__
 #define __WDT_H__
@@ -215,5 +215,3 @@ void WDT_Open(uint32_t u32TimeoutInterval, uint32_t u32ResetDelay, uint32_t u32E
 #endif
 
 #endif /* __WDT_H__ */
-
-/*** (C) COPYRIGHT 2019-2020 Nuvoton Technology Corp. ***/

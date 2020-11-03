@@ -3,9 +3,8 @@
  * @version  V3.0
  * @brief    M2354 series General Purpose I/O (GPIO) driver header file
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __GPIO_H__
 #define __GPIO_H__
@@ -1154,5 +1153,3 @@ void GPIO_SetPullCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode);
 #endif
 
 #endif /* __GPIO_H__ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

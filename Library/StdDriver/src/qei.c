@@ -5,9 +5,9 @@
  * $Date: 17/09/20 9:33a $
  * @brief    Quadrature Encoder Interface (QEI) driver source file
  *
- * @note
- * Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
-*****************************************************************************/
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ *****************************************************************************/
 #include "NuMicro.h"
 
 
@@ -143,4 +143,3 @@ void QEI_Stop(QEI_T* qei)
 
 /**@}*/ /* end of group Standard_Driver */
 
-/*** (C) COPYRIGHT 2017 Nuvoton Technology Corp. ***/

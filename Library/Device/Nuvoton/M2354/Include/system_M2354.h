@@ -3,9 +3,8 @@
  * @version  V3.00
  * @brief    System Setting Header File
  *
- * @note
- * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
- *
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __SYSTEM_M2354_H__
 #define __SYSTEM_M2354_H__
