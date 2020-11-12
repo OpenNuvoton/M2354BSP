@@ -57,17 +57,14 @@ void SYS_Init(void)
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
 
-    /* Enable PLL */
-    CLK->PLLCTL = CLK_PLLCTL_128MHz_HIRC;
+    /* Enable HIRC, HXT and LXT clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk|CLK_PWRCTL_LXTEN_Msk);
 
-    /* Waiting for PLL stable */
-    while((CLK->STATUS & CLK_STATUS_PLLSTB_Msk) == 0);
+    /* Wait for HIRC, HXT and LXT clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk|CLK_STATUS_LXTSTB_Msk);
 
-    /* Set HCLK divider to 2 */
-    CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | 1;
-
-    /* Switch HCLK clock source to PLL */
-    CLK->CLKSEL0 = CLK_CLKSEL0_HCLKSEL_PLL;
+    /* Set core clock as PLL_CLOCK from PLL */
+    CLK_SetCoreClock(FREQ_96MHZ);
 
     /* Select IP clock source */
     CLK->CLKSEL1 = CLK_CLKSEL1_TMR1SEL_HIRC;
