@@ -20,11 +20,10 @@
 //#include <sys/ioctl.h>
 //#include <sys/mman.h>
 //#include <sys/time.h>
-#include "font.h"
 #include "fbutils.h"
 //#include "wbtypes.h"
 //#include "LCDconf.h"
-#include "M2351TouchPanel.h"
+#include "M2354TouchPanel.h"
 #include "GUI.h"
 #if 0
 union multiptr
@@ -77,7 +76,7 @@ void put_cross(int x, int y, unsigned colidx)
     line(x + 4, y + 4, x + 7, y + 7, colidx + 1);
 #endif
 }
-
+#if 0
 void put_char(int x, int y, int c, int colidx)
 {
     int i, j, bits;
@@ -104,7 +103,7 @@ void put_string_center(int x, int y, char *s, unsigned colidx)
     put_string(x - (sl / 2) * font_vga_8x8.width,
                y - font_vga_8x8.height / 2, s, colidx);
 }
-
+#endif
 void setcolor(unsigned colidx, unsigned value)
 {
     unsigned res;
@@ -122,32 +121,32 @@ void setcolor(unsigned colidx, unsigned value)
 
     switch(bytes_per_pixel)
     {
-        default:
-        case 1:
+    default:
+    case 1:
 #if 0
-            res = colidx;
-            red = (value >> 8) & 0xff00;
-            green = value & 0xff00;
-            blue = (value << 8) & 0xff00;
-            cmap.start = colidx;
-            cmap.len = 1;
-            cmap.red = &red;
-            cmap.green = &green;
-            cmap.blue = &blue;
-            cmap.transp = NULL;
+        res = colidx;
+        red = (value >> 8) & 0xff00;
+        green = value & 0xff00;
+        blue = (value << 8) & 0xff00;
+        cmap.start = colidx;
+        cmap.len = 1;
+        cmap.red = &red;
+        cmap.green = &green;
+        cmap.blue = &blue;
+        cmap.transp = NULL;
 #endif
-            break;
-        case 2:
+        break;
+    case 2:
 #if 0
-            red = (value >> 16) & 0xff;
-            green = (value >> 8) & 0xff;
-            blue = value & 0xff;
-            res = ((red >> (8 - red_length)) << red_offset) |
-                  ((green >> (8 - green_length)) << green_offset) |
-                  ((blue >> (8 - blue_length)) << blue_offset);
+        red = (value >> 16) & 0xff;
+        green = (value >> 8) & 0xff;
+        blue = value & 0xff;
+        res = ((red >> (8 - red_length)) << red_offset) |
+              ((green >> (8 - green_length)) << green_offset) |
+              ((blue >> (8 - blue_length)) << blue_offset);
 #endif
-        case 4:
-            res = value;
+    case 4:
+        res = value;
     }
     colormap [colidx] = value;
     GUI_SetColor(value);
@@ -162,25 +161,25 @@ static void __setpixel(union multiptr loc, unsigned xormode, unsigned color)
 {
     switch(bytes_per_pixel)
     {
-        case 1:
-        default:
-            if(xormode)
-                *loc.p8 ^= color;
-            else
-                *loc.p8 = color;
-            break;
-        case 2:
-            if(xormode)
-                *loc.p16 ^= color;
-            else
-                *loc.p16 = color;
-            break;
-        case 4:
-            if(xormode)
-                *loc.p32 ^= color;
-            else
-                *loc.p32 = color;
-            break;
+    case 1:
+    default:
+        if(xormode)
+            *loc.p8 ^= color;
+        else
+            *loc.p8 = color;
+        break;
+    case 2:
+        if(xormode)
+            *loc.p16 ^= color;
+        else
+            *loc.p16 = color;
+        break;
+    case 4:
+        if(xormode)
+            *loc.p32 ^= color;
+        else
+            *loc.p32 = color;
+        break;
     }
 }
 #endif

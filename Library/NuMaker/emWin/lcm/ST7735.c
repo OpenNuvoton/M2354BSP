@@ -49,8 +49,8 @@ Purpose     : Display controller configuration (single layer)
 #include "GUIDRV_FlexColor.h"
 
 #include "NuMicro.h"
-
-#include "M2351TouchPanel.h"
+#ifdef __DEMO_160x128__
+#include "M2354TouchPanel.h"
 
 #include "lcm.h"
 
@@ -127,7 +127,7 @@ void _ReadM1(U8 * pData, int NumItems)
 void _Write0(U8 Cmd)
 {
     LCM_DC_CLR;
-    
+
     SPI_WRITE_TX(SPI_LCD_PORT, Cmd);
     while(SPI_IS_BUSY(SPI_LCD_PORT));
 }
@@ -139,7 +139,7 @@ void _Write0(U8 Cmd)
 void _Write1(U8 Data)
 {
     LCM_DC_SET;
-    
+
     SPI_WRITE_TX(SPI_LCD_PORT, Data);
     while(SPI_IS_BUSY(SPI_LCD_PORT));
 }
@@ -167,25 +167,25 @@ static void _Open_SPI(void)
     /* Setup SPI1 multi-function pins */
     SYS->GPE_MFPL &= ~(SYS_GPE_MFPL_PE0MFP_Msk       | SYS_GPE_MFPL_PE1MFP_Msk);
     SYS->GPE_MFPL |=  (SYS_GPE_MFPL_PE0MFP_SPI1_MOSI | SYS_GPE_MFPL_PE1MFP_SPI1_MISO);
-    
+
     SYS->GPH_MFPH &= ~(SYS_GPH_MFPH_PH8MFP_Msk | SYS_GPH_MFPH_PH9MFP_Msk);
     SYS->GPH_MFPH |=  (SYS_GPH_MFPH_PH8MFP_SPI1_CLK | SYS_GPH_MFPH_PH9MFP_SPI1_SS);
 
     /* Set IO to high slew rate */
     PE->SLEWCTL |= 3;
     PH->SLEWCTL |= (3 << 8);
-    
+
     /* Enable SPI1 */
     CLK_EnableModuleClock(SPI1_MODULE);
     CLK_SetModuleClock(SPI1_MODULE, CLK_CLKSEL2_SPI1SEL_PCLK0, 0);
 
     SPI_Open(SPI_LCD_PORT, SPI_MASTER, SPI_MODE_0, 8, 32000000);
-    
+
     /* Clear suspend interval */
     SPI_LCD_PORT->CTL &= (~SPI_CTL_SUSPITV_Msk);
     SPI_LCD_PORT->CTL |= (0 << SPI_CTL_SUSPITV_Pos);
-    
-    
+
+
     /* Disable auto SS function, control SS signal manually. */
     SPI_EnableAutoSS(SPI_LCD_PORT, SPI_SS, QSPI_SS_ACTIVE_LOW);
     SPI_ENABLE(SPI_LCD_PORT);
@@ -198,7 +198,8 @@ static void _Open_SPI(void)
 * Purpose:
 *   Initializes the display controller
 */
-void _InitController(void) {
+void _InitController(void)
+{
     int i;
     static uint8_t s_InitOnce = 0;
 
@@ -335,3 +336,4 @@ void _InitController(void) {
 
     _Write0(0x29);    //Display on
 }
+#endif

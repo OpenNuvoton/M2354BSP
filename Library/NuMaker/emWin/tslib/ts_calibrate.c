@@ -19,16 +19,12 @@
 //#include <sys/ioctl.h>
 //#include <sys/mman.h>
 //#include <sys/time.h>
+#include "NuMicro.h"
 #include "tslib.h"
 #include "fbutils.h"
 #include "testutils.h"
-//#include "wbio.h"
-//#include "wbtypes.h"
-//#include "wblib.h"
-//#include "LCDconf.h"
 #include "GUI.h"
-#include "M2351TouchPanel.h"
-//#include "nvtfat.h"
+#include "M2354TouchPanel.h"
 
 typedef struct
 {
@@ -250,10 +246,18 @@ static void get_sample(calibration *cal, int index, int x, int y, char *name)
     }
 #ifdef __DEMO_160x128__
 #else
+#if 0
     put_string_center(xres / 2, yres / 4,
                       "TSLIB calibration utility", 1);
     put_string_center(xres / 2, yres / 4 + 20,
                       "Touch crosshair to calibrate", 2);
+#else
+    GUI_SetColor(palette [1]);
+    GUI_DispStringHCenterAt("TSLIB calibration utility", xres / 2, yres / 4);
+
+    GUI_SetColor(palette [2]);
+    GUI_DispStringHCenterAt("Touch crosshair to calibrate", xres / 2, yres / 4 + 20);
+#endif
 #endif
 
     put_cross(x, y, 2 | XORMODE);
@@ -386,7 +390,7 @@ int ts_readfile(void)
 }
 void ts_init(void)
 {
-    
+
 #ifdef __DEMO_160x128__
     final_cal.a[0] = 0xFFFFFFEB;
     final_cal.a[1] = 0x00000D1D;
@@ -395,7 +399,7 @@ void ts_init(void)
     final_cal.a[4] = 0x00000004;
     final_cal.a[5] = 0xFFE8E0E6;
     final_cal.a[6] = 0x00010000;
-#else    
+#else
     final_cal.a[0] = 0xFFFFFFDC;
     final_cal.a[1] = 0x00001A57;
     final_cal.a[2] = 0xFFCCFD2C;
@@ -404,5 +408,5 @@ void ts_init(void)
     final_cal.a[5] = 0xFFD0DCCC;
     final_cal.a[6] = 0x00010000;
 #endif
-    
+
 }
