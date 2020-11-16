@@ -55,9 +55,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/main.c</locationURI>
 		</link>
 		<link>
-			<name>Library/Library/LCDLIB.c</name>
+			<name>Library/Library/lcdlib.c</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/Library/LCDLib/Source/LCDLIB.c</locationURI>
+			<locationURI>PARENT-4-PROJECT_LOC/Library/LCDLib/Source/lcdlib.c</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>

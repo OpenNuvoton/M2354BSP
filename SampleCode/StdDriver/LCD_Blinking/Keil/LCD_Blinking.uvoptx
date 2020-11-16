@@ -317,8 +317,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\Library\LCDLib\Source\LCDLIB.c</PathWithFileName>
-      <FilenameWithoutPath>LCDLIB.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\..\..\Library\LCDLib\Source\lcdlib.c</PathWithFileName>
+      <FilenameWithoutPath>lcdlib.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

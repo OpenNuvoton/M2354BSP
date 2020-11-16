@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include "NuMicro.h"
 
-#include "LCDLIB.h"
+#include "lcdlib.h"
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Functions and variables declaration                                                                     */
