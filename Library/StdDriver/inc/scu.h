@@ -136,7 +136,7 @@ typedef enum NSATTR
  * @brief       Set secure/non-secure attribution of specified GPIO pin
  *
  * @param[in]   port        GPIO Port. It could be PA, PB, PC, PD, PE, PF, PG and PH.
- * @param[in]   bitmask     Bit mask of each bit. 0 is non-secure. 1 is secure.
+ * @param[in]   bitmask     Bit mask of each bit. 0 is secure. 1 is non-secure.
  *
  * @return      None
  *
