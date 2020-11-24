@@ -25,11 +25,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Application</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>CMSIS</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -45,24 +40,14 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>emWin</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>lcm</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>tslib</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>Application/GUIDEMO.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Application/GUIDEMO.c</locationURI>
+		</link>
+		<link>
+			<name>Application/GUIDEMO.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Application/GUIDEMO.h</locationURI>
 		</link>
 		<link>
 			<name>Application/GUIDEMO_AntialiasedText.c</name>
@@ -187,7 +172,7 @@
 		<link>
 			<name>CMSIS/CMSIS</name>
 			<type>2</type>
-			<locationURI>PARENT-4-PROJECT_LOC/Library/Device/Nuvoton/M2351/Source</locationURI>
+			<locationURI>PARENT-4-PROJECT_LOC/Library/Device/Nuvoton/M2354/Source</locationURI>
 		</link>
 		<link>
 			<name>Library/Library</name>
@@ -205,6 +190,11 @@
 			<locationURI>PARENT-4-PROJECT_LOC/ThirdParty/emWin/Config/GUIConf.c</locationURI>
 		</link>
 		<link>
+			<name>emWin/GUIConf.h</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/ThirdParty/emWin/Config/GUIConf.h</locationURI>
+		</link>
+		<link>
 			<name>emWin/GUI_X.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/ThirdParty/emWin/Config/GUI_X.c</locationURI>
@@ -213,6 +203,11 @@
 			<name>emWin/LCDConf.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/ThirdParty/emWin/Config/LCDConf.c</locationURI>
+		</link>
+		<link>
+			<name>emWin/LCDConf.h</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/ThirdParty/emWin/Config/LCDConf.h</locationURI>
 		</link>
 		<link>
 			<name>lcm/ILI9341.c</name>
@@ -225,14 +220,24 @@
 			<locationURI>PARENT-4-PROJECT_LOC/Library/NuMaker/emWin/lcm/ST7735.c</locationURI>
 		</link>
 		<link>
-			<name>tslib/M2351TouchPanel.c</name>
+			<name>lcm/lcm.h</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/Library/NuMaker/emWin/tslib/M2351TouchPanel.c</locationURI>
+			<locationURI>PARENT-4-PROJECT_LOC/Library/NuMaker/emWin/lcm/lcm.h</locationURI>
 		</link>
 		<link>
-			<name>tslib/M2351_320x240.c</name>
+			<name>tslib/M2354TouchPanel.c</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/Library/NuMaker/emWin/tslib/M2351_320x240.c</locationURI>
+			<locationURI>PARENT-4-PROJECT_LOC/Library/NuMaker/emWin/tslib/M2354TouchPanel.c</locationURI>
+		</link>
+		<link>
+			<name>tslib/M2354TouchPanel.h</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Library/NuMaker/emWin/tslib/M2354TouchPanel.h</locationURI>
+		</link>
+		<link>
+			<name>tslib/M2354_320x240.c</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Library/NuMaker/emWin/tslib/M2354_320x240.c</locationURI>
 		</link>
 		<link>
 			<name>tslib/fbutils.c</name>
