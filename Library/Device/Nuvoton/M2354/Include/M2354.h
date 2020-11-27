@@ -657,6 +657,7 @@ extern void SystemInit(void);
 
 /* Always Secure Modules */
 #define SYS SYS_S
+#define SYSINT SYSINT_S
 #define CLK CLK_S
 #define FMC FMC_S
 #define SCU SCU_S
