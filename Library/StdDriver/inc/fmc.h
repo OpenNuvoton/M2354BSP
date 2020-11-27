@@ -217,30 +217,6 @@ extern "C"
 #define FMC_DISABLE_AP_UPDATE()   (FMC_ISP->ISPCTL &= ~FMC_ISPCTL_APUEN_Msk)  /*!< Disable APROM Update Function  */
 
 /**
- * @brief      Set Boot from APROM
- *
- * @param      None
- *
- * @return     None
- *
- * @details    This function is select booting from APROM.
- *
- */
-#define FMC_SET_APROM_BOOT()        (FMC->ISPCTL &= ~FMC_ISPCTL_BS_Msk)         /*!< Select booting from APROM  */
-
-/**
- * @brief      Set Boot from LDROM
- *
- * @param      None
- *
- * @return     None
- *
- * @details    This function is select booting from LDROM.
- *
- */
-#define FMC_SET_LDROM_BOOT()        (FMC->ISPCTL |= FMC_ISPCTL_BS_Msk)          /*!< Select booting from LDROM  */
-
-/**
  * @brief      Get ISP Fail Flag
  *
  * @param      None

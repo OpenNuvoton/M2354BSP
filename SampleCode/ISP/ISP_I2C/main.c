@@ -142,7 +142,7 @@ _APROM:
 
     /* Reset system and boot from APROM */
     SYS->RSTSTS = (SYS_RSTSTS_PORF_Msk | SYS_RSTSTS_PINRF_Msk);
-    FMC->ISPCTL &= ~(FMC_ISPCTL_ISPEN_Msk | FMC_ISPCTL_BS_Msk);
+    FMC->ISPCTL &= ~FMC_ISPCTL_ISPEN_Msk;
     SCB->AIRCR = (V6M_AIRCR_VECTKEY_DATA | V6M_AIRCR_SYSRESETREQ);
 
     /* Trap the CPU */
