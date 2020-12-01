@@ -1,8 +1,8 @@
 /* Linker script to configure memory regions. */
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 0x80000   /* 512k */
-  RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 0x18000   /* 160k */
+  FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 0x100000   /* 1M */
+  RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 0x40000    /* 256k */
 }
 
 /* Library configurations */
@@ -123,9 +123,25 @@ SECTIONS
 
 	__etext = .;
 
+	/* .stack_dummy section doesn't contains any symbols. It is only
+	 * used for linker to calculate size of stack sections, and assign
+	 * values to stack symbols later */
+
+	.stack_dummy (COPY):
+	{
+		KEEP(*(.stack*))
+	} > RAM
+
+	/* Set stack top to size of stack_dummy section in RAM, and stack limit move down by
+	* size of stack_dummy section */
+	__StackTop = ORIGIN(RAM) + SIZEOF(.stack_dummy);
+	__StackLimit = ORIGIN(RAM);
+	PROVIDE(__stack = __StackTop);
+
 	.data : AT (__etext)
 	{
 		__data_start__ = .;
+		. = SIZEOF(.stack_dummy);
 		*(vtable)
 		*(.data*)
 
@@ -176,20 +192,6 @@ SECTIONS
 		__HeapLimit = .;
 	} > RAM
 
-	/* .stack_dummy section doesn't contains any symbols. It is only
-	 * used for linker to calculate size of stack sections, and assign
-	 * values to stack symbols later */
-	.stack_dummy (COPY):
-	{
-		KEEP(*(.stack*))
-	} > RAM
-
-	/* Set stack top to end of RAM, and stack limit move down by
-	 * size of stack_dummy section */
-	__StackTop = ORIGIN(RAM) + LENGTH(RAM);
-	__StackLimit = __StackTop - SIZEOF(.stack_dummy);
-	PROVIDE(__stack = __StackTop);
-
 	/* Check if data + heap + stack exceeds RAM limit */
-	ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack")
+	/*ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack")*/
 }

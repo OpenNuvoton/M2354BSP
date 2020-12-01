@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.30.1.17146</state>
+                    <state>8.32.3.20186</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -78,7 +78,7 @@
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
-                    <state>M2351 series	Nuvoton M2351 series</state>
+                    <state>M2354 series	Nuvoton M2354 series</state>
                 </option>
                 <option>
                     <name>GenLowLevelInterface</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>58</state>
                 </option>
                 <option>
@@ -133,12 +133,12 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>58</state>
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>M2351 series	Nuvoton M2351 series</state>
+                    <state>M2354 series	Nuvoton M2354 series</state>
                 </option>
                 <option>
                     <name>FPU2</name>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>58</state>
                 </option>
                 <option>
@@ -215,11 +215,12 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>34</version>
+                <version>35</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
                     <name>CCDefines</name>
+                    <state>NDEBUG</state>
                     <state>__DEMO_320x240__</state>
                 </option>
                 <option>
@@ -346,7 +347,7 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\..\..\..\..\Library\CMSIS\Include</state>
-                    <state>$PROJ_DIR$\..\..\..\..\Library\Device\Nuvoton\M2351\Include</state>
+                    <state>$PROJ_DIR$\..\..\..\..\Library\Device\Nuvoton\M2354\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\Library\StdDriver\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\ThirdParty\emWin\Config</state>
                     <state>$PROJ_DIR$\..\..\..\..\ThirdParty\emWin\Include</state>
@@ -372,7 +373,7 @@
                 <option>
                     <name>CCOptStrategy</name>
                     <version>0</version>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
@@ -439,7 +440,7 @@
                 <option>
                     <name>CCOptStrategySlave</name>
                     <version>0</version>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCGuardCalls</name>
@@ -468,6 +469,10 @@
                 <option>
                     <name>IccRTTI2</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>OICompilerExtraOption</name>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -647,7 +652,7 @@
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
@@ -689,7 +694,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>21</version>
+                <version>22</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -770,7 +775,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\m2351.icf</state>
+                    <state>$PROJ_DIR$\M2354.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -818,7 +823,7 @@
                 </option>
                 <option>
                     <name>IlinkAdditionalLibs</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\..\..\..\ThirdParty\emWin\Lib\NUemWin_CM23_IAR.a</state>
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
@@ -1003,7 +1008,11 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>TIMER_PeriodicINT_import_lib.o</state>
+                    <state>emWin_GUIDemo_import_lib.o</state>
+                </option>
+                <option>
+                    <name>OILinkExtraOption</name>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -1118,10 +1127,10 @@
     <group>
         <name>CMSIS</name>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\Library\Device\Nuvoton\M2351\Source\IAR\startup_M2351.s</name>
+            <name>$PROJ_DIR$\..\..\..\..\Library\Device\Nuvoton\M2354\Source\IAR\startup_M2354.s</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\Library\Device\Nuvoton\M2351\Source\system_M2351.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Library\Device\Nuvoton\M2354\Source\system_M2354.c</name>
         </file>
     </group>
     <group>
@@ -1140,9 +1149,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\..\ThirdParty\emWin\Config\LCDConf.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\emWin\Lib\NUemWin_CM23_IAR.a</name>
         </file>
     </group>
     <group>
@@ -1196,10 +1202,13 @@
             <name>$PROJ_DIR$\..\..\..\..\Library\NuMaker\emWin\tslib\fbutils.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\Library\NuMaker\emWin\tslib\M2351_320x240.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Library\NuMaker\emWin\tslib\M2354_320x240.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\Library\NuMaker\emWin\tslib\M2351TouchPanel.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Library\NuMaker\emWin\tslib\M2354TouchPanel.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\Library\NuMaker\emWin\tslib\M2354TouchPanel.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\..\Library\NuMaker\emWin\tslib\testutils.c</name>
