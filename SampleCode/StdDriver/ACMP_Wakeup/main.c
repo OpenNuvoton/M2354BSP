@@ -36,9 +36,9 @@ int32_t main(void)
     printf("|             ACMP Sample Code          |\n");
     printf("+---------------------------------------+\n");
 
-    printf("\nThis sample code demonstrates ACMP0 wake-up function. Using ACMP0_P0 (PB7) as ACMP0\n");
+    printf("\nThis sample code demonstrates ACMP0 wake-up function. Using ACMP0_P0 (PA11) as ACMP0\n");
     printf("positive input and using internal CRV as the negative input.\n");
-    printf("The compare result reflects on ACMP0_O (PD6).\n");
+    printf("The compare result reflects on ACMP0_O (PB7).\n");
 
     printf("When the voltage of the positive input is greater than the voltage of the negative input,\n");
     printf("the analog comparator outputs logical one; otherwise, it outputs logical zero.\n");
@@ -91,12 +91,14 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
+    /* Enable HIRC */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
     /* Enable external 12MHz XTAL */
     CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
 
     /* Waiting for clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk | CLK_STATUS_HIRCSTB_Msk);
 
     /* Select clock source of UART */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
