@@ -279,6 +279,9 @@ void SYS_Init(void)
     while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk);
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | (SYS_PLCTL_PLSEL_PL0);
 
+    /* Set Flash Access Cycle by HCLK working frequency */
+    FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (4);
+
     /* Set HCLK divider to 1 */
     CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | 0;
 
