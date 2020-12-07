@@ -28,7 +28,7 @@ void SYS_Init(void);
 
 void ProcessHardFault(void){}
 void SH_Return(void){}
-void SendChar_ToUART(void){}     
+void SendChar_ToUART(void){}
 
 
 void SYS_Init(void)
@@ -36,29 +36,32 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
-    
+
     /* Enable HIRC clock */
     CLK->PWRCTL |= CLK_PWRCTL_HIRCEN_Msk;
 
     /* Wait for HIRC clock ready */
     while (!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk));
 
-    /* Set HCLK source to HIRC first */    
-    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC; 
-    
+    /* Set HCLK source to HIRC first */
+    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC;
+
     /* Enable PLL */
     CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
 
     /* Wait for PLL stable */
     while (!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
-    
+
     /* Set power level 0 */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
 
+    /* Set Flash Access Cycle to 4 */
+    FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (4);
+
     /* Select HCLK clock source as PLL and HCLK source divider as 1 */
-    CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | CLK_CLKDIV0_HCLK(1);    
+    CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | CLK_CLKDIV0_HCLK(1);
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_PLL;
-    
+
     /* Update System Core Clock */
     PllClock        = 96000000;
     SystemCoreClock = 96000000;
@@ -69,14 +72,14 @@ void SYS_Init(void)
 
     /* Enable UART module clock */
     CLK->APBCLK0 |= CLK_APBCLK0_UART1CKEN_Msk;
-       
+
     /* Select UART module clock source */
     CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_UART1SEL_Msk)) | CLK_CLKSEL2_UART1SEL_HIRC;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
     /*---------------------------------------------------------------------------------------------------------*/
-    
+
     /* Set multi-function pins for UART1 RXD and TXD */
     PE->MODE = (PE->MODE & (~GPIO_MODE_MODE12_Msk)) | (GPIO_MODE_OUTPUT << GPIO_MODE_MODE12_Pos);
     nRTSPin = REVEIVE_MODE;
