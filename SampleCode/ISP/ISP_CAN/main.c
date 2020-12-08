@@ -112,6 +112,9 @@ void SYS_Init(void)
     /* Set power level to 0 */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
 
+    /* Set Flash Access Cycle by HCLK working frequency */
+    FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (4);
+
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_PLL;
     CLK->CLKDIV0 &= ~CLK_CLKDIV0_HCLKDIV_Msk;
     CLK->CLKDIV0 |= CLK_CLKDIV0_HCLK(HCLK_DIV);
