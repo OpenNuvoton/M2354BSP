@@ -71,6 +71,9 @@ void SYS_Init(void)
     /* Waiting for Internal RC clock ready */
     while(!(CLK->STATUS & CLK_STATUS_HIRC48STB_Msk));
 
+    /* Set Flash Access Cycle by HCLK working frequency */
+    FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (2);
+
     /* Switch HCLK clock source to Internal RC and HCLK source divide 1 */
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC48;
     CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | CLK_CLKDIV0_HCLK(1);
