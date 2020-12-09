@@ -136,9 +136,9 @@ void SYS_Init(void)
     /* Update System Core Clock */
     /* User can use SystemCoreClockUpdate() to calculate PllClock, SystemCoreClock and CycylesPerUs automatically. */
     //SystemCoreClockUpdate();
-    PllClock        = 128000000;           // PLL
-    SystemCoreClock = 128000000 / 1;       // HCLK
-    CyclesPerUs     = 64000000 / 1000000;  // For SYS_SysTickDelay()
+    PllClock        = 96000000;            // PLL
+    SystemCoreClock = 96000000 / 1;        // HCLK
+    CyclesPerUs     = 96000000 / 1000000;  // For CLK_SysTickDelay()
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */

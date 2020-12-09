@@ -305,7 +305,7 @@ void SYS_Init(void)
     //SystemCoreClockUpdate();
     PllClock        = 96000000;            // PLL
     SystemCoreClock = 96000000 / 1;        // HCLK
-    CyclesPerUs     = 96000000 / 1000000;  // For SYS_SysTickDelay()
+    CyclesPerUs     = 96000000 / 1000000;  // For CLK_SysTickDelay()
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */

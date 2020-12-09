@@ -31,13 +31,16 @@ void ACMP01_IRQHandler(void)
 
 void SYS_Init(void)
 {
+    /* Enable HIRC */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
+
     /* Enable external 12MHz XTAL */
     CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
 
     /* Waiting for clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk | CLK_STATUS_HIRCSTB_Msk);
 
-    /* Select HIRC as the clock source of UART */
+    /* Select clock source of UART */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
     /* Enable UART peripheral clock */

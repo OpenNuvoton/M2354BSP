@@ -104,7 +104,7 @@ void SYS_Init(void)
     /* Update System Core Clock */
     PllClock        = 96000000;
     SystemCoreClock = 96000000;
-    CyclesPerUs     = SystemCoreClock / 1000000;  // For SYS_SysTickDelay()
+    CyclesPerUs     = SystemCoreClock / 1000000;  // For CLK_SysTickDelay()
 
     /* Select PCLK0 as the clock source of SPI1 */
     CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_SPI1SEL_Msk)) | CLK_CLKSEL2_SPI1SEL_PCLK0;
