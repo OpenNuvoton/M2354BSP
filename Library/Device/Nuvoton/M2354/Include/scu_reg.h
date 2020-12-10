@@ -453,102 +453,95 @@ typedef struct
 /**
     @addtogroup FVC Firmware Version Counter(FVC)
     Memory Mapped Structure for FVC Controller
-  @{ 
-*/
- 
+@{ */
+
 typedef struct
 {
 
 
-/**
- * @var FVC_T::CTL
- * Offset: 0x00  FVC Control Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[0]     |INIT      |FVC Init Bit
- * |        |          |Set to 1 to enable FVC
- * |        |          |This bit is writable when FVC is at Reset state.
- * |        |          |Note: After set to one, this bit is cleared to zero automatically when FVC is back to Reset state.
- * |[1]     |MONOEN    |Monotonic Enable Bit
- * |        |          |Set to 1 to enable the monotonic mechanism of FVC.
- * |        |          |Note: This bit can be set to one but cannot be cleared to zero.
- * |[31:16] |WVCODE    |Verification Code
- * |        |          |When write, VERIFY must be 0x7710
- * @var FVC_T::STS
- * Offset: 0x04  FVC Status Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[0]     |BUSY      |FVC Busy Bit
- * |        |          |Indicates the FVC is at busy state.
- * |[1]     |RDY       |FVC Ready Bit
- * |        |          |Indicates the FVC is ready after the initial process.
- * @var FVC_T::BL2
- * Offset: 0x10  BL2 Firmware Control Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[15:0]  |FW_VERSION|Firmware Version
- * |        |          |Read: Indicate the current firmware version of BL2.
- * |        |          |Write: Update the firmware version of BL2.
- * |        |          |The maximum value is 63.
- * |        |          |Indicating number of 1 in Fuse OTP or number of 0 in Flash
- * |[31:16] |WVCODE_RVCODE|Verification Code
- * |        |          |When write, VERIFY must be current firmware version number
- * @var FVC_T::BL32
- * Offset: 0x14  BL32 Firmware Control Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[15:0]  |FW_VERSION|Firmware Version
- * |        |          |Read: Indicate the current firmware version of BL32.
- * |        |          |Write: Update the firmware version of BL32.
- * |        |          |The maximum value is 63.
- * |        |          |Indicating number of 1 in Fuse OTP or number of 0 in Flash
- * |[31:16] |WVCODE_RVCODE|Verification Code
- * |        |          |When write, VERIFY must be current firmware version number
- * @var FVC_T::BL33
- * Offset: 0x20  BL33 Firmware Control Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[15:0]  |FW_VERSION|Firmware Version
- * |        |          |Read: Indicate the current firmware version of BL33.
- * |        |          |Write: Update the firmware version of BL33.
- * |        |          |The maximum value is 255.
- * |        |          |Indicating number of 1 in Fuse OTP or number of 0 in Flash
- * |[31:16] |WVCODE_RVCODE|Verification Code
- * |        |          |When write, VERIFY must be current firmware version number
- * @var FVC_T::UDF
- * Offset: 0x24  User-defined Firmware Control Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[15:0]  |FW_VERSION|Firmware Version
- * |        |          |Read: Indicate the current firmware version of useru2019s firmware.
- * |        |          |Write: Update the firmware version of useru2019s firmware.
- * |        |          |The maximum value is 255.
- * |        |          |Indicating number of 1 in Fuse OTP or number of 0 in Flash
- * |[31:16] |WVCODE_RVCODE|Verification Code
- * |        |          |When write, VERIFY must be current firmware version number
- */
-    __IO uint32_t CTL;                   /*!< [0x0000] FVC Control Register                                             */
-    __I  uint32_t STS;                   /*!< [0x0004] FVC Status Register                                              */
+    /**
+     * @var FVC_T::CTL
+     * Offset: 0x00  FVC Control Register
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[0]     |INIT      |FVC Init Bit
+     * |        |          |Set to 1 to enable FVC
+     * |        |          |This bit is writable when FVC is at Reset state.
+     * |        |          |Note: After set to 1, this bit is cleared to 0 automatically when FVC is back to Reset state.
+     * |[1]     |MONOEN    |Monotonic Enable Bit
+     * |        |          |Set to 1 to enable the monotonic mechanism of FVC.
+     * |        |          |Note: This bit can be set to1 but cannot be cleared to 0.
+     * |[31:16] |WVCODE    |Verification Code
+     * |        |          |When written, this field must be 0x7710
+     * @var FVC_T::STS
+     * Offset: 0x04  FVC Status Register
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[0]     |BUSY      |FVC Busy Bit
+     * |        |          |Indicates the FVC is at busy state.
+     * |[1]     |RDY       |FVC Ready Bit
+     * |        |          |Indicates the FVC is ready after the initial process.
+     * @var FVC_T::NVC0
+     * Offset: 0x10  Non-volatile Version Counter Control Register0 BL2 Firmware
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[15:0]  |FWVER     |Firmware Version
+     * |        |          |Read: Indicates the current firmware version of FVC0.
+     * |        |          |Write: Updates the firmware version of FVC0.
+     * |        |          |The maximum value of this field is 63.
+     * |        |          |Indicating number of 1 in Fuse OTP or number of 0 in Flash
+     * |[31:16] |WVCODE    |Verification Code
+     * |        |          |When written, this field must be the current firmware version number
+     * @var FVC_T::NVC1
+     * Offset: 0x14  Non-volatile Version Counter Control Register1 BL32 Firmware
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[15:0]  |FWVER     |Firmware Version
+     * |        |          |Read: Indicates the current firmware version of NVC1.
+     * |        |          |Write: Updates the firmware version of NVC1.
+     * |        |          |The maximum value of this field is 63.
+     * |        |          |Indicating number of 1 in Fuse OTP or number of 0 in Flash
+     * |[31:16] |WVCODE    |Verification Code
+     * |        |          |When written, this field must be the current firmware version number
+     * @var FVC_T::NVC4
+     * Offset: 0x20  Non-volatile Version Counter Control Register4 BL33 Firmware
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[15:0]  |FWVER     |Firmware Version
+     * |        |          |Read: Indicates the current firmware version of NVC4.
+     * |        |          |Write: Updates the firmware version of NVC4.
+     * |        |          |The maximum value of this field is 255.
+     * |        |          |Indicating number of 1 in Fuse OTP or number of 0 in Flash
+     * |[31:16] |WVCODE    |Verification Code
+     * |        |          |When written, this field must be the current firmware version number
+     * @var FVC_T::NVC5
+     * Offset: 0x24  Non-volatile Version Counter Control Register5 User-defined Firmware
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[15:0]  |FWVER     |Firmware Version
+     * |        |          |Read: Indicates the current firmware version of NVC5.
+     * |        |          |Write: Updates the firmware version of NVC5.
+     * |        |          |The maximum value of this field is 255.
+     * |        |          |Indicating number of 1 in Fuse OTP or number of 0 in Flash
+     * |[31:16] |WVCODE    |Verification Code
+     * |        |          |When written, this field must be the current firmware version number
+     */
+    __IO uint32_t CTL;                   /*!< [0x0000] FVC Control Register                                           */
+    __I  uint32_t STS;                   /*!< [0x0004] FVC Status Register                                            */
     __I  uint32_t RESERVE0[2];
-    __IO uint32_t BL2;                   /*!< [0x0010] BL2 Firmware Control Register                                    */
-    __IO uint32_t BL32;                  /*!< [0x0014] BL32 Firmware Control Register                                   */
-    __I  uint32_t RESERVE1[2];
-    __IO uint32_t BL33;                  /*!< [0x0020] BL33 Firmware Control Register                                   */
-    __IO uint32_t UDF;                   /*!< [0x0024] User-defined Firmware Control Register                           */
-
+    __IO uint32_t NVC[6];                /*!< [0x0010-0x24] Non-volatile Version Counter Control Register Firmware. NVC[2], NVC[3] is reserved    */
 } FVC_T;
 
 /**
     @addtogroup FVC_CONST FVC Bit Field Definition
     Constant Definitions for FVC Controller
-  @{ 
-*/
+@{ */
 
 #define FVC_CTL_INIT_Pos                 (0)                                               /*!< FVC_T::CTL: INIT Position              */
 #define FVC_CTL_INIT_Msk                 (0x1ul << FVC_CTL_INIT_Pos)                       /*!< FVC_T::CTL: INIT Mask                  */
@@ -565,29 +558,8 @@ typedef struct
 #define FVC_STS_RDY_Pos                  (1)                                               /*!< FVC_T::STS: RDY Position               */
 #define FVC_STS_RDY_Msk                  (0x1ul << FVC_STS_RDY_Pos)                        /*!< FVC_T::STS: RDY Mask                   */
 
-#define FVC_BL2_FW_VERSION_Pos           (0)                                               /*!< FVC_T::BL2: FW_VERSION Position        */
-#define FVC_BL2_FW_VERSION_Msk           (0xfffful << FVC_BL2_FW_VERSION_Pos)              /*!< FVC_T::BL2: FW_VERSION Mask            */
-
-#define FVC_BL2_WVCODE_RVCODE_Pos        (16)                                              /*!< FVC_T::BL2: WVCODE_RVCODE Position     */
-#define FVC_BL2_WVCODE_RVCODE_Msk        (0xfffful << FVC_BL2_WVCODE_RVCODE_Pos)           /*!< FVC_T::BL2: WVCODE_RVCODE Mask         */
-
-#define FVC_BL32_FW_VERSION_Pos          (0)                                               /*!< FVC_T::BL32: FW_VERSION Position       */
-#define FVC_BL32_FW_VERSION_Msk          (0xfffful << FVC_BL32_FW_VERSION_Pos)             /*!< FVC_T::BL32: FW_VERSION Mask           */
-
-#define FVC_BL32_WVCODE_RVCODE_Pos       (16)                                              /*!< FVC_T::BL32: WVCODE_RVCODE Position    */
-#define FVC_BL32_WVCODE_RVCODE_Msk       (0xfffful << FVC_BL32_WVCODE_RVCODE_Pos)          /*!< FVC_T::BL32: WVCODE_RVCODE Mask        */
-
-#define FVC_BL33_FW_VERSION_Pos          (0)                                               /*!< FVC_T::BL33: FW_VERSION Position       */
-#define FVC_BL33_FW_VERSION_Msk          (0xfffful << FVC_BL33_FW_VERSION_Pos)             /*!< FVC_T::BL33: FW_VERSION Mask           */
-
-#define FVC_BL33_WVCODE_RVCODE_Pos       (16)                                              /*!< FVC_T::BL33: WVCODE_RVCODE Position    */
-#define FVC_BL33_WVCODE_RVCODE_Msk       (0xfffful << FVC_BL33_WVCODE_RVCODE_Pos)          /*!< FVC_T::BL33: WVCODE_RVCODE Mask        */
-
-#define FVC_UDF_FW_VERSION_Pos           (0)                                               /*!< FVC_T::UDF: FW_VERSION Position        */
-#define FVC_UDF_FW_VERSION_Msk           (0xfffful << FVC_UDF_FW_VERSION_Pos)              /*!< FVC_T::UDF: FW_VERSION Mask            */
-
-#define FVC_UDF_WVCODE_RVCODE_Pos        (16)                                              /*!< FVC_T::UDF: WVCODE_RVCODE Position     */
-#define FVC_UDF_WVCODE_RVCODE_Msk        (0xfffful << FVC_UDF_WVCODE_RVCODE_Pos)           /*!< FVC_T::UDF: WVCODE_RVCODE Mask         */
+#define FVC_NVC_FWVER_Pos                (0)                                               /*!< FVC_T::NVC:  FWVER Position            */
+#define FVC_NVC_FWVER_Msk                (0xfffful << FVC_NVC_FWVER_Pos)                   /*!< FVC_T::NVC:  FWVER Mask                */
 
 /**@}*/ /* FVC_CONST */
 /**@}*/ /* end of FVC register group */
