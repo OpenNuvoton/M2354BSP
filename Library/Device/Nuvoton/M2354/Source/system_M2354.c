@@ -419,6 +419,7 @@ void SystemInit(void)
 
     if((__PC() & NS_OFFSET) == 0)
     {
+        /* Unlock protected registers */
         do
         {
             SYS->REGLCTL = 0x59;
@@ -426,10 +427,10 @@ void SystemInit(void)
             SYS->REGLCTL = 0x88;
         } while(!SYS->REGLCTL);
 
-        // power gating
-        M32(0x400001f4) = 0xfffffffful;
-        M32(0x400000dC) = 0ul;
-        // GPIO clk
+        /* Enable Crypto power switch */
+        SYS->PSWCTL = SYS_PSWCTL_CRPTPWREN_Msk;
+
+        /* Enable all GPIO, SRAM and Trace clock */
         CLK->AHBCLK |= (0xffful << 20) | (1ul << 14);
     }
 
