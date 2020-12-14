@@ -239,7 +239,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3xBankx(uint32_t *buf, int32_t mode, uint32_t u32
     }
     NUBL_MSG("Verify NuBL3%d Key Storage Hash [PASS]\n\n", ((mode&BIT0)==0)?2:3);
 
-/* Step 1. Decrypt NuBL3x public key */
+    /* Step 1. Decrypt NuBL3x public key */
     /* Get AES256key for follows AES decryption */
     GetNuBL2AES256Key(AESkey);
     NUBL_MSG("AES256 decryption keys:\n");
@@ -277,7 +277,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3xBankx(uint32_t *buf, int32_t mode, uint32_t u32
     NUBL_MSG("Decrypt NuBL3%d public key [Done]\n\n", ((mode&BIT0)==0)?2:3);
 
 
-/* Step 2. Decrypt or get NuBL3x info */
+    /* Step 2. Decrypt or get NuBL3x info */
     /* Get NuBL3x F/W info */
     len = sizeof(FW_INFO_T);
     if((mode&BIT4) != BIT4)
@@ -298,7 +298,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3xBankx(uint32_t *buf, int32_t mode, uint32_t u32
     NUBL_MSG("Get NuBL3%d F/W info [Done]\n\n", ((mode&BIT0)==0)?2:3);
 
 
-/* Step 3. Identify NuBL3x public key (encloed in Key Storage and F/W info) */
+    /* Step 3. Identify NuBL3x public key (encloed in Key Storage and F/W info) */
     memcpy(&FwInfo, infobuf, sizeof(FW_INFO_T));
 #if defined(DIRECT_VERIFY_NUBL3x_PUBKEY)
     if(memcmp(&PubKey.au32Key0[0], &FwInfo.pubkey.au32Key0[0], sizeof(ECC_PUBKEY_T)) != 0)
@@ -330,7 +330,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3xBankx(uint32_t *buf, int32_t mode, uint32_t u32
     NUBL_MSG("Identify NuBL3%d public key [PASS]\n\n", ((mode&BIT0)==0)?2:3);
 
 
-/* Step 4. Authenticate NuBL3x info Hash */
+    /* Step 4. Authenticate NuBL3x info Hash */
     /* Calculate NuBL3x info Hash */
     start = (uint32_t )&FwInfo;
     end   = (uint32_t )&FwInfo.sign.au32R[0];
@@ -351,7 +351,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3xBankx(uint32_t *buf, int32_t mode, uint32_t u32
 
 
 
-/* Step 5. Verify NuBL3x F/W Hash */
+    /* Step 5. Verify NuBL3x F/W Hash */
     if((mode&BIT4) != BIT4) /* if BIT4 == 0, dnubo not check F/W integrity */
     {
         uint32_t au32Hash[8];
@@ -527,7 +527,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3x(uint32_t *buf, int32_t mode)
     }
     NUBL_MSG("Verify NuBL3%d Key Storage Hash [PASS]\n\n", ((mode&BIT0)==0)?2:3);
 
-	/* Step 1. Decrypt NuBL3x public key */
+    /* Step 1. Decrypt NuBL3x public key */
     /* Get AES256key for follows AES decryption */
     GetNuBL2AES256Key(AESkey);
     NUBL_MSG("AES256 decryption keys:\n");
@@ -546,7 +546,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3x(uint32_t *buf, int32_t mode)
         extern uint32_t g_NuBL33EnCryptPubKeyBase;  /* declared in LoadKeyStorage.s */
         base = (uint32_t)&g_NuBL33EnCryptPubKeyBase;  /* encrypted NuBL33 pub key address */
     }
-	/* inpw() is cpu read, so logical address do not add 0x80000 */
+    /* inpw() is cpu read, so logical address do not add 0x80000 */
 
     keybuf = (uint32_t *)&PubKey;
     for(i=0; i<(len/4); i++)
@@ -561,7 +561,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3x(uint32_t *buf, int32_t mode)
     NUBL_MSG("Decrypt NuBL3%d public key [Done]\n\n", ((mode&BIT0)==0)?2:3);
 
 
-/* Step 2. Decrypt or get NuBL3x info */
+    /* Step 2. Decrypt or get NuBL3x info */
     /* Get NuBL3x F/W info */
     len = sizeof(FW_INFO_T);
     if((mode&BIT4) != BIT4)
@@ -579,7 +579,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3x(uint32_t *buf, int32_t mode)
     NUBL_MSG("Get NuBL3%d F/W info [Done]\n\n", ((mode&BIT0)==0)?2:3);
 
 
-/* Step 3. Identify NuBL3x public key (encloed in Key Storage and F/W info) */
+    /* Step 3. Identify NuBL3x public key (encloed in Key Storage and F/W info) */
     memcpy(&FwInfo, infobuf, sizeof(FW_INFO_T));
 #if defined(DIRECT_VERIFY_NUBL3x_PUBKEY)
     if(memcmp(&PubKey.au32Key0[0], &FwInfo.pubkey.au32Key0[0], sizeof(ECC_PUBKEY_T)) != 0)
@@ -611,7 +611,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3x(uint32_t *buf, int32_t mode)
     NUBL_MSG("Identify NuBL3%d public key [PASS]\n\n", ((mode&BIT0)==0)?2:3);
 
 
-/* Step 4. Authenticate NuBL3x info Hash */
+    /* Step 4. Authenticate NuBL3x info Hash */
     /* Calculate NuBL3x info Hash */
     start = (uint32_t )&FwInfo;
     end   = (uint32_t )&FwInfo.sign.au32R[0];
@@ -632,7 +632,7 @@ int32_t NuBL2_ExecuteVerifyNuBL3x(uint32_t *buf, int32_t mode)
 
 
 
-/* Step 5. Verify NuBL3x F/W Hash */
+    /* Step 5. Verify NuBL3x F/W Hash */
     if((mode&BIT4) != BIT4) /* if BIT4 == 0, dnubo not check F/W integrity */
     {
         uint32_t au32Hash[8];
@@ -737,7 +737,7 @@ int32_t NuBL2_GetNuBL3xECDHKeys(uint32_t Key32[], uint32_t Key33[])
         goto _exit_NuBL2_GetNuBL3xECDHKeys;
     }
 
-/* Step 2. Calculate (NuBL2 * NuBL32) ECDH key */
+    /* Step 2. Calculate (NuBL2 * NuBL32) ECDH key */
     /* Init ECC */
     if(NuBL_ECCInitCurve() != 0)
     {
@@ -764,7 +764,7 @@ int32_t NuBL2_GetNuBL3xECDHKeys(uint32_t Key32[], uint32_t Key33[])
         NUBL_MSG("\tSharedKey: 0x%08x. (NuBL2_priv * NuBL32_pub)\n", Key32[i]);
 
 
-/* Step 3. Decrypt NuBL33 public key */
+    /* Step 3. Decrypt NuBL33 public key */
     /* Get encrypted NuBL33 public key from Key Storage */
     len = sizeof(ECC_PUBKEY_T);
     extern uint32_t g_NuBL33EnCryptPubKeyBase;  /* declared in LoadKeyStorage.s */
@@ -780,7 +780,7 @@ int32_t NuBL2_GetNuBL3xECDHKeys(uint32_t Key32[], uint32_t Key33[])
         goto _exit_NuBL2_GetNuBL3xECDHKeys;
     }
 
-/* Step 4. Calculate (NuBL2 * NuBL33) ECDH key */
+    /* Step 4. Calculate (NuBL2 * NuBL33) ECDH key */
     /* Init ECC */
     if(NuBL_ECCInitCurve() != 0)
     {
@@ -1035,7 +1035,7 @@ int32_t GenCmdSessionKey(uint32_t key[])
     }
 
 
-/* Step 2. Calculate (NuBL2 * Host) ECDH key */
+    /* Step 2. Calculate (NuBL2 * Host) ECDH key */
     /* Init ECC */
     if(NuBL_ECCInitCurve() != 0)
     {
@@ -1251,7 +1251,7 @@ int32_t VerifyNuBL3xKeyHash(uint32_t * pu32KeyHash)
     NVIC_DisableIRQ(CRPT_IRQn);
 
     GetNuBL2AES256Key(AESkey);
-/* Step 1. Decrypt NuBL3x public key */
+    /* Step 1. Decrypt NuBL3x public key */
     for(i=0; i<8; i++)
         NUBL_MSG("\tSharedKey: 0x%08x. (NuBL2_priv * NuBL1_pub)\n", AESkey[i]);
 

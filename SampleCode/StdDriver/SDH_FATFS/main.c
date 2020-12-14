@@ -377,34 +377,42 @@ void SDH0_IRQHandler(void)
 
 void SYS_Init(void)
 {
-    /* Set PF multi-function pins for XT1_OUT(PF.2) and XT1_IN(PF.3) */
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF2MFP_Msk)) | XT1_OUT_PF2;
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF3MFP_Msk)) | XT1_IN_PF3;
 
-    /* Unlock protected registers */
-    SYS_UnlockReg();
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
 
-    /* Enable External XTAL (4~24 MHz) */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
+    /* Enable HIRC, HXT clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
 
-    /* Waiting for 12MHz clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
-
-    /* Switch HCLK clock source to HXT */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HXT, CLK_CLKDIV0_HCLK(1));
-
-    /* Set PLL to power down mode and PLL_STB bit in CLKSTATUS register will be cleared by hardware.*/
-    CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
-
-    /* Set power level to 0 */
-    SYS_SetPowerLevel(SYS_PLCTL_PLSEL_PL0);
+    /* Wait for HIRC, HXT clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
 
-    CLK->CLKSEL0 = (CLK->CLKSEL0 & ~CLK_CLKSEL0_SDH0SEL_Msk) | CLK_CLKSEL0_SDH0SEL_HCLK;
+    /* Enable UART0 module clock */
+    CLK_EnableModuleClock(UART0_MODULE);
 
-    /* select multi-function pin */
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
+
+	/* Enable SDH0 module clock */
+    CLK_EnableModuleClock(SDH0_MODULE);
+
+	/* Enable Tiemr 0 module clock */
+    CLK_EnableModuleClock(TMR0_MODULE);
+
+	/* Select Timer 0 module clock source as HXT */
+    CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_HXT, 0);
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init I/O Multi-function                                                                                 */
+    /*---------------------------------------------------------------------------------------------------------*/
+
+    /* Set multi-function pins for UART0 RXD and TXD */
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+
+    /* Set multi-function pin for SDH */
     /* CD: PB12(9) */
     SYS->GPB_MFPH = (SYS->GPB_MFPH & (~SYS_GPB_MFPH_PB12MFP_Msk)) | SD0_nCD_PB12;
 
@@ -431,31 +439,6 @@ void SYS_Init(void)
     /* D3: PB5(3)-, PE5(3) */
     //SYS->GPB_MFPL = (SYS->GPB_MFPL & (~SYS_GPB_MFPL_PB5MFP_Msk)) | SD0_DAT3_PB5;
     SYS->GPE_MFPL = (SYS->GPE_MFPL & (~SYS_GPE_MFPL_PE5MFP_Msk)) | SD0_DAT3_PE5;
-
-    /* Enable IP clock */
-    CLK->AHBCLK |= CLK_AHBCLK_SDH0CKEN_Msk | \
-                    CLK_AHBCLK_SRAM0CKEN_Msk | CLK_AHBCLK_SRAM1CKEN_Msk | CLK_AHBCLK_SRAM2CKEN_Msk | \
-                    CLK_AHBCLK_GPACKEN_Msk | CLK_AHBCLK_GPBCKEN_Msk | CLK_AHBCLK_GPCCKEN_Msk | CLK_AHBCLK_GPDCKEN_Msk | \
-                    CLK_AHBCLK_GPECKEN_Msk | CLK_AHBCLK_GPFCKEN_Msk | CLK_AHBCLK_GPGCKEN_Msk | CLK_AHBCLK_GPHCKEN_Msk;
-
-    /* Enable IP clock */
-    CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk; // UART0 Clock Enable
-
-    /* Select IP clock source */
-    CLK->CLKSEL2 &= ~CLK_CLKSEL2_UART0SEL_Msk;  /* clock source is HXT */
-
-    CLK_EnableModuleClock(TMR0_MODULE);
-
-    CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_HXT, 0);
-
-    /* User can use SystemCoreClockUpdate() to calculate PllClock, SystemCoreClock and CyclesPerUs automatically. */
-    SystemCoreClockUpdate();
-
-    /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-
-    /* Lock protected registers */
-    SYS_LockReg();
 
 }
 

@@ -24,52 +24,24 @@ void SYS_Init(void);
 
 void SYS_Init(void)
 {
-    /* Set PF multi-function pins for XT1_OUT(PF.2) and XT1_IN(PF.3) */
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF2MFP_Msk)) | XT1_OUT_PF2;
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF3MFP_Msk)) | XT1_IN_PF3;
 
-    /* Unlock protected registers */
-    SYS_UnlockReg();
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
 
-    /* Enable HIRC clock (Internal RC 12 MHz) */
+    /* Enable HIRC clock */
     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
     /* Wait for HIRC clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
 
-    /* Enable HXT clock (external XTAL 12MHz) */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
-
-    /* Wait for HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
-
-    /* Set PLL to power down mode and PLL_STB bit in CLKSTATUS register will be cleared by hardware. */
-    CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
-
-    /* Set power level to 0 */
-    SYS_SetPowerLevel(SYS_PLCTL_PLSEL_PL0);
-
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
 
-    /* Enable SRAM module clock */
-    CLK_EnableModuleClock(SRAM1_MODULE);
-    CLK_EnableModuleClock(SRAM2_MODULE);
-
-    /* Enable GPIO module clock */
-    CLK_EnableModuleClock(GPA_MODULE);
-    CLK_EnableModuleClock(GPB_MODULE);
-    CLK_EnableModuleClock(GPC_MODULE);
-    CLK_EnableModuleClock(GPD_MODULE);
-    CLK_EnableModuleClock(GPE_MODULE);
-    CLK_EnableModuleClock(GPF_MODULE);
-    CLK_EnableModuleClock(GPG_MODULE);
-    CLK_EnableModuleClock(GPH_MODULE);
-
-    /* Enable UART module clock */
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* Select UART module clock source as HIRC and UART module clock divider as 1 */
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
     /* Enable DAC module clock */
@@ -78,20 +50,22 @@ void SYS_Init(void)
     /* Enable Timer 0 module clock */
     CLK_EnableModuleClock(TMR0_MODULE);
 
-    /* Enable PDMA module clock */
+    /* Enable PDMA0 module clock */
     CLK_EnableModuleClock(PDMA0_MODULE);
+
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init I/O Multi-function                                                                                 */
+    /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
-    /* Set PB multi-function pin for DAC voltage output */
+    /* Set multi-function pin for DAC voltage output */
     SYS->GPB_MFPH = (SYS->GPB_MFPH & ~SYS_GPB_MFPH_PB12MFP_Msk) | DAC0_OUT_PB12;
 
     /* Disable digital input path of analog pin DAC0_OUT to prevent leakage */
     GPIO_DISABLE_DIGITAL_PATH(PB, (1ul << 12));
 
-    /* Lock protected registers */
-    SYS_LockReg();
 }
 
 int32_t main(void)
