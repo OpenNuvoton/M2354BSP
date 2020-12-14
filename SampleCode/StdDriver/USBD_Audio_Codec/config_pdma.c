@@ -1,10 +1,10 @@
 /******************************************************************************
  * @file     config_pdma.c
- * @brief    NuMicro series HSUSBD driver Sample file
+ * @brief    NuMicro series USBD driver Sample file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 /*!<Includes */
 #include <string.h>
@@ -116,5 +116,3 @@ void PDMA_WriteRxSGTable(void)
             DMA_RXDESC[u16Cnt].offset = (uint32_t)&DMA_RXDESC[0] - (PDMA0->SCATBA);
     }
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

@@ -3,8 +3,8 @@
  * @brief    M2354 series USB driver header file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USBD_PRINTER_H__
 #define __USBD_PRINTER_H__
@@ -63,5 +63,3 @@ void PTR_ClassRequest(void);
 void PTR_Data_Receive(void);
 
 #endif  /* __USBD_PRINTER_H_ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

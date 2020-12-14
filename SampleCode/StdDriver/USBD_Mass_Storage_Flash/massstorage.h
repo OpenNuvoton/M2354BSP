@@ -3,8 +3,9 @@
  * @brief    M2354 series USB mass storage header file
  * @version  V1.00
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USBD_MASS_H__
 #define __USBD_MASS_H__
@@ -166,5 +167,3 @@ void EP2_Handler(void);
 void EP3_Handler(void);
 
 #endif  /* __USBD_MASS_H_ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

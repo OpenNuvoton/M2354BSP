@@ -1,11 +1,11 @@
 /******************************************************************************
  * @file     isr.c
- * @version  V1.00
- * @brief   ISR source file
+ * @version  V3.00
+ * @brief    ISR source file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -33,5 +33,3 @@ void PDMA0_IRQHandler(void)
     }
 
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

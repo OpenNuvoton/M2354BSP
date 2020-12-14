@@ -3,8 +3,8 @@
  * @brief    M2354 series USBD driver Sample file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */
@@ -1528,5 +1528,3 @@ void MSC_WriteMedia(uint32_t u32Addr, uint32_t u32Size, uint8_t *pu8Buffer)
     (void)u32Size;
     (void)pu8Buffer;
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

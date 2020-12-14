@@ -1,11 +1,10 @@
 /***************************************************************************//**
  * @file     targetdev.c
  * @brief    ISP support function source file
- * @version  0x32
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include "targetdev.h"
 #include "isp_user.h"
@@ -60,5 +59,3 @@ void GetDataFlashInfo(uint32_t *addr, uint32_t *size)
         *size = 0;
     }
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

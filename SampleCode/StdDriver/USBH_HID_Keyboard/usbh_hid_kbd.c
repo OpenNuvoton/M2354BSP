@@ -4,8 +4,8 @@
  * @brief    M2354 MCU USB Host HID keyboard driver
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -188,5 +188,3 @@ int kbd_parse_report(HID_DEV_T *hdev, uint8_t *pu8Buf, int i8Len)
 
     return 0;
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

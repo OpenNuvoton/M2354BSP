@@ -4,8 +4,8 @@
  * @brief    M2354 series SD Card source file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include "SDCARD.h"
@@ -717,5 +717,3 @@ void SpiWrite(uint32_t u32Addr, uint32_t u32Size, uint8_t* pu8Buffer)
 /*@}*/ /* end of group M2354_SDCARD_Driver */
 
 /*@}*/ /* end of group M2354_Library */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

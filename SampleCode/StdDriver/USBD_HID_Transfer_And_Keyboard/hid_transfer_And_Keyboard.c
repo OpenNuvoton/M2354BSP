@@ -3,8 +3,8 @@
  * @brief    M2354 series USBD driver Sample file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */
@@ -647,8 +647,8 @@ void HID_UpdateKbData(void)
     {
         pu8Buf = (uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP4));
 
-        /* If PB.0 = 0, just report it is key 'a' */
-        u32Key = (PB->PIN & (1 << 0)) ? 0 : 1;
+        /* If PF.11 = 0, just report it is key 'a' */
+        u32Key = (PF->PIN & (1 << 11)) ? 0 : 1;
 
         if(u32Key == 0)
         {
@@ -671,5 +671,3 @@ void HID_UpdateKbData(void)
         }
     }
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file     main.c
  * @brief    ISP tool SPI initialization and IRQ function
- * @version  2.0.0
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include "targetdev.h"
@@ -113,5 +113,3 @@ void SPI1_IRQHandler(void)
     {
     }
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

@@ -2,8 +2,9 @@
  * @file     DataFlashProg.c
  * @brief    M2354 Series Data Flash Access API
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -113,5 +114,3 @@ void DataFlashWrite(uint32_t u32Addr, uint32_t u32Size, uint32_t u32Buffer)
     }
     while(u32Size > 0);
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

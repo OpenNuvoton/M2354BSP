@@ -3,8 +3,9 @@
  * @version  V1.00
  * @brief    M2354 MCU USB Host Vendor LBK driver header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __LBK_DRIVER_H_
 #define __LBK_DRIVER_H_
@@ -45,5 +46,3 @@ extern int lbk_isochronous_out_start(ISO_CB_FUNC *func);
 extern void lbk_isochronous_out_stop(void);
 
 #endif  /* __LBK_DRIVER_H_ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

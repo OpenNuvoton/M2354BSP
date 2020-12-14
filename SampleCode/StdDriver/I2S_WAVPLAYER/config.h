@@ -1,11 +1,11 @@
 /**************************************************************************//**
  * @file     config.h
- * @version  V1.00
+ * @version  V3.00
  * @brief    I2S Wave Player Sample Configuration Header File
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef CONFIG_H
 #define CONFIG_H
@@ -38,5 +38,3 @@ void WAVPlayer(void);
 void NAU88L25_ConfigSampleRate(uint32_t u32SampleRate);
 
 #endif
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

@@ -1,10 +1,11 @@
 /***************************************************************************//**
  * @file     descriptors.c
+ * @version  V1.00
  * @brief    This file define the descriptors of Vendor LBK device.
- * @version  2.0.0
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 /*!<Includes */
 #include "NuMicro.h"
@@ -235,5 +236,3 @@ const S_USBD_INFO_T gsInfo =
     (uint32_t *)s_au32UsbHidReportLen,
     (uint32_t *)s_au32ConfigHidDescIdx
 };
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

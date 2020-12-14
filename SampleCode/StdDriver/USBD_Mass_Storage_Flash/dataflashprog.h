@@ -2,8 +2,9 @@
  * @file     dataflashprog.h
  * @brief    M2354 series data flash programming driver header
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __DATA_FLASH_PROG_H__
 #define __DATA_FLASH_PROG_H__
@@ -17,5 +18,3 @@ void DataFlashWrite(uint32_t u32Addr, uint32_t u32Size, uint32_t u32Buffer);
 void DataFlashRead(uint32_t u32Addr, uint32_t u32Size, uint32_t u32Buffer);
 
 #endif  /* __DATA_FLASH_PROG_H__ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

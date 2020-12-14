@@ -3,8 +3,8 @@
  * @brief    M2354 series USB driver header file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USBD_HID_H__
 #define __USBD_HID_H__
@@ -121,5 +121,3 @@ void EP5_Handler(void);
 void HID_UpdateKbData(void);
 
 #endif  /* __USBD_HID_H_ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

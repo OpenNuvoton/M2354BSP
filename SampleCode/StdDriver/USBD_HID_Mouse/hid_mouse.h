@@ -3,8 +3,8 @@
  * @brief    USB HID mouse header file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USBD_HID_H__
 #define __USBD_HID_H__
@@ -69,5 +69,3 @@ void EP2_Handler(void);
 void HID_UpdateMouseData(void);
 
 #endif  /* __USBD_HID_H_ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

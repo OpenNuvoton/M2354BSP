@@ -4,8 +4,8 @@
  * @brief    Non-secure sample code for Collaborative Secure Software Development
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 #include <arm_cmse.h>
@@ -101,5 +101,3 @@ int main(void)
     /* Waiting for secure/non-secure SysTick interrupt */
     while(1);
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

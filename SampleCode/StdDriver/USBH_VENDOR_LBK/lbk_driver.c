@@ -3,8 +3,9 @@
  * @version  V1.00
  * @brief    M2354 MCU USB Host Vendor LBK driver
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 
 #include <stdio.h>
@@ -829,5 +830,3 @@ int lbk_device_reset(void)
         return usbh_reset_device(s_lbk_dev.udev);
     return 0;
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

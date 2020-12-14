@@ -3,8 +3,8 @@
  * @brief    M2354 series USB driver header file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USBD_CDC_H__
 #define __USBD_CDC_H__
@@ -122,5 +122,3 @@ void VCOM_LineCoding(uint8_t u8Port);
 void VCOM_TransferData(void);
 
 #endif  /* __USBD_CDC_H_ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

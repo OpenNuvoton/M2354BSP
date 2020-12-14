@@ -1,10 +1,10 @@
 /**************************************************************************//**
  * @file     main.c
  * @brief    ISP tool main function
- * @version  2.0.0
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -73,28 +73,32 @@ void TIMER3_Init(void)
 
 void SYS_Init(void)
 {
-    /* Set XT1_OUT(PF.2) and XT1_IN(PF.3) to input mode */
-    PF->MODE &= ~(GPIO_MODE_MODE2_Msk | GPIO_MODE_MODE3_Msk);
-
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
+
     /* Enable HIRC clock */
     CLK->PWRCTL |= CLK_PWRCTL_HIRCEN_Msk;
 
     /* Wait for HIRC clock ready */
     while(!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk));
 
-    /* Enable PLL */
+    /* Select HCLK clock source as HIRC first */
+    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC;
+
+    /* Disable PLL clock before setting PLL frequency */
+    CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
+
+    /* Set PLL clock as 96MHz from HIRC */
     CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
 
-    /* Wait for PLL stable */
-    while(!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
+    /* Wait for PLL clock ready */
+    while (!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
 
-    /* Set power level 0 */
+    /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
 
-    /* Set Flash Access Cycle by HCLK working frequency */
+    /* Set Flash access cycle by HCLK working frequency */
     FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (4);
 
     /* Select HCLK clock source as PLL and HCLK source divider as 1 */
@@ -106,19 +110,22 @@ void SYS_Init(void)
     SystemCoreClock = 96000000;
     CyclesPerUs     = SystemCoreClock / 1000000;  // For CLK_SysTickDelay()
 
-    /* Select PCLK0 as the clock source of SPI1 */
-    CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_SPI1SEL_Msk)) | CLK_CLKSEL2_SPI1SEL_PCLK0;
     /* Enable SPI1 peripheral clock */
     CLK->APBCLK0 |= CLK_APBCLK0_SPI1CKEN_Msk;
+
+    /* Select SPI1 peripheral clock source as PCLK0 */
+    CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_SPI1SEL_Msk)) | CLK_CLKSEL2_SPI1SEL_PCLK0;
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
     /*---------------------------------------------------------------------------------------------------------*/
+
     /* Setup SPI1 multi-function pins */
     SYS->GPE_MFPL = (SYS->GPE_MFPL & ~(SYS_GPE_MFPL_PE0MFP_Msk | SYS_GPE_MFPL_PE1MFP_Msk))
                     | (SYS_GPE_MFPL_PE0MFP_SPI1_MOSI | SYS_GPE_MFPL_PE1MFP_SPI1_MISO);
     SYS->GPH_MFPH = (SYS->GPH_MFPH & ~(SYS_GPH_MFPH_PH8MFP_Msk | SYS_GPH_MFPH_PH9MFP_Msk))
                     | (SYS_GPH_MFPH_PH8MFP_SPI1_CLK | SYS_GPH_MFPH_PH9MFP_SPI1_SS);
+
     /* Enable SPI1 clock pin (PH8) schmitt trigger */
     PH->SMTEN |= GPIO_SMTEN_SMTEN8_Msk;
 }
@@ -174,5 +181,3 @@ _APROM:
     /* Trap the CPU */
     while(1);
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
