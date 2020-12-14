@@ -22,7 +22,7 @@ void SysTick_Handler(void)
 void enable_sys_tick(int ticks_per_second)
 {
     g_tick_cnt = 0;
-    SystemCoreClock = 64000000;         /* HCLK is 64 MHz */
+    SystemCoreClock = 96000000;         /* HCLK is 96 MHz */
     if(SysTick_Config(SystemCoreClock / ticks_per_second))
     {
         /* Setup SysTick Timer for 1 second interrupts  */
@@ -34,7 +34,7 @@ void enable_sys_tick(int ticks_per_second)
 void start_timer0()
 {
     /* Start TIMER0  */
-    CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL1_TMR0SEL_Msk)) | CLK_CLKSEL1_TMR0SEL_HXT;
+    CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL1_TMR0SEL_Msk)) | CLK_CLKSEL1_TMR0SEL_HIRC;
     CLK->APBCLK0 |= CLK_APBCLK0_TMR0CKEN_Msk;    /* enable TIMER0 clock                  */
     TIMER0->CTL = 0;                   /* disable timer                                  */
     TIMER0->INTSTS = (TIMER_INTSTS_TWKF_Msk | TIMER_INTSTS_TIF_Msk);  /* clear interrupt status */

@@ -30,41 +30,59 @@ void SendChar_ToUART(void) {}
 
 void SYS_Init(void)
 {
-    /* Set PF multi-function pins for XT1_OUT(PF.2) and XT1_IN(PF.3) */
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF2MFP_Msk)) | SYS_GPF_MFPL_PF2MFP_XT1_OUT;
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF3MFP_Msk)) | SYS_GPF_MFPL_PF3MFP_XT1_IN;
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
+
     /* Enable HIRC clock */
     CLK->PWRCTL |= CLK_PWRCTL_HIRCEN_Msk;
 
     /* Wait for HIRC clock ready */
     while (!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk));
 
-    /* Select HCLK clock source as HIRC and HCLK clock divider as 1 */
-    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC; /* Set HCLK source to HIRC first */
+    /* Select HCLK clock source as HIRC first */
+    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC; 
 
-    /* Enable PLL */
+    /* Disable PLL clock before setting PLL frequency */
+    CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
+
+    /* Set PLL clock as 96MHz from HIRC */ 
     CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
 
-    /* Waiting for PLL stable */
-    while (!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
+    /* Wait for PLL clock ready */
+    while (!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk)); 
 
-    /* Select HCLK clock source as PLL and HCLK source divider as 2 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_PLL, CLK_CLKDIV0_HCLK(2));
+    /* Set power level by HCLK working frequency */
+    SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
 
-    PllClock        = 128000000;
-    SystemCoreClock = 128000000 / 2;
-    CyclesPerUs     = SystemCoreClock / 1000000;
+    /* Set flash access cycle by HCLK working frequency */
+    FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (4);
 
-    /* Enable I2C1 peripheral clock */
-    CLK_EnableModuleClock(I2C1_MODULE);
+    /* Select HCLK clock source as PLL and HCLK source divider as 1 */
+    CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | CLK_CLKDIV0_HCLK(1);
+    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_PLL;
 
     /* Update System Core Clock */
-    /* User can use SystemCoreClockUpdate() to calculate SystemCoreClock and CyclesPerUs automatically. */
-    SystemCoreClockUpdate();
+    PllClock        = 96000000;
+    SystemCoreClock = 96000000;
+    CyclesPerUs     = SystemCoreClock / 1000000;  /* For CLK_SysTickDelay() */
 
+    /* Enable UART0 module clock */
+    CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk;
+
+    /* Select UART0 module clock source as HIRC */
+    CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_UART0SEL_Msk)) | CLK_CLKSEL2_UART0SEL_HIRC;
+
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init I/O Multi-function                                                                                 */
+    /*---------------------------------------------------------------------------------------------------------*/
+
+    /* Set multi-function pins for UART0 RXD and TXD */
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+
+    /* Enable I2C1 module clock */
+    CLK->APBCLK0 |= CLK_APBCLK0_I2C1CKEN_Msk;
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
     /*---------------------------------------------------------------------------------------------------------*/
