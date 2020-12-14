@@ -31,5 +31,3 @@ int main(void)
 
     while(1) {}
 }
-
-/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/

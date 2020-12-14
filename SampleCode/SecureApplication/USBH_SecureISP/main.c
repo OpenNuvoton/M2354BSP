@@ -4,9 +4,8 @@
  * $Revision: 1 $
  * @brief    Use M2354 as USB Host to perform SecureISP.
  *
- * @note
  * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+ * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -124,50 +123,44 @@ int  init_hid_device(HID_DEV_T *hdev)
 
 void SYS_Init(void)
 {
-    /* Set XT1_OUT(PF.2) and XT1_IN(PF.3) to input mode */
-    PF->MODE &= ~(GPIO_MODE_MODE2_Msk | GPIO_MODE_MODE3_Msk);
-
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
     /* Enable HXT clock */
     CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HXT clock ready */
     CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
 
-    /* Switch HCLK clock source to HXT */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HXT, CLK_CLKDIV0_HCLK(1));
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
-    /* Set PLL frequency */
-    CLK->PLLCTL = CLK_PLLCTL_192MHz_HXT;
-
-    /* Waiting for clock ready */
-    CLK_WaitClockReady(CLK_STATUS_PLLSTB_Msk);
-
-    /* Switch HCLK clock source to PLL */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_PLL, CLK_CLKDIV0_HCLK(3));
-
-    /* Enable UART module clock */
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* Select UART module clock source as HIRC and UART module clock divider as 1 */
-    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
+    /* Select UART0 module clock source as PCLK and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_PCLK0, CLK_CLKDIV0_UART0(1));
 
-    /* Enable USBH module clock */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init I/O Multi-function                                                                                 */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Set multi-function pins for UART0 RXD and TXD */
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Initialization for sample code                                                                          */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Enable USBH module clock, default clock source is from PLL */
     CLK_EnableModuleClock(USBH_MODULE);
 
-    /* USB Host desired input clock is 48 MHz. Set as PLL divided by 4 (192/4 = 48) */
-    CLK->CLKDIV0 = (CLK->CLKDIV0 & ~CLK_CLKDIV0_USBDIV_Msk) | CLK_CLKDIV0_USB(4);
+    /* USB Host desired input clock is 48 MHz. Set as PLL divided by 2 (96/2 = 48) */
+    CLK->CLKDIV0 = (CLK->CLKDIV0 & ~CLK_CLKDIV0_USBDIV_Msk) | CLK_CLKDIV0_USB(2);
 
     /* Enable USBD and OTG clock */
     CLK->APBCLK0 |= CLK_APBCLK0_USBDCKEN_Msk | CLK_APBCLK0_OTGCKEN_Msk;
 
     /* Set OTG as USB Host role */
     SYS->USBPHY = SYS_USBPHY_OTGPHYEN_Msk | SYS_USBPHY_SBO_Msk | (0x1 << SYS_USBPHY_USBROLE_Pos);
-
-    /* Update System Core Clock */
-    SystemCoreClockUpdate();
-
-    /* Set GPB multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
     /* USB_VBUS_EN (USB 1.1 VBUS power enable pin) multi-function pin - PB.15     */
     SYS->GPB_MFPH = (SYS->GPB_MFPH & ~SYS_GPB_MFPH_PB15MFP_Msk) | SYS_GPB_MFPH_PB15MFP_USB_VBUS_EN;
@@ -252,5 +245,3 @@ int main()
 
     while(1) {}
 }
-
-/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

@@ -427,5 +427,3 @@ void SRAM_BS616LV4017(uint32_t u32MaxSize)
         u32DataIdx++;
     }
 }
-
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/

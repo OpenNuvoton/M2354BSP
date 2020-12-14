@@ -239,5 +239,3 @@ int32_t NOR_MX29LV320T_EraseChip(uint32_t u32Bank, uint32_t u32IsCheckBlank)
 
     return 0;
 }
-
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/

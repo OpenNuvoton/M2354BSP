@@ -18,47 +18,39 @@ void UART_Init(void);
 
 void SYS_Init(void)
 {
-    /* Enable all GPIO and SRAM clock */
-    CLK->AHBCLK |= (CLK_AHBCLK_TRACECKEN_Msk | CLK_AHBCLK_SRAM0CKEN_Msk | CLK_AHBCLK_SRAM1CKEN_Msk | CLK_AHBCLK_SRAM2CKEN_Msk |
-                    CLK_AHBCLK_GPACKEN_Msk | CLK_AHBCLK_GPBCKEN_Msk | CLK_AHBCLK_GPCCKEN_Msk | CLK_AHBCLK_GPDCKEN_Msk |
-                    CLK_AHBCLK_GPECKEN_Msk | CLK_AHBCLK_GPFCKEN_Msk | CLK_AHBCLK_GPGCKEN_Msk | CLK_AHBCLK_GPHCKEN_Msk);
-    SYS->GPE_MFPH = (SYS->GPE_MFPH & ~(TRACE_CLK_PE12_Msk | TRACE_DATA0_PE11_Msk | TRACE_DATA1_PE10_Msk | TRACE_DATA2_PE9_Msk | TRACE_DATA3_PE8_Msk)) |
-                    (TRACE_CLK_PE12 | TRACE_DATA0_PE11 | TRACE_DATA1_PE10 | TRACE_DATA2_PE9 | TRACE_DATA3_PE8);
-
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
     /* Enable HIRC clock */
     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
-    /* Waiting for HIRC clock ready */
+    /* Wait for HIRC clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
 
-    /* Switch HCLK clock source to HIRC */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
-    /* Enable HXT */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
-
-    /* Waiting for clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
-
-    /* Enable PLL */
-    CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
-
-    /* Waiting for PLL stable */
-    CLK_WaitClockReady(CLK_STATUS_PLLSTB_Msk);
-    
-    /* Select HCLK clock source as PLL and HCLK source divider as 1 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_PLL, CLK_CLKDIV0_HCLK(1));
-
-    /* Set SysTick source to HCLK/2 */
-    CLK_SetSysTickClockSrc(CLK_CLKSEL0_STCLKSEL_HCLK_DIV2);
-
-    /* Enable UART module clock */
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
+
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init I/O Multi-function                                                                                 */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Set multi-function pins for UART0 RXD and TXD */
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+    
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Initialization for sample code                                                                          */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Enable HXT and LIRC */
+    CLK_EnableXtalRC((CLK_PWRCTL_HXTEN_Msk | CLK_PWRCTL_LIRCEN_Msk));
+
+    /* Waiting for clock ready */
+    CLK_WaitClockReady((CLK_STATUS_HXTSTB_Msk | CLK_STATUS_LIRCSTB_Msk));
+    
     /* Enable TIMER module clock */
     CLK_EnableModuleClock(TMR0_MODULE);
     CLK_EnableModuleClock(TMR1_MODULE);
@@ -68,12 +60,6 @@ void SYS_Init(void)
     CLK_SetModuleClock(TMR1_MODULE, CLK_CLKSEL1_TMR1SEL_PCLK0, 0);
     CLK_SetModuleClock(TMR4_MODULE, CLK_CLKSEL3_TMR4SEL_PCLK0, 0);
     CLK_SetModuleClock(TMR5_MODULE, CLK_CLKSEL3_TMR5SEL_PCLK0, 0);
-
-    /*---------------------------------------------------------------------------------------------------------*/
-    /* Init I/O Multi-function                                                                                 */
-    /*---------------------------------------------------------------------------------------------------------*/
-    /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 }
 
 void UART_Init(void)
@@ -155,8 +141,8 @@ int main(void)
     TIMER_EnableCapture(TIMER5, TIMER_CAPTURE_COUNTER_RESET_MODE, TIMER_CAPTURE_EVENT_FALLING);
         
     /* Select capture source and source divider */
-    TIMER0->EXTCTL |= (TIMER_CAPTURE_SOURCE_DIV_128 | TIMER_INTER_CAPTURE_SOURCE_HXT);
-    TIMER1->EXTCTL |= (TIMER_CAPTURE_SOURCE_DIV_256 | TIMER_INTER_CAPTURE_SOURCE_HIRC);
+    TIMER0->EXTCTL |= (TIMER_CAPTURE_SOURCE_DIV_256 | TIMER_INTER_CAPTURE_SOURCE_HXT);
+    TIMER1->EXTCTL |= (TIMER_CAPTURE_SOURCE_DIV_128 | TIMER_INTER_CAPTURE_SOURCE_HIRC);
     TIMER4->EXTCTL |= (TIMER_CAPTURE_SOURCE_DIV_1 | TIMER_INTER_CAPTURE_SOURCE_LIRC);
     TIMER5->EXTCTL |= (TIMER_CAPTURE_SOURCE_DIV_32 | TIMER_INTER_CAPTURE_SOURCE_MIRC);
     
@@ -199,10 +185,10 @@ int main(void)
             = (TIMER_CLK / (CAP_DAT + 1))* CAPSRC_DIV
             = (TIMER_CLK * CAPSRC_DIV) / (CAP_DAT + 1) (Hz)
     */ 
-    printf("HXT freq:  %d Hz.\n", (SystemCoreClock * 128) / (au32CAPValue[0] + 1)); 
-    printf("HIRC freq: %d Hz.\n", (SystemCoreClock * 256) / (au32CAPValue[1] + 1)); 
-    printf("LIRC freq: %d Hz.\n", (SystemCoreClock * 1) / (au32CAPValue[4] + 1)); 
-    printf("MIRC freq: %d Hz.\n", (SystemCoreClock * 32) / (au32CAPValue[5] + 1));     
+    printf("HXT freq:  %d Hz.\n", ((SystemCoreClock / (au32CAPValue[0] + 1)) * 256)); 
+    printf("HIRC freq: %d Hz.\n", ((SystemCoreClock / (au32CAPValue[1] + 1)) * 128)); 
+    printf("LIRC freq: %d Hz.\n", ((SystemCoreClock / (au32CAPValue[4] + 1)) * 1)); 
+    printf("MIRC freq: %d Hz.\n", ((SystemCoreClock / (au32CAPValue[5] + 1)) * 32));     
 
     /* Stop Timer0, Timer1, Timer4 and Timer5 counting */
     TIMER_Stop(TIMER0);
@@ -212,5 +198,3 @@ int main(void)
 
     while(1) {}
 }
-
-/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/

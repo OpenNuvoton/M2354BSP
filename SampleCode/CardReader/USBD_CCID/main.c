@@ -64,13 +64,6 @@ void SC0_IRQHandler(void)
 
 void SYS_Init(void)
 {
-    /* Enable all GPIO and SRAM clock */
-    CLK->AHBCLK |= (CLK_AHBCLK_TRACECKEN_Msk | CLK_AHBCLK_SRAM0CKEN_Msk | CLK_AHBCLK_SRAM1CKEN_Msk | CLK_AHBCLK_SRAM2CKEN_Msk |
-                    CLK_AHBCLK_GPACKEN_Msk | CLK_AHBCLK_GPBCKEN_Msk | CLK_AHBCLK_GPCCKEN_Msk | CLK_AHBCLK_GPDCKEN_Msk |
-                    CLK_AHBCLK_GPECKEN_Msk | CLK_AHBCLK_GPFCKEN_Msk | CLK_AHBCLK_GPGCKEN_Msk | CLK_AHBCLK_GPHCKEN_Msk);
-    SYS->GPE_MFPH = (SYS->GPE_MFPH & ~(TRACE_CLK_PE12_Msk | TRACE_DATA0_PE11_Msk | TRACE_DATA1_PE10_Msk | TRACE_DATA2_PE9_Msk | TRACE_DATA3_PE8_Msk)) |
-                    (TRACE_CLK_PE12 | TRACE_DATA0_PE11 | TRACE_DATA1_PE10 | TRACE_DATA2_PE9 | TRACE_DATA3_PE8);
-
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -101,7 +94,7 @@ void SYS_Init(void)
     CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_PLL, CLK_CLKDIV0_HCLK(1));
 
     /* Set UART0 module clock */
-    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_PCLK0, CLK_CLKDIV0_UART0(1));
     CLK_EnableModuleClock(UART0_MODULE);
 
     /*---------------------------------------------------------------------------------------------------------*/
@@ -110,7 +103,9 @@ void SYS_Init(void)
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
-
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Initialization for sample code                                                                          */
+    /*---------------------------------------------------------------------------------------------------------*/
     /*---------------------------------------------------------------------------------------------------------*/
     /* Configure relative smartcard reader settings                                                            */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -127,7 +122,6 @@ void SYS_Init(void)
     SYS->GPB_MFPL |= (SC0_PWR_PB2 | SC0_RST_PB3 | SC0_CLK_PB5 | SC0_DAT_PB4);
     SYS->GPC_MFPH &= ~(SC0_nCD_PC12_Msk);
     SYS->GPC_MFPH |= (SC0_nCD_PC12);
-
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Configure relative USBD settings                                                                        */
@@ -200,5 +194,3 @@ int main(void)
 
     while(1) {}
 }
-
-/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/
