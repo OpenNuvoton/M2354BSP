@@ -96,32 +96,50 @@ void CAN0_IRQHandler(void)
     }
 }
 
+
+
 void SYS_Init(void)
 {
-    /* Enable Internal and External RC clock */
-    CLK->PWRCTL |= CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk;
 
-    /* Waiting for clock ready */
-    while(!(CLK->STATUS & CLK_STATUS_HXTSTB_Msk));
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init System Clock                                                                                       */
+    /*---------------------------------------------------------------------------------------------------------*/
 
-    /* Set core clock as PLL_CLOCK from PLL */
-    CLK->PLLCTL = PLLCTL_SETTING;
+    /* Enable HIRC clock */
+    CLK->PWRCTL |= CLK_PWRCTL_HIRCEN_Msk;
 
-    while(!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
+    /* Wait for HIRC clock ready */
+    while (!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk));
 
-    /* Set power level to 0 */
+    /* Select HCLK clock source as HIRC first */
+    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC; 
+
+    /* Disable PLL clock before setting PLL frequency */
+    CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
+
+    /* Set PLL clock as 96MHz from HIRC */ 
+    CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
+
+    /* Wait for PLL clock ready */
+    while (!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk)); 
+
+    /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
 
-    /* Set Flash Access Cycle by HCLK working frequency */
+    /* Set flash access cycle by HCLK working frequency */
     FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (4);
 
+    /* Select HCLK clock source as PLL and HCLK source divider as 1 */
+    CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | CLK_CLKDIV0_HCLK(1);
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_PLL;
-    CLK->CLKDIV0 &= ~CLK_CLKDIV0_HCLKDIV_Msk;
-    CLK->CLKDIV0 |= CLK_CLKDIV0_HCLK(HCLK_DIV);
 
     /* Update System Core Clock */
-    SystemCoreClockUpdate();
+    PllClock        = 96000000;
+    SystemCoreClock = 96000000;
+    CyclesPerUs     = SystemCoreClock / 1000000;  /* For CLK_SysTickDelay() */
+
 }
+
 
 /*----------------------------------------------------------------------------*/
 /*  Tx Msg by Normal Mode Function (With Message RAM)                    */
