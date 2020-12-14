@@ -3,9 +3,8 @@
  * @version  V1.00
  * @brief    Secure sample code for HardFault
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 #include <arm_cmse.h>
@@ -17,7 +16,6 @@
 //#define dbg(...)
 
 
-#define PLL_CLOCK       FREQ_96MHZ
 #define NEXT_BOOT_BASE  0x10040000
 #define JUMP_HERE       0xe7fee7ff      /* Instruction Code of "B ." */
 
@@ -190,30 +188,21 @@ void SYS_Init(void)
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
 
-    /* Set core clock as PLL_CLOCK from PLL */
-    CLK_SetCoreClock(PLL_CLOCK);
+    /* Enable HIRC clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
-    /* Enable IP clock */
-    CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk;
+    /* Wait for HIRC clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
 
-    /* Select IP clock source */
-    CLK->CLKSEL2 = CLK_CLKSEL2_UART0SEL_HIRC;
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
-    /* Enable SRAM module clock */
-    CLK_EnableModuleClock(SRAM0_MODULE); 
-    CLK_EnableModuleClock(SRAM1_MODULE); 
-    CLK_EnableModuleClock(SRAM2_MODULE);   
+    /* Enable UART0 module clock */
+    CLK_EnableModuleClock(UART0_MODULE);
 
-    /* Enable GPIO port A~H module clock */
-    CLK_EnableModuleClock(GPA_MODULE);
-    CLK_EnableModuleClock(GPB_MODULE);  
-    CLK_EnableModuleClock(GPC_MODULE);  
-    CLK_EnableModuleClock(GPD_MODULE);  
-    CLK_EnableModuleClock(GPE_MODULE);  
-    CLK_EnableModuleClock(GPF_MODULE);  
-    CLK_EnableModuleClock(GPG_MODULE);  
-    CLK_EnableModuleClock(GPH_MODULE);        
-    
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -240,5 +229,3 @@ void HardFault_Handler(void)
     dbg("Secure Hard Fault Handler\n");
     while(1);
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

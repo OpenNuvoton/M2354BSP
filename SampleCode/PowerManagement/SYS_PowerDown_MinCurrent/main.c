@@ -1,12 +1,10 @@
 /**************************************************************************//**
  * @file     main.c
  * @version  V3.00
- * @brief
- *           Demonstrate how to minimize power consumption when entering power down mode.
- *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @brief    Demonstrate how to minimize power consumption when entering power down mode.
+ * 
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
@@ -84,26 +82,14 @@ void SYS_Init(void)
     /* Wait for HIRC clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
 
-    /* Enable UART module clock */
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
+
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* Select UART module clock source as HIRC and UART module clock divider as 1 */
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
-  
-    /* Enable SRAM module clock */
-    CLK_EnableModuleClock(SRAM0_MODULE);   
-    CLK_EnableModuleClock(SRAM1_MODULE); 
-    CLK_EnableModuleClock(SRAM2_MODULE);     
-
-    /* Enable GPIO port A~H module clock. They need to be enabled to configure GPIO */
-    CLK_EnableModuleClock(GPA_MODULE);
-    CLK_EnableModuleClock(GPB_MODULE);  
-    CLK_EnableModuleClock(GPC_MODULE);  
-    CLK_EnableModuleClock(GPD_MODULE);  
-    CLK_EnableModuleClock(GPE_MODULE);  
-    CLK_EnableModuleClock(GPF_MODULE);  
-    CLK_EnableModuleClock(GPG_MODULE);  
-    CLK_EnableModuleClock(GPH_MODULE);         
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
@@ -248,8 +234,8 @@ int32_t main(void)
     SYS->PSWCTL = 0;    
           
     /* Enter to Power-down mode */
-    printf("Enter to Power-Down ......\n");    
-    PowerDownFunction(); 
+    printf("Enter to Power-Down ......\n");
+    PowerDownFunction();
 
     /* Waiting for PB.3 falling-edge interrupt event */
     printf("System waken-up done.\n\n");
@@ -257,5 +243,3 @@ int32_t main(void)
     while(1);
 
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

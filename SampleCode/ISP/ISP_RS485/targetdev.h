@@ -2,10 +2,9 @@
  * @file     targetdev.h
  * @brief    ISP support function header file
  * @version  0x32
- * @date     14, June, 2017
  *
- * @note
- * Copyright (C) 2017-2018 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __TARGET_H__
 #define __TARGET_H__

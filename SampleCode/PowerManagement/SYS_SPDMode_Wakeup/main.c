@@ -1,19 +1,16 @@
 /**************************************************************************//**
  * @file     main.c
  * @version  V3.00
- * @brief
- *           Show how to wake up system form SPD Power-down mode by Wake-up pin(PC.0),
+ * @brief    Show how to wake up system form SPD Power-down mode by Wake-up pin(PC.0),
  *           Wake-up Timer, Wake-up ACMP, RTC Tick, RTC Alarm, RTC Tamper 0, LVR or BOD.
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
 
 
-#define PLL_CLOCK   FREQ_96MHZ
 
 void PowerDownFunction(void);
 void WakeUpPinFunction(uint32_t u32PDMode)__attribute__((noreturn));
@@ -415,23 +412,20 @@ void SYS_Init(void)
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
 
-    /* Enable HIRC, HXT and LXT clock */
+    /* Enable HIRC and LXT clock */
     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_LXTEN_Msk);
 
-    /* Wait for HIRC, HXT and LXT clock ready */
+    /* Wait for HIRC and LXT clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_LXTSTB_Msk);
 
-    /* Set core clock as PLL_CLOCK from PLL */
-    CLK_SetCoreClock(PLL_CLOCK);
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
-    /* Enable UART module clock */
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* Select UART module clock source as HIRC and UART module clock divider as 1 */
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
-
-    /* Enable GPIO port C module clock */
-    CLK_EnableModuleClock(GPC_MODULE);
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
@@ -502,7 +496,6 @@ int32_t main(void)
     /* Get power manager wake up source */
     CheckPowerSource();
 
-
     printf("+-----------------------------------------------------------------+\n");
     printf("|    SPD Power-down Mode and Wake-up Sample Code                  |\n");
     printf("|    Please Select Power Down Mode and Wake up source.            |\n");
@@ -551,5 +544,3 @@ int32_t main(void)
     while(1);
 
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

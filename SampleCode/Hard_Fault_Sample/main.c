@@ -3,16 +3,15 @@
  * @version  V3.00
  * @brief    Show hard fault information when hard fault happened.
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include "NuMicro.h"
 
 /*
- The ARM M0 Generic User Guide lists the following sources for a hard fault:
+ The ARM M23 Generic User Guide lists the following sources for a hard fault:
 
  All faults result in the HardFault exception being taken or cause lockup if
  they occur in the NMI or HardFault handler. The faults are:
@@ -57,30 +56,21 @@ void SYS_Init(void)
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
 
-    /* Enable HIRC, HXT and LXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk|CLK_PWRCTL_LXTEN_Msk);
+    /* Enable HIRC clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
-    /* Wait for HIRC, HXT and LXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk|CLK_STATUS_LXTSTB_Msk);
+    /* Wait for HIRC clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
 
-    /* Set core clock as PLL_CLOCK from PLL */
-    CLK_SetCoreClock(FREQ_96MHZ);
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
-    /* Select IP clock source */
-    CLK->CLKSEL1 = CLK_CLKSEL1_TMR1SEL_HIRC;
-    CLK->CLKSEL2 = CLK_CLKSEL2_UART0SEL_HIRC;
+    /* Enable UART0 and Timer1 module clock */
+    CLK_EnableModuleClock(UART0_MODULE);
+    CLK_EnableModuleClock(TMR1_MODULE);
 
-    /* Enable IP clock */
-    CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk | CLK_APBCLK0_TMR1CKEN_Msk;
-
-
-
-    /* Update System Core Clock */
-    /* User can use SystemCoreClockUpdate() to calculate PllClock, SystemCoreClock and CycylesPerUs automatically. */
-    //SystemCoreClockUpdate();
-    PllClock        = 96000000;            // PLL
-    SystemCoreClock = 96000000;            // HCLK
-    CyclesPerUs     = 96000000 / 1000000;  // For CLK_SysTickDelay()
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
@@ -88,7 +78,6 @@ void SYS_Init(void)
 
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-
 
 }
 
@@ -255,6 +244,3 @@ int32_t main(void)
     }
 
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
-

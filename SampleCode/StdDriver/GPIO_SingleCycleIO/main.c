@@ -3,16 +3,14 @@
  * @version  V3.00
  * @brief    Show GPIO single cycle IO bus performance.
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 #include <stdio.h>
 #include "NuMicro.h"
 
 
-#define PLL_CLOCK   FREQ_96MHZ
 
 
 void SYS_Init(void);
@@ -22,10 +20,6 @@ void GPIO_SingleCycleIO_Test(void);
 
 void SYS_Init(void)
 {
-
-    /* Set PF multi-function pins for XT1_OUT(PF.2) and XT1_IN(PF.3) */
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF2MFP_Msk)) | SYS_GPF_MFPL_PF2MFP_XT1_OUT;
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF3MFP_Msk)) | SYS_GPF_MFPL_PF3MFP_XT1_IN;
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
@@ -37,42 +31,18 @@ void SYS_Init(void)
     /* Wait for HIRC clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
 
-    /* Select HCLK clock source as HIRC and HCLK clock divider as 1 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
-    /* Enable HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
-
-    /* Wait for HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
-
-    /* Set core clock as PLL_CLOCK from PLL */
-    CLK_SetCoreClock(PLL_CLOCK);
-
-    /* Enable SRAM module clock */
-    CLK_EnableModuleClock(SRAM0_MODULE);
-    CLK_EnableModuleClock(SRAM1_MODULE);
-    CLK_EnableModuleClock(SRAM2_MODULE);
-
-    /* Enable GPIO module clock */
-    CLK_EnableModuleClock(GPA_MODULE);
-    CLK_EnableModuleClock(GPB_MODULE);
-    CLK_EnableModuleClock(GPC_MODULE);
-    CLK_EnableModuleClock(GPD_MODULE);
-    CLK_EnableModuleClock(GPE_MODULE);
-    CLK_EnableModuleClock(GPF_MODULE);
-    CLK_EnableModuleClock(GPG_MODULE);
-    CLK_EnableModuleClock(GPH_MODULE);
-
-    /* Enable UART, TIMER0 and TIMER2 module clock */
+    /* Enable UART0, TIMER0 and TIMER2 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
     CLK_EnableModuleClock(TMR0_MODULE);
-    CLK_EnableModuleClock(TMR2_MODULE);        
+    CLK_EnableModuleClock(TMR2_MODULE);
 
-    /* Select module clock source and clock divider */
+    /* Select UART0, TIMER0 and TIMER2 module clock source and clock divider */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
     CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_PCLK0, 0);
-    CLK_SetModuleClock(TMR2_MODULE, CLK_CLKSEL1_TMR2SEL_PCLK1, 0);     
+    CLK_SetModuleClock(TMR2_MODULE, CLK_CLKSEL1_TMR2SEL_PCLK1, 0);
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
@@ -80,9 +50,9 @@ void SYS_Init(void)
 
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
-    /* Set Timer 2 event counter pin */    
-    SYS->GPD_MFPL = (SYS->GPD_MFPL & (~TM2_PD0_Msk)) | TM2_PD0;        
+
+    /* Set Timer 2 event counter pin */
+    SYS->GPD_MFPL = (SYS->GPD_MFPL & (~TM2_PD0_Msk)) | TM2_PD0;
 
 }
 
@@ -120,22 +90,20 @@ int32_t main(void)
     printf("+--------------------------------------------+\n");
     printf("|    GPIO Single Cycle IO Bus Sample Code    |\n");
     printf("+--------------------------------------------+\n\n");
-    printf("GPIO supports Single Cycle IO Bus. User can access GPIO in one clock cycle.\n");     
-    printf("This sample code toggles PA.0 state 50 times and measures the toggle speed.\n");        
+    printf("GPIO supports Single Cycle IO Bus. User can access GPIO in one clock cycle.\n");
+    printf("This sample code toggles PA.0 state 50 times and measures the toggle speed.\n");
     printf("Please connect PA.0 and PD.0(TIMER2 event counter pin).\n");
     printf("Enter any key to continue.\n\n");
     getchar();
     printf("Testing ...\n\n");
 
-    /* Configure PA.0 as output mode */ 
+    /* Configure PA.0 as output mode */
     PA0=0;
-    GPIO_SetMode(PA, BIT0, GPIO_MODE_OUTPUT);   
-    
-    /* Toggle PA.0 state 50 times and measure the toggle speed. */    
+    GPIO_SetMode(PA, BIT0, GPIO_MODE_OUTPUT);
+
+    /* Toggle PA.0 state 50 times and measure the toggle speed. */
     GPIO_SingleCycleIO_Test();
 
     while(1);
 
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

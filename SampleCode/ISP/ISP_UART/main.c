@@ -1,15 +1,14 @@
 /***************************************************************************//**
  * @file     main.c
  * @brief    Demonstrate how to update chip flash data through UART interface
-             between chip UART and PC UART.
-             Nuvoton NuMicro ISP Programming Tool is also required in this
-             sample code to connect with chip UART and assign update file
-             of Flash.
+ *           between chip UART and PC UART.
+ *           Nuvoton NuMicro ISP Programming Tool is also required in this
+ *           sample code to connect with chip UART and assign update file
+ *           of Flash.
  * @version  0x32
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include "targetdev.h"
@@ -38,19 +37,22 @@ void SYS_Init(void)
     /* Wait for HIRC clock ready */
     while (!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk));
 
-    /* Set HCLK source to HIRC first */
+    /* Set HCLK clock source as HIRC first */
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC;
 
-    /* Enable PLL */
+    /* Disable PLL clock before setting PLL frequency */
+    CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
+
+    /* Set PLL clock as 96MHz from HIRC */
     CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
 
-    /* Wait for PLL stable */
+    /* Wait for PLL clock ready */
     while (!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
 
-    /* Set power level 0 */
+    /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
 
-    /* Set Flash Access Cycle to 4 */
+    /* Set flash access cycle by HCLK working frequency */
     FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (4);
 
     /* Select HCLK clock source as PLL and HCLK source divider as 1 */
@@ -62,10 +64,10 @@ void SYS_Init(void)
     SystemCoreClock = 96000000;
     CyclesPerUs     = SystemCoreClock / 1000000;  /* For CLK_SysTickDelay() */
 
-    /* Enable UART module clock */
+    /* Enable UART0 module clock */
     CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk;
 
-    /* Select UART module clock source */
+    /* Select UART0 module clock source as HIRC */
     CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_UART0SEL_Msk)) | CLK_CLKSEL2_UART0SEL_HIRC;
 
     /*---------------------------------------------------------------------------------------------------------*/
@@ -145,7 +147,7 @@ _ISP:
     }
 
 _APROM:
-    
+
     /* Reset system and boot from APROM */
     FMC_SetVectorPageAddr(FMC_APROM_BASE);
     NVIC_SystemReset();
@@ -153,5 +155,3 @@ _APROM:
     /* Trap the CPU */
     while (1);
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

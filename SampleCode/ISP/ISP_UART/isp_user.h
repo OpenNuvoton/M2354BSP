@@ -3,9 +3,8 @@
  * @brief    ISP Command header file
  * @version  0x32
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef ISP_USER_H
 #define ISP_USER_H
@@ -44,5 +43,3 @@ extern uint32_t g_u32ApromSize, g_u32DataFlashAddr, g_u32DataFlashSize;
 extern __attribute__((aligned(4))) uint8_t g_au8ResponseBuff[64];
 
 #endif  /* ISP_USER_H */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

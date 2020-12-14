@@ -3,9 +3,8 @@
  * @version  V1.00
  * @brief    General UART ISP slave Sample file
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */
@@ -88,5 +87,3 @@ void UART_Init()
     /* Enable tim-out counter, Rx tim-out interrupt and Rx ready interrupt */
     UART0->INTEN = (UART_INTEN_TOCNTEN_Msk | UART_INTEN_RXTOIEN_Msk | UART_INTEN_RDAIEN_Msk);
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

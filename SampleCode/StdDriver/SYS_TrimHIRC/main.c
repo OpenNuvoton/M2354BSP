@@ -3,15 +3,13 @@
  * @version  V3.00
  * @brief    Demonstrate how to use LXT to trim HIRC.
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
 
 
-#define PLL_CLOCK   FREQ_96MHZ
 
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -66,28 +64,13 @@ void SYS_Init(void)
     /* Wait for HIRC, HXT and LXT clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk|CLK_STATUS_LXTSTB_Msk);
 
-    /* Set core clock as PLL_CLOCK from PLL */
-    CLK_SetCoreClock(PLL_CLOCK);
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
-    /* Enable SRAM module clock */
-    CLK_EnableModuleClock(SRAM0_MODULE);
-    CLK_EnableModuleClock(SRAM1_MODULE);
-    CLK_EnableModuleClock(SRAM2_MODULE);
-
-    /* Enable GPIO module clock */
-    CLK_EnableModuleClock(GPA_MODULE);
-    CLK_EnableModuleClock(GPB_MODULE);
-    CLK_EnableModuleClock(GPC_MODULE);
-    CLK_EnableModuleClock(GPD_MODULE);
-    CLK_EnableModuleClock(GPE_MODULE);
-    CLK_EnableModuleClock(GPF_MODULE);
-    CLK_EnableModuleClock(GPG_MODULE);
-    CLK_EnableModuleClock(GPH_MODULE);
-
-    /* Enable UART module clock */
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* Select UART module clock source */
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
     /*---------------------------------------------------------------------------------------------------------*/
@@ -136,6 +119,7 @@ int32_t main(void)
 
     /* Enable Interrupt */
     NVIC_EnableIRQ(IRC_IRQn);
+
     /* Trim HIRC to 12MHz */
     TrimHIRC();
 
@@ -149,7 +133,7 @@ int32_t main(void)
 
 void TrimHIRC(void)
 {
-    /*  Enable IRC Trim, set HIRC clock and enable interrupt */
+    /* Enable IRC Trim, set HIRC clock and enable interrupt */
     SYS->TIEN12M |= (SYS_TIEN12M_CLKEIEN_Msk | SYS_TIEN12M_TFAILIEN_Msk);
     SYS->TCTL12M = (SYS->TCTL12M & (~SYS_TCTL12M_FREQSEL_Msk)) | 0x1;
 
@@ -170,5 +154,3 @@ void TrimHIRC(void)
     CLK_EnableCKO(CLK_CLKSEL1_CLKOSEL_HIRC, 0, 1);
 
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

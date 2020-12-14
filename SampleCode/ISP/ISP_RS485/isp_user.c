@@ -3,9 +3,8 @@
  * @brief    ISP Command source file
  * @version  0x32
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -64,7 +63,8 @@ int ParseCmd(uint8_t *pu8Buffer, uint8_t u8len)
     }
     else if(u32Lcmd == CMD_GET_DEVICEID)
     {
-        outpw((uint32_t)(pu8Response + 8), SYS->PDID);
+        //outpw((uint32_t)(pu8Response + 8), SYS->PDID);
+        outpw((uint32_t)(pu8Response + 8), 0xA1735440);
         goto out;
     }
     else if(u32Lcmd == CMD_RUN_APROM)
@@ -166,5 +166,3 @@ out:
     u32PackNo++;
     return 0;
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

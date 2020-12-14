@@ -1,11 +1,10 @@
 /***************************************************************************//**
  * @file     fmc_user.c
- * @brief    M2354 series FMC driver source file
+ * @brief    FMC driver source file
  * @version  2.0.0
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include "fmc_user.h"
@@ -171,5 +170,3 @@ void UpdateConfig(unsigned int *data, unsigned int *res)
 
     FMC_DISABLE_CFG_UPDATE();
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

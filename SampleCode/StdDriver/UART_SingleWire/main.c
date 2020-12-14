@@ -3,16 +3,14 @@
  * @version  V3.00
  * @brief    Transmit and receive data by UART Single-Wire mode.
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include "stdio.h"
 #include "string.h"
 #include "NuMicro.h"
 
 
-#define PLL_CLOCK   FREQ_96MHZ
 #define BUFSIZE     128
 
 
@@ -48,10 +46,6 @@ void SYS_Init(void)
     SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF2MFP_Msk)) | SYS_GPF_MFPL_PF2MFP_XT1_OUT;
     SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF3MFP_Msk)) | SYS_GPF_MFPL_PF3MFP_XT1_IN;
 
-    /* Set PF multi-function pins for X32_OUT(PF.4) and X32_IN(PF.5) */
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF4MFP_Msk)) | SYS_GPF_MFPL_PF4MFP_X32_OUT;
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF5MFP_Msk)) | SYS_GPF_MFPL_PF5MFP_X32_IN;
-
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -62,33 +56,18 @@ void SYS_Init(void)
     /* Wait for HIRC and HXT clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
 
-    /* Set core clock as PLL_CLOCK from PLL */
-    CLK_SetCoreClock(PLL_CLOCK);
-
-    /* Enable SRAM module clock */
-    CLK_EnableModuleClock(SRAM0_MODULE);
-    CLK_EnableModuleClock(SRAM1_MODULE);
-    CLK_EnableModuleClock(SRAM2_MODULE);
-
-    /* Enable GPIO module clock */
-    CLK_EnableModuleClock(GPA_MODULE);
-    CLK_EnableModuleClock(GPB_MODULE);
-    CLK_EnableModuleClock(GPC_MODULE);
-    CLK_EnableModuleClock(GPD_MODULE);
-    CLK_EnableModuleClock(GPE_MODULE);
-    CLK_EnableModuleClock(GPF_MODULE);
-    CLK_EnableModuleClock(GPG_MODULE);
-    CLK_EnableModuleClock(GPH_MODULE);
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
     /* Enable UART module clock */
     CLK_EnableModuleClock(UART0_MODULE);
     CLK_EnableModuleClock(UART1_MODULE);
-    CLK_EnableModuleClock(UART2_MODULE);    
+    CLK_EnableModuleClock(UART2_MODULE);
 
     /* Select UART module clock source as HIRC and UART module clock divider as 1 */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
     CLK_SetModuleClock(UART1_MODULE, CLK_CLKSEL2_UART1SEL_HIRC, CLK_CLKDIV0_UART1(1));
-    CLK_SetModuleClock(UART2_MODULE, CLK_CLKSEL2_UART2SEL_HIRC, CLK_CLKDIV4_UART2(1));   
+    CLK_SetModuleClock(UART2_MODULE, CLK_CLKSEL2_UART2SEL_HIRC, CLK_CLKDIV4_UART2(1));
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
@@ -99,14 +78,14 @@ void SYS_Init(void)
 
     /* Set PB multi-function pin for UART1 RXD(PB.6) */
     SYS->GPB_MFPL = (SYS->GPB_MFPL & (~SYS_GPB_MFPL_PB6MFP_Msk)) | SYS_GPB_MFPL_PB6MFP_UART1_RXD;
-    
+
     /* Set PB multi-function pin for UART2 RXD(PB.0) */
-    SYS->GPB_MFPL = (SYS->GPB_MFPL & (~SYS_GPB_MFPL_PB0MFP_Msk)) | SYS_GPB_MFPL_PB0MFP_UART2_RXD; 
-    
+    SYS->GPB_MFPL = (SYS->GPB_MFPL & (~SYS_GPB_MFPL_PB0MFP_Msk)) | SYS_GPB_MFPL_PB0MFP_UART2_RXD;
+
     /* The RX pin needs to pull-high for single-wire */
     /* If the external circuit doesn't pull-high, set GPIO pin as Quasi-directional mode for this purpose here */
     GPIO_SetMode(PB, BIT0, GPIO_MODE_QUASI);
-    GPIO_SetMode(PB, BIT6, GPIO_MODE_QUASI);      
+    GPIO_SetMode(PB, BIT6, GPIO_MODE_QUASI);
 
 }
 
@@ -427,11 +406,9 @@ void UART_FunctionTest()
 
     /* Disable UART1 RDA/Single-wire Bit Error Detection interrupt */
     UART_DisableInt(UART1, (UART_INTEN_RDAIEN_Msk | UART_INTEN_SWBEIEN_Msk));
-    
+
     /* Disable UART2 RDA/Single-wire Bit Error Detection interrupt */
     UART_DisableInt(UART2, (UART_INTEN_RDAIEN_Msk | UART_INTEN_SWBEIEN_Msk));
     printf("\nUART Sample Demo End.\n");
 
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

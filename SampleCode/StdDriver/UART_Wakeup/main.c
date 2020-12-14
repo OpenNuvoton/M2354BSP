@@ -3,15 +3,13 @@
  * @version  V3.00
  * @brief    Show how to wake up system form Power-down mode by UART interrupt.
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
 
 
-#define PLL_CLOCK       FREQ_96MHZ
 #define RS485_ADDRESS   0xC0
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -42,9 +40,6 @@ void PowerDownFunction(void)
 
 void SYS_Init(void)
 {
-    /* Set PF multi-function pins for XT1_OUT(PF.2) and XT1_IN(PF.3) */
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF2MFP_Msk)) | SYS_GPF_MFPL_PF2MFP_XT1_OUT;
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF3MFP_Msk)) | SYS_GPF_MFPL_PF3MFP_XT1_IN;
 
     /* Set PF multi-function pins for X32_OUT(PF.4) and X32_IN(PF.5) */
     SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF4MFP_Msk)) | SYS_GPF_MFPL_PF4MFP_X32_OUT;
@@ -54,29 +49,14 @@ void SYS_Init(void)
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
 
-    /* Enable HIRC, HXT and LXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk|CLK_PWRCTL_LXTEN_Msk);
+    /* Enable HIRC and LXT clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_LXTEN_Msk);
 
-    /* Wait for HIRC, HXT and LXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk|CLK_STATUS_LXTSTB_Msk);
+    /* Wait for HIRC and LXT clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_LXTSTB_Msk);
 
-    /* Set core clock as PLL_CLOCK from PLL */
-    CLK_SetCoreClock(PLL_CLOCK);
-
-    /* Enable SRAM module clock */
-    CLK_EnableModuleClock(SRAM0_MODULE);
-    CLK_EnableModuleClock(SRAM1_MODULE);
-    CLK_EnableModuleClock(SRAM2_MODULE);
-
-    /* Enable GPIO module clock */
-    CLK_EnableModuleClock(GPA_MODULE);
-    CLK_EnableModuleClock(GPB_MODULE);
-    CLK_EnableModuleClock(GPC_MODULE);
-    CLK_EnableModuleClock(GPD_MODULE);
-    CLK_EnableModuleClock(GPE_MODULE);
-    CLK_EnableModuleClock(GPF_MODULE);
-    CLK_EnableModuleClock(GPG_MODULE);
-    CLK_EnableModuleClock(GPH_MODULE);
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
     /* Enable UART module clock */
     CLK_EnableModuleClock(UART0_MODULE);
@@ -360,18 +340,16 @@ void UART_PowerDownWakeUpTest(void)
     UART1->WKCTL = 0;
 
     /* Disable UART Interrupt */
-    NVIC_DisableIRQ(UART1_IRQn);      
+    NVIC_DisableIRQ(UART1_IRQn);
     UART_DisableInt(UART1, UART_INTEN_WKIEN_Msk | UART_INTEN_RDAIEN_Msk | UART_INTEN_RXTOIEN_Msk);
 
     /* Unlock protected registers */
     SYS_UnlockReg();
 
-    /* Set core clock as PLL_CLOCK from PLL */
-    CLK_SetCoreClock(PLL_CLOCK);
+    /* Set core clock as 96MHz */
+    CLK_SetCoreClock(96000000);
 
     /* Lock protected registers */
     SYS_LockReg();
 
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
