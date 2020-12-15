@@ -22,8 +22,6 @@
 */
 
 
-
-
 /**
   * @brief      Initial firmware version counter
   * @param      None
@@ -73,42 +71,37 @@ void FVC_EnableMonotone(void)
 }
 
 /**
-  * @brief      Set BL2 version
-  * @param[in]  ver     Version Number. It could be 0~63.
+  * @brief      Set non-volatile version counter
+  * @param[in]  u32NvcIdx    Index number of non-volatile version counter. It could be 0, 1, 4, 5.
+  * @param[in]  u32Cnt       Version Number. It could be 0~63 for u32NvcIdx=0, 1, and 0~255 for u32NvcIdx=4, 5
   * @retval     0       Successful
   * @retval     -1      Failed
-  * @details    Set version number of BL2
+  * @details    Set non-volatile version counter
   *
   */
-int32_t FVC_SetBL2Ver(uint32_t u32Ver)
+int32_t FVC_SetNVC(uint32_t u32NvcIdx, uint32_t u32Cnt)
 {
-    if(u32Ver >= 64)
+    if(u32NvcIdx < 2)
+    {
+        if(u32Cnt >= 64)
+            /* The counter value is out of range */
+            return -1;
+    }
+    else if(u32NvcIdx < 4)
+        return -1;
+    else if(u32NvcIdx < 6)
+    {
+        /* The counter value is out of range */
+        if(u32Cnt >= 256)
+            /* The counter value is out of range */
+            return -1;
+    }
+    else
         return -1;
 
-    FVC->BL2 = (FVC->BL2 << 16) | (u32Ver & 0x3ful);
+    FVC->NVC[u32NvcIdx] = (FVC->NVC[u32NvcIdx] << 16) | (u32Cnt & 0x3ful);
     while(FVC->STS & FVC_STS_BUSY_Msk) {}
-    if(FVC->BL2 != u32Ver)
-        return -1;
-
-    return 0;
-}
-
-/**
-  * @brief      Set BL32 version
-  * @param[in]  ver     Version Number. It could be 0~63.
-  * @retval     0       Successful
-  * @retval     -1      Failed
-  * @details    Set version number of BL32
-  *
-  */
-int32_t FVC_SetBL32Ver(uint32_t u32Ver)
-{
-    if(u32Ver >= 64)
-        return -1;
-
-    FVC->BL32 = (FVC->BL32 << 16) | (u32Ver & 0x3ful);
-    while(FVC->STS & FVC_STS_BUSY_Msk) {}
-    if(FVC->BL32 != u32Ver)
+    if(FVC->NVC[u32NvcIdx] != u32Cnt)
         return -1;
 
     return 0;
@@ -116,48 +109,20 @@ int32_t FVC_SetBL32Ver(uint32_t u32Ver)
 
 
 /**
-  * @brief      Set BL33 version
-  * @param[in]  ver     Version Number. It could be 0~255.
-  * @retval     0       Successful
+  * @brief      Get non-volatile version counter
+  * @param[in]  u32NvcIdx    Index number of non-volatile version counter. It could be 0, 1, 4, 5.
+  * @retval     the version counter
   * @retval     -1      Failed
-  * @details    Set version number of BL33
+  * @details    Get non-volatile version counter
   *
   */
-int32_t FVC_SetBL33Ver(uint32_t u32Ver)
+int32_t FVC_GetNVC(uint32_t u32NvcIdx)
 {
-    if(u32Ver >= 256)
+    if((u32NvcIdx == 2) || (u32NvcIdx ==3) || (u32NvcIdx > 5))
         return -1;
-
-    FVC->BL33 = (FVC->BL33 << 16) | (u32Ver & 0xfful);
-    while(FVC->STS & FVC_STS_BUSY_Msk) {}
-    if(FVC->BL33 != u32Ver)
-        return -1;
-
-    return 0;
+    
+    return FVC->NVC[u32NvcIdx];
 }
-
-
-/**
-  * @brief      Set version for user firmware
-  * @param[in]  ver     Version Number. It could be 0~255.
-  * @retval     0       Successful
-  * @retval     -1      Failed
-  * @details    Set version number of user firmware
-  *
-  */
-int32_t FVC_SetUDFVer(uint32_t u32Ver)
-{
-    if(u32Ver >= 256)
-        return -1;
-
-    FVC->UDF = (FVC->UDF << 16) | (u32Ver & 0xfful);
-    while(FVC->STS & FVC_STS_BUSY_Msk) {}
-    if(FVC->UDF != u32Ver)
-        return -1;
-
-    return 0;
-}
-
 
 /**@}*/ /* end of group FVC_EXPORTED_FUNCTIONS */
 

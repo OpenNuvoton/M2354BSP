@@ -28,10 +28,6 @@ extern "C"
 */
 
 #define FVC_VCODE   (0x77100000ul)  /*!< The key code for FVC_CTL write. */
-#define FVC_BL2     (FVC->BL2)      /*!< Version number of BL2 Firmware  */
-#define FVC_BL32    (FVC->BL32)     /*!< Version number of BL32 Firmware */
-#define FVC_BL33    (FVC->BL33)     /*!< Version number of BL33 Firmware */
-#define FVC_UDF     (FVC->UDF)      /*!< Version number of User Firmware */
 
 /**@}*/ /* end of group FVC_EXPORTED_CONSTANTS */
 
@@ -42,10 +38,8 @@ extern "C"
 
 int32_t FVC_Open(void);
 void FVC_EnableMonotone(void);
-int32_t FVC_SetBL2Ver(uint32_t u32Ver);
-int32_t FVC_SetBL32Ver(uint32_t u32Ver);
-int32_t FVC_SetBL33Ver(uint32_t u32Ver);
-int32_t FVC_SetUDFVer(uint32_t u32Ver);
+int32_t FVC_SetNVC(uint32_t u32NvcIdx, uint32_t u32Cnt);
+int32_t FVC_GetNVC(uint32_t u32NvcIdx);
 
 
 /**@}*/ /* end of group FVC_EXPORTED_FUNCTIONS */
