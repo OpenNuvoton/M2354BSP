@@ -107,49 +107,25 @@ void I2S0_IRQHandler(void)
 
 void SYS_Init(void)
 {
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
+
     /* Enable HIRC clock */
     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
-    /* Waiting for HIRC clock ready */
+    /* Wait for HIRC clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
-
-    /* Select HCLK clock source as HIRC and HCLK source divider as 1 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
-
-    /* Enable HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
-
-    /* Wait for HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
-
-    /* Set power level to 0 */
-    SYS_SetPowerLevel(SYS_PLCTL_PLSEL_PL0);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
 
-    /* Enable SRAM module clock */
-    CLK_EnableModuleClock(SRAM1_MODULE);
-    CLK_EnableModuleClock(SRAM2_MODULE);
-
-    /* Enable GPIO module clock */
-    CLK_EnableModuleClock(GPA_MODULE);
-    CLK_EnableModuleClock(GPB_MODULE);
-    CLK_EnableModuleClock(GPC_MODULE);
-    CLK_EnableModuleClock(GPD_MODULE);
-    CLK_EnableModuleClock(GPE_MODULE);
-    CLK_EnableModuleClock(GPF_MODULE);
-    CLK_EnableModuleClock(GPG_MODULE);
-    CLK_EnableModuleClock(GPH_MODULE);
-
-    /* Select UART module clock source as HIRC and UART module clock divider as 1 */
-    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
-
-    /* Enable UART peripheral clock */
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
+
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
     /* Enable I2S0 peripheral clock */
     CLK_EnableModuleClock(I2S0_MODULE);
@@ -160,19 +136,20 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
     /*---------------------------------------------------------------------------------------------------------*/
+
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
     /* Set multi function pin for I2S0 */
-    /* PF10, PF9, PF8, PF7, PF6 */
     SYS->GPF_MFPH = (SYS->GPF_MFPH & ~(SYS_GPF_MFPH_PF8MFP_Msk | SYS_GPF_MFPH_PF9MFP_Msk | SYS_GPF_MFPH_PF10MFP_Msk)) |
                     (SYS_GPF_MFPH_PF8MFP_I2S0_DI | SYS_GPF_MFPH_PF9MFP_I2S0_MCLK | SYS_GPF_MFPH_PF10MFP_I2S0_BCLK);
     SYS->GPF_MFPL = (SYS->GPF_MFPL & ~(SYS_GPF_MFPL_PF6MFP_Msk | SYS_GPF_MFPL_PF7MFP_Msk)) |
                     (SYS_GPF_MFPL_PF6MFP_I2S0_LRCK | SYS_GPF_MFPL_PF7MFP_I2S0_DO);
 
-    /* Set CODEC_I2C multi-function pins */
+    /* Set multi-function pins for CODEC_I2C */
     SYS->GPA_MFPH &= ~(SYS_GPA_MFPH_PA10MFP_Msk | SYS_GPA_MFPH_PA11MFP_Msk);
     SYS->GPA_MFPH |= (SYS_GPA_MFPH_PA10MFP_I2C2_SDA | SYS_GPA_MFPH_PA11MFP_I2C2_SCL);
+
 }
 
 

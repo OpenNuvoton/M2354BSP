@@ -37,11 +37,10 @@ void PDMA_Init(void);
 
 void SYS_Init(void)
 {
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
-    /* Unlock protected registers */
-    SYS_UnlockReg();
 
     /* Enable HIRC clock */
     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
@@ -49,60 +48,33 @@ void SYS_Init(void)
     /* Wait for HIRC clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
 
-    /* Set XT1_OUT(PF.2) and XT1_IN(PF.3) to input mode */
-    PF->MODE &= ~(GPIO_MODE_MODE2_Msk | GPIO_MODE_MODE3_Msk);
-
-    /* Enable HXT clock (external XTAL 12MHz) */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
-
-    /* Wait for HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
-
-    /* Set power level to 0 */
-    SYS_SetPowerLevel(SYS_PLCTL_PLSEL_PL0);
-
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
 
-    /* Enable SRAM module clock */
-    CLK_EnableModuleClock(SRAM1_MODULE);
-    CLK_EnableModuleClock(SRAM2_MODULE);
+    /* Enable UART0 module clock */
+    CLK_EnableModuleClock(UART0_MODULE);
 
-    /* Enable GPIO module clock */
-    CLK_EnableModuleClock(GPA_MODULE);
-    CLK_EnableModuleClock(GPB_MODULE);
-    CLK_EnableModuleClock(GPC_MODULE);
-    CLK_EnableModuleClock(GPD_MODULE);
-    CLK_EnableModuleClock(GPE_MODULE);
-    CLK_EnableModuleClock(GPF_MODULE);
-    CLK_EnableModuleClock(GPG_MODULE);
-    CLK_EnableModuleClock(GPH_MODULE);
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
-    /* Enable IP clock */
-    CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk; // UART0 Clock Enable
-    CLK->APBCLK0 |= CLK_APBCLK0_UART1CKEN_Msk; // UART1 Clock Enable
-    CLK->AHBCLK  |= CLK_AHBCLK_PDMA0CKEN_Msk; // PDMA Clock Enable
+    /* Enable UART1 module clock */
+    CLK_EnableModuleClock(UART1_MODULE);
 
-    /* Select IP clock source */
-    /* Select UART0 clock source is HXT */
-    CLK->CLKSEL2 = (CLK->CLKSEL2 & ~CLK_CLKSEL2_UART0SEL_Msk) | (0x0 << CLK_CLKSEL2_UART0SEL_Pos);
-    /* Select UART1 clock source is HXT */
-    CLK->CLKSEL2 = (CLK->CLKSEL2 & ~CLK_CLKSEL2_UART1SEL_Msk) | (0x0 << CLK_CLKSEL2_UART1SEL_Pos);
+    /* Select UART1 module clock source as HIRC and UART1 module clock divider as 1 */
+    CLK_SetModuleClock(UART1_MODULE, CLK_CLKSEL2_UART1SEL_HIRC, CLK_CLKDIV0_UART1(1));
 
-    /* Update System Core Clock */
-    /* User can use SystemCoreClockUpdate() to calculate PllClock, SystemCoreClock and CycylesPerUs automatically. */
-    SystemCoreClockUpdate();
+    /* Enable PDMA0 clock source */
+    CLK_EnableModuleClock(PDMA0_MODULE);
+
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init I/O Multi-function                                                                                 */
+    /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL &= ~(SYS_GPA_MFPL_PA6MFP_Msk | SYS_GPA_MFPL_PA7MFP_Msk);
-    SYS->GPA_MFPL |= (SYS_GPA_MFPL_PA6MFP_UART0_RXD | SYS_GPA_MFPL_PA7MFP_UART0_TXD);
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
-    /* Set PA multi-function pins for UART1 TXD, RXD */
-    SYS->GPA_MFPL &= ~(SYS_GPA_MFPL_PA2MFP_Msk | SYS_GPA_MFPL_PA3MFP_Msk);
-    SYS->GPA_MFPL |= (0x8 << SYS_GPA_MFPL_PA2MFP_Pos) | (0x8 << SYS_GPA_MFPL_PA3MFP_Pos);
-
-    /* Lock protected registers */
-    SYS_LockReg();
+    /* Set multi-function pins for UART1 TXD and RXD */
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART1_RXD_PA2_Msk | UART1_TXD_PA3_Msk))) | UART1_RXD_PA2 | UART1_TXD_PA3;
 
 }
 

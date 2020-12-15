@@ -26,66 +26,32 @@ void UART0_Init(void);
 void SYS_Init(void)
 {
 
-    /* Set PF multi-function pins for XT1_OUT(PF.2) and XT1_IN(PF.3) */
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF2MFP_Msk)) | XT1_OUT_PF2;
-    SYS->GPF_MFPL = (SYS->GPF_MFPL & (~SYS_GPF_MFPL_PF3MFP_Msk)) | XT1_IN_PF3;
-
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
 
-    /* Enable HIRC clock (Internal RC 12 MHz) */
+    /* Enable HIRC clock */
     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
     /* Wait for HIRC clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
 
-    /* Select HCLK clock source as HIRC and and HCLK source divider as 1 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
-
-    /* Enable HXT clock (external XTAL 12MHz) */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
-
-    /* Wait for HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
-
-    /* Set power level to 0 */
-    SYS_SetPowerLevel(SYS_PLCTL_PLSEL_PL0);
-
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
 
-    /* Enable SRAM module clock */
-    CLK_EnableModuleClock(SRAM1_MODULE);
-    CLK_EnableModuleClock(SRAM2_MODULE);
-
-    /* Enable GPIO module clock */
-    CLK_EnableModuleClock(GPA_MODULE);
-    CLK_EnableModuleClock(GPB_MODULE);
-    CLK_EnableModuleClock(GPC_MODULE);
-    CLK_EnableModuleClock(GPD_MODULE);
-    CLK_EnableModuleClock(GPE_MODULE);
-    CLK_EnableModuleClock(GPF_MODULE);
-    CLK_EnableModuleClock(GPG_MODULE);
-    CLK_EnableModuleClock(GPH_MODULE);
-
-    /* Enable UART module clock */
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
+
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
     /* Enable BPWM module clock */
     CLK_EnableModuleClock(BPWM0_MODULE);
     CLK_EnableModuleClock(BPWM1_MODULE);
 
-    /* Select UART module clock source */
-    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
-
     /* Select BPWM module clock source */
     CLK_SetModuleClock(BPWM0_MODULE, CLK_CLKSEL2_BPWM0SEL_PCLK0, 0);
     CLK_SetModuleClock(BPWM1_MODULE, CLK_CLKSEL2_BPWM1SEL_PCLK1, 0);
-
-    /* Reset BPWM0 and BPWM1 */
-    SYS_ResetModule(BPWM0_RST);
-    SYS_ResetModule(BPWM1_RST);
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
@@ -94,7 +60,7 @@ void SYS_Init(void)
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
-    /* Set multi-function pins for BPWM0 Channel0~5 */
+    /* Set multi-function pins for BPWM */
     SYS->GPE_MFPL = (SYS->GPE_MFPL & ~SYS_GPE_MFPL_PE2MFP_Msk) | SYS_GPE_MFPL_PE2MFP_BPWM0_CH0;
     SYS->GPE_MFPL = (SYS->GPE_MFPL & ~SYS_GPE_MFPL_PE3MFP_Msk) | SYS_GPE_MFPL_PE3MFP_BPWM0_CH1;
     SYS->GPE_MFPL = (SYS->GPE_MFPL & ~SYS_GPE_MFPL_PE4MFP_Msk) | SYS_GPE_MFPL_PE4MFP_BPWM0_CH2;
@@ -102,13 +68,13 @@ void SYS_Init(void)
     SYS->GPE_MFPL = (SYS->GPE_MFPL & ~SYS_GPE_MFPL_PE6MFP_Msk) | SYS_GPE_MFPL_PE6MFP_BPWM0_CH4;
     SYS->GPE_MFPL = (SYS->GPE_MFPL & ~SYS_GPE_MFPL_PE7MFP_Msk) | SYS_GPE_MFPL_PE7MFP_BPWM0_CH5;
 
-    /* Set multi-function pins for BPWM1 Channel0~5 */
     SYS->GPB_MFPH = (SYS->GPB_MFPH & ~SYS_GPB_MFPH_PB11MFP_Msk) | SYS_GPB_MFPH_PB11MFP_BPWM1_CH0;
     SYS->GPB_MFPH = (SYS->GPB_MFPH & ~SYS_GPB_MFPH_PB10MFP_Msk) | SYS_GPB_MFPH_PB10MFP_BPWM1_CH1;
     SYS->GPB_MFPH = (SYS->GPB_MFPH & ~SYS_GPB_MFPH_PB9MFP_Msk) | SYS_GPB_MFPH_PB9MFP_BPWM1_CH2;
     SYS->GPB_MFPH = (SYS->GPB_MFPH & ~SYS_GPB_MFPH_PB8MFP_Msk) | SYS_GPB_MFPH_PB8MFP_BPWM1_CH3;
     SYS->GPB_MFPL = (SYS->GPB_MFPL & ~SYS_GPB_MFPL_PB7MFP_Msk) | SYS_GPB_MFPL_PB7MFP_BPWM1_CH4;
     SYS->GPB_MFPL = (SYS->GPB_MFPL & ~SYS_GPB_MFPL_PB6MFP_Msk) | SYS_GPB_MFPL_PB6MFP_BPWM1_CH5;
+
 }
 void UART0_Init(void)
 {
