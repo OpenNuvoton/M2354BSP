@@ -1,10 +1,10 @@
 /******************************************************************************
  * @file     usbd_audio.c
- * @brief    December series USBD driver Sample file
+ * @brief    NuMicro series USBD driver Sample file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */
@@ -840,5 +840,3 @@ void TMR0_IRQHandler(void)
             AdjustCodecPll(E_RS_DOWN);
     }
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

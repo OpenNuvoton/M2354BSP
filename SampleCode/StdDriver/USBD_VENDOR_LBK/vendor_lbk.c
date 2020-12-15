@@ -1,10 +1,11 @@
 /***************************************************************************//**
  * @file     vendor_lbk.c
+ * @version  V1.00
  * @brief    M2354 series USBD Vendor LBK device driver Sample file
- * @version  2.0.0
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */
@@ -374,5 +375,3 @@ void VendorLBK_ProcessData(void)
         USBD_SET_PAYLOAD_LEN(EP7, EP7_MAX_PKT_SIZE);
     }
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

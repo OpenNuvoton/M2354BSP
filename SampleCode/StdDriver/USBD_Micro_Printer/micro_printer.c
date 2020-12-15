@@ -3,8 +3,8 @@
  * @brief    M2354 series USBD driver Sample file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 #include "NuMicro.h"
@@ -259,5 +259,3 @@ void PTR_Data_Receive(void)
     /* trigger next OUT data */
     USBD_SET_PAYLOAD_LEN(EP3, EP3_MAX_PKT_SIZE);
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

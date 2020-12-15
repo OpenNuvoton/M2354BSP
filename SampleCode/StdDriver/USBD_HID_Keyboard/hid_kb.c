@@ -3,8 +3,8 @@
  * @brief    M2354 series USBD HID keyboard sample file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */
@@ -297,5 +297,3 @@ void HID_ClassRequest(void)
         }
     }
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

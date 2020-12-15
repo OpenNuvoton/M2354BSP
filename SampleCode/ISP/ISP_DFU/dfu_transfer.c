@@ -1,10 +1,10 @@
 /******************************************************************************//**
  * @file     dfu_transfer.c
- * @version  V1.00
  * @brief    M2354 series USBD DFU transfer sample file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */

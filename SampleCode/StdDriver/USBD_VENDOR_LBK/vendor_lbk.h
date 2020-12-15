@@ -1,10 +1,11 @@
 /***************************************************************************//**
  * @file     vendor_lbk.h
+ * @version  V1.00
  * @brief    M2354 series USBD Vendor LBK driver header file
- * @version  2.0.0
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __VENDOR_LBK_H_
 #define __VENDOR_LBK_H_
@@ -81,5 +82,3 @@ void VendorLBK_ClassRequest(void);
 void VendorLBK_ProcessData(void);
 
 #endif  /* __VENDOR_LBK_H_ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

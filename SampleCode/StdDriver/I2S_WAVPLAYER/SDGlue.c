@@ -1,11 +1,11 @@
 /******************************************************************************
  * @file     SDGlue.c
- * @version  V1.00
+ * @version  V3.00
  * @brief    SD glue functions for FATFS
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,4 +59,3 @@ void SDH_Close_Disk(SDH_T *sdh)
 //        memset(&_FatfsVolSd1, 0, sizeof(FATFS));
     }
 }
-

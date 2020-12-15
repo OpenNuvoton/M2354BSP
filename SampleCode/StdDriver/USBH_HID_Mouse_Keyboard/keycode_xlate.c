@@ -3,8 +3,9 @@
  * @version  V1.00
  * @brief    M2354 MCU USB Host HID keyboard code translation.
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 
 #include <stdio.h>
@@ -266,5 +267,3 @@ void kbd_function_input(uint8_t code)
     }
 #endif
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

@@ -1,11 +1,10 @@
 /******************************************************************************
  * @file     main.c
  * @brief    ISP tool main function
- * @version  0x32
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -38,29 +37,34 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
-    /* Enable Internal RC 48MHz clock */
+
+    /* Enable HIRC48 clock */
     CLK->PWRCTL |= CLK_PWRCTL_HIRC48EN_Msk;
 
-    /* Waiting for Internal RC clock ready */
+    /* Wait for HIRC48 clock ready */
     while(!(CLK->STATUS & CLK_STATUS_HIRC48STB_Msk));
 
-    /* Set Flash Access Cycle by HCLK working frequency */
+    /* Set power level by HCLK working frequency */
+    SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL2;
+
+    /* Set Flash access cycle by HCLK working frequency */
     FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (2);
 
-    /* Switch HCLK clock source to Internal RC and HCLK source divide 1 */
+    /* Select HCLK clock source as HIRC48 and HCLK clock divider as 1 */
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC48;
     CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | CLK_CLKDIV0_HCLK(1);
-    /* Use HIRC48 as USB clock source */
+    /* Select USB clock source as HIRC48 and USB clock divider as 1 */
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_USBSEL_Msk)) | CLK_CLKSEL0_USBSEL_HIRC48;
     CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_USBDIV_Msk)) | CLK_CLKDIV0_USB(1);
     /* Select USBD */
     SYS->USBPHY = (SYS->USBPHY & ~SYS_USBPHY_USBROLE_Msk) | SYS_USBPHY_OTGPHYEN_Msk | SYS_USBPHY_SBO_Msk;
-    /* Enable IP clock */
+    /* Enable USBD module clock */
     CLK->APBCLK0 |= CLK_APBCLK0_USBDCKEN_Msk;
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
     /*---------------------------------------------------------------------------------------------------------*/
+
     /* USBD multi-function pins for VBUS, D+, D-, and ID pins */
     SYS->GPA_MFPH &= ~(SYS_GPA_MFPH_PA12MFP_Msk | SYS_GPA_MFPH_PA13MFP_Msk | SYS_GPA_MFPH_PA14MFP_Msk | SYS_GPA_MFPH_PA15MFP_Msk);
     SYS->GPA_MFPH |= (SYS_GPA_MFPH_PA12MFP_USB_VBUS | SYS_GPA_MFPH_PA13MFP_USB_D_N | SYS_GPA_MFPH_PA14MFP_USB_D_P | SYS_GPA_MFPH_PA15MFP_USB_OTG_ID);
@@ -150,5 +154,3 @@ _APROM:
     /* Trap the CPU */
     while(1);
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

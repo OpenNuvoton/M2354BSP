@@ -3,8 +3,8 @@
  * @brief    M2354 series USBD HID mouse sample file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */
@@ -334,5 +334,3 @@ void HID_UpdateMouseData(void)
         USBD_SET_PAYLOAD_LEN(EP2, 4);
     }
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

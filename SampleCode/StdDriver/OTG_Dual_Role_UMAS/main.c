@@ -4,9 +4,10 @@
  *           Demonstrate how USB works as a dual role device.
  *           If it works as USB Host, it can access a mass storage device.
  *           If it works as USB Device, it acts as a mass storage device.
+ *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -362,31 +363,26 @@ void SYS_Init(void)
     /* Unlock protected registers */
     SYS_UnlockReg();
 
-    /* Set XT1_OUT(PF.2) and XT1_IN(PF.3) to input mode */
-    PF->MODE &= ~(GPIO_MODE_MODE2_Msk | GPIO_MODE_MODE3_Msk);
-
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
-    /* Enable HIRC clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
-    /* Waiting for HIRC clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+    /* Enable HIRC and HXT clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
-    /* Select HCLK clock source as HIRC and HCLK source divider as 1 */
+    /* Wait for HIRC and HXT clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
+
+    /* Select HCLK clock source as HIRC and HCLK clock divider as 1 */
     CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
 
-    /* Enable external XTAL 12MHz clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
-
-    /* Waiting for 12MHz clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
+    /* Disable PLL clock before setting PLL frequency */
+    CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
 
     /* Set PLL frequency */
     CLK->PLLCTL = CLK_PLLCTL_144MHz_HXT;
 
-    /* Waiting for clock ready */
+    /* Waiting for PLL clock ready */
     CLK_WaitClockReady(CLK_STATUS_PLLSTB_Msk);
 
     /* Switch HCLK clock source to PLL */
@@ -395,7 +391,7 @@ void SYS_Init(void)
     /* Set OTG as ID dependent role */
     SYS->USBPHY = (SYS->USBPHY & ~SYS_USBPHY_USBROLE_Msk) | SYS_USBPHY_OTGPHYEN_Msk | SYS_USBPHY_SBO_Msk | (0x2 << SYS_USBPHY_USBROLE_Pos);
 
-    /* Select IP clock source */
+    /* Select USB clock divider as 3 */
     CLK->CLKDIV0 = (CLK->CLKDIV0 & ~CLK_CLKDIV0_USBDIV_Msk) | CLK_CLKDIV0_USB(3);
 
     /* Enable USBH module clock */
@@ -407,18 +403,19 @@ void SYS_Init(void)
     /* Enable OTG module clock */
     CLK_EnableModuleClock(OTG_MODULE);
 
-    /* Select UART module clock source */
-    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
-
-    /* Enable UART module clock */
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* Enable SRAM clock */
-    CLK_EnableModuleClock(SRAM1_MODULE);
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
     /*---------------------------------------------------------------------------------------------------------*/
+
+    /* Set multi-function pins for UART0 RXD and TXD */
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+
     /* USBD multi-function pins for VBUS, D+, D-, and ID pins */
     SYS->GPA_MFPH &= ~(SYS_GPA_MFPH_PA12MFP_Msk | SYS_GPA_MFPH_PA13MFP_Msk | SYS_GPA_MFPH_PA14MFP_Msk | SYS_GPA_MFPH_PA15MFP_Msk);
     SYS->GPA_MFPH |= (SYS_GPA_MFPH_PA12MFP_USB_VBUS | SYS_GPA_MFPH_PA13MFP_USB_D_N | SYS_GPA_MFPH_PA14MFP_USB_D_P | SYS_GPA_MFPH_PA15MFP_USB_OTG_ID);
@@ -426,9 +423,6 @@ void SYS_Init(void)
     /* USB_VBUS_EN (USBD VBUS power enable pin) and USB_VBUS_ST (USBD over-current detect pin) multi-function pins */
     SYS->GPB_MFPH &= ~(SYS_GPB_MFPH_PB14MFP_Msk | SYS_GPB_MFPH_PB15MFP_Msk);
     SYS->GPB_MFPH |= (SYS_GPB_MFPH_PB14MFP_USB_VBUS_ST | SYS_GPB_MFPH_PB15MFP_USB_VBUS_EN);
-
-    /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
     /* Lock protected registers */
     SYS_LockReg();
@@ -1025,6 +1019,3 @@ int32_t main(void)
         }
     }
 }
-
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

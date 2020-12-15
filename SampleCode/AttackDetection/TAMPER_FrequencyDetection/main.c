@@ -3,8 +3,9 @@
  * @version  V3.00
  * @brief    Show the usage of LXT clock frequency monitor function.
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
@@ -60,44 +61,14 @@ void SYS_Init(void)
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
 
-    /* Enable HIRC clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
+    /* Enable HIRC, HXT and LXT clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk | CLK_PWRCTL_LXTEN_Msk);
 
-    /* Waiting for HIRC clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+    /* Wait for HIRC, HXT and LXT clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk | CLK_STATUS_LXTSTB_Msk);
 
-    /* Select HCLK clock source as HIRC and HCLK source divider as 1 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
-
-    /* Enable HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
-
-    /* Waiting for HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
-
-    /* Enable LXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_LXTEN_Msk);
-
-    /* Waiting for LXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_LXTSTB_Msk);
-
-    /* Enable PLL */
-    CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
-
-    /* Waiting for PLL stable */
-    CLK_WaitClockReady(CLK_STATUS_PLLSTB_Msk);
-
-    /* Select power level as level 0 */
-    SYS_SetPowerLevel(SYS_PLCTL_PLSEL_PL0);
-
-    /* Select HCLK clock source as PLL and HCLK source divider as 1 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_PLL, CLK_CLKDIV0_HCLK(1));
-
-    /* Enable UART module clock */
-    CLK_EnableModuleClock(UART0_MODULE);
-
-    /* Select UART module clock source as HIRC and UART module clock divider as 1 */
-    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
     /* Enable TAMPER module clock */
     CLK_EnableModuleClock(TAMPER_MODULE);
@@ -105,9 +76,16 @@ void SYS_Init(void)
     /* Enable RTC peripheral clock */
     CLK_EnableModuleClock(RTC_MODULE);
 
+    /* Enable UART0 module clock */
+    CLK_EnableModuleClock(UART0_MODULE);
+
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
     /*---------------------------------------------------------------------------------------------------------*/
+
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 }
@@ -271,5 +249,3 @@ int main(void)
     /* Wait for LXT clock frequency monitor fail/stop interrupt happened */
     while(1);
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

@@ -3,8 +3,8 @@
  * @brief    M2354 series USBD driver Sample file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */
@@ -496,5 +496,3 @@ void VCOM_LineCoding(uint8_t u8Port)
         NVIC_EnableIRQ(UART1_IRQn);
     }
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

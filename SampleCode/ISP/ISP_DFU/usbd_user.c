@@ -3,8 +3,9 @@
  * @version  V3.00
  * @brief    M2354 series USBD driver source file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 
 #include <string.h>
@@ -794,5 +795,3 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

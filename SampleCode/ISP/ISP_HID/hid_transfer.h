@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file     hid_transfer.h
  * @brief    M2354 series USBD driver header file
- * @version  2.0.0
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USBD_HID_H__
 #define __USBD_HID_H__
@@ -78,5 +78,3 @@ void HID_SetInReport(void);
 void HID_GetOutReport(uint8_t *pu8EpBuf, uint32_t u32Size);
 
 #endif  /* __USBD_HID_H_ */
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

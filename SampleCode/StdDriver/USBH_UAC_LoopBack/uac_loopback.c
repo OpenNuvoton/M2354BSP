@@ -3,8 +3,8 @@
  * @brief    NuMicro series USBD audio sample file
  *
  * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */
@@ -178,5 +178,3 @@ int audio_out_callback(UAC_DEV_T *dev, uint8_t *pu8Data, int i8Len)
 
     return 192;   // for 48000 stero Hz
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

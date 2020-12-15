@@ -1,11 +1,12 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.00
+ * @version  V3.00
  * @brief    This is a WAV file player which plays back WAV file stored in
  *           SD memory card.
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -395,38 +396,21 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
-    /* Enable HIRC clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
-    /* Waiting for HIRC clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+    /* Enable HIRC and HXT clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
-    /* Select HCLK clock source as HIRC and HCLK source divider as 1 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
+    /* Wait for HIRC and HXT clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
-    /* Enable HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
-    /* Wait for HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HXTSTB_Msk);
-
-    /* Enable PLL */
-    CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
-
-    /* Waiting for PLL stable */
-    CLK_WaitClockReady(CLK_STATUS_PLLSTB_Msk);
-
-    /* Select power level as level 0 */
-    SYS_SetPowerLevel(SYS_PLCTL_PLSEL_PL0);
-
-    /* Select HCLK clock source as PLL and HCLK source divider as 1 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_PLL, CLK_CLKDIV0_HCLK(1));
-
-    /* Select UART module clock source as HIRC and UART module clock divider as 1 */
-    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
-
-    /* Enable UART peripheral clock */
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
+
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
     /* Enable I2S0 peripheral clock */
     CLK_EnableModuleClock(I2S0_MODULE);
@@ -437,18 +421,14 @@ void SYS_Init(void)
     /* Enable PDMA0 clock source */
     CLK_EnableModuleClock(PDMA0_MODULE);
 
-    /* Enable SRAM clock */
-    CLK_EnableModuleClock(SRAM1_MODULE);
-    CLK_EnableModuleClock(SRAM2_MODULE);
-
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
     /*---------------------------------------------------------------------------------------------------------*/
+
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
     /* Set multi-function pins for I2S0 */
-    /* GPC0, GPC1, GPC2, GPC3, GPC4 */
     SYS->GPC_MFPL &= ~(SYS_GPC_MFPL_PC0MFP_Msk | SYS_GPC_MFPL_PC1MFP_Msk | SYS_GPC_MFPL_PC2MFP_Msk | SYS_GPC_MFPL_PC3MFP_Msk | SYS_GPC_MFPL_PC4MFP_Msk);
     SYS->GPC_MFPL |= (SYS_GPC_MFPL_PC0MFP_I2S0_LRCK | SYS_GPC_MFPL_PC1MFP_I2S0_DO | SYS_GPC_MFPL_PC2MFP_I2S0_DI | SYS_GPC_MFPL_PC3MFP_I2S0_MCLK | SYS_GPC_MFPL_PC4MFP_I2S0_BCLK);
 
@@ -518,7 +498,7 @@ int32_t main(void)
     /* Init I2C2 to access NAU88L25 */
     I2C2_Init();
 
-    /* select source from HXT(12MHz) */
+    /* Select source from HXT(12MHz) */
     CLK_SetModuleClock(I2S0_MODULE, CLK_CLKSEL3_I2S0SEL_HXT, 0);
 
     /* Reset NAU88L25 codec */
@@ -538,6 +518,3 @@ int32_t main(void)
 
     while(1);
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
-

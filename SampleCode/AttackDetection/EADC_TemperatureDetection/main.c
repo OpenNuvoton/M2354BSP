@@ -3,13 +3,14 @@
  * @version  V3.00
  * @brief    Show how to measure temperature by EADC.
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
 
-#define VREF_VOLTAGE (3.3)
+#define VREF_VOLTAGE (3.0)
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Define global variables and constants                                                                   */
@@ -34,35 +35,23 @@ void SYS_Init(void)
     /* Enable HIRC clock */
     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
-    /* Waiting for HIRC clock ready */
+    /* Wait for HIRC clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
 
-    /* Select HCLK clock source as HIRC and HCLK source divider as 1 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_HIRC, CLK_CLKDIV0_HCLK(1));
+    /* Set core clock to 96MHz */
+    CLK_SetCoreClock(96000000);
 
-    /* Enable PLL */
-    CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
-
-    /* Waiting for PLL stable */
-    CLK_WaitClockReady(CLK_STATUS_PLLSTB_Msk);
-
-    /* Select power level as level 0 */
-    SYS_SetPowerLevel(SYS_PLCTL_PLSEL_PL0);
-
-    /* Select HCLK clock source as PLL and HCLK source divider as 1 */
-    CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_PLL, CLK_CLKDIV0_HCLK(1));
-
-    /* Enable UART module clock */
+    /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* Select UART module clock source as HIRC and UART module clock divider as 1 */
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
     /* Enable EADC module clock */
     CLK_EnableModuleClock(EADC_MODULE);
 
-    /* EADC clock source is 64MHz, set divider to 8, EADC clock is 64/8 MHz */
-    CLK_SetModuleClock(EADC_MODULE, 0, CLK_CLKDIV0_EADC(8));
+    /* EADC clock source is 96MHz, set divider to 8, EADC clock is 96/8 MHz */
+    CLK_SetModuleClock(EADC_MODULE, 0, CLK_CLKDIV0_EADC(12));
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */
@@ -198,7 +187,4 @@ int32_t main(void)
     NVIC_DisableIRQ(EADC0_IRQn);
 
     while(1);
-
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
