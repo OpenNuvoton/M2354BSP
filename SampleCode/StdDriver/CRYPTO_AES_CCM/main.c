@@ -1,10 +1,11 @@
 /**************************************************************************//**
  * @file     main.c
  * @version  V1.10
- * @brief    Mbedtls AES test suite
+ * @brief    Demonstrate how to encrypt/decrypt data by AES CCM.
  *
- * @copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
-*****************************************************************************/
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include "NuMicro.h"

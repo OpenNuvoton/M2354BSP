@@ -2,10 +2,10 @@
  * @file     main.c
  * @version  V3.00
  * @brief    Show how to wake up MCU from Power-down mode by ACMP wake-up function.
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
-*****************************************************************************/
+ * 
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
+ *****************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
 
