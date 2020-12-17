@@ -20,7 +20,7 @@
 /**
     @addtogroup DAC Digital to Analog Converter(DAC)
     Memory Mapped Structure for DAC Controller
-  @{ 
+  @{
 */
 
 
@@ -144,7 +144,7 @@ typedef struct
 /**
     @addtogroup DAC_CONST DAC Bit Field Definition
     Constant Definitions for DAC Controller
-  @{ 
+  @{
 */
 
 #define DAC_CTL_DACEN_Pos                (0)                                               /*!< DAC_T::CTL: DACEN Position             */

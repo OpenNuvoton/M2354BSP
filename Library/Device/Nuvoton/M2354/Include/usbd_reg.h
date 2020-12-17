@@ -19,7 +19,7 @@
 /**
     @addtogroup USBD USB Device Controller(USBD)
     Memory Mapped Structure for USBD Controller
-  @{ 
+  @{
 */
 
 
@@ -441,7 +441,7 @@ typedef struct
 /**
     @addtogroup USBD_CONST USBD Bit Field Definition
     Constant Definitions for USBD Controller
-  @{ 
+  @{
 */
 
 #define USBD_INTEN_BUSIEN_Pos            (0)                                               /*!< USBD_T::INTEN: BUSIEN Position         */

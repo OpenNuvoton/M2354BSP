@@ -534,12 +534,12 @@ void RSA_Start(CRPT_T *crpt);
 int32_t RSA_Read(CRPT_T *crpt, char * Output);
 int32_t RSA_SetKey_KS(CRPT_T *crpt, uint32_t u32KeyNum, uint32_t u32KSMemType, uint32_t u32BlindKeyNum);
 int32_t RSA_SetDMATransfer_KS(CRPT_T *crpt, char *Src, char *n, uint32_t u32PNum,
-                           uint32_t u32QNum, uint32_t u32CpNum, uint32_t u32CqNum, uint32_t u32DpNum,
-                           uint32_t u32DqNum, uint32_t u32RpNum, uint32_t u32RqNum);
+                              uint32_t u32QNum, uint32_t u32CpNum, uint32_t u32CqNum, uint32_t u32DpNum,
+                              uint32_t u32DqNum, uint32_t u32RpNum, uint32_t u32RqNum);
 int32_t  ECC_GeneratePublicKey_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[], uint32_t u32ExtraOp);
-int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message,KS_MEM_Type mem_d, int32_t i32KeyIdx_d,KS_MEM_Type mem_k, int32_t i32KeyIdx_k, char *R, char *S);
-int32_t  ECC_VerifySignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message,KS_MEM_Type mem_pk1, int32_t i32KeyIdx_pk1,KS_MEM_Type mem_pk2, int32_t i32KeyIdx_pk2, char *R, char *S);
-int32_t  ECC_GenerateSecretZ_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve,KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[]);
+int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_d, int32_t i32KeyIdx_d, KS_MEM_Type mem_k, int32_t i32KeyIdx_k, char *R, char *S);
+int32_t  ECC_VerifySignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_pk1, int32_t i32KeyIdx_pk1, KS_MEM_Type mem_pk2, int32_t i32KeyIdx_pk2, char *R, char *S);
+int32_t  ECC_GenerateSecretZ_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[]);
 
 void CRPT_Reg2Hex(int32_t count, uint32_t volatile reg[], char output[]);
 void CRPT_Hex2Reg(char input[], uint32_t volatile reg[]);

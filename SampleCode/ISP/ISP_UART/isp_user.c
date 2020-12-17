@@ -92,7 +92,7 @@ int ParseCmd(uint8_t *pu8Buffer, uint8_t u8len)
         {
             u32StartAddress = g_u32DataFlashAddr;
 
-            if(g_u32DataFlashSize)    
+            if(g_u32DataFlashSize)
             {
                 EraseAP(g_u32DataFlashAddr, g_u32DataFlashSize);
             }
@@ -150,7 +150,7 @@ int ParseCmd(uint8_t *pu8Buffer, uint8_t u8len)
         }
 
         u32TotalLen -= u32srclen;
-        WriteData(u32StartAddress, u32StartAddress + u32srclen, (uint32_t *)(uint32_t)pu8Src); 
+        WriteData(u32StartAddress, u32StartAddress + u32srclen, (uint32_t *)(uint32_t)pu8Src);
         memset(pu8Src, 0, u32srclen);
         ReadData(u32StartAddress, u32StartAddress + u32srclen, (uint32_t *)(uint32_t)pu8Src);
         u32StartAddress += u32srclen;

@@ -223,7 +223,7 @@ typedef struct
     uint32_t        IsUARTDataReady;
 
     ISPCallback     pfnVendorFunc;
-    
+
     GenKeyFunc      pfnGenKeyFunc;
 
     uint32_t        tmp0[8];

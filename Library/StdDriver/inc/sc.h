@@ -274,7 +274,7 @@ __STATIC_INLINE void SC_SetRxRetry(SC_T *sc, uint32_t u32Count)
 
     if((u32Count) != 0UL)
     {
-        while(((sc)->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk){}
+        while(((sc)->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk) {}
         (sc)->CTL |= (((u32Count) - 1UL) << SC_CTL_RXRTY_Pos) | SC_CTL_RXRTYEN_Msk;
     }
 }

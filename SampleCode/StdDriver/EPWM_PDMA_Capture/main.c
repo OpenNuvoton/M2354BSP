@@ -72,9 +72,9 @@ void PDMA0_IRQHandler(void)
 void CalPeriodTime(EPWM_T *EPWM, uint32_t u32Ch)
 {
     uint16_t u16RisingTime, u16FallingTime, u16HighPeriod, u16LowPeriod, u16TotalPeriod;
-    
-	  (void)EPWM;
-	  (void)u32Ch;
+
+    (void)EPWM;
+    (void)u32Ch;
 
     g_u32IsTestOver = 0;
     /* Wait PDMA interrupt (g_u32IsTestOver will be set at IRQ_Handler function) */
@@ -124,8 +124,8 @@ void SYS_Init(void)
     /* Enable EPWM1 module clock */
     CLK_EnableModuleClock(EPWM1_MODULE);
 
-	/* Select EPWM1 module clock source */
-	CLK_SetModuleClock(EPWM1_MODULE, CLK_CLKSEL2_EPWM1SEL_PCLK1, 0);
+    /* Select EPWM1 module clock source */
+    CLK_SetModuleClock(EPWM1_MODULE, CLK_CLKSEL2_EPWM1SEL_PCLK1, 0);
 
     /* Enable PDMA module clock */
     CLK_EnableModuleClock(PDMA0_MODULE);

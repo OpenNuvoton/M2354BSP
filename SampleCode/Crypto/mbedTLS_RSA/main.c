@@ -54,7 +54,7 @@ void SYS_Init(void)
 
 
 extern int PEMtoRSA(void);
-extern int RSAEncryptWithHashTest( int verbose );
+extern int RSAEncryptWithHashTest(int verbose);
 
 int32_t main(void)
 {
@@ -97,7 +97,7 @@ int32_t main(void)
     }
 #if 0
     printf("\n RSA encrypt with hash test. \n Please enter the [verbose] value, then press Enter Key:\n");
-    scanf("%d",&u32Verbose);
+    scanf("%d", &u32Verbose);
     printf("\n RSA encrypt with hash test start...   verbose[%d]\n", u32Verbose);
 #else
     u32Verbose = 1;

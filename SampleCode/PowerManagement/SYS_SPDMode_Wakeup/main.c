@@ -513,32 +513,32 @@ int32_t main(void)
 
     switch(u8Item)
     {
-    case '1':
-        WakeUpPinFunction(CLK_PMUCTL_PDMSEL_SPD);
-    //break;
-    case '2':
-        WakeUpTimerFunction(CLK_PMUCTL_PDMSEL_SPD, CLK_PMUCTL_WKTMRIS_3277);
-    //break;
-    case '3':
-        WakeUpACMP0Function(CLK_PMUCTL_PDMSEL_SPD);
-    //break;
-    case '4':
-        WakeUpRTCTickFunction(CLK_PMUCTL_PDMSEL_SPD);
-    //break;
-    case '5':
-        WakeUpRTCAlarmFunction(CLK_PMUCTL_PDMSEL_SPD);
-    //break;
-    case '6':
-        WakeUpRTCTamperFunction(CLK_PMUCTL_PDMSEL_SPD);
-    //break;
-    case '7':
-        WakeUpBODFunction(CLK_PMUCTL_PDMSEL_SPD);
-    //break;
-    case '8':
-        WakeUpLVRFunction(CLK_PMUCTL_PDMSEL_SPD);
-    //break;
-    default:
-        break;
+        case '1':
+            WakeUpPinFunction(CLK_PMUCTL_PDMSEL_SPD);
+        //break;
+        case '2':
+            WakeUpTimerFunction(CLK_PMUCTL_PDMSEL_SPD, CLK_PMUCTL_WKTMRIS_3277);
+        //break;
+        case '3':
+            WakeUpACMP0Function(CLK_PMUCTL_PDMSEL_SPD);
+        //break;
+        case '4':
+            WakeUpRTCTickFunction(CLK_PMUCTL_PDMSEL_SPD);
+        //break;
+        case '5':
+            WakeUpRTCAlarmFunction(CLK_PMUCTL_PDMSEL_SPD);
+        //break;
+        case '6':
+            WakeUpRTCTamperFunction(CLK_PMUCTL_PDMSEL_SPD);
+        //break;
+        case '7':
+            WakeUpBODFunction(CLK_PMUCTL_PDMSEL_SPD);
+        //break;
+        case '8':
+            WakeUpLVRFunction(CLK_PMUCTL_PDMSEL_SPD);
+        //break;
+        default:
+            break;
     }
 
     while(1);

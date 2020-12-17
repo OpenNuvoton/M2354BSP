@@ -24,7 +24,7 @@ extern "C"
 #define DEBUG_MSG(...)
 #endif
 
-#define BUF_SIZE	128
+#define BUF_SIZE    128
 #define ALIGN_BUFF_SIZE 64
 
 /**
@@ -41,9 +41,9 @@ int8_t OTA_API_TaskProcess(void);
   * @param       None
   * @return      None
   * @details     The function is used to disconnect transfer connection.
-  */    
+  */
 void OTA_API_TransferConnClose(void);
-    
+
 /**
   * @brief       Send frame data
   * @param[in]   pu8TxBuf        The buffer to send the data

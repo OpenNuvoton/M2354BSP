@@ -146,7 +146,7 @@ void PDMA_Callback_0(void)
         PDMA_UART_RxTest();
 
         /* Enable UART Tx and Rx PDMA function */
-        UART_PDMA_ENABLE(UART1, UART_INTEN_TXPDMAEN_Msk|UART_INTEN_RXPDMAEN_Msk); 
+        UART_PDMA_ENABLE(UART1, UART_INTEN_TXPDMAEN_Msk | UART_INTEN_RXPDMAEN_Msk);
     }
     else
     {
@@ -177,7 +177,7 @@ void PDMA_Callback_1(void)
         PDMA_UART_RxTest();
 
         /* Enable UART Rx PDMA function */
-        UART_PDMA_ENABLE(UART1, UART_INTEN_RXPDMAEN_Msk);         
+        UART_PDMA_ENABLE(UART1, UART_INTEN_RXPDMAEN_Msk);
     }
     else
     {
@@ -208,7 +208,7 @@ void PDMA0_IRQHandler(void)
             PDMA_CLR_TD_FLAG(PDMA0, (1 << UART_TX_DMA_CH));
 
             /* Disable UART Tx PDMA function */
-            UART_PDMA_DISABLE(UART1, UART_INTEN_TXPDMAEN_Msk); 
+            UART_PDMA_DISABLE(UART1, UART_INTEN_TXPDMAEN_Msk);
         }
 
         /* UART Rx PDMA transfer done interrupt flag */
@@ -218,7 +218,7 @@ void PDMA0_IRQHandler(void)
             PDMA_CLR_TD_FLAG(PDMA0, (1 << UART_RX_DMA_CH));
 
             /* Disable UART Rx PDMA function */
-            UART_PDMA_DISABLE(UART1, UART_INTEN_RXPDMAEN_Msk);             
+            UART_PDMA_DISABLE(UART1, UART_INTEN_RXPDMAEN_Msk);
 
             /* Handle PDMA transfer done interrupt event */
             if(g_u32TwoChannelPdmaTest == 1)
@@ -338,7 +338,7 @@ void PDMA_UART(int32_t i32option)
     /* Enable UART0 RDA interrupt */
     if(g_u32TwoChannelPdmaTest == 0)
     {
-        NVIC_EnableIRQ(UART0_IRQn);        
+        NVIC_EnableIRQ(UART0_IRQn);
         UART_EnableInt(UART0, UART_INTEN_RDAIEN_Msk);
     }
 
@@ -348,9 +348,9 @@ void PDMA_UART(int32_t i32option)
 
     /* Enable UART Tx and Rx PDMA function */
     if(g_u32TwoChannelPdmaTest == 1)
-        UART_PDMA_ENABLE(UART1, UART_INTEN_TXPDMAEN_Msk);    
+        UART_PDMA_ENABLE(UART1, UART_INTEN_TXPDMAEN_Msk);
     else
-        UART_PDMA_DISABLE(UART1, UART_INTEN_TXPDMAEN_Msk);    
+        UART_PDMA_DISABLE(UART1, UART_INTEN_TXPDMAEN_Msk);
 
     UART_PDMA_ENABLE(UART1, UART_INTEN_RXPDMAEN_Msk);
 
@@ -362,7 +362,7 @@ void PDMA_UART(int32_t i32option)
         printf("target abort...\n");
 
     /* Disable UART Tx and Rx PDMA function */
-    UART_PDMA_DISABLE(UART1, UART_INTEN_TXPDMAEN_Msk|UART_INTEN_RXPDMAEN_Msk);  
+    UART_PDMA_DISABLE(UART1, UART_INTEN_TXPDMAEN_Msk | UART_INTEN_RXPDMAEN_Msk);
 
     /* Disable PDMA channel */
     PDMA_Close(PDMA0);
@@ -389,10 +389,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC and HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HIRC and HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);

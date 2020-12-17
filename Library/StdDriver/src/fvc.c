@@ -118,9 +118,9 @@ int32_t FVC_SetNVC(uint32_t u32NvcIdx, uint32_t u32Cnt)
   */
 int32_t FVC_GetNVC(uint32_t u32NvcIdx)
 {
-    if((u32NvcIdx == 2) || (u32NvcIdx ==3) || (u32NvcIdx > 5))
+    if((u32NvcIdx == 2) || (u32NvcIdx == 3) || (u32NvcIdx > 5))
         return -1;
-    
+
     return FVC->NVC[u32NvcIdx];
 }
 

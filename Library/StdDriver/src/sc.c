@@ -97,11 +97,11 @@ void SC_ClearFIFO(SC_T *sc)
 void SC_Close(SC_T *sc)
 {
     sc->INTEN = 0UL;
-    
+
     while((sc->PINCTL & SC_PINCTL_SYNC_Msk) == SC_PINCTL_SYNC_Msk) {}
     sc->PINCTL = 0UL;
     sc->ALTCTL = 0UL;
-        
+
     while((sc->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk) {}
     sc->CTL = 0UL;
 }
@@ -149,7 +149,7 @@ void SC_Open(SC_T *sc, uint32_t u32CardDet, uint32_t u32PWR)
         g_u32CardStateIgnore[u32Intf] = 1UL;
     }
     sc->PINCTL = u32PWR ? 0UL : SC_PINCTL_PWRINV_Msk;
-    
+
     while((sc->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk) {}
     sc->CTL = SC_CTL_SCEN_Msk | SC_CTL_TMRSEL_Msk | u32Reg;
 }
@@ -253,7 +253,7 @@ void SC_SetBlockGuardTime(SC_T *sc, uint32_t u32BGT)
 void SC_SetCharGuardTime(SC_T *sc, uint32_t u32CGT)
 {
     /* CGT is "START bit" + "8-bits" + "Parity bit" + "STOP bit(s)" + "EGT counts" */
-    u32CGT -= ((sc->CTL & SC_CTL_NSB_Msk) == SC_CTL_NSB_Msk)? 11UL : 12UL;
+    u32CGT -= ((sc->CTL & SC_CTL_NSB_Msk) == SC_CTL_NSB_Msk) ? 11UL : 12UL;
     sc->EGT = u32CGT;
 }
 

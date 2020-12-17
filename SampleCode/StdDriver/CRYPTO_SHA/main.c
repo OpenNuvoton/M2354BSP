@@ -68,10 +68,10 @@ int32_t RunSHA(void)
     g_SHA_done = 0;
     /* Start SHA calculation */
     SHA_Start(CRPT, CRYPTO_DMA_ONE_SHOT);
-    
+
     /* Waiting for SHA calcuation done */
     while(!g_SHA_done) ;
-    
+
     /* Read SHA calculation result */
     SHA_Read(CRPT, au32OutputDigest);
 
@@ -102,7 +102,7 @@ void SYS_Init(void)
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* ENable CRYPTO module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
@@ -117,7 +117,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;    
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
 }
 
@@ -156,8 +156,8 @@ int main(void)
     OpenTestVector();
 
     while(1)
-    {   
-        /* Get data from test vector to calcualte and 
+    {
+        /* Get data from test vector to calcualte and
            compre the result with golden pattern */
         if(GetNextPattern() < 0)
             break;

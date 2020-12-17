@@ -95,20 +95,20 @@ uint32_t LCD_Open(S_LCD_CFG_T *pLCDCfg)
 
     /* Set com and bias */
     LCD->PCTL = (pLCDCfg->u32ComDuty | pLCDCfg->u32BiasLevel);
-    
+
     /* Set waveform type */
     LCD_WAVEFORM_TYPE(pLCDCfg->u32WaveformType);
 
     /* Configure interrupt source */
     LCD->INTEN = pLCDCfg->u32IntSrc;
-    
+
     /* Set driving mode */
     LCD_DRIVING_MODE(pLCDCfg->u32DrivingMode);
-    
+
     /* Select voltage source */
     LCD_VOLTAGE_SOURCE(pLCDCfg->u32VSrc);
-    
-    /* 
+
+    /*
         An example for specify frame rate.
             If LCD source clock is 32768Hz, COM duty 4.
             In type-A:
@@ -126,34 +126,10 @@ uint32_t LCD_Open(S_LCD_CFG_T *pLCDCfg)
     if((pLCDCfg->u32WaveformType & LCD_PCTL_TYPE_Msk) == LCD_PCTL_TYPE_Msk)
     {
         /* In type-B */
-        
+
         /* Calculate LCD operation frequency */
         u32FreqLCD = (pLCDCfg->u32Framerate * u32ComNum);
-        
-        /* Calculate possible freq. divider */
-        u32FreqDiv = (pLCDCfg->u32SrcFreq  / u32FreqLCD);
-        
-        if(u32FreqDiv > 1024)
-        {
-            /* Invalid frame rate */
-            g_LCDFrameRate = 0ul;
-        }
-        else
-        {
-            /* Set freq. divider */
-            LCD_SET_FREQDIV(u32FreqDiv);
-            
-            /* Calculate target frame rate */
-            g_LCDFrameRate = pLCDCfg->u32SrcFreq / (u32ComNum * u32FreqDiv);
-        }
-    }
-    else
-    {
-        /* In type-A */
-                
-        /* Calculate LCD operation frequency */
-        u32FreqLCD = (pLCDCfg->u32Framerate * u32ComNum) * 2;
-        
+
         /* Calculate possible freq. divider */
         u32FreqDiv = (pLCDCfg->u32SrcFreq  / u32FreqLCD);
 
@@ -166,7 +142,31 @@ uint32_t LCD_Open(S_LCD_CFG_T *pLCDCfg)
         {
             /* Set freq. divider */
             LCD_SET_FREQDIV(u32FreqDiv);
-            
+
+            /* Calculate target frame rate */
+            g_LCDFrameRate = pLCDCfg->u32SrcFreq / (u32ComNum * u32FreqDiv);
+        }
+    }
+    else
+    {
+        /* In type-A */
+
+        /* Calculate LCD operation frequency */
+        u32FreqLCD = (pLCDCfg->u32Framerate * u32ComNum) * 2;
+
+        /* Calculate possible freq. divider */
+        u32FreqDiv = (pLCDCfg->u32SrcFreq  / u32FreqLCD);
+
+        if(u32FreqDiv > 1024)
+        {
+            /* Invalid frame rate */
+            g_LCDFrameRate = 0ul;
+        }
+        else
+        {
+            /* Set freq. divider */
+            LCD_SET_FREQDIV(u32FreqDiv);
+
             /* Calculate target frame rate */
             g_LCDFrameRate = (pLCDCfg->u32SrcFreq  / (u32ComNum * u32FreqDiv)) / 2;
         }
@@ -206,15 +206,15 @@ void LCD_SetPixel(uint32_t u32Com, uint32_t u32Seg, uint32_t u32OnFlag)
     uint32_t seg_num = (u32Seg / 4);
     uint32_t seg_shift = (8 * (u32Seg - (4 * seg_num)));
 
-    if (seg_num < 11)
+    if(seg_num < 11)
     {
         if(u32OnFlag)
         {
-            LCD->DATA[seg_num] |= ((uint32_t)(1<<u32Com) << seg_shift);
+            LCD->DATA[seg_num] |= ((uint32_t)(1 << u32Com) << seg_shift);
         }
         else
         {
-            LCD->DATA[seg_num] &= (~((uint32_t)(1<<u32Com) << seg_shift));
+            LCD->DATA[seg_num] &= (~((uint32_t)(1 << u32Com) << seg_shift));
         }
     }
 }
@@ -275,7 +275,7 @@ uint32_t LCD_EnableBlink(uint32_t u32ms)
         u32TargetCounts = 1;
     if(u32TargetCounts > 1024)
         u32TargetCounts = 1024;
-    
+
     LCD_SET_FRAME_COUNTING_VALUE(u32TargetCounts);
 
     /* Enable blink display */
@@ -302,7 +302,7 @@ void LCD_DisableBlink(void)
 /**
   * @brief      Enable LCD Interrupt
   *
-  * @param[in]  IntSrc      Interrupt Source. It could be a combination of 
+  * @param[in]  IntSrc      Interrupt Source. It could be a combination of
   *                             \ref LCD_FRAME_COUNTING_END_INT, \ref LCD_FRAME_END_INT and \ref LCD_CPTOUT_INT.
   *
   * @return     None

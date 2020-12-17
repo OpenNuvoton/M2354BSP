@@ -118,10 +118,10 @@ void PDMA_SetStride(PDMA_T *pdma, uint32_t u32Ch, uint32_t u32DestLen, uint32_t 
  *
  * @details     This function set the selected repeat.
  */
-void PDMA_SetRepeat(PDMA_T * pdma,uint32_t u32Ch, uint32_t u32DestInterval, uint32_t u32SrcInterval, uint32_t u32RepeatCount)
+void PDMA_SetRepeat(PDMA_T * pdma, uint32_t u32Ch, uint32_t u32DestInterval, uint32_t u32SrcInterval, uint32_t u32RepeatCount)
 {
     pdma->DSCT[u32Ch].CTL |= PDMA_DSCT_CTL_STRIDEEN_Msk;
-    pdma->REPEAT[u32Ch].AICTL =((u32DestInterval)<<16) | (u32SrcInterval);
+    pdma->REPEAT[u32Ch].AICTL = ((u32DestInterval) << 16) | (u32SrcInterval);
     pdma->REPEAT[u32Ch].RCNT = u32RepeatCount;
 }
 
@@ -231,32 +231,32 @@ void PDMA_SetTransferMode(PDMA_T *pdma, uint32_t u32Ch, uint32_t u32Peripheral, 
     au8ChSelect[u32Ch] = (uint8_t)u32Peripheral;
     switch(u32Ch)
     {
-    case 0UL:
-        (pdma)->REQSEL0_3 = ((pdma)->REQSEL0_3 & ~PDMA_REQSEL0_3_REQSRC0_Msk) | u32Peripheral;
-        break;
-    case 1UL:
-        (pdma)->REQSEL0_3 = ((pdma)->REQSEL0_3 & ~PDMA_REQSEL0_3_REQSRC1_Msk) | (u32Peripheral << PDMA_REQSEL0_3_REQSRC1_Pos);
-        break;
-    case 2UL:
-        (pdma)->REQSEL0_3 = ((pdma)->REQSEL0_3 & ~PDMA_REQSEL0_3_REQSRC2_Msk) | (u32Peripheral << PDMA_REQSEL0_3_REQSRC2_Pos);
-        break;
-    case 3UL:
-        (pdma)->REQSEL0_3 = ((pdma)->REQSEL0_3 & ~PDMA_REQSEL0_3_REQSRC3_Msk) | (u32Peripheral << PDMA_REQSEL0_3_REQSRC3_Pos);
-        break;
-    case 4UL:
-        (pdma)->REQSEL4_7 = ((pdma)->REQSEL4_7 & ~PDMA_REQSEL4_7_REQSRC4_Msk) | u32Peripheral;
-        break;
-    case 5UL:
-        (pdma)->REQSEL4_7 = ((pdma)->REQSEL4_7 & ~PDMA_REQSEL4_7_REQSRC5_Msk) | (u32Peripheral << PDMA_REQSEL4_7_REQSRC5_Pos);
-        break;
-    case 6UL:
-        (pdma)->REQSEL4_7 = ((pdma)->REQSEL4_7 & ~PDMA_REQSEL4_7_REQSRC6_Msk) | (u32Peripheral << PDMA_REQSEL4_7_REQSRC6_Pos);
-        break;
-    case 7UL:
-        (pdma)->REQSEL4_7 = ((pdma)->REQSEL4_7 & ~PDMA_REQSEL4_7_REQSRC7_Msk) | (u32Peripheral << PDMA_REQSEL4_7_REQSRC7_Pos);
-        break;
-    default:
-        break;
+        case 0UL:
+            (pdma)->REQSEL0_3 = ((pdma)->REQSEL0_3 & ~PDMA_REQSEL0_3_REQSRC0_Msk) | u32Peripheral;
+            break;
+        case 1UL:
+            (pdma)->REQSEL0_3 = ((pdma)->REQSEL0_3 & ~PDMA_REQSEL0_3_REQSRC1_Msk) | (u32Peripheral << PDMA_REQSEL0_3_REQSRC1_Pos);
+            break;
+        case 2UL:
+            (pdma)->REQSEL0_3 = ((pdma)->REQSEL0_3 & ~PDMA_REQSEL0_3_REQSRC2_Msk) | (u32Peripheral << PDMA_REQSEL0_3_REQSRC2_Pos);
+            break;
+        case 3UL:
+            (pdma)->REQSEL0_3 = ((pdma)->REQSEL0_3 & ~PDMA_REQSEL0_3_REQSRC3_Msk) | (u32Peripheral << PDMA_REQSEL0_3_REQSRC3_Pos);
+            break;
+        case 4UL:
+            (pdma)->REQSEL4_7 = ((pdma)->REQSEL4_7 & ~PDMA_REQSEL4_7_REQSRC4_Msk) | u32Peripheral;
+            break;
+        case 5UL:
+            (pdma)->REQSEL4_7 = ((pdma)->REQSEL4_7 & ~PDMA_REQSEL4_7_REQSRC5_Msk) | (u32Peripheral << PDMA_REQSEL4_7_REQSRC5_Pos);
+            break;
+        case 6UL:
+            (pdma)->REQSEL4_7 = ((pdma)->REQSEL4_7 & ~PDMA_REQSEL4_7_REQSRC6_Msk) | (u32Peripheral << PDMA_REQSEL4_7_REQSRC6_Pos);
+            break;
+        case 7UL:
+            (pdma)->REQSEL4_7 = ((pdma)->REQSEL4_7 & ~PDMA_REQSEL4_7_REQSRC7_Msk) | (u32Peripheral << PDMA_REQSEL4_7_REQSRC7_Pos);
+            break;
+        default:
+            break;
     }
 
     if(u32ScatterEn)
@@ -347,15 +347,15 @@ void PDMA_SetTimeOut(PDMA_T *pdma, uint32_t u32Ch, uint32_t u32OnOff, uint32_t u
 {
     switch(u32Ch)
     {
-    case 0UL:
-        (pdma)->TOC0_1 = ((pdma)->TOC0_1 & ~PDMA_TOC0_1_TOC0_Msk) | u32TimeOutCnt;
-        break;
-    case 1UL:
-        (pdma)->TOC0_1 = ((pdma)->TOC0_1 & ~PDMA_TOC0_1_TOC1_Msk) | (u32TimeOutCnt << PDMA_TOC0_1_TOC1_Pos);
-        break;
+        case 0UL:
+            (pdma)->TOC0_1 = ((pdma)->TOC0_1 & ~PDMA_TOC0_1_TOC0_Msk) | u32TimeOutCnt;
+            break;
+        case 1UL:
+            (pdma)->TOC0_1 = ((pdma)->TOC0_1 & ~PDMA_TOC0_1_TOC1_Msk) | (u32TimeOutCnt << PDMA_TOC0_1_TOC1_Pos);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
     if(u32OnOff)
     {
@@ -405,19 +405,19 @@ void PDMA_EnableInt(PDMA_T *pdma, uint32_t u32Ch, uint32_t u32Mask)
 {
     switch(u32Mask)
     {
-    case PDMA_INT_TRANS_DONE:
-    case PDMA_INT_ALIGN:
-        (pdma)->INTEN |= (1UL << u32Ch);
-        break;
-    case PDMA_INT_TABLE:
-        (pdma)->DSCT[u32Ch].CTL &= ~PDMA_DSCT_CTL_TBINTDIS_Msk;
-        break;
-    case PDMA_INT_TIMEOUT:
-        (pdma)->TOUTIEN |= (1UL << u32Ch);
-        break;
+        case PDMA_INT_TRANS_DONE:
+        case PDMA_INT_ALIGN:
+            (pdma)->INTEN |= (1UL << u32Ch);
+            break;
+        case PDMA_INT_TABLE:
+            (pdma)->DSCT[u32Ch].CTL &= ~PDMA_DSCT_CTL_TBINTDIS_Msk;
+            break;
+        case PDMA_INT_TIMEOUT:
+            (pdma)->TOUTIEN |= (1UL << u32Ch);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -442,19 +442,19 @@ void PDMA_DisableInt(PDMA_T *pdma, uint32_t u32Ch, uint32_t u32Mask)
 {
     switch(u32Mask)
     {
-    case PDMA_INT_TRANS_DONE:
-    case PDMA_INT_ALIGN:
-        (pdma)->INTEN &= ~(1UL << u32Ch);
-        break;
-    case PDMA_INT_TABLE:
-        (pdma)->DSCT[u32Ch].CTL |= PDMA_DSCT_CTL_TBINTDIS_Msk;
-        break;
-    case PDMA_INT_TIMEOUT:
-        (pdma)->TOUTIEN &= ~(1UL << u32Ch);
-        break;
+        case PDMA_INT_TRANS_DONE:
+        case PDMA_INT_ALIGN:
+            (pdma)->INTEN &= ~(1UL << u32Ch);
+            break;
+        case PDMA_INT_TABLE:
+            (pdma)->DSCT[u32Ch].CTL |= PDMA_DSCT_CTL_TBINTDIS_Msk;
+            break;
+        case PDMA_INT_TIMEOUT:
+            (pdma)->TOUTIEN &= ~(1UL << u32Ch);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 

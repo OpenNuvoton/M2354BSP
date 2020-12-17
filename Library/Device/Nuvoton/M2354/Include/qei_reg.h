@@ -19,7 +19,7 @@
 /**
     @addtogroup QEI Quadrature Encoder Interface(QEI)
     Memory Mapped Structure for QEI Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -201,7 +201,7 @@ typedef struct
 /**
     @addtogroup QEI_CONST QEI Bit Field Definition
     Constant Definitions for QEI Controller
-  @{ 
+  @{
 */
 
 #define QEI_CNT_CNT_Pos                  (0)                                               /*!< QEI_T::CNT: CNT Position               */

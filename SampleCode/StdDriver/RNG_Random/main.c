@@ -31,24 +31,25 @@ void CRPT_IRQHandler(void)
 
 void DumpBuff(uint8_t *pucBuff, int nBytes)
 {
-    int nIdx, i,j;
+    int nIdx, i, j;
 
     nIdx = 0;
-    while (nBytes > 0) {
+    while(nBytes > 0)
+    {
         j = nBytes;
         if(j > 16)
         {
             j = 16;
         }
         printf("0x%04X  ", nIdx);
-        for (i = 0; i < j; i++)
+        for(i = 0; i < j; i++)
             printf("%02x ", pucBuff[nIdx + i]);
-        for (     ; i < 16; i++)
+        for(; i < 16; i++)
             printf("   ");
         printf("  ");
-        for (i = 0; i < j; i++)
+        for(i = 0; i < j; i++)
         {
-            if ((pucBuff[nIdx + i] >= 0x20) && (pucBuff[nIdx + i] < 127))
+            if((pucBuff[nIdx + i] >= 0x20) && (pucBuff[nIdx + i] < 127))
                 printf("%c", pucBuff[nIdx + i]);
             else
                 printf(".");
@@ -147,7 +148,7 @@ int main(void)
 
         if(n)
         {
-            for(i=0; i<8; i++)
+            for(i = 0; i < 8; i++)
             {
                 printf("%08x", au32Buf[i]);
             }
@@ -155,7 +156,8 @@ int main(void)
         }
 
         CLK_SysTickDelay(100000);
-    } while(1);
+    }
+    while(1);
 
 }
 

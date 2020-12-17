@@ -20,7 +20,7 @@
 /**
     @addtogroup EBI External Bus Interface Controller(EBI)
     Memory Mapped Structure for EBI Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -110,7 +110,7 @@ typedef struct
 /**
     @addtogroup EBI_CONST EBI Bit Field Definition
     Constant Definitions for EBI Controller
-  @{ 
+  @{
 */
 
 #define EBI_CTL_EN_Pos                   (0)                                               /*!< EBI_T::CTL0: EN Position                  */

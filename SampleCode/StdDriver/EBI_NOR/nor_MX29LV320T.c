@@ -142,7 +142,7 @@ uint16_t NOR_MX29LV320T_READ(uint32_t u32Bank, uint32_t u32DstAddr)
 int32_t NOR_MX29LV320T_WRITE(uint32_t u32Bank, uint32_t u32DstAddr, uint16_t u16Data)
 {
     (void)u32Bank; /* Since EBI bank 1 is fixed in this sample code, u32Bank is an unused parameter */
-    
+
     /* Command */
     EBI1_WRITE_DATA16(EBI, (0x555 << 1), 0xAA);
     EBI1_WRITE_DATA16(EBI, (0x2AA << 1), 0x55);

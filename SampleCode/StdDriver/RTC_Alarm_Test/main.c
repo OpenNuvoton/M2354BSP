@@ -81,7 +81,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -90,7 +90,7 @@ void SYS_Init(void)
 
     /* Waiting for clock ready */
     CLK_WaitClockReady(CLK_STATUS_LXTSTB_Msk);
-    
+
     /* Enable RTC module clock */
     CLK_EnableModuleClock(RTC_MODULE);
 }
@@ -125,7 +125,7 @@ int main(void)
 
     /* Lock protected registers */
     SYS_LockReg();
-    
+
     printf("\n\nCPU @ %dHz\n", SystemCoreClock);
     printf("+----------------------------------+\n");
     printf("|    RTC Alarm Test Sample Code    |\n");
@@ -133,7 +133,7 @@ int main(void)
 
     /* Set LXT as RTC clock source */
     RTC_SetClockSource(RTC_CLOCK_SOURCE_LXT);
-    
+
     /* Time Setting */
     sInitTime.u32Year       = 2019;
     sInitTime.u32Month      = 12;

@@ -4,7 +4,7 @@
  * \website https://majerle.eu
  * \license MIT
  * \brief   Generic cyclic buffer library
- *	
+ *
 \verbatim
    ----------------------------------------------------------------------
     Copyright (c) 2016 Tilen Majerle
@@ -13,8 +13,8 @@
     obtaining a copy of this software and associated documentation
     files (the "Software"), to deal in the Software without restriction,
     including without limitation the rights to use, copy, modify, merge,
-    publish, distribute, sublicense, and/or sell copies of the Software, 
-    and to permit persons to whom the Software is furnished to do so, 
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
     subject to the following conditions:
 
     The above copyright notice and this permission notice shall be
@@ -25,7 +25,7 @@
     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
     AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     OTHER DEALINGS IN THE SOFTWARE.
    ----------------------------------------------------------------------
@@ -53,13 +53,13 @@ extern "C" {
  *
 \verbatim
 - Buffer supports fast memory read/write operation using memory copy feature
-- Buffer will first check if string delimiter character exists in buffer. 
-    - If it exists, characters will be set to user buffer until delimiter is detected. 
-	- Delimiter is included in string!
-- If string delimiter is not in buffer, but cyclic buffer full, 
+- Buffer will first check if string delimiter character exists in buffer.
+    - If it exists, characters will be set to user buffer until delimiter is detected.
+    - Delimiter is included in string!
+- If string delimiter is not in buffer, but cyclic buffer full,
     then string will be also filled into user buffer, because we need to free
-	some memory for future characters, including string delimiter character
-- If user buffer size is less than number of characters in buffer before string delimiter is found, 
+    some memory for future characters, including string delimiter character
+- If user buffer size is less than number of characters in buffer before string delimiter is found,
     string is also filled in user buffer
 - In all other cases, if there is no string delimiter in buffer, buffer will not return anything and will check for it first.
 \endverbatim
@@ -100,7 +100,7 @@ extern "C" {
 /**
  * \}
  */
- 
+
 /**
  * \defgroup BUFFER_Typedefs
  * \brief    Library Typedefs
@@ -110,14 +110,15 @@ extern "C" {
 /**
  * \brief  Buffer structure
  */
-typedef struct _BUFFER_t {
-	uint32_t Size;           /*!< Size of buffer in units of bytes, DO NOT MOVE OFFSET, 0 */
-	uint32_t In;             /*!< Input pointer to save next value, DO NOT MOVE OFFSET, 1 */
-	uint32_t Out;            /*!< Output pointer to read next value, DO NOT MOVE OFFSET, 2 */
-	uint8_t* Buffer;         /*!< Pointer to buffer data array, DO NOT MOVE OFFSET, 3 */
-	uint8_t Flags;           /*!< Flags for buffer, DO NOT MOVE OFFSET, 4 */
-	uint8_t StringDelimiter; /*!< Character for string delimiter when reading from buffer as string, DO NOT MOVE OFFSET, 5 */
-	void* UserParameters;    /*!< Pointer to user value if needed */
+typedef struct _BUFFER_t
+{
+    uint32_t Size;           /*!< Size of buffer in units of bytes, DO NOT MOVE OFFSET, 0 */
+    uint32_t In;             /*!< Input pointer to save next value, DO NOT MOVE OFFSET, 1 */
+    uint32_t Out;            /*!< Output pointer to read next value, DO NOT MOVE OFFSET, 2 */
+    uint8_t* Buffer;         /*!< Pointer to buffer data array, DO NOT MOVE OFFSET, 3 */
+    uint8_t Flags;           /*!< Flags for buffer, DO NOT MOVE OFFSET, 4 */
+    uint8_t StringDelimiter; /*!< Character for string delimiter when reading from buffer as string, DO NOT MOVE OFFSET, 5 */
+    void* UserParameters;    /*!< Pointer to user value if needed */
 } BUFFER_t;
 
 /**
@@ -155,7 +156,7 @@ void BUFFER_Free(BUFFER_t* Buffer);
  * \param  *Buffer: Pointer to \ref BUFFER_t structure
  * \param  *Data: Pointer to data to be written
  * \param  count: Number of elements of type unsigned char to write
- * \retval Number of elements written in buffer 
+ * \retval Number of elements written in buffer
  */
 uint32_t BUFFER_Write(BUFFER_t* Buffer, const void* Data, uint32_t count);
 
@@ -174,19 +175,19 @@ uint32_t BUFFER_WriteToTop(BUFFER_t* Buffer, const void* Data, uint32_t count);
  * \param  *Buffer: Pointer to \ref BUFFER_t structure
  * \param  *Data: Pointer to data where read values will be stored
  * \param  count: Number of elements of type unsigned char to read
- * \retval Number of elements read from buffer 
+ * \retval Number of elements read from buffer
  */
 uint32_t BUFFER_Read(BUFFER_t* Buffer, void* Data, uint32_t count);
 
 /**
- * \brief  Gets number of free elements in buffer 
+ * \brief  Gets number of free elements in buffer
  * \param  *Buffer: Pointer to \ref BUFFER_t structure
  * \retval Number of free elements in buffer
  */
 uint32_t BUFFER_GetFree(BUFFER_t* Buffer);
 
 /**
- * \brief  Gets number of elements in buffer 
+ * \brief  Gets number of elements in buffer
  * \param  *Buffer: Pointer to \ref BUFFER_t structure
  * \retval Number of elements in buffer
  */
@@ -233,7 +234,7 @@ int32_t BUFFER_Find(BUFFER_t* Buffer, const void* Data, uint32_t Size);
 /**
  * \brief  Writes string formatted data to buffer
  * \param  *Buffer: Pointer to \ref BUFFER_t structure
- * \param  *buff: Pointer to string to write 
+ * \param  *buff: Pointer to string to write
  * \retval Number of characters written
  */
 uint32_t BUFFER_WriteString(BUFFER_t* Buffer, const char* buff);
@@ -261,7 +262,7 @@ int8_t BUFFER_CheckElement(BUFFER_t* Buffer, uint32_t pos, uint8_t* element);
 /**
  * \}
  */
- 
+
 /**
  * \}
  */

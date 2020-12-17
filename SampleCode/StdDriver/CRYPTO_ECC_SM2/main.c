@@ -96,7 +96,7 @@ void SYS_Init(void)
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* ENable CAN module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
@@ -111,7 +111,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;    
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
 }
 
@@ -268,15 +268,15 @@ int32_t main(void)
     }
 
     printf("\n\n");
-            
+
     strcpy(d, "bdca6455a55b9c2722d0f580f7f3c5633cbfcee85517aaa57f119b4b25569b43");
     ECC_GeneratePublicKey(CRPT, CURVE_P_SIZE, d, Qx, Qy);
     printf("d =%s\n", d);
     printf("Qx=%s\n", Qx);
     printf("Qy=%s\n", Qy);
-    
-    if(strcmp(Qx, "8a689f2ea87a601cdba2cd46e0862d66deb48ff1c636d068ed1ddbe47201bbdd") || 
-       strcmp(Qy, "02be58c5acc94fa3fb82e1cbd220172f1f304bdd89ab7e294a4f672c04eb3de4"))
+
+    if(strcmp(Qx, "8a689f2ea87a601cdba2cd46e0862d66deb48ff1c636d068ed1ddbe47201bbdd") ||
+            strcmp(Qy, "02be58c5acc94fa3fb82e1cbd220172f1f304bdd89ab7e294a4f672c04eb3de4"))
     {
         printf("Public key check fail!\n");
     }
@@ -284,9 +284,9 @@ int32_t main(void)
     {
         printf("public calculation check PASS\n");
     }
-    
-    
-    
+
+
+
     while(1);
 }
 

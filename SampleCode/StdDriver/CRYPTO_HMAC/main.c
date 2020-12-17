@@ -128,7 +128,7 @@ void SYS_Init(void)
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* ENable CAN module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
@@ -143,7 +143,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;    
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
 }
 
@@ -179,14 +179,14 @@ int  main(void)
     char *msg    = "ac939659dc5f668c9969c0530422e3417a462c8b665e8db25a883a625f7aa59b89c5ad0ece5712ca17442d1798c6dea25d82c5db260cb59c75ae650be56569c1bd2d612cc57e71315917f116bbfa65a0aeb8af7840ee83d3e7101c52cf652d2773531b7a6bdd690b846a741816c860819270522a5b0cdfa1d736c501c583d916";
     char *hmac   = "bd3d2df6f9d284b421a43e5f9cb94bc4ff88a88243f1f0133bad0fb1791f6569"; // The golden pattern
     uint32_t u32OpMode = HMAC_MODE_SHA512;
-#endif    
-    
+#endif
+
 
     /* Unlock protected registers */
     SYS_UnlockReg();
 
     SYS_Init();
-    
+
     DEBUG_PORT_Init();
 
     printf("\n\n");
@@ -202,42 +202,42 @@ int  main(void)
     u32KeyLen = Str2Hex(keyStr, &gau8HMACSrc[0], 0);
     u32MsgLen = Str2Hex(msg, &gau8HMACSrc[(u32KeyLen + 3) & 0xfffffffc], 0);
     u32MacLen = Str2Hex(hmac, &gau8HMAC[0], 0);
-    
+
     /* Key alignment for DMA */
     u32KeyLenAlign = ((u32KeyLen + 3) & 0xfffffffc);
-    
-    
+
+
     printf("Key (%3d bytes):\n%s\n", u32KeyLen, keyStr);
     printf("Msg (%3d bytes):\n%s\n", u32MsgLen, msg);
-    
-    
+
+
     SHA_Open(CRPT, u32OpMode, SHA_IN_OUT_SWAP, u32KeyLen);
     SHA_SetDMATransfer(CRPT, (uint32_t)&gau8HMACSrc[0], u32MsgLen + u32KeyLenAlign);
 
     g_HMAC_done = 0;
     CRPT->HMAC_CTL |= CRPT_HMAC_CTL_START_Msk | CRPT_HMAC_CTL_DMAEN_Msk | CRPT_HMAC_CTL_DMALAST_Msk;
-    while(!g_HMAC_done){}
+    while(!g_HMAC_done) {}
 
-        
+
     printf("\nHMAC Output:\n");
-    
+
     pu8 = (uint8_t *)&CRPT->HMAC_DGST[0];
-    for(i=0;i<32;i++)
+    for(i = 0; i < 32; i++)
     {
         printf("%02x", pu8[i]);
     }
     printf("\n");
 
-    
-    if(memcmp((const void *)CRPT->HMAC_DGST, (const void *)gau8HMAC, u32MacLen) != 0)    
+
+    if(memcmp((const void *)CRPT->HMAC_DGST, (const void *)gau8HMAC, u32MacLen) != 0)
     {
         printf("\n  !!Output is wrong!!\n");
-        while(1){}
+        while(1) {}
     }
-    
-    
+
+
     printf("\nHMAC Demo Done\n");
-    while(1){}
+    while(1) {}
 }
 
 

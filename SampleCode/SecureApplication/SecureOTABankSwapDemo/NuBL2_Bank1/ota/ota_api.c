@@ -35,7 +35,7 @@ extern volatile uint32_t g_u32SendbytesLen;
   */
 void OTA_SysValueInit(uint32_t u32HSI)
 {
-    uint8_t au8SendBuf[]="CONNECT0\r\n";
+    uint8_t au8SendBuf[] = "CONNECT0\r\n";
 
     CyclesPerUs = (u32HSI / 1000000UL);
     g_u8SendbytesFlag = 1;
@@ -132,7 +132,7 @@ int8_t OTA_API_RecvCallBack(uint8_t* pu8Buff, uint32_t u32Len, uint32_t u32Start
   */
 void OTA_API_Init(uint32_t u32HSI)
 {
-	/* Init some global variables of NuBL2 when now is running NuBL32 firmware. */
+    /* Init some global variables of NuBL2 when now is running NuBL32 firmware. */
     OTA_SysValueInit(u32HSI);
 
     /* Init hardware for transfer task */
@@ -166,7 +166,7 @@ uint8_t OTA_API_EraseFlash(uint32_t u32FlashAddr)
 //    FMC_Open();
     FMC_ENABLE_AP_UPDATE();
 
-    if (FMC_Erase(u32FlashAddr))
+    if(FMC_Erase(u32FlashAddr))
         u8Status = STATUS_FAILED;
     else
         u8Status = STATUS_SUCCESS;
@@ -210,11 +210,11 @@ uint8_t OTA_API_WriteFlash(uint32_t u32FlashAddr, uint32_t u32Data)
 /* the system does not support an RTC.                     */
 /* This function is not required in read-only cfg.         */
 
-unsigned long get_fattime (void)
+unsigned long get_fattime(void)
 {
     unsigned long tmr;
 
-    tmr=0x00000;
+    tmr = 0x00000;
 
     return tmr;
 }

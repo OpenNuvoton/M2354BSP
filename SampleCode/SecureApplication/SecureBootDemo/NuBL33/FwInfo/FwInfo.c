@@ -13,14 +13,14 @@
 
 
 /*
-    Description of FwInfo format:   
+    Description of FwInfo format:
     [ Public key ]
-        Length: 
+        Length:
             Fixed 64 bytes.
-        Content: 
-            ECC public key which will be updated according [KEY] Public Key 1 and Public Key 2 in the FwInfo.ini after executing FwSign.exe. 
+        Content:
+            ECC public key which will be updated according [KEY] Public Key 1 and Public Key 2 in the FwInfo.ini after executing FwSign.exe.
     [ Metadata data ]
-        Length: 
+        Length:
             Fixed 4 words + 1 word Extend Info Length(N) + N words Extend Info Content.
         Content:
             Word-0, the ID Hash Configuration.
@@ -46,20 +46,20 @@
             Word-1, 8(bytes) to indicate only one NuBL33 FW region for NuBL2 can verify it.
             Word-2, indicates the NuBL33 FW base address.
             Word-3, indicates the NuBL33 FW size, which will be updated after NuBL33 is successfully built.
-            Word-4, indicates the valid Extend Info Length. Must be a word alignment length.         
-            Word-5~, the content of Extend Info.            
+            Word-4, indicates the valid Extend Info Length. Must be a word alignment length.
+            Word-5~, the content of Extend Info.
     [ FW hash ]
-        Length: 
+        Length:
             Fixed 32 bytes.
-        Content: 
+        Content:
             To store the NuBL33 FW hash.
-            The target content will be updated according FW base and size in Metadata after executing FwSign.exe. 
+            The target content will be updated according FW base and size in Metadata after executing FwSign.exe.
     [ FwInfo signature ]
-        Length: 
+        Length:
             Fixed 64 bytes.
-        Content: 
+        Content:
             To store the ECDSA signature.
-            The target content will be updated according the ECC private key in FwSign.ini after executing FwSign.exe. 
+            The target content will be updated according the ECC private key in FwSign.ini after executing FwSign.exe.
 */
 const uint32_t g_InitialFWInfo[] =
 {
@@ -71,8 +71,8 @@ const uint32_t g_InitialFWInfo[] =
 
     /* Metadata data - includes ID Hash Configuration, FW region and Extend Info */
     0x00000001, 0x00000008, 0x10040000, 0x00000000, // Word-2: 0x10040000, NuBL33 FW base
-    0x0000000C, 0x20191201, 0x44445555, 0x66667777, // Word-5/6/7: 0x20191201/0x44445555/0x66667777, Extend Info 
-    
+    0x0000000C, 0x20191201, 0x44445555, 0x66667777, // Word-5/6/7: 0x20191201/0x44445555/0x66667777, Extend Info
+
     /* FW hash - 32-bytes (256-bits) */
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,

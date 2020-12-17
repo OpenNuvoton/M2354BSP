@@ -129,7 +129,7 @@ int32_t main(void)
         SRAM power mode can select as normal mode, retention mode and power shut down mode.
         SRAM is able to access only in normal mode and SRAM clock have to be enabled.
         The unused SRAM can be set in power shut down mode, but SRAM data will not kept.
-        This sample code will set SRAM bank1 (0x2008000 - 0x20027FFF) in normal mode, 
+        This sample code will set SRAM bank1 (0x2008000 - 0x20027FFF) in normal mode,
         and set SRAM bank2 (0x20028000 - 0x2003_FFFF) in power shut down mode.
         The SRAM bank2 checksum will be different after setting in power shut down mode.
     */
@@ -139,7 +139,7 @@ int32_t main(void)
 
     /* Select SRAM power mode:
        SRAM bank1 is in normal mode.
-       SRAM bank2 is in normal mode.       
+       SRAM bank2 is in normal mode.
     */
     SYS_SetSSRAMPowerMode(SYS_SRAMPC0_SRAM1PM0_Msk, SYS_SRAMPC0_SRAM_NORMAL);
     SYS_SetSSRAMPowerMode(SYS_SRAMPC0_SRAM1PM1_Msk, SYS_SRAMPC0_SRAM_NORMAL);
@@ -155,7 +155,7 @@ int32_t main(void)
     SYS_SetSSRAMPowerMode(SYS_SRAMPC1_SRAM2PM3_Msk, SYS_SRAMPC1_SRAM_NORMAL);
     SYS_SetSSRAMPowerMode(SYS_SRAMPC1_SRAM2PM4_Msk, SYS_SRAMPC1_SRAM_NORMAL);
     SYS_SetSSRAMPowerMode(SYS_SRAMPC1_SRAM2PM5_Msk, SYS_SRAMPC1_SRAM_NORMAL);
-    
+
     /* Calculate SRAM checksum */
     printf("Calculate SRAM checksum before Power-down:\n\n");
 
@@ -194,10 +194,10 @@ int32_t main(void)
     printf("SRAM Bank2 Region 2 Checksum [0x%08X]\n",   au32SRAMCheckSum[10]);
     printf("SRAM Bank2 Region 3 Checksum [0x%08X]\n",   au32SRAMCheckSum[11]);
     printf("SRAM Bank2 Region 4 Checksum [0x%08X]\n",   au32SRAMCheckSum[12]);
-    printf("SRAM Bank2 Region 5 Checksum [0x%08X]\n\n",   au32SRAMCheckSum[13]);      
-    
+    printf("SRAM Bank2 Region 5 Checksum [0x%08X]\n\n",   au32SRAMCheckSum[13]);
+
     /* Select SRAM power mode:
-       SRAM bank2 is in power shut down mode mode.       
+       SRAM bank2 is in power shut down mode mode.
     */
     SYS_SetSSRAMPowerMode(SYS_SRAMPC0_SRAM2PM0_Msk, SYS_SRAMPC0_SRAM_POWER_SHUT_DOWN);
     SYS_SetSSRAMPowerMode(SYS_SRAMPC0_SRAM2PM1_Msk, SYS_SRAMPC0_SRAM_POWER_SHUT_DOWN);
@@ -227,16 +227,16 @@ int32_t main(void)
     /* Check if WDT time-out interrupt and wake-up occurred or not */
     while(g_u8IsINTEvent == 0);
     printf("wake-up!\n\n");
-    
+
     /* Select SRAM power mode:
-       SRAM bank2 is in normal mode.       
-    */    
+       SRAM bank2 is in normal mode.
+    */
     SYS_SetSSRAMPowerMode(SYS_SRAMPC0_SRAM2PM0_Msk, SYS_SRAMPC0_SRAM_NORMAL);
     SYS_SetSSRAMPowerMode(SYS_SRAMPC0_SRAM2PM1_Msk, SYS_SRAMPC0_SRAM_NORMAL);
     SYS_SetSSRAMPowerMode(SYS_SRAMPC1_SRAM2PM2_Msk, SYS_SRAMPC1_SRAM_NORMAL);
     SYS_SetSSRAMPowerMode(SYS_SRAMPC1_SRAM2PM3_Msk, SYS_SRAMPC1_SRAM_NORMAL);
     SYS_SetSSRAMPowerMode(SYS_SRAMPC1_SRAM2PM4_Msk, SYS_SRAMPC1_SRAM_NORMAL);
-    SYS_SetSSRAMPowerMode(SYS_SRAMPC1_SRAM2PM5_Msk, SYS_SRAMPC1_SRAM_NORMAL);   
+    SYS_SetSSRAMPowerMode(SYS_SRAMPC1_SRAM2PM5_Msk, SYS_SRAMPC1_SRAM_NORMAL);
 
     /* Calculate SRAM checksum */
     printf("Calculate SRAM CheckSum after wake-up:\n\n");
@@ -276,7 +276,7 @@ int32_t main(void)
     printf("SRAM Bank2 Region 2 Checksum [0x%08X]\n",   au32SRAMCheckSum[10]);
     printf("SRAM Bank2 Region 3 Checksum [0x%08X]\n",   au32SRAMCheckSum[11]);
     printf("SRAM Bank2 Region 4 Checksum [0x%08X]\n",   au32SRAMCheckSum[12]);
-    printf("SRAM Bank2 Region 5 Checksum [0x%08X]\n\n",   au32SRAMCheckSum[13]);   
+    printf("SRAM Bank2 Region 5 Checksum [0x%08X]\n\n",   au32SRAMCheckSum[13]);
 
     while(1);
 

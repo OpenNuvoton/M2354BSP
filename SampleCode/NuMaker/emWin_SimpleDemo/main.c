@@ -125,7 +125,7 @@ void TMR0_IRQHandler(void)
             GUI_StoreKeyMsg(Key, 1);
             printf("tab\n");
         }
-        if (PC0 == 0)
+        if(PC0 == 0)
         {
             Key = GUI_KEY_DOWN;
             GUI_StoreKeyMsg(Key, 1);
@@ -185,7 +185,7 @@ void MainTask(void)
 #else
     i32Scale = 1000;
 #endif
-    GUI_DrawBitmapEx(&bmM2354_320x240, 0, 5,0,0, i32Scale, i32Scale);
+    GUI_DrawBitmapEx(&bmM2354_320x240, 0, 5, 0, 0, i32Scale, i32Scale);
     GUI_Delay(3000);
 
 

@@ -82,10 +82,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC, HXT, LXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk|CLK_PWRCTL_LXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk | CLK_PWRCTL_LXTEN_Msk);
 
     /* Wait for HIRC, HXT, LXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk|CLK_STATUS_LXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk | CLK_STATUS_LXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -123,7 +123,7 @@ static osThreadId_t thd3;
 __NO_RETURN static void MyThread1(void *argument)
 {
     static uint32_t ticks = 0;
-    
+
     (void)argument;
 
     for(;;)
@@ -139,7 +139,7 @@ __NO_RETURN static void MyThread2(void *argument)
     (void)argument;
 
     GPIO_SetMode(PA, BIT10, GPIO_MODE_OUTPUT);
-    
+
     for(;;)
     {
         osThreadFlagsWait(0x0001U, osFlagsWaitAny, 500);
@@ -153,7 +153,7 @@ __NO_RETURN static void MyThread3(void *argument)
     (void)argument;
 
     GPIO_SetMode(PA, BIT11, GPIO_MODE_OUTPUT);
-    
+
     for(;;)
     {
         PA11 = 0;
@@ -182,27 +182,27 @@ int32_t main(void)
     osKernelInitialize();
 
     /* create thread */
-    thd1 = osThreadNew(MyThread1, NULL, NULL);             
+    thd1 = osThreadNew(MyThread1, NULL, NULL);
     if(thd1 == NULL)
     {
         printf("Cannot create thread ...\n");
     }
 
-    thd2 = osThreadNew(MyThread2, NULL, NULL);             
+    thd2 = osThreadNew(MyThread2, NULL, NULL);
     if(thd2 == NULL)
     {
         printf("Cannot create thread2 ...\n");
     }
 
-    thd3 = osThreadNew(MyThread3, NULL, NULL);             
+    thd3 = osThreadNew(MyThread3, NULL, NULL);
     if(thd2 == NULL)
     {
         printf("Cannot create thread3 ...\n");
     }
-    
+
     osKernelStart(); //Start the RTOS
 
-    for(;;){}
+    for(;;) {}
 }
 
 /*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

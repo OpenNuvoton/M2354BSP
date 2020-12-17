@@ -273,16 +273,16 @@ int ts_test(int xsize, int ysize)
             if(button_handle(&buttons [i], samp.x, samp.y, samp.pressure))
                 switch(i)
                 {
-                case 0:
-                    mode = 0;
-                    refresh_screen();
-                    break;
-                case 1:
-                    mode = 1;
-                    refresh_screen();
-                    break;
-                case 2:
-                    quit_pressed = 1;
+                    case 0:
+                        mode = 0;
+                        refresh_screen();
+                        break;
+                    case 1:
+                        mode = 1;
+                        refresh_screen();
+                        break;
+                    case 2:
+                        quit_pressed = 1;
                 }
 
         if(samp.pressure > 0)

@@ -20,7 +20,7 @@
 /**
     @addtogroup BPWM Basic Pulse Width Modulation Controller(BPWM)
     Memory Mapped Structure for BPWM Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -1120,7 +1120,7 @@ typedef struct
 /**
     @addtogroup BPWM_CONST BPWM Bit Field Definition
     Constant Definitions for BPWM Controller
-  @{ 
+  @{
 */
 
 #define BPWM_CTL0_CTRLD0_Pos             (0)                                               /*!< BPWM_T::CTL0: CTRLD0 Position          */

@@ -38,7 +38,7 @@ void DumpBuffHex(uint8_t *pucBuff, int nBytes)
     {
         printf("0x%04X  ", i32Idx);
 
-        len = (nBytes < 16)?nBytes:16;
+        len = (nBytes < 16) ? nBytes : 16;
         for(i = 0; i < len; i++)
             printf("%02x ", pucBuff[i32Idx + i]);
         for(; i < 16; i++)
@@ -69,7 +69,7 @@ void DumpBuffHex2(uint8_t *pucBuff, int nBytes)
     while(nBytes > 0)
     {
         printf("0x%04X  ", i32Idx);
-        for(i = 0; i < 16; i+=4)
+        for(i = 0; i < 16; i += 4)
             printf("%08x ", *((uint32_t *)&pucBuff[i32Idx + i]));
         i32Idx += 16;
         nBytes -= 16;
@@ -180,15 +180,15 @@ void bin2str(uint8_t *buf, uint32_t size, char *pstr)
 {
     int32_t i;
     uint8_t c;
-    
-    for(i=size-1;i >= 0;i--)
+
+    for(i = size - 1; i >= 0; i--)
     {
         c = buf[i] >> 4;
-        *pstr++ = (c >= 10)?c-10+'a':c+'0';
+        *pstr++ = (c >= 10) ? c - 10 + 'a' : c + '0';
         c = buf[i] & 0xf;
-        *pstr++ = (c >= 10)?c-10+'a':c+'0';
+        *pstr++ = (c >= 10) ? c - 10 + 'a' : c + '0';
     }
-    
+
     *pstr = '\0';
 }
 
@@ -254,7 +254,7 @@ int32_t ToBigEndian(uint8_t *pbuf, uint32_t u32Size)
 
         *((uint32_t *)pbuf) = u32Tmp;
     }
-    
+
     return 0;
 }
 
@@ -301,16 +301,16 @@ int32_t ToLittleEndian(uint8_t *pbuf, uint32_t u32Size)
 
 /*
     CCM input format must be block alignment. The block size is 16 bytes.
-    
+
     ----------------------------------------------------------------------
-     Block B0                                                             
-          Formatting of the Control Information and the Nonce             
+     Block B0
+          Formatting of the Control Information and the Nonce
     ----------------------------------------------------------------------
     First block B_0:
     0        .. 0        flags
     1        .. iv_len   nonce (aka iv)
     iv_len+1 .. 15       length
-    
+
 
     flags:
     With flags as (bits):
@@ -341,7 +341,7 @@ int32_t CCMPacker(uint8_t *iv, uint32_t ivlen, uint8_t *A, uint32_t alen, uint8_
     q = 15 - ivlen;
     u8Tmp = (q - 1) | ((tlen - 2) / 2 << 3) | ((alen > 0) ? 0x40 : 0);
     pbuf[0] = u8Tmp;            // flags
-    for(i = 0; i < ivlen; i++)  // N 
+    for(i = 0; i < ivlen; i++)  // N
         pbuf[i + 1] = iv[i];
     for(i = ivlen + 1, j = q - 1; i < 16; i++, j--)    // Q
     {
@@ -369,7 +369,7 @@ int32_t CCMPacker(uint8_t *iv, uint32_t ivlen, uint8_t *A, uint32_t alen, uint8_
         {
             pbuf[i] = 0; // padding zero
         }
-        
+
         u32Offset += alen_aligned;
     }
 
@@ -385,7 +385,7 @@ int32_t CCMPacker(uint8_t *iv, uint32_t ivlen, uint8_t *A, uint32_t alen, uint8_
         {
             pbuf[u32Offset + i] = 0; // padding zero
         }
-        
+
         u32Offset += plen_aligned;
     }
 
@@ -400,7 +400,7 @@ int32_t CCMPacker(uint8_t *iv, uint32_t ivlen, uint8_t *A, uint32_t alen, uint8_
     {
         pbuf[u32Offset + 1 + i] = 0; // padding zero to block alignment
     }
-    
+
     *psize = u32Offset;
 
     return 0;
@@ -416,7 +416,7 @@ int32_t AES_CCM(int32_t enc, uint8_t *key, uint32_t klen, uint8_t *iv, uint32_t 
     printf("key (%d):\n", klen);
     DumpBuffHex(key, klen);
 
-    printf("N (%d):\n",ivlen);
+    printf("N (%d):\n", ivlen);
     DumpBuffHex(iv, ivlen);
 
     printf("A (%d):\n", alen);
@@ -429,12 +429,12 @@ int32_t AES_CCM(int32_t enc, uint8_t *key, uint32_t klen, uint8_t *iv, uint32_t 
 
     /* Prepare the blocked buffer for GCM */
     CCMPacker(iv, ivlen, A, alen, P, plen, g_au8Buf, size, tlen);
-    
-    ToBigEndian(g_au8Buf, *size+16);
+
+    ToBigEndian(g_au8Buf, *size + 16);
 
     printf("input blocks (%d):\n", *size);
     DumpBuffHex2(g_au8Buf, *size);
-    
+
     *plen_aligned = (plen & 0xful) ? (plen + 15) / 16 * 16 : plen;
 
     memcpy(au8TmpBuf, key, klen);
@@ -498,10 +498,10 @@ int main(void)
     tlen = 8;
 
     /* Init System, IP clock and multi-function I/O */
-    SYS_Init();                        
+    SYS_Init();
 
     /* Initialize UART0 */
-    UART0_Init();                      
+    UART0_Init();
 
 
     printf("+---------------------------------------+\n");
@@ -522,7 +522,7 @@ int main(void)
     str2bin(a_str, g_A, alen);
     str2bin(pt_str, g_P, plen);
     str2bin(c_str, g_C, clen);
-    
+
     AES_CCM(1, g_key, klen, g_iv, ivlen, g_A, alen, g_P, plen, g_au8Out, &size, &plen_aligned, tlen);
 
 #ifndef _SWAP
@@ -541,7 +541,7 @@ int main(void)
         DumpBuffHex(g_C, plen);
         printf("g_au8Out:\n");
         DumpBuffHex(g_au8Out, plen);
-        while(1){}
+        while(1) {}
     }
 
     if(memcmp(&g_C[plen], &g_au8Out[plen_aligned], tlen))
@@ -557,10 +557,10 @@ int main(void)
         printf("ERR: Encrypted data fail!\n");
         while(1) {}
     }
-    
+
     printf("Test PASS!\n");
 
-    while(1){}
+    while(1) {}
 
-    
+
 }

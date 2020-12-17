@@ -42,10 +42,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC and HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HIRC and HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -217,7 +217,7 @@ void AutoFlow_FunctionRxTest(void)
     UART_SetTimeoutCnt(UART1, 0x3E);
 
     /* Enable RDA and RTO Interrupt */
-    NVIC_EnableIRQ(UART1_IRQn);    
+    NVIC_EnableIRQ(UART1_IRQn);
     UART_EnableInt(UART1, (UART_INTEN_RDAIEN_Msk | UART_INTEN_RLSIEN_Msk | UART_INTEN_RXTOIEN_Msk));
 
     printf("\n Starting to receive data...\n");

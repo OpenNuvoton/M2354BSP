@@ -133,7 +133,7 @@ void SYS_Init(void)
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* ENable CAN module clock */
     CLK_EnableModuleClock(CAN0_MODULE);
 
@@ -148,7 +148,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;    
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
     /* Set multi-function pins for CAN0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(CAN0_RXD_PA4_Msk | CAN0_TXD_PA5_Msk))) | CAN0_RXD_PA4 | CAN0_TXD_PA5;

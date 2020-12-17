@@ -354,13 +354,13 @@ extern "C"
  *
  *    @param[in]    uart            The pointer of the specified UART module
  *    @param[in]    u32eIntTypeFlag Interrupt Type Flag, should be
- *                                  - \ref UART_INTSTS_ABRINT_Msk    : Auto-baud Rate Interrupt Indicator 
+ *                                  - \ref UART_INTSTS_ABRINT_Msk    : Auto-baud Rate Interrupt Indicator
  *                                  - \ref UART_INTSTS_HWBUFEINT_Msk : PDMA Mode Buffer Error Interrupt Indicator
  *                                  - \ref UART_INTSTS_HWTOINT_Msk   : PDMA Mode Rx Time-out Interrupt Indicator
  *                                  - \ref UART_INTSTS_HWMODINT_Msk  : PDMA Mode MODEM Status Interrupt Indicator
  *                                  - \ref UART_INTSTS_HWRLSINT_Msk  : PDMA Mode Receive Line Status Interrupt Indicator
- *                                  - \ref UART_INTSTS_SWBEINT_Msk   : Single-wire Bit Error Detect Interrupt Indicator 
- *                                  - \ref UART_INTSTS_HWBUFEIF_Msk  : PDMA Mode Buffer Error Interrupt Flag 
+ *                                  - \ref UART_INTSTS_SWBEINT_Msk   : Single-wire Bit Error Detect Interrupt Indicator
+ *                                  - \ref UART_INTSTS_HWBUFEIF_Msk  : PDMA Mode Buffer Error Interrupt Flag
  *                                  - \ref UART_INTSTS_HWTOIF_Msk    : PDMA Mode Time-out Interrupt Flag
  *                                  - \ref UART_INTSTS_HWMODIF_Msk   : PDMA Mode MODEM Status Interrupt Flag
  *                                  - \ref UART_INTSTS_HWRLSIF_Msk   : PDMA Mode Receive Line Status Flag

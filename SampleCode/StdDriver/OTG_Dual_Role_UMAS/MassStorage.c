@@ -1258,7 +1258,7 @@ void MSC_AckCmd(void)
             case UFI_VERIFY_10:
             case UFI_START_STOP:
             {
-                if (s_sCBW.dCBWDataTransferLength < STORAGE_BUFFER_SIZE)
+                if(s_sCBW.dCBWDataTransferLength < STORAGE_BUFFER_SIZE)
                     s_sCSW.dCSWDataResidue = 0;
                 else
                     s_sCSW.dCSWDataResidue = s_sCBW.dCBWDataTransferLength - STORAGE_BUFFER_SIZE;

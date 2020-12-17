@@ -447,7 +447,7 @@ static int32_t Card_ResponseATR(SC_INFO_T *sc_info)
         Card_SetFreqAfterPPSExchange(u32Fi, u32Di);
     }
     else { /* No PPS exchange */ }
-    
+
     if(sc_info->u8Protocol == 0)
         SC_SetBlockGuardTime(sc, 16); // for T=0
     else
@@ -742,105 +742,105 @@ static int32_t Process_T0(SC_INFO_T *sc_info)
         /* Check INS */
         switch(u8INS)
         {
-        case SC_INS_SELECT: // INS: SELECT FILE
-            if((u8P1 != u8P2) || (u8P1 != 0x0) || (u8P3 != 0x2))
-            {
-                sc_info->u32RxPos = sc_info->u32RxLen = 0;
-                printf("\nERROR. SELECT FILE, APDU data.\n");
-                return -1;
-            }
-            u32SW1 = 0x9F;
-            /* Prepare response data and length */
-            if((u8D[0] == 0x3F) && (u8D[1] == 0x00))        /* MF */
-            {
-                u32RespMF = (uint32_t)&g_u8RespMF[0];
-                sc_info->pu8RespBuf = (uint8_t *)u32RespMF;
-                sc_info->u32RespLen = sizeof(g_u8RespMF);
-            }
-            else if((u8D[0] == 0x7F) && (u8D[1] == 0x10))   /* DF */
-            {
-                u32RespDF = (uint32_t)&g_u8RespDF[0];
-                sc_info->pu8RespBuf = (uint8_t *)u32RespDF;
-                sc_info->u32RespLen = sizeof(g_u8RespDF);
-            }
-            else if((u8D[0] == 0x6F) && (u8D[1] == 0x3A))   /* EF */
-            {
-                u32RespEF = (uint32_t)&g_u8RespEF[0];
-                sc_info->pu8RespBuf = (uint8_t *)u32RespEF;
-                sc_info->u32RespLen = sizeof(g_u8RespEF);
-            }
-            else
-            {
-                sc_info->u32RxPos = sc_info->u32RxLen = 0;
-                printf("\nERROR. SELECT FILE, directory.\n");
-                return -1;
-            }
-            u32SW2 = (uint8_t)sc_info->u32RespLen;
+            case SC_INS_SELECT: // INS: SELECT FILE
+                if((u8P1 != u8P2) || (u8P1 != 0x0) || (u8P3 != 0x2))
+                {
+                    sc_info->u32RxPos = sc_info->u32RxLen = 0;
+                    printf("\nERROR. SELECT FILE, APDU data.\n");
+                    return -1;
+                }
+                u32SW1 = 0x9F;
+                /* Prepare response data and length */
+                if((u8D[0] == 0x3F) && (u8D[1] == 0x00))        /* MF */
+                {
+                    u32RespMF = (uint32_t)&g_u8RespMF[0];
+                    sc_info->pu8RespBuf = (uint8_t *)u32RespMF;
+                    sc_info->u32RespLen = sizeof(g_u8RespMF);
+                }
+                else if((u8D[0] == 0x7F) && (u8D[1] == 0x10))   /* DF */
+                {
+                    u32RespDF = (uint32_t)&g_u8RespDF[0];
+                    sc_info->pu8RespBuf = (uint8_t *)u32RespDF;
+                    sc_info->u32RespLen = sizeof(g_u8RespDF);
+                }
+                else if((u8D[0] == 0x6F) && (u8D[1] == 0x3A))   /* EF */
+                {
+                    u32RespEF = (uint32_t)&g_u8RespEF[0];
+                    sc_info->pu8RespBuf = (uint8_t *)u32RespEF;
+                    sc_info->u32RespLen = sizeof(g_u8RespEF);
+                }
+                else
+                {
+                    sc_info->u32RxPos = sc_info->u32RxLen = 0;
+                    printf("\nERROR. SELECT FILE, directory.\n");
+                    return -1;
+                }
+                u32SW2 = (uint8_t)sc_info->u32RespLen;
 
-            sc_info->OP_State = SC_OP_WRITE;
-            sc_info->pu8TxBuf = (uint8_t *)u32SCTxBuf;
-            sc_info->u32TxLen = 2;
-            sc_info->u32TxPos = 0;
+                sc_info->OP_State = SC_OP_WRITE;
+                sc_info->pu8TxBuf = (uint8_t *)u32SCTxBuf;
+                sc_info->u32TxLen = 2;
+                sc_info->u32TxPos = 0;
 
-            g_au8SCTxBuf[0] = u32SW1;
-            g_au8SCTxBuf[1] = u32SW2;
-            break;
+                g_au8SCTxBuf[0] = u32SW1;
+                g_au8SCTxBuf[1] = u32SW2;
+                break;
 
-        case SC_INS_GET_DATA: // INS: GET DATA
-            u32SW1 = 0x90;
-            u32SW2 = 0x00;
-
-            sc_info->OP_State = SC_OP_WRITE;
-            sc_info->pu8TxBuf = (uint8_t *)u32SCTxBuf;
-            sc_info->u32TxLen = 2;
-            sc_info->u32TxPos = 0;
-
-            g_au8SCTxBuf[0] = u32SW1;
-            g_au8SCTxBuf[1] = u32SW2;
-            break;
-
-        case SC_INS_GET_RESPONSE: // INS: GET RESPONSE
-            if((u8P1 != u8P2) || (u8P1 != 0x0) || (u8P3 == 0x0))
-            {
-                u32RespLen = sc_info->u32RespLen = 0;
-                sc_info->u32RxPos = sc_info->u32RxLen = 0;
-                printf("\nERROR. 0x%x cmd data.\n", u8INS);
-                return -1;
-            }
-            if(sc_info->u32RespLen == 0)
-            {
-                u32RespLen = sc_info->u32RespLen = 0;
-                u32SW1 = 0x94; /* No "EF" selected */
+            case SC_INS_GET_DATA: // INS: GET DATA
+                u32SW1 = 0x90;
                 u32SW2 = 0x00;
-            }
-            else if(sc_info->u32RespLen < u8P3)
-            {
-                u32RespLen = sc_info->u32RespLen = 0;
-                u32SW1 = 0x94; /* Over the selected size */
-                u32SW2 = 0x02;
-            }
-            else
-            {
-                u32RespLen = u8P3;
-                u32SW1 = 0x90; /* Success */
-                u32SW2 = 0x00;
-            }
 
-            /* Data: [Data] + SW1 + SW2 */
-            memcpy((void *)(u32SCTxBuf), sc_info->pu8RespBuf, u32RespLen);
-            g_au8SCTxBuf[u32RespLen + 0] = u32SW1;
-            g_au8SCTxBuf[u32RespLen + 1] = u32SW2;
+                sc_info->OP_State = SC_OP_WRITE;
+                sc_info->pu8TxBuf = (uint8_t *)u32SCTxBuf;
+                sc_info->u32TxLen = 2;
+                sc_info->u32TxPos = 0;
 
-            sc_info->OP_State = SC_OP_WRITE;
-            sc_info->pu8TxBuf = (uint8_t *)u32SCTxBuf;
-            sc_info->u32TxLen = u32RespLen + 2;
-            sc_info->u32TxPos = 0;
-            break;
+                g_au8SCTxBuf[0] = u32SW1;
+                g_au8SCTxBuf[1] = u32SW2;
+                break;
 
-        default:
-            sc_info->u32RxPos = sc_info->u32RxLen = 0;
-            printf("\nERROR. T=0. Wrong INS (0x%x).\n", u8INS);
-            return -1;
+            case SC_INS_GET_RESPONSE: // INS: GET RESPONSE
+                if((u8P1 != u8P2) || (u8P1 != 0x0) || (u8P3 == 0x0))
+                {
+                    u32RespLen = sc_info->u32RespLen = 0;
+                    sc_info->u32RxPos = sc_info->u32RxLen = 0;
+                    printf("\nERROR. 0x%x cmd data.\n", u8INS);
+                    return -1;
+                }
+                if(sc_info->u32RespLen == 0)
+                {
+                    u32RespLen = sc_info->u32RespLen = 0;
+                    u32SW1 = 0x94; /* No "EF" selected */
+                    u32SW2 = 0x00;
+                }
+                else if(sc_info->u32RespLen < u8P3)
+                {
+                    u32RespLen = sc_info->u32RespLen = 0;
+                    u32SW1 = 0x94; /* Over the selected size */
+                    u32SW2 = 0x02;
+                }
+                else
+                {
+                    u32RespLen = u8P3;
+                    u32SW1 = 0x90; /* Success */
+                    u32SW2 = 0x00;
+                }
+
+                /* Data: [Data] + SW1 + SW2 */
+                memcpy((void *)(u32SCTxBuf), sc_info->pu8RespBuf, u32RespLen);
+                g_au8SCTxBuf[u32RespLen + 0] = u32SW1;
+                g_au8SCTxBuf[u32RespLen + 1] = u32SW2;
+
+                sc_info->OP_State = SC_OP_WRITE;
+                sc_info->pu8TxBuf = (uint8_t *)u32SCTxBuf;
+                sc_info->u32TxLen = u32RespLen + 2;
+                sc_info->u32TxPos = 0;
+                break;
+
+            default:
+                sc_info->u32RxPos = sc_info->u32RxLen = 0;
+                printf("\nERROR. T=0. Wrong INS (0x%x).\n", u8INS);
+                return -1;
         }
     }
     while(0);
@@ -1002,56 +1002,56 @@ static int32_t Process_T1(SC_INFO_T *sc_info)
         /* Check [INS] to parse received TPDU */
         switch(u8INS)
         {
-        case SC_INS_SELECT: // SELECT FILE
-            /* Get FILE ID */
-            g_u32FileID = ((uint32_t)(pu8RxBuf[8] << 8)) | (uint32_t)pu8RxBuf[9];
+            case SC_INS_SELECT: // SELECT FILE
+                /* Get FILE ID */
+                g_u32FileID = ((uint32_t)(pu8RxBuf[8] << 8)) | (uint32_t)pu8RxBuf[9];
 
-            u8RespIFLen = 2; /* "SW1-SW0" */
+                u8RespIFLen = 2; /* "SW1-SW0" */
 
-            u32TxLen = 1 + 1 + 1 + u8RespIFLen + 1; /* NAD, PCB, LEN, [IF], EDC */
+                u32TxLen = 1 + 1 + 1 + u8RespIFLen + 1; /* NAD, PCB, LEN, [IF], EDC */
 
-            /* SW1-SW0 */
-            g_au8SCTxBuf[u32TxLen - 3] = 0x90;
-            g_au8SCTxBuf[u32TxLen - 2] = 0x00;
-            break;
+                /* SW1-SW0 */
+                g_au8SCTxBuf[u32TxLen - 3] = 0x90;
+                g_au8SCTxBuf[u32TxLen - 2] = 0x00;
+                break;
 
-        case SC_INS_READ_BINARY: // READ BINARY
-            if(g_u32MaxFileSize == 0)
-            {
-                sc_info->u32RxPos = sc_info->u32RxLen = 0;
-                printf("Invalid File Size: 0x%x.\n", g_u32MaxFileSize);
-                return -1;
-            }
+            case SC_INS_READ_BINARY: // READ BINARY
+                if(g_u32MaxFileSize == 0)
+                {
+                    sc_info->u32RxPos = sc_info->u32RxLen = 0;
+                    printf("Invalid File Size: 0x%x.\n", g_u32MaxFileSize);
+                    return -1;
+                }
 
-            u8RespIFLen = g_au8SCRxBuf[7] + 2; /* Response data + "SW1-SW0" */
+                u8RespIFLen = g_au8SCRxBuf[7] + 2; /* Response data + "SW1-SW0" */
 
-            u32TxLen = 1 + 1 + 1 + u8RespIFLen + 1; /* NAD, PCB, LEN, [IF], EDC */
+                u32TxLen = 1 + 1 + 1 + u8RespIFLen + 1; /* NAD, PCB, LEN, [IF], EDC */
 
-            /* SW1-SW0 */
-            g_au8SCTxBuf[u32TxLen - 3] = 0x90;
-            g_au8SCTxBuf[u32TxLen - 2] = 0x00;
-            break;
+                /* SW1-SW0 */
+                g_au8SCTxBuf[u32TxLen - 3] = 0x90;
+                g_au8SCTxBuf[u32TxLen - 2] = 0x00;
+                break;
 
-        case SC_INS_WRITE_BINARY: // WRITE BINARY
-            if(g_u32MaxFileSize == 0)
-            {
-                sc_info->u32RxPos = sc_info->u32RxLen = 0;
-                printf("Invalid File Size: 0x%x.\n", g_u32MaxFileSize);
-                return -1;
-            }
+            case SC_INS_WRITE_BINARY: // WRITE BINARY
+                if(g_u32MaxFileSize == 0)
+                {
+                    sc_info->u32RxPos = sc_info->u32RxLen = 0;
+                    printf("Invalid File Size: 0x%x.\n", g_u32MaxFileSize);
+                    return -1;
+                }
 
-            /* Update data to buffer */
-            u8InDataLen = g_au8SCRxBuf[7]; /* Write-in data length */
-            memcpy((void *)((uint32_t)g_au8FileBuf), (void *)((uint32_t)g_au8SCRxBuf + 8), u8InDataLen);
+                /* Update data to buffer */
+                u8InDataLen = g_au8SCRxBuf[7]; /* Write-in data length */
+                memcpy((void *)((uint32_t)g_au8FileBuf), (void *)((uint32_t)g_au8SCRxBuf + 8), u8InDataLen);
 
-            u8RespIFLen = 2; /* "SW1-SW0" */
+                u8RespIFLen = 2; /* "SW1-SW0" */
 
-            u32TxLen = 1 + 1 + 1 + u8RespIFLen + 1; /* NAD, PCB, LEN, [IF], EDC */
+                u32TxLen = 1 + 1 + 1 + u8RespIFLen + 1; /* NAD, PCB, LEN, [IF], EDC */
 
-            /* SW1-SW0 */
-            g_au8SCTxBuf[u32TxLen - 3] = 0x90;
-            g_au8SCTxBuf[u32TxLen - 2] = 0x00;
-            break;
+                /* SW1-SW0 */
+                g_au8SCTxBuf[u32TxLen - 3] = 0x90;
+                g_au8SCTxBuf[u32TxLen - 2] = 0x00;
+                break;
         }
 
         /* NAD, PCB */

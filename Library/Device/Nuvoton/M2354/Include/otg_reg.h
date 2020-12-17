@@ -19,7 +19,7 @@
 /**
     @addtogroup OTG USB On-The-Go Controller(OTG)
     Memory Mapped Structure for OTG Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -255,7 +255,7 @@ typedef struct
 /**
     @addtogroup OTG_CONST OTG Bit Field Definition
     Constant Definitions for OTG Controller
-  @{ 
+  @{
 */
 
 #define OTG_CTL_VBUSDROP_Pos             (0)                                               /*!< OTG_T::CTL: VBUSDROP Position          */

@@ -108,8 +108,8 @@ void PowerDownFunction(void)
     CLK_SetPowerDownMode(g_u32PowerDownMode);
 
     /* Forces a write of all user-space buffered data for the given output */
-    fflush(stdout);    
-    
+    fflush(stdout);
+
     /* To check if all the debug messages are finished */
     while(IsDebugFifoEmpty() == 0);
 
@@ -247,9 +247,9 @@ int32_t main(void)
 
     /* Init System, peripheral clock and multi-function I/O */
     SYS_Init();
-    
+
     /* Release I/O hold status */
-    CLK->IOPDCTL = 1;    
+    CLK->IOPDCTL = 1;
 
     /* Lock protected registers */
     SYS_LockReg();
@@ -279,7 +279,7 @@ int32_t main(void)
     {
 
         /* Select Power-down mode */
-        g_u32PowerDownMode = M32(PDMD_FLAG_ADDR);       
+        g_u32PowerDownMode = M32(PDMD_FLAG_ADDR);
         switch(g_u32PowerDownMode)
         {
             case CLK_PMUCTL_PDMSEL_PD:

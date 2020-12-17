@@ -2,7 +2,7 @@
  * @file     main.c
  * @version  V3.00
  * @brief    Show how to wake up MCU from Power-down mode by ACMP wake-up function.
- * 
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
@@ -102,7 +102,7 @@ void SYS_Init(void)
 
     /* Enable UART peripheral clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* Enable ACMP01 peripheral clock */
     CLK_EnableModuleClock(ACMP01_MODULE);
 

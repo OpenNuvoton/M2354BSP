@@ -64,7 +64,7 @@ int32_t pi(void)
         if(i == 19)
             break;
 
-        for(b = c; (void)(d += g_ai32f[b] * a), (void)(g_ai32f[b] = d % --g),(void)(d /= g--), --b; d *= b);
+        for(b = c; (void)(d += g_ai32f[b] * a), (void)(g_ai32f[b] = d % --g), (void)(d /= g--), --b; d *= b);
     }
     i32Err = 0;
     for(i = 0; i < 19; i++)

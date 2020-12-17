@@ -51,10 +51,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC and HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HIRC and HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -100,7 +100,7 @@ void UART0_Init(void)
 
     /* Configure UART0 and set UART0 baud rate */
     UART_Open(UART0, 115200);
-    
+
     UART_SelectSingleWireMode(UART1);
 }
 
@@ -171,7 +171,7 @@ int32_t main(void)
     /* UART sample function */
     UART_FunctionTest();
 
-    while (1);
+    while(1);
 
 }
 
@@ -191,16 +191,16 @@ void UART1_TEST_HANDLE()
     uint32_t u32temp;
 
     /* Handle Receive Data Available interrupt */
-    if (UART_GET_INT_FLAG(UART1,UART_INTSTS_RDAIF_Msk))
+    if(UART_GET_INT_FLAG(UART1, UART_INTSTS_RDAIF_Msk))
     {
         /* Get all the input characters */
-        while (UART_IS_RX_READY(UART1))
+        while(UART_IS_RX_READY(UART1))
         {
             /* Get the character from UART Buffer */
             u32temp = UART_READ(UART1);
             g_u8RecData[g_u32RecLen] = (uint8_t)u32temp;
 
-            if (g_u32RecLen == BUFSIZE - 1)
+            if(g_u32RecLen == BUFSIZE - 1)
             {
                 g_i32RecOK = TRUE;
                 g_u32RecLen = 0;
@@ -212,8 +212,8 @@ void UART1_TEST_HANDLE()
         }
     }
 
-    /* Handle Single-wire Bit Error Detection interrupt */    
-    if (UART_GET_INT_FLAG(UART1,UART_INTSTS_SWBEIF_Msk))
+    /* Handle Single-wire Bit Error Detection interrupt */
+    if(UART_GET_INT_FLAG(UART1, UART_INTSTS_SWBEIF_Msk))
     {
         printf("Single-wire Bit Error Detection \n");
         UART_ClearIntFlag(UART1, UART_INTSTS_SWBEINT_Msk);
@@ -234,19 +234,19 @@ void UART2_IRQHandler(void)
 /*---------------------------------------------------------------------------------------------------------*/
 void UART2_TEST_HANDLE()
 {
-    uint32_t u32temp;  
+    uint32_t u32temp;
 
-    /* Handle Receive Data Available interrupt */    
-    if (UART_GET_INT_FLAG(UART2,UART_INTSTS_RDAIF_Msk))
+    /* Handle Receive Data Available interrupt */
+    if(UART_GET_INT_FLAG(UART2, UART_INTSTS_RDAIF_Msk))
     {
         /* Get all the input characters */
-        while (UART_IS_RX_READY(UART2))
+        while(UART_IS_RX_READY(UART2))
         {
             /* Get the character from UART Buffer */
             u32temp = UART_READ(UART2);
             g_u8RecData[g_u32RecLen] = (uint8_t)u32temp;
 
-            if (g_u32RecLen == BUFSIZE - 1)
+            if(g_u32RecLen == BUFSIZE - 1)
             {
                 g_i32RecOK = TRUE;
                 g_u32RecLen = 0;
@@ -258,8 +258,8 @@ void UART2_TEST_HANDLE()
         }
     }
 
-    /* Handle Single-wire Bit Error Detection interrupt */        
-    if (UART_GET_INT_FLAG(UART2,UART_INTSTS_SWBEIF_Msk))
+    /* Handle Single-wire Bit Error Detection interrupt */
+    if(UART_GET_INT_FLAG(UART2, UART_INTSTS_SWBEIF_Msk))
     {
         printf("Single-wire Bit Error Detection \n");
         UART_ClearIntFlag(UART2, UART_INTSTS_SWBEINT_Msk);
@@ -275,13 +275,13 @@ void Build_Src_Pattern(uint32_t u32Addr, uint8_t type, uint32_t u32Length)
     uint8_t *pAddr;
     pAddr = (uint8_t *)u32Addr;
 
-    if (type == 0)      pattern = 0x1f;
-    else if (type == 1) pattern = 0x3f;
-    else if (type == 2) pattern = 0x7f;
-    else if (type == 3) pattern = 0xff;
+    if(type == 0)      pattern = 0x1f;
+    else if(type == 1) pattern = 0x3f;
+    else if(type == 2) pattern = 0x7f;
+    else if(type == 3) pattern = 0xff;
     else  pattern = 0xff;
 
-    for (i = 0; i < u32Length ; i++)
+    for(i = 0; i < u32Length ; i++)
         pAddr[i] = (i & (uint8_t)pattern);
 
 }
@@ -298,9 +298,9 @@ uint8_t Check_Pattern(uint32_t u32Addr0, uint32_t u32Addr1, uint32_t u32Length)
     pAddr0 = (uint8_t *)u32Addr0;
     pAddr1 = (uint8_t *)u32Addr1;
 
-    for (i = 0; i < u32Length ; i++)
+    for(i = 0; i < u32Length ; i++)
     {
-        if (pAddr0[i] != pAddr1[i])
+        if(pAddr0[i] != pAddr1[i])
         {
             printf("Data Error Index=%d,tx =%d,rx=%d\n", i, pAddr0[i], pAddr1[i]) ;
             result = 0;
@@ -340,7 +340,7 @@ void UART_FunctionTest()
     /* Enable UART1 RDA/Single-wire Bit Error Detection interrupt */
     NVIC_EnableIRQ(UART1_IRQn);
     UART_EnableInt(UART1, (UART_INTEN_RDAIEN_Msk | UART_INTEN_SWBEIEN_Msk));
-    
+
     /* Enable UART2 RDA/Single-wire Bit Error Detection interrupt */
     NVIC_EnableIRQ(UART2_IRQn);
     UART_EnableInt(UART2, (UART_INTEN_RDAIEN_Msk | UART_INTEN_SWBEIEN_Msk));
@@ -358,51 +358,51 @@ void UART_FunctionTest()
 
         cmmd = (uint8_t)getchar();
 
-        switch (cmmd)
+        switch(cmmd)
         {
-        case '1':
-        {
-            printf("SW1(UART1) --> SW2(UART2)Test :");
-            g_i32RecOK  = FALSE;
-            Build_Src_Pattern((uint32_t)g_u8TxData, UART_WORD_LEN_8, BUFSIZE);
+            case '1':
+            {
+                printf("SW1(UART1) --> SW2(UART2)Test :");
+                g_i32RecOK  = FALSE;
+                Build_Src_Pattern((uint32_t)g_u8TxData, UART_WORD_LEN_8, BUFSIZE);
 
-            /* Check the Rx status is Idle */
-            while (!UART_RX_IDLE(UART1)) {}
-            UART_Write(UART1, g_u8TxData, BUFSIZE);
-            while (g_i32RecOK != TRUE) {}
+                /* Check the Rx status is Idle */
+                while(!UART_RX_IDLE(UART1)) {}
+                UART_Write(UART1, g_u8TxData, BUFSIZE);
+                while(g_i32RecOK != TRUE) {}
 
-            Check_Pattern((uint32_t)g_u8TxData, (uint32_t)g_u8RecData, BUFSIZE) ? printf(" Pass\n") : printf(" Fail\n");
-            /* Clear the Tx and Rx data buffer */
-            memset((uint8_t *)g_u8TxData, 0, BUFSIZE);
-            memset((uint8_t *)g_u8RecData, 0, BUFSIZE);
-        }
-        break;
-
-        case '2':
-        {
-            printf("SW2(UART2) --> SW1(UART1)Test :");
-            g_i32RecOK  = FALSE;
-            Build_Src_Pattern((uint32_t)g_u8TxData, UART_WORD_LEN_8, BUFSIZE);
-
-            /* Check the Rx status is Idle */
-            while (!UART_RX_IDLE(UART2)) {}
-            UART_Write(UART2, g_u8TxData, BUFSIZE);
-            while (g_i32RecOK != TRUE) {}
-
-            Check_Pattern((uint32_t)g_u8TxData, (uint32_t)g_u8RecData, BUFSIZE) ? printf(" Pass\n") :   printf(" Fail\n");
-
-            /* Clear the Tx and Rx data buffer */
-            memset((uint8_t *)g_u8TxData, 0, BUFSIZE);
-            memset((uint8_t *)g_u8RecData, 0, BUFSIZE);
-        }
-        break;
-
-        default:
+                Check_Pattern((uint32_t)g_u8TxData, (uint32_t)g_u8RecData, BUFSIZE) ? printf(" Pass\n") : printf(" Fail\n");
+                /* Clear the Tx and Rx data buffer */
+                memset((uint8_t *)g_u8TxData, 0, BUFSIZE);
+                memset((uint8_t *)g_u8RecData, 0, BUFSIZE);
+            }
             break;
+
+            case '2':
+            {
+                printf("SW2(UART2) --> SW1(UART1)Test :");
+                g_i32RecOK  = FALSE;
+                Build_Src_Pattern((uint32_t)g_u8TxData, UART_WORD_LEN_8, BUFSIZE);
+
+                /* Check the Rx status is Idle */
+                while(!UART_RX_IDLE(UART2)) {}
+                UART_Write(UART2, g_u8TxData, BUFSIZE);
+                while(g_i32RecOK != TRUE) {}
+
+                Check_Pattern((uint32_t)g_u8TxData, (uint32_t)g_u8RecData, BUFSIZE) ? printf(" Pass\n") :   printf(" Fail\n");
+
+                /* Clear the Tx and Rx data buffer */
+                memset((uint8_t *)g_u8TxData, 0, BUFSIZE);
+                memset((uint8_t *)g_u8RecData, 0, BUFSIZE);
+            }
+            break;
+
+            default:
+                break;
         }
 
     }
-    while ((cmmd != 'E') && (cmmd != 'e'));
+    while((cmmd != 'E') && (cmmd != 'e'));
 
     /* Disable UART1 RDA/Single-wire Bit Error Detection interrupt */
     UART_DisableInt(UART1, (UART_INTEN_RDAIEN_Msk | UART_INTEN_SWBEIEN_Msk));

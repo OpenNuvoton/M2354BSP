@@ -4,7 +4,7 @@
  * \website http://esp8266at.com
  * \license MIT
  * \brief   Configuration part for ESP8266 library
- *	
+ *
 \verbatim
    ----------------------------------------------------------------------
     Copyright (c) 2016 Tilen Majerle
@@ -13,8 +13,8 @@
     obtaining a copy of this software and associated documentation
     files (the "Software"), to deal in the Software without restriction,
     including without limitation the rights to use, copy, modify, merge,
-    publish, distribute, sublicense, and/or sell copies of the Software, 
-    and to permit persons to whom the Software is furnished to do so, 
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
     subject to the following conditions:
 
     The above copyright notice and this permission notice shall be
@@ -25,7 +25,7 @@
     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
     AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     OTHER DEALINGS IN THE SOFTWARE.
    ----------------------------------------------------------------------
@@ -49,7 +49,7 @@
  */
 
 /**
- * \brief   USART input buffer size. This buffer stores data received from USART RX interrupt 
+ * \brief   USART input buffer size. This buffer stores data received from USART RX interrupt
  *          before stack use them.
  *
  *          Size of buffer depends on speed of calling \ref ESP_Update function, ESP baudrate and
@@ -69,7 +69,7 @@
 
 /**
  * \brief   Connection data receive buffer size in units of bytes.
- *          
+ *
  *          Since there can only be one received data packet at a time,
  *          library uses single buffer for connection receive data.
  *          It can be anysize, but recommended at least 1460 bytes as this is normal packet size from ESP.
@@ -86,7 +86,7 @@
  *          This is useful for low ram devices but not useful when having server mode active
  *          In this case, data may be lost because of strange AT output from ESP8266 software.
  *
- * \note    When server mode is active, this feature should not be enabled. In this case, 
+ * \note    When server mode is active, this feature should not be enabled. In this case,
  *          each connection will have separater buffer of \ref ESP_CONNBUFFER_SIZE size in bytes.
  */
 #define ESP_CONN_SINGLEBUFFER               0
@@ -117,14 +117,14 @@
 
 /**
  * \brief  RTOS specific macro for yielding
- * 
- *         This macro is placed in places where code might block when RTOS is 
+ *
+ *         This macro is placed in places where code might block when RTOS is
  *         being run in tickless mode - when one thread is waiting for other one
  *         to complete some actions.
  *
  * \note   If RTOS is not being used or scheduler is running in normal mode,
- *         leave it undefined. 
- *         
+ *         leave it undefined.
+ *
  * \note   User have add yield on his own in Update thread and the one
  *         which is processing callbacks.
  */
@@ -141,22 +141,22 @@
  * \brief  Async data processing enabled (1) or disabled (0)
  *
  * \note   This feature has sense when in non-RTOS mode and you wanna process income data async (in interrupt).
- * 
+ *
  *         When this feature is enabled, you HAVE TO do processing (ESP_Update) in interrupt.
  */
 #define ESP_ASYNC                           1
 
 /**
  * \brief   Enables (1) or disables (0) CTS pin on ESP8266 and software RTS pin on microcontroller
- *          
+ *
  *          When option is enabled, MCU must implement RTS software output pin to disable ESP
  *          module to send data before they are read from buffer and processed by ESP stack.
  *          This prevents loosing data if you have low RAM memory and you need to do hard work with data,
  *          like saving data to SDCARD.
- * 
+ *
  *          Function to control software RTS output on MCU is called from function
  *          which adds data to internal buffer of ESP stack.
- *         
+ *
  *          When buffer is read from \ref ESP_Update function, RTS should be set low again.
  *
  * \note    Software RTS pin from microcontroller (any pin selected by user)

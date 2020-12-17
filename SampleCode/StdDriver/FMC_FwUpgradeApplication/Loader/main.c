@@ -258,7 +258,7 @@ int main()
         printf("+------------------------+\n");
 
         /* Check CPU run at Bank0 or Bank1*/
-        s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
+        s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk) >> FMC_ISPSTS_FBS_Pos);
         printf("\n BANK%d Loader processing \n\n", s_u32ExecBank);
 
         /* Get loader CRC */
@@ -267,13 +267,14 @@ int main()
         printf(" Loader0 checksum: 0x%08x \n Loader1 checksum: 0x%08x\n", u32Loader0ChkSum, u32Loader1ChkSum);
 
         /* Get app CRC */
-        u32App0ChkSum = FMC_GetChkSum(FMC_APROM_BASE+APP_BASE, APP_SIZE);
-        u32App1ChkSum = FMC_GetChkSum(FMC_APROM_BANK0_END+APP_BASE, APP_SIZE);
+        u32App0ChkSum = FMC_GetChkSum(FMC_APROM_BASE + APP_BASE, APP_SIZE);
+        u32App1ChkSum = FMC_GetChkSum(FMC_APROM_BANK0_END + APP_BASE, APP_SIZE);
         printf(" App0 checksum: 0x%08x \n App1 checksum: 0x%08x\n", u32App0ChkSum, u32App1ChkSum);
 
         /* Write firmware CRC in CRC base for following checking */
         printf("\n Firmware CRC in [0x%x] is [0x%x]\n", FW_CRC_BASE, FMC_Read(FW_CRC_BASE));
-        if(FMC_Read(FW_CRC_BASE) == 0xFFFFFFFF) {
+        if(FMC_Read(FW_CRC_BASE) == 0xFFFFFFFF)
+        {
 
             FMC_Write(FW_CRC_BASE, u32App0ChkSum);
             printf("\n Update Firmware CRC in [0x%x] is [0x%x]\n", FW_CRC_BASE, FMC_Read(FW_CRC_BASE));
@@ -281,46 +282,47 @@ int main()
 
         /* Write backup firmware CRC in backup CRC base for following checking */
         printf("\n Backup Firmware CRC in [0x%x] is [0x%x]\n", BACKUP_FW_CRC_BASE, FMC_Read(BACKUP_FW_CRC_BASE));
-        if(FMC_Read(BACKUP_FW_CRC_BASE) == 0xFFFFFFFF) {
+        if(FMC_Read(BACKUP_FW_CRC_BASE) == 0xFFFFFFFF)
+        {
 
             FMC_Write(BACKUP_FW_CRC_BASE, u32App1ChkSum);
             printf("\n Update Firmware CRC in [0x%x] is [0x%x]\n", BACKUP_FW_CRC_BASE, FMC_Read(BACKUP_FW_CRC_BASE));
         }
 
         /* Create the other bank loader for executing bank swap */
-        if( (s_u32ExecBank == 0) && ( u32Loader0ChkSum != u32Loader1ChkSum ) )
+        if((s_u32ExecBank == 0) && (u32Loader0ChkSum != u32Loader1ChkSum))
         {
-            printf("\n Create BANK%d Loader... \n",  s_u32ExecBank^1);
+            printf("\n Create BANK%d Loader... \n",  s_u32ExecBank ^ 1);
 
             /* Erase loader region */
-            for(i = LOADER_BASE; i < (LOADER_BASE + LOADER_SIZE); i+= FMC_FLASH_PAGE_SIZE)
+            for(i = LOADER_BASE; i < (LOADER_BASE + LOADER_SIZE); i += FMC_FLASH_PAGE_SIZE)
             {
-                FMC_Erase( FMC_BANK_SIZE*(s_u32ExecBank^1) + i );
+                FMC_Erase(FMC_BANK_SIZE * (s_u32ExecBank ^ 1) + i);
             }
             /* Create loader in the other bank */
-            for(i = LOADER_BASE; i < (LOADER_BASE + LOADER_SIZE); i+= 4)
+            for(i = LOADER_BASE; i < (LOADER_BASE + LOADER_SIZE); i += 4)
             {
-                FMC_Write( FMC_BANK_SIZE*(s_u32ExecBank^1) + i, FMC_Read( (FMC_BANK_SIZE*s_u32ExecBank) + i) );
+                FMC_Write(FMC_BANK_SIZE * (s_u32ExecBank ^ 1) + i, FMC_Read((FMC_BANK_SIZE * s_u32ExecBank) + i));
             }
-            printf(" Create Bank%d Loader completed! \n", (s_u32ExecBank^1) );
+            printf(" Create Bank%d Loader completed! \n", (s_u32ExecBank ^ 1));
         }
 
 #if CREATE_BANK1_APP
-        if( (s_u32ExecBank == 0) && ( (FMC_CheckAllOne( (FMC_APROM_BANK0_END + APP_BASE), APP_SIZE) )== READ_ALLONE_YES ) )
+        if((s_u32ExecBank == 0) && ((FMC_CheckAllOne((FMC_APROM_BANK0_END + APP_BASE), APP_SIZE)) == READ_ALLONE_YES))
         {
-            printf("\n Create BANK%d App... \n", s_u32ExecBank^1);
+            printf("\n Create BANK%d App... \n", s_u32ExecBank ^ 1);
 
             /* Erase app region */
-            for(i = APP_BASE; i < (APP_BASE + APP_SIZE); i+= FMC_FLASH_PAGE_SIZE)
+            for(i = APP_BASE; i < (APP_BASE + APP_SIZE); i += FMC_FLASH_PAGE_SIZE)
             {
-                FMC_Erase( FMC_BANK_SIZE*(s_u32ExecBank^1) + i );
+                FMC_Erase(FMC_BANK_SIZE * (s_u32ExecBank ^ 1) + i);
             }
             /* Create app in the other bank(just for test)*/
-            for(i = APP_BASE; i < (APP_BASE + APP_SIZE); i+= 4)
+            for(i = APP_BASE; i < (APP_BASE + APP_SIZE); i += 4)
             {
-                FMC_Write( FMC_BANK_SIZE*(s_u32ExecBank^1) + i, FMC_Read( (FMC_BANK_SIZE*s_u32ExecBank) + i) );
+                FMC_Write(FMC_BANK_SIZE * (s_u32ExecBank ^ 1) + i, FMC_Read((FMC_BANK_SIZE * s_u32ExecBank) + i));
             }
-            printf(" Create Bank%d App completed! \n", (s_u32ExecBank^1) );
+            printf(" Create Bank%d App completed! \n", (s_u32ExecBank ^ 1));
         }
 #endif
         /* To check if system has been reset by WDT time-out reset or not */
@@ -333,7 +335,7 @@ int main()
 
             /* Swap to Bank1 to execute backup firmware */
             FMC_SwapBank(1);
-            s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
+            s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk) >> FMC_ISPSTS_FBS_Pos);
             printf("\n BANK%d Loader after swap  \n\n", s_u32ExecBank);
 
             /* Remap to App */

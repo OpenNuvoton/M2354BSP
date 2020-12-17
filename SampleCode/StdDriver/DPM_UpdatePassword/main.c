@@ -63,9 +63,9 @@ void UART0_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int32_t main(void)
 {
-    uint32_t au32Pwd_5[4] = {0x55555555, 0x55555555, 0x55555555, 0x55555555}; 
-    uint32_t au32Pwd_A[4] = {0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA};     
-    
+    uint32_t au32Pwd_5[4] = {0x55555555, 0x55555555, 0x55555555, 0x55555555};
+    uint32_t au32Pwd_A[4] = {0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA};
+
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -84,15 +84,15 @@ int32_t main(void)
     printf("+----------------------------------+\n\n");
 
     /* Get DPM status */
-    printf("Secure DPM manages Secure region debug.\n");    
-    printf("Get Secure DPM status:\n");      
-    printf("Secure region debug is %s.\n", DPM_GetDebugDisable(SECURE_DPM)? "Disabled": "Enabled");     
-    printf("Secure region debug is %s.\n\n", DPM_GetDebugLock(SECURE_DPM)? "Locked": "not Locked");      
-    
-    /* Update password */    
+    printf("Secure DPM manages Secure region debug.\n");
+    printf("Get Secure DPM status:\n");
+    printf("Secure region debug is %s.\n", DPM_GetDebugDisable(SECURE_DPM) ? "Disabled" : "Enabled");
+    printf("Secure region debug is %s.\n\n", DPM_GetDebugLock(SECURE_DPM) ? "Locked" : "not Locked");
+
+    /* Update password */
     printf("Update Secure DPM password ... ");
 
-    if(DPM_SetPasswordUpdate(SECURE_DPM, au32Pwd_5)==0)
+    if(DPM_SetPasswordUpdate(SECURE_DPM, au32Pwd_5) == 0)
     {
         printf("Password update has reached maximum time. Please erase chip.\n");
         while(1);
@@ -100,14 +100,14 @@ int32_t main(void)
     else
     {
         printf("OK.\n");
-    }        
-    
-    /* Compare password fail */   
+    }
+
+    /* Compare password fail */
     printf("Compare with wrong password ... ");
-    
-    if(DPM_SetPasswordCompare(SECURE_DPM, au32Pwd_A)==0)
+
+    if(DPM_SetPasswordCompare(SECURE_DPM, au32Pwd_A) == 0)
     {
-        if(DPM_GetPasswordErrorFlag(SECURE_DPM)==1)
+        if(DPM_GetPasswordErrorFlag(SECURE_DPM) == 1)
         {
             printf("password is wrong.\n");
             DPM_ClearPasswordErrorFlag(SECURE_DPM);
@@ -120,18 +120,18 @@ int32_t main(void)
     else
     {
         printf("Password compare has reached maximum time. Please erase chip.\n");
-        while(1);           
+        while(1);
     }
 
-    /* Compare password pass */   
+    /* Compare password pass */
     printf("Compare with correct password ... ");
-    
-    if(DPM_SetPasswordCompare(SECURE_DPM, au32Pwd_5)==0)
+
+    if(DPM_SetPasswordCompare(SECURE_DPM, au32Pwd_5) == 0)
     {
-        if(DPM_GetPasswordErrorFlag(SECURE_DPM)==1)
+        if(DPM_GetPasswordErrorFlag(SECURE_DPM) == 1)
         {
             printf("password is wrong.\n");
-            DPM_ClearPasswordErrorFlag(SECURE_DPM);  
+            DPM_ClearPasswordErrorFlag(SECURE_DPM);
         }
         else
         {

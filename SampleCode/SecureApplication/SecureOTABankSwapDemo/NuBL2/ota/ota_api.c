@@ -29,7 +29,7 @@
   */
 void OTA_SysValueInit(uint32_t u32HSI)
 {
-    uint8_t au8SendBuf[]="CONNECT0\r\n";
+    uint8_t au8SendBuf[] = "CONNECT0\r\n";
 
     CyclesPerUs = (u32HSI / 1000000UL);
     g_u8SendbytesFlag = 1;
@@ -160,7 +160,7 @@ uint8_t OTA_API_EraseFlash(uint32_t u32FlashAddr)
 //    FMC_Open();
     FMC_ENABLE_AP_UPDATE();
 
-    if (FMC_Erase(u32FlashAddr))
+    if(FMC_Erase(u32FlashAddr))
         u8Status = STATUS_FAILED;
     else
         u8Status = STATUS_SUCCESS;
@@ -204,11 +204,11 @@ uint8_t OTA_API_WriteFlash(uint32_t u32FlashAddr, uint32_t u32Data)
 /* the system does not support an RTC.                     */
 /* This function is not required in read-only cfg.         */
 
-unsigned long get_fattime (void)
+unsigned long get_fattime(void)
 {
     unsigned long tmr;
 
-    tmr=0x00000;
+    tmr = 0x00000;
 
     return tmr;
 }

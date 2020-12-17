@@ -41,7 +41,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ void SYS_Init(void)
 
     /* Waiting for clock ready */
     CLK_WaitClockReady((CLK_STATUS_HXTSTB_Msk | CLK_STATUS_LIRCSTB_Msk));
-    
+
     /* Enable TIMER module clock */
     CLK_EnableModuleClock(TMR0_MODULE);
     CLK_EnableModuleClock(TMR1_MODULE);
@@ -86,7 +86,7 @@ int main(void)
 
     /* Init System, peripheral clock and multi-function I/O */
     SYS_Init();
-    
+
     /* Init UART for printf */
     UART_Init();
 
@@ -111,7 +111,7 @@ int main(void)
     printf("    - Clock source is HCLK, and operation at periodic mode\n");
     printf("    - Capture source is MIRC and source divider 32\n");
     printf("# Calculate the target clock frequency:\n\n");
-    
+
     /* Open Timer0, Timer1, Timer4 and Timer5 operation in periodic mode */
     TIMER_Open(TIMER0, TIMER_PERIODIC_MODE, 1);
     TIMER_Open(TIMER1, TIMER_PERIODIC_MODE, 1);
@@ -127,68 +127,68 @@ int main(void)
     TIMER_SET_CMP_VALUE(TIMER4, 0xFFFFFFUL);
     TIMER_SET_PRESCALE_VALUE(TIMER5, 0);
     TIMER_SET_CMP_VALUE(TIMER5, 0xFFFFFFUL);
-        
+
     /* Select capture source from internal signal */
     TIMER0->CTL = ((TIMER0->CTL & ~TIMER_CTL_CAPSRC_Msk) | TIMER_CAPTURE_SOURCE_FROM_INTERNAL);
     TIMER1->CTL = ((TIMER1->CTL & ~TIMER_CTL_CAPSRC_Msk) | TIMER_CAPTURE_SOURCE_FROM_INTERNAL);
     TIMER4->CTL = ((TIMER4->CTL & ~TIMER_CTL_CAPSRC_Msk) | TIMER_CAPTURE_SOURCE_FROM_INTERNAL);
     TIMER5->CTL = ((TIMER5->CTL & ~TIMER_CTL_CAPSRC_Msk) | TIMER_CAPTURE_SOURCE_FROM_INTERNAL);
-    
+
     /* Enable capture function */
     TIMER_EnableCapture(TIMER0, TIMER_CAPTURE_COUNTER_RESET_MODE, TIMER_CAPTURE_EVENT_FALLING);
     TIMER_EnableCapture(TIMER1, TIMER_CAPTURE_COUNTER_RESET_MODE, TIMER_CAPTURE_EVENT_FALLING);
     TIMER_EnableCapture(TIMER4, TIMER_CAPTURE_COUNTER_RESET_MODE, TIMER_CAPTURE_EVENT_FALLING);
     TIMER_EnableCapture(TIMER5, TIMER_CAPTURE_COUNTER_RESET_MODE, TIMER_CAPTURE_EVENT_FALLING);
-        
+
     /* Select capture source and source divider */
     TIMER0->EXTCTL |= (TIMER_CAPTURE_SOURCE_DIV_256 | TIMER_INTER_CAPTURE_SOURCE_HXT);
     TIMER1->EXTCTL |= (TIMER_CAPTURE_SOURCE_DIV_128 | TIMER_INTER_CAPTURE_SOURCE_HIRC);
     TIMER4->EXTCTL |= (TIMER_CAPTURE_SOURCE_DIV_1 | TIMER_INTER_CAPTURE_SOURCE_LIRC);
     TIMER5->EXTCTL |= (TIMER_CAPTURE_SOURCE_DIV_32 | TIMER_INTER_CAPTURE_SOURCE_MIRC);
-    
+
     /* Start timer capture function */
     TIMER_Start(TIMER0);
     TIMER_Start(TIMER1);
     TIMER_Start(TIMER4);
     TIMER_Start(TIMER5);
-    
+
     /* Delay 10 ms to get captured data */
     CLK_SysTickDelay(10000);
-    
+
     /* Get TIMER0 captured data */
     TIMER_ClearCaptureIntFlag(TIMER0);
     while(TIMER_GetCaptureIntFlag(TIMER0) == 0) {}
     TIMER_ClearCaptureIntFlag(TIMER0);
     au32CAPValue[0] = TIMER_GetCaptureData(TIMER0);
-    
+
     /* Get TIMER1 captured data */
     TIMER_ClearCaptureIntFlag(TIMER1);
     while(TIMER_GetCaptureIntFlag(TIMER1) == 0) {}
     TIMER_ClearCaptureIntFlag(TIMER1);
     au32CAPValue[1] = TIMER_GetCaptureData(TIMER1);
-    
+
     /* Get TIMER4 captured data */
     TIMER_ClearCaptureIntFlag(TIMER4);
     while(TIMER_GetCaptureIntFlag(TIMER4) == 0) {}
     TIMER_ClearCaptureIntFlag(TIMER4);
     au32CAPValue[4] = TIMER_GetCaptureData(TIMER4);
-    
+
     /* Get TIMER5 captured data */
     TIMER_ClearCaptureIntFlag(TIMER5);
     while(TIMER_GetCaptureIntFlag(TIMER5) == 0) {}
     TIMER_ClearCaptureIntFlag(TIMER5);
     au32CAPValue[5] = TIMER_GetCaptureData(TIMER5);
-        
-    /* 
+
+    /*
         Target input clock source is :
             (1000000 / ((CAP_DAT + 1) * (1000000 / TIMER_CLK))) * CAPSRC_DIV
             = (TIMER_CLK / (CAP_DAT + 1))* CAPSRC_DIV
             = (TIMER_CLK * CAPSRC_DIV) / (CAP_DAT + 1) (Hz)
-    */ 
-    printf("HXT freq:  %d Hz.\n", ((SystemCoreClock / (au32CAPValue[0] + 1)) * 256)); 
-    printf("HIRC freq: %d Hz.\n", ((SystemCoreClock / (au32CAPValue[1] + 1)) * 128)); 
-    printf("LIRC freq: %d Hz.\n", ((SystemCoreClock / (au32CAPValue[4] + 1)) * 1)); 
-    printf("MIRC freq: %d Hz.\n", ((SystemCoreClock / (au32CAPValue[5] + 1)) * 32));     
+    */
+    printf("HXT freq:  %d Hz.\n", ((SystemCoreClock / (au32CAPValue[0] + 1)) * 256));
+    printf("HIRC freq: %d Hz.\n", ((SystemCoreClock / (au32CAPValue[1] + 1)) * 128));
+    printf("LIRC freq: %d Hz.\n", ((SystemCoreClock / (au32CAPValue[4] + 1)) * 1));
+    printf("MIRC freq: %d Hz.\n", ((SystemCoreClock / (au32CAPValue[5] + 1)) * 32));
 
     /* Stop Timer0, Timer1, Timer4 and Timer5 counting */
     TIMER_Stop(TIMER0);

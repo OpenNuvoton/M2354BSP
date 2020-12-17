@@ -30,22 +30,22 @@ void UART1_IRQHandler(void)
     uint32_t u32IntSrc = UART1->INTSTS;
 
     /* RDA FIFO interrupt and RDA timeout interrupt */
-    if (u32IntSrc & (UART_INTSTS_RXTOIF_Msk|UART_INTSTS_RDAIF_Msk) ) 
+    if(u32IntSrc & (UART_INTSTS_RXTOIF_Msk | UART_INTSTS_RDAIF_Msk))
     {
-        /* Read data until RX FIFO is empty or data is over maximum packet size */ 
-        while (((UART1->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) == 0) && (g_u8bufhead < MAX_PKT_SIZE)) 
+        /* Read data until RX FIFO is empty or data is over maximum packet size */
+        while(((UART1->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) == 0) && (g_u8bufhead < MAX_PKT_SIZE))
         {
             g_au8uart_rcvbuf[g_u8bufhead++] = (uint8_t)UART1->DAT;
         }
     }
 
     /* Reset data buffer index */
-    if (g_u8bufhead == MAX_PKT_SIZE)
+    if(g_u8bufhead == MAX_PKT_SIZE)
     {
         g_u8bUartDataReady = TRUE;
         g_u8bufhead = 0;
     }
-    else if (u32IntSrc & UART_INTSTS_RXTOIF_Msk)
+    else if(u32IntSrc & UART_INTSTS_RXTOIF_Msk)
     {
         g_u8bufhead = 0;
     }
@@ -57,12 +57,12 @@ void PutString(void)
     uint32_t i;
 
     /* UART send response to master */
-    for (i = 0; i < MAX_PKT_SIZE; i++)
+    for(i = 0; i < MAX_PKT_SIZE; i++)
     {
         /* Wait for TX not full */
-        while ((UART1->FIFOSTS & UART_FIFOSTS_TXFULL_Msk));
+        while((UART1->FIFOSTS & UART_FIFOSTS_TXFULL_Msk));
 
-        /* UART send data */        
+        /* UART send data */
         UART1->DAT = g_au8ResponseBuff[i];
     }
 }

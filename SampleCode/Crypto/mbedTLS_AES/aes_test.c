@@ -52,14 +52,17 @@ uint32_t  get_timer0_counter()
 
 static const unsigned char aes_test_cfb128_key[3][32] =
 {
-    {   0x2B, 0x7E, 0x15, 0x16, 0x28, 0xAE, 0xD2, 0xA6,
+    {
+        0x2B, 0x7E, 0x15, 0x16, 0x28, 0xAE, 0xD2, 0xA6,
         0xAB, 0xF7, 0x15, 0x88, 0x09, 0xCF, 0x4F, 0x3C
     },
-    {   0x8E, 0x73, 0xB0, 0xF7, 0xDA, 0x0E, 0x64, 0x52,
+    {
+        0x8E, 0x73, 0xB0, 0xF7, 0xDA, 0x0E, 0x64, 0x52,
         0xC8, 0x10, 0xF3, 0x2B, 0x80, 0x90, 0x79, 0xE5,
         0x62, 0xF8, 0xEA, 0xD2, 0x52, 0x2C, 0x6B, 0x7B
     },
-    {   0x60, 0x3D, 0xEB, 0x10, 0x15, 0xCA, 0x71, 0xBE,
+    {
+        0x60, 0x3D, 0xEB, 0x10, 0x15, 0xCA, 0x71, 0xBE,
         0x2B, 0x73, 0xAE, 0xF0, 0x85, 0x7D, 0x77, 0x81,
         0x1F, 0x35, 0x2C, 0x07, 0x3B, 0x61, 0x08, 0xD7,
         0x2D, 0x98, 0x10, 0xA3, 0x09, 0x14, 0xDF, 0xF4
@@ -86,7 +89,8 @@ static const unsigned char aes_test_cfb128_pt[64] =
 
 static const unsigned char aes_test_cfb128_ct[3][64] =
 {
-    {   0x3B, 0x3F, 0xD9, 0x2E, 0xB7, 0x2D, 0xAD, 0x20,
+    {
+        0x3B, 0x3F, 0xD9, 0x2E, 0xB7, 0x2D, 0xAD, 0x20,
         0x33, 0x34, 0x49, 0xF8, 0xE8, 0x3C, 0xFB, 0x4A,
         0xC8, 0xA6, 0x45, 0x37, 0xA0, 0xB3, 0xA9, 0x3F,
         0xCD, 0xE3, 0xCD, 0xAD, 0x9F, 0x1C, 0xE5, 0x8B,
@@ -95,7 +99,8 @@ static const unsigned char aes_test_cfb128_ct[3][64] =
         0xC0, 0x4B, 0x05, 0x35, 0x7C, 0x5D, 0x1C, 0x0E,
         0xEA, 0xC4, 0xC6, 0x6F, 0x9F, 0xF7, 0xF2, 0xE6
     },
-    {   0xCD, 0xC8, 0x0D, 0x6F, 0xDD, 0xF1, 0x8C, 0xAB,
+    {
+        0xCD, 0xC8, 0x0D, 0x6F, 0xDD, 0xF1, 0x8C, 0xAB,
         0x34, 0xC2, 0x59, 0x09, 0xC9, 0x9A, 0x41, 0x74,
         0x67, 0xCE, 0x7F, 0x7F, 0x81, 0x17, 0x36, 0x21,
         0x96, 0x1A, 0x2B, 0x70, 0x17, 0x1D, 0x3D, 0x7A,
@@ -104,7 +109,8 @@ static const unsigned char aes_test_cfb128_ct[3][64] =
         0xC0, 0x5F, 0x9F, 0x9C, 0xA9, 0x83, 0x4F, 0xA0,
         0x42, 0xAE, 0x8F, 0xBA, 0x58, 0x4B, 0x09, 0xFF
     },
-    {   0xDC, 0x7E, 0x84, 0xBF, 0xDA, 0x79, 0x16, 0x4B,
+    {
+        0xDC, 0x7E, 0x84, 0xBF, 0xDA, 0x79, 0x16, 0x4B,
         0x7E, 0xCD, 0x84, 0x86, 0x98, 0x5D, 0x38, 0x60,
         0x39, 0xFF, 0xED, 0x14, 0x3B, 0x28, 0xB1, 0xC8,
         0x32, 0x11, 0x3C, 0x63, 0x31, 0xE5, 0x40, 0x7B,
@@ -133,67 +139,67 @@ int AESTest(void)
 
     mbedtls_aes_context ctx;
 
-    memset( key, 0, 32 );
-    mbedtls_aes_init( &ctx );
+    memset(key, 0, 32);
+    mbedtls_aes_init(&ctx);
 
 
     /*
      * CFB128 mode
      */
     printf(" AES CFB Mode:\n\n");
-    for( i = 0; i < 6; i++ )
+    for(i = 0; i < 6; i++)
     {
         u = i >> 1;
         keybits = 128 + u * 64;
         mode = i & 1;
 
-        if( verbose != 0 )
-            printf( "  AES-CFB128-%3d (%s): ", keybits,
-                    ( mode == MBEDTLS_AES_DECRYPT ) ? "dec" : "enc" );
+        if(verbose != 0)
+            printf("  AES-CFB128-%3d (%s): ", keybits,
+                   (mode == MBEDTLS_AES_DECRYPT) ? "dec" : "enc");
 
-        memcpy( iv,  aes_test_cfb128_iv, 16 );
-        memcpy( key, aes_test_cfb128_key[u], keybits / 8 );
+        memcpy(iv,  aes_test_cfb128_iv, 16);
+        memcpy(key, aes_test_cfb128_key[u], keybits / 8);
 
         offset = 0;
 
         enable_sys_tick(1000);
         start_timer0();
         /* Sets the AES encryption key */
-        ret = mbedtls_aes_setkey_enc( &ctx, key, keybits );
+        ret = mbedtls_aes_setkey_enc(&ctx, key, keybits);
 
-        if( ret == MBEDTLS_ERR_PLATFORM_FEATURE_UNSUPPORTED && keybits == 192 )
+        if(ret == MBEDTLS_ERR_PLATFORM_FEATURE_UNSUPPORTED && keybits == 192)
         {
-            printf( "skipped\n" );
+            printf("skipped\n");
             continue;
         }
-        else if( ret != 0 )
+        else if(ret != 0)
         {
             goto exit;
         }
 
-        if( mode == MBEDTLS_AES_DECRYPT )
+        if(mode == MBEDTLS_AES_DECRYPT)
         {
-            memcpy( buf, aes_test_cfb128_ct[u], 64 );
+            memcpy(buf, aes_test_cfb128_ct[u], 64);
             aes_tests = aes_test_cfb128_pt;
         }
         else
         {
-            memcpy( buf, aes_test_cfb128_pt, 64 );
+            memcpy(buf, aes_test_cfb128_pt, 64);
             aes_tests = aes_test_cfb128_ct[u];
         }
 
         /* AES-CFB128 buffer encryption/decryption */
-        ret = mbedtls_aes_crypt_cfb128( &ctx, mode, 64, &offset, iv, buf, buf );
-        if( ret != 0 )
+        ret = mbedtls_aes_crypt_cfb128(&ctx, mode, 64, &offset, iv, buf, buf);
+        if(ret != 0)
             goto exit;
 
-        if( memcmp( buf, aes_tests, 64 ) != 0 )
+        if(memcmp(buf, aes_tests, 64) != 0)
         {
             ret = 1;
             goto exit;
         }
 
-        if( verbose != 0 )
+        if(verbose != 0)
         {
             printf("passed");
             u32Time = get_timer0_counter();
@@ -203,16 +209,16 @@ int AESTest(void)
         }
     }
 
-    if( verbose != 0 )
-        printf( "\n" );
+    if(verbose != 0)
+        printf("\n");
 
     ret = 0;
 
 exit:
-    if( ret != 0 && verbose != 0 )
-        printf( "failed\n" );
+    if(ret != 0 && verbose != 0)
+        printf("failed\n");
 
-    mbedtls_aes_free( &ctx );
+    mbedtls_aes_free(&ctx);
 
-    return( ret );
+    return(ret);
 }

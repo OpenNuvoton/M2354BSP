@@ -74,7 +74,7 @@ void SYS_Init(void)
     SYS->GPB_MFPH = (SYS->GPB_MFPH & ~(SYS_GPB_MFPH_PB14MFP_Msk)) | EADC0_CH14_PB14;
     SYS->GPB_MFPH = (SYS->GPB_MFPH & ~(SYS_GPB_MFPH_PB15MFP_Msk)) | EADC0_CH15_PB15;
 
-	/* Disable digital input path of EADC analog pin to prevent leakage */
+    /* Disable digital input path of EADC analog pin to prevent leakage */
     GPIO_DISABLE_DIGITAL_PATH(PB, BIT15 | BIT14 | BIT11 | BIT10);
 
 }

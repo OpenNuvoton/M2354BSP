@@ -88,7 +88,7 @@ void RTC_IRQHandler(void);
 void RTC_IRQHandler(void)
 {
     /* Clear RTC interrupt flag */
-	uint32_t u32INTSTS = RTC->INTSTS;
+    uint32_t u32INTSTS = RTC->INTSTS;
     RTC->INTSTS = u32INTSTS;
 }
 
@@ -115,7 +115,7 @@ void WakeUpRTCTickFunction(uint32_t u32PDMode)
 
     /* Enable RTC Tick interrupt */
     RTC_EnableInt(RTC_INTEN_TICKIEN_Msk);
-    NVIC_EnableIRQ(RTC_TAMPER_IRQn);     
+    NVIC_EnableIRQ(RTC_TAMPER_IRQn);
 
     /* Select Power-down mode */
     CLK_SetPowerDownMode(u32PDMode);
@@ -206,7 +206,7 @@ void RTC_TAMPER_IRQHandler(void);
 void RTC_TAMPER_IRQHandler(void)
 {
     /* Clear RTC interrupt flag */
-	uint32_t u32INTSTS = RTC->INTSTS;
+    uint32_t u32INTSTS = RTC->INTSTS;
     RTC->INTSTS = u32INTSTS;
 }
 
@@ -239,14 +239,14 @@ void  WakeUpRTCTamperFunction(uint32_t u32PDMode)
 
     /* Enable RTC Tamper 0 */
     RTC_EnableInt(RTC_INTEN_TAMP0IEN_Msk);
-    NVIC_EnableIRQ(RTC_TAMPER_IRQn);        
+    NVIC_EnableIRQ(RTC_TAMPER_IRQn);
 
     /* Select Power-down mode */
     CLK_SetPowerDownMode(u32PDMode);
 
     /* Enable RTC wake-up */
     CLK_ENABLE_RTCWK();
- 
+
     /* Enter to Power-down mode */
     PowerDownFunction();
 
@@ -334,7 +334,7 @@ void SYS_Init(void)
     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_LXTEN_Msk);
 
     /* Wait for HIRC and LXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_LXTSTB_Msk );
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_LXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -426,23 +426,23 @@ int32_t main(void)
 
     switch(u8Item)
     {
-    case '1':
-        WakeUpPinFunction(CLK_PMUCTL_PDMSEL_DPD, CLK_DPDWKPIN_RISING);
-    /* break; */
-    case '2':
-        WakeUpTimerFunction(CLK_PMUCTL_PDMSEL_DPD, CLK_PMUCTL_WKTMRIS_3277);
-    /* break; */
-    case '3':
-        WakeUpRTCTickFunction(CLK_PMUCTL_PDMSEL_DPD);
-    /* break; */
-    case '4':
-        WakeUpRTCAlarmFunction(CLK_PMUCTL_PDMSEL_DPD);
-    /* break; */
-    case '5':
-        WakeUpRTCTamperFunction(CLK_PMUCTL_PDMSEL_DPD);
-    /* break; */
-    default:
-        break;
+        case '1':
+            WakeUpPinFunction(CLK_PMUCTL_PDMSEL_DPD, CLK_DPDWKPIN_RISING);
+        /* break; */
+        case '2':
+            WakeUpTimerFunction(CLK_PMUCTL_PDMSEL_DPD, CLK_PMUCTL_WKTMRIS_3277);
+        /* break; */
+        case '3':
+            WakeUpRTCTickFunction(CLK_PMUCTL_PDMSEL_DPD);
+        /* break; */
+        case '4':
+            WakeUpRTCAlarmFunction(CLK_PMUCTL_PDMSEL_DPD);
+        /* break; */
+        case '5':
+            WakeUpRTCTamperFunction(CLK_PMUCTL_PDMSEL_DPD);
+        /* break; */
+        default:
+            break;
     }
 
     while(1);

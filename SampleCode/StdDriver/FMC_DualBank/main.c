@@ -123,54 +123,54 @@ void SysTick_Handler(void)
      */
     switch(g_i8DbState)
     {
-    case DB_STATE_START:
-        if(g_u32DbAddr & ~FMC_PAGE_ADDR_MASK)
-        {
-            printf("Warning - dual bank start address is not page aligned!\n");
-            g_i8DbState = DB_STATE_FAIL;
-            break;
-        }
-        if(g_u32DbLength & ~FMC_PAGE_ADDR_MASK)
-        {
-            printf("Warning - dual bank length is not page aligned!\n");
-            g_i8DbState = DB_STATE_FAIL;
-            break;
-        }
+        case DB_STATE_START:
+            if(g_u32DbAddr & ~FMC_PAGE_ADDR_MASK)
+            {
+                printf("Warning - dual bank start address is not page aligned!\n");
+                g_i8DbState = DB_STATE_FAIL;
+                break;
+            }
+            if(g_u32DbLength & ~FMC_PAGE_ADDR_MASK)
+            {
+                printf("Warning - dual bank length is not page aligned!\n");
+                g_i8DbState = DB_STATE_FAIL;
+                break;
+            }
 
-        /* Next state is to erase flash */
-        g_i8DbState = DB_STATE_ERASE;
-        break;
-
-    case DB_STATE_ERASE:
-        FMC->ISPCMD = FMC_ISPCMD_PAGE_ERASE;     /* ISP page erase command                   */
-        FMC->ISPADDR = g_u32DbAddr;              /* page address                             */
-        FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;      /* trigger ISP page erase and no wait       */
-
-        g_i8DbState = DB_STATE_PROGRAM;          /* Next state is to program flash           */
-        break;
-
-    case DB_STATE_PROGRAM:
-        if((g_u32DbAddr & ~FMC_PAGE_ADDR_MASK) == 0)
-            printf("Erase done [%d ticks]\n", g_u32TickCnt);
-
-        FMC->ISPCMD = FMC_ISPCMD_PROGRAM;        /* ISP word program command                 */
-        FMC->ISPADDR = g_u32DbAddr;              /* word program address                     */
-        FMC->ISPDAT = g_u32DbAddr;               /* 32-bits data to be programmed            */
-        FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;      /* trigger ISP program and no wait          */
-
-        g_u32DbAddr += 4;                        /* advance to next word                     */
-        g_u32DbLength -= 4;
-        if((g_u32DbAddr & ~FMC_PAGE_ADDR_MASK) == 0)
-        {
-            /* have reached start of next page */
+            /* Next state is to erase flash */
             g_i8DbState = DB_STATE_ERASE;
-            /* next state, erase page */
-        }
-        break;
+            break;
 
-    default:
-        printf("Unknown db_state state!\n");
-        while(1);
+        case DB_STATE_ERASE:
+            FMC->ISPCMD = FMC_ISPCMD_PAGE_ERASE;     /* ISP page erase command                   */
+            FMC->ISPADDR = g_u32DbAddr;              /* page address                             */
+            FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;      /* trigger ISP page erase and no wait       */
+
+            g_i8DbState = DB_STATE_PROGRAM;          /* Next state is to program flash           */
+            break;
+
+        case DB_STATE_PROGRAM:
+            if((g_u32DbAddr & ~FMC_PAGE_ADDR_MASK) == 0)
+                printf("Erase done [%d ticks]\n", g_u32TickCnt);
+
+            FMC->ISPCMD = FMC_ISPCMD_PROGRAM;        /* ISP word program command                 */
+            FMC->ISPADDR = g_u32DbAddr;              /* word program address                     */
+            FMC->ISPDAT = g_u32DbAddr;               /* 32-bits data to be programmed            */
+            FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;      /* trigger ISP program and no wait          */
+
+            g_u32DbAddr += 4;                        /* advance to next word                     */
+            g_u32DbLength -= 4;
+            if((g_u32DbAddr & ~FMC_PAGE_ADDR_MASK) == 0)
+            {
+                /* have reached start of next page */
+                g_i8DbState = DB_STATE_ERASE;
+                /* next state, erase page */
+            }
+            break;
+
+        default:
+            printf("Unknown db_state state!\n");
+            while(1);
     }
 }
 

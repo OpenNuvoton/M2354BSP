@@ -48,7 +48,7 @@ void SYS_Init(void)
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* ENable CRYPTO module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
@@ -63,7 +63,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;    
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
 }
 
@@ -103,20 +103,20 @@ int32_t main(void)
 
     for(u32KeySize = PRNG_KEY_SIZE_128; u32KeySize <= PRNG_KEY_SIZE_256; u32KeySize++)
     {
-        printf("\n\nPRNG Key size = %s\n\n", 
+        printf("\n\nPRNG Key size = %s\n\n",
                (u32KeySize == PRNG_KEY_SIZE_128) ? "128" :
                (u32KeySize == PRNG_KEY_SIZE_192) ? "192" :
                (u32KeySize == PRNG_KEY_SIZE_256) ? "256" : "unknown");
 
         /* start PRNG with seed 0x55 */
-        PRNG_Open(CRPT, u32KeySize, 1, 0x55);     
+        PRNG_Open(CRPT, u32KeySize, 1, 0x55);
 
         for(i = 0; i < GENERATE_COUNT; i++)
         {
             g_PRNG_done = 0;
             /* Start random number generator */
             PRNG_Start(CRPT);
-            
+
             /* Waiting for number ready */
             while(!g_PRNG_done);
 

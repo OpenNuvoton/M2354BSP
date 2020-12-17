@@ -21,201 +21,201 @@
 /**
     @addtogroup KS Key Store(KS)
     Memory Mapped Structure for KS Controller
-  @{ 
+  @{
 */
- 
+
 typedef struct
 {
 
 
-/**
- * @var KS_T::CTL
- * Offset: 0x00  Key Store Control Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[0]     |START     |Key Store Start Control Bit
- * |        |          |0 = No operation.
- * |        |          |1 = Start the setted operation.
- * |[3:1]   |OPMODE    |Key Store Operation Mode
- * |        |          |000 = Read operation.
- * |        |          |001 = Create operation.
- * |        |          |010 = Erase one key operation (only for key is in SRAM).
- * |        |          |011 = Erase all keys operation (only for SRAM and Flash).
- * |        |          |100 = Revoke key operation.
- * |        |          |101 = Data Remanence prevention opertation (only for SRAM).
- * |        |          |Others = reserved.
- * |[7]     |CONT      |Read/Write Key Continue Bit
- * |        |          |0 = Read/Write key operation is not continuous to previous operation.
- * |        |          |1 = Read/Write key operation is continuous to previous operation.
- * |[8]     |INIT      |Key Store Initialization
- * |        |          |User should to check BUSY(KS_STS[2]) is 0, and then write 1 to this bit and START(KS_CTL[0[), the Key Store will start to be initialized.
- * |        |          |After KeyStore is initialized, INIT will be cleared.
- * |        |          |Note: Before executing INIT, user must to checks KS(SYS_SRAMPC1) is 00.
- * |[10]    |SILENT    |Silent Access Enable Bit
- * |        |          |0 = Silent Access Disabled.
- * |        |          |1 = Silent Access Enabled.
- * |[11]    |SCMB      |Data Scramble Enable Bit
- * |        |          |0 = Data Scramble Disabled.
- * |        |          |1 = Data Scramble Enabled.
- * |[15]    |IEN       |Key Store Interrupt Enable Bit
- * |        |          |0 = Key Store Interrupt Disabled.
- * |        |          |1 = Key Store Interrupt Enabled.
- * @var KS_T::METADATA
- * Offset: 0x04  Key Store Metadata Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[0]     |SEC       |Secure Key Selection Bit
- * |        |          |0 = Set key as the non-secure key.
- * |        |          |1 = Set key as the secure key.
- * |[1]     |PRIV      |Privilege Key Selection Bit
- * |        |          |0 = Set key as the non-privilege key.
- * |        |          |1 = Set key as the privilege key.
- * |[2]     |READABLE  |Key Readable Control Bit
- * |        |          |0 = key is un-readable.
- * |        |          |1 = key is readable.
- * |[3]     |RVK       |Key Revoke Control Bit
- * |        |          |0 = Key current selected will not be changed.
- * |        |          |1 = key current selected will be change to revoked state.
- * |[4]     |BS        |Booting State Selection Bit
- * |        |          |0 = Set key used at all state.
- * |        |          |1 = Set key used at boot loader state 1 (BL1 state).
- * |[12:8]  |SIZE      |Key Size Selection Bits
- * |        |          |00000 = 128 bits.
- * |        |          |00001 = 163 bits.
- * |        |          |00010 = 192 bits.
- * |        |          |00011 = 224 bits.
- * |        |          |00100 = 233 bits.
- * |        |          |00101 = 255 bits.
- * |        |          |00110 = 256 bits.
- * |        |          |00111 = 283 bits.
- * |        |          |01000 = 384 bits.
- * |        |          |01001 = 409 bits.
- * |        |          |01010 = 512 bits.
- * |        |          |01011 = 521 bits.
- * |        |          |01100 = 571 bits.
- * |        |          |10000 = 1024 bits.
- * |        |          |10001 = 1536 bits.
- * |        |          |10010 = 2048 bits.
- * |        |          |10011 = 3072 bits.
- * |        |          |10100 = 4096 bits.
- * |        |          |Others = reserved.
- * |[18:16] |OWNER     |Key Owner Selection Bits
- * |        |          |000 = Only for AES used.
- * |        |          |001 = Only for HMAC engine used.
- * |        |          |010 = Only for RSA engine exponential used (private key).
- * |        |          |011 = Only for RSA engine middle data used.
- * |        |          |100 = Only for ECC engine used.
- * |        |          |101 = Only for CPU engine use.
- * |        |          |Others = reserved.
- * |[25:20] |NUMBER    |Key Number
- * |        |          |Before read or erase one key operation starts, user should write the key number to be operated
- * |        |          |When create operation is finished, user can read these bits to get its key number.
- * |[31:30] |DST       |Key Location Selection Bits
- * |        |          |00 = Key is in SRAM.
- * |        |          |01 = Key is in Flash.
- * |        |          |10 = Key is in OTP.
- * |        |          |Others = reserved.
- * @var KS_T::STS
- * Offset: 0x08  Key Store Status Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[0]     |IF        |Key Store Finish Interrupt Flag
- * |        |          |This bit is cleared by writing 1 and it has no effect by writing 0.
- * |        |          |0 = No Key Store interrupt.
- * |        |          |1 = Key Store operation done interrupt.
- * |[1]     |EIF       |Key Store Error Flag
- * |        |          |This bit is cleared by writing 1 and it has no effect by writing 0.
- * |        |          |0 = No Key Store error.
- * |        |          |1 = Key Store error interrupt.
- * |[2]     |BUSY      |Key Store Busy Flag (RO)
- * |        |          |0 = KeyStore is idle or finished.
- * |        |          |1 = KeyStore is busy.
- * |[3]     |SRAMFULL  |Key Storage at SRAM Full Status Bit (RO)
- * |        |          |0 = Key Storage at SRAM is not full.
- * |        |          |1 = Key Storage at SRAM is full.
- * |[4]     |FLASHFULL |Key Storage at Flash Full Status Bit (RO)
- * |        |          |0 = Key Storage at Flash is not full.
- * |        |          |1 = Key Storage at Flash is full.
- * |[7]     |INITDONE  |Key Store Initialization Done Status (RO)
- * |        |          |0 = Key Store is un-initialized.
- * |        |          |1 = Key Store is initialized.
- * |[8]     |RAMINV    |Key Store SRAM Invert Status (RO)
- * |        |          |0 = Key Store key in SRAM is normal.
- * |        |          |1 = Key Store key in SRAM is inverted.
- * @var KS_T::REMAIN
- * Offset: 0x0C  Key Store Remaining Space Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[12:0]  |RRMNG     |Key Store SRAM Remaining Space
- * |        |          |The RRMNG shows the remaining byte count space for SRAM.
- * |[27:16] |FRMNG     |Key Store Flash Remaining Space
- * |        |          |The FRMNG shows the remaining byte count space for Flash.
- * @var KS_T::SCMBKEY
- * Offset: 0x10-0x1C  Key Store Scramble Key Word Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[31:0]  |SCMBKEY   |Key Store Scramble Key
- * |        |          |When SCMB(KS_CTL[]) is set to 1, user should write the scramble key in this register before new key stores in Key Store
- * |        |          |If user does not write the scramble key in this register, the Key Store will use previous scramble key to execute data scramble function.
- * @var KS_T::KEY
- * Offset: 0x20-0x3C  Key Store Entry Key Word Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[31:0]  |KEY       |Key Data
- * |        |          |The register will be cleared if the Key Store executes the write operation or CPU completes the reading key.
- * @var KS_T::OTPSTS
- * Offset: 0x40  Key Store OTP Keys Status Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[0]     |KEY0      |OTP Key 0 Used Status
- * |        |          |0 = OTP key 0 is unused.
- * |        |          |1 = OTP key 0 is used.
- * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
- * |[1]     |KEY1      |OTP Key 1 Used Status
- * |        |          |0 = OTP key 1 is unused.
- * |        |          |1 = OTP key 1 is used.
- * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
- * |[2]     |KEY2      |OTP Key 2 Used Status
- * |        |          |0 = OTP key 2 is unused.
- * |        |          |1 = OTP key 2 is used.
- * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
- * |[3]     |KEY3      |OTP Key 3 Used Status
- * |        |          |0 = OTP key 3 is unused.
- * |        |          |1 = OTP key 3 is used.
- * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
- * |[4]     |KEY4      |OTP Key 4 Used Status
- * |        |          |0 = OTP key 4 is unused.
- * |        |          |1 = OTP key 4 is used.
- * |        |          |Note: If chip is changed to RMA stage, existing key will be revoked after initialization.
- * |[5]     |KEY5      |OTP Key 5 Used Status
- * |        |          |0 = OTP key 5 is unused.
- * |        |          |1 = OTP key 5 is used.
- * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
- * |[6]     |KEY6      |OTP Key 6 Used Status
- * |        |          |0 = OTP key 6 is unused.
- * |        |          |1 = OTP key 6 is used.
- * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
- * |[7]     |KEY7      |OTP Key 7 Used Status
- * |        |          |0 = OTP key 7 is unused.
- * |        |          |1 = OTP key 7 is used.
- * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
- * @var KS_T::REMKCNT
- * Offset: 0x44  Key Store Remaining Key Count Register
- * ---------------------------------------------------------------------------------------------------
- * |Bits    |Field     |Descriptions
- * | :----: | :----:   | :---- |
- * |[5:0]   |RRMKCNT   |Key Store SRAM Remaining Key Count
- * |        |          |The RRMKCNT shows the remaining key count for SRAM.
- * |[21:16] |FRMKCNT   |Key Store Flash Remaining Key Count
- * |        |          |The FRMKCNT shows the remaining key count for Flash.
- */
+    /**
+     * @var KS_T::CTL
+     * Offset: 0x00  Key Store Control Register
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[0]     |START     |Key Store Start Control Bit
+     * |        |          |0 = No operation.
+     * |        |          |1 = Start the setted operation.
+     * |[3:1]   |OPMODE    |Key Store Operation Mode
+     * |        |          |000 = Read operation.
+     * |        |          |001 = Create operation.
+     * |        |          |010 = Erase one key operation (only for key is in SRAM).
+     * |        |          |011 = Erase all keys operation (only for SRAM and Flash).
+     * |        |          |100 = Revoke key operation.
+     * |        |          |101 = Data Remanence prevention opertation (only for SRAM).
+     * |        |          |Others = reserved.
+     * |[7]     |CONT      |Read/Write Key Continue Bit
+     * |        |          |0 = Read/Write key operation is not continuous to previous operation.
+     * |        |          |1 = Read/Write key operation is continuous to previous operation.
+     * |[8]     |INIT      |Key Store Initialization
+     * |        |          |User should to check BUSY(KS_STS[2]) is 0, and then write 1 to this bit and START(KS_CTL[0[), the Key Store will start to be initialized.
+     * |        |          |After KeyStore is initialized, INIT will be cleared.
+     * |        |          |Note: Before executing INIT, user must to checks KS(SYS_SRAMPC1) is 00.
+     * |[10]    |SILENT    |Silent Access Enable Bit
+     * |        |          |0 = Silent Access Disabled.
+     * |        |          |1 = Silent Access Enabled.
+     * |[11]    |SCMB      |Data Scramble Enable Bit
+     * |        |          |0 = Data Scramble Disabled.
+     * |        |          |1 = Data Scramble Enabled.
+     * |[15]    |IEN       |Key Store Interrupt Enable Bit
+     * |        |          |0 = Key Store Interrupt Disabled.
+     * |        |          |1 = Key Store Interrupt Enabled.
+     * @var KS_T::METADATA
+     * Offset: 0x04  Key Store Metadata Register
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[0]     |SEC       |Secure Key Selection Bit
+     * |        |          |0 = Set key as the non-secure key.
+     * |        |          |1 = Set key as the secure key.
+     * |[1]     |PRIV      |Privilege Key Selection Bit
+     * |        |          |0 = Set key as the non-privilege key.
+     * |        |          |1 = Set key as the privilege key.
+     * |[2]     |READABLE  |Key Readable Control Bit
+     * |        |          |0 = key is un-readable.
+     * |        |          |1 = key is readable.
+     * |[3]     |RVK       |Key Revoke Control Bit
+     * |        |          |0 = Key current selected will not be changed.
+     * |        |          |1 = key current selected will be change to revoked state.
+     * |[4]     |BS        |Booting State Selection Bit
+     * |        |          |0 = Set key used at all state.
+     * |        |          |1 = Set key used at boot loader state 1 (BL1 state).
+     * |[12:8]  |SIZE      |Key Size Selection Bits
+     * |        |          |00000 = 128 bits.
+     * |        |          |00001 = 163 bits.
+     * |        |          |00010 = 192 bits.
+     * |        |          |00011 = 224 bits.
+     * |        |          |00100 = 233 bits.
+     * |        |          |00101 = 255 bits.
+     * |        |          |00110 = 256 bits.
+     * |        |          |00111 = 283 bits.
+     * |        |          |01000 = 384 bits.
+     * |        |          |01001 = 409 bits.
+     * |        |          |01010 = 512 bits.
+     * |        |          |01011 = 521 bits.
+     * |        |          |01100 = 571 bits.
+     * |        |          |10000 = 1024 bits.
+     * |        |          |10001 = 1536 bits.
+     * |        |          |10010 = 2048 bits.
+     * |        |          |10011 = 3072 bits.
+     * |        |          |10100 = 4096 bits.
+     * |        |          |Others = reserved.
+     * |[18:16] |OWNER     |Key Owner Selection Bits
+     * |        |          |000 = Only for AES used.
+     * |        |          |001 = Only for HMAC engine used.
+     * |        |          |010 = Only for RSA engine exponential used (private key).
+     * |        |          |011 = Only for RSA engine middle data used.
+     * |        |          |100 = Only for ECC engine used.
+     * |        |          |101 = Only for CPU engine use.
+     * |        |          |Others = reserved.
+     * |[25:20] |NUMBER    |Key Number
+     * |        |          |Before read or erase one key operation starts, user should write the key number to be operated
+     * |        |          |When create operation is finished, user can read these bits to get its key number.
+     * |[31:30] |DST       |Key Location Selection Bits
+     * |        |          |00 = Key is in SRAM.
+     * |        |          |01 = Key is in Flash.
+     * |        |          |10 = Key is in OTP.
+     * |        |          |Others = reserved.
+     * @var KS_T::STS
+     * Offset: 0x08  Key Store Status Register
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[0]     |IF        |Key Store Finish Interrupt Flag
+     * |        |          |This bit is cleared by writing 1 and it has no effect by writing 0.
+     * |        |          |0 = No Key Store interrupt.
+     * |        |          |1 = Key Store operation done interrupt.
+     * |[1]     |EIF       |Key Store Error Flag
+     * |        |          |This bit is cleared by writing 1 and it has no effect by writing 0.
+     * |        |          |0 = No Key Store error.
+     * |        |          |1 = Key Store error interrupt.
+     * |[2]     |BUSY      |Key Store Busy Flag (RO)
+     * |        |          |0 = KeyStore is idle or finished.
+     * |        |          |1 = KeyStore is busy.
+     * |[3]     |SRAMFULL  |Key Storage at SRAM Full Status Bit (RO)
+     * |        |          |0 = Key Storage at SRAM is not full.
+     * |        |          |1 = Key Storage at SRAM is full.
+     * |[4]     |FLASHFULL |Key Storage at Flash Full Status Bit (RO)
+     * |        |          |0 = Key Storage at Flash is not full.
+     * |        |          |1 = Key Storage at Flash is full.
+     * |[7]     |INITDONE  |Key Store Initialization Done Status (RO)
+     * |        |          |0 = Key Store is un-initialized.
+     * |        |          |1 = Key Store is initialized.
+     * |[8]     |RAMINV    |Key Store SRAM Invert Status (RO)
+     * |        |          |0 = Key Store key in SRAM is normal.
+     * |        |          |1 = Key Store key in SRAM is inverted.
+     * @var KS_T::REMAIN
+     * Offset: 0x0C  Key Store Remaining Space Register
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[12:0]  |RRMNG     |Key Store SRAM Remaining Space
+     * |        |          |The RRMNG shows the remaining byte count space for SRAM.
+     * |[27:16] |FRMNG     |Key Store Flash Remaining Space
+     * |        |          |The FRMNG shows the remaining byte count space for Flash.
+     * @var KS_T::SCMBKEY
+     * Offset: 0x10-0x1C  Key Store Scramble Key Word Register
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[31:0]  |SCMBKEY   |Key Store Scramble Key
+     * |        |          |When SCMB(KS_CTL[]) is set to 1, user should write the scramble key in this register before new key stores in Key Store
+     * |        |          |If user does not write the scramble key in this register, the Key Store will use previous scramble key to execute data scramble function.
+     * @var KS_T::KEY
+     * Offset: 0x20-0x3C  Key Store Entry Key Word Register
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[31:0]  |KEY       |Key Data
+     * |        |          |The register will be cleared if the Key Store executes the write operation or CPU completes the reading key.
+     * @var KS_T::OTPSTS
+     * Offset: 0x40  Key Store OTP Keys Status Register
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[0]     |KEY0      |OTP Key 0 Used Status
+     * |        |          |0 = OTP key 0 is unused.
+     * |        |          |1 = OTP key 0 is used.
+     * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
+     * |[1]     |KEY1      |OTP Key 1 Used Status
+     * |        |          |0 = OTP key 1 is unused.
+     * |        |          |1 = OTP key 1 is used.
+     * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
+     * |[2]     |KEY2      |OTP Key 2 Used Status
+     * |        |          |0 = OTP key 2 is unused.
+     * |        |          |1 = OTP key 2 is used.
+     * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
+     * |[3]     |KEY3      |OTP Key 3 Used Status
+     * |        |          |0 = OTP key 3 is unused.
+     * |        |          |1 = OTP key 3 is used.
+     * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
+     * |[4]     |KEY4      |OTP Key 4 Used Status
+     * |        |          |0 = OTP key 4 is unused.
+     * |        |          |1 = OTP key 4 is used.
+     * |        |          |Note: If chip is changed to RMA stage, existing key will be revoked after initialization.
+     * |[5]     |KEY5      |OTP Key 5 Used Status
+     * |        |          |0 = OTP key 5 is unused.
+     * |        |          |1 = OTP key 5 is used.
+     * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
+     * |[6]     |KEY6      |OTP Key 6 Used Status
+     * |        |          |0 = OTP key 6 is unused.
+     * |        |          |1 = OTP key 6 is used.
+     * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
+     * |[7]     |KEY7      |OTP Key 7 Used Status
+     * |        |          |0 = OTP key 7 is unused.
+     * |        |          |1 = OTP key 7 is used.
+     * |        |          |Note: If chip is changed to RMA stage, the existing key will be revoked after initialization.
+     * @var KS_T::REMKCNT
+     * Offset: 0x44  Key Store Remaining Key Count Register
+     * ---------------------------------------------------------------------------------------------------
+     * |Bits    |Field     |Descriptions
+     * | :----: | :----:   | :---- |
+     * |[5:0]   |RRMKCNT   |Key Store SRAM Remaining Key Count
+     * |        |          |The RRMKCNT shows the remaining key count for SRAM.
+     * |[21:16] |FRMKCNT   |Key Store Flash Remaining Key Count
+     * |        |          |The FRMKCNT shows the remaining key count for Flash.
+     */
     __IO uint32_t CTL;                   /*!< [0x0000] Key Store Control Register                                       */
     __IO uint32_t METADATA;              /*!< [0x0004] Key Store Metadata Register                                      */
     __IO uint32_t STS;                   /*!< [0x0008] Key Store Status Register                                        */
@@ -230,7 +230,7 @@ typedef struct
 /**
     @addtogroup KS_CONST KS Bit Field Definition
     Constant Definitions for KS Controller
-  @{ 
+  @{
 */
 
 #define KS_CTL_START_Pos                 (0)                                               /*!< KS_T::CTL: START Position              */

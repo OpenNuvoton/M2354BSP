@@ -28,7 +28,8 @@ static volatile ISP_INFO_T g_NuBL2ISPInfo = {0};
 #define PLL_CLOCK       64000000
 
 /* For ECC NIST: Curve P-256 */
-const uint32_t g_au32Eorder[] = {
+const uint32_t g_au32Eorder[] =
+{
     0xFC632551, 0xF3B9CAC2, 0xA7179E84, 0xBCE6FAAD, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF
 };
 
@@ -151,21 +152,21 @@ void WdtEnableAndCheck(void)
 #if (WDT_RST_ENABLE)
     /* Check WDT config */
     u32Cfg = FMC_Read(FMC_CONFIG_BASE);
-    if((u32Cfg & (BIT31|BIT4|BIT3)) == ((BIT31|BIT4|BIT3)))
+    if((u32Cfg & (BIT31 | BIT4 | BIT3)) == ((BIT31 | BIT4 | BIT3)))
     {
         printf("[WRAN]WDT was disabled\n");
         FMC_ENABLE_CFG_UPDATE();
-        u32Cfg &= ~((BIT31|BIT4|BIT3));
+        u32Cfg &= ~((BIT31 | BIT4 | BIT3));
         FMC_Write(FMC_CONFIG_BASE, u32Cfg);
 
         //NVIC_SystemReset();
         SYS_ResetChip();
-        while(1){}
+        while(1) {}
     }
     else
         printf("WDT was enabled\n");
 #endif
-    if (SYS_IS_WDT_RST())
+    if(SYS_IS_WDT_RST())
     {
         /* upgrade done, clear OTA status */
         FMC_Write(OTA_STATUS_BASE, 0x1);
@@ -173,7 +174,7 @@ void WdtEnableAndCheck(void)
         SYS_ClearResetSrc(SYS_RSTSTS_WDTRF_Msk);
         printf("*** System has been reset by WDT time-out event 0***\n\n");
         SYS_ResetChip();
-        while(1){}
+        while(1) {}
     }
 
     /* To check if system has been reset by WDT time-out reset or not */
@@ -250,7 +251,7 @@ int main(void)
     u8FailNuBL3x = 0;
     /* check OTA status of system firmware */
     printf("check OTA status: SYS:%d, APP:%d\n", FMC_Read(SYS_FW_OTA_STATUS_BASE), FMC_Read(APP_FW_OTA_STATUS_BASE));
-    if (FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1)
+    if(FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1)
     {
         int32_t i32Ret = 0;
 
@@ -261,7 +262,7 @@ int main(void)
 
         /* verify NuBL32 identity by FW INFO and update FW */
         i32Ret = OTA_VerifyAndUpdateNuBL3xFromSD(0x1);
-        if (i32Ret == 0)
+        if(i32Ret == 0)
         {
             /* if update done, clear OTA status, reboot for secure boot. */
             u32NeedReset = TRUE;
@@ -276,7 +277,7 @@ int main(void)
         FMC_Erase(SYS_FW_OTA_STATUS_BASE);
     }
     /* check OTA status of application firmware */
-    if (FMC_Read(APP_FW_OTA_STATUS_BASE) == 1)
+    if(FMC_Read(APP_FW_OTA_STATUS_BASE) == 1)
     {
         int32_t i32Ret = 0;
 
@@ -286,7 +287,7 @@ int main(void)
         OTA_API_SDInit();
         /* verify NuBL33 identity by FW INFO and update FW */
         i32Ret = OTA_VerifyAndUpdateNuBL3xFromSD(0x2);
-        if (i32Ret == 0)
+        if(i32Ret == 0)
         {
             /* if update done, clear OTA status, reboot for secure boot. */
             u32NeedReset = TRUE;
@@ -301,7 +302,7 @@ int main(void)
         FMC_Erase(APP_FW_OTA_STATUS_BASE);
     }
 
-    if (u32NeedReset)
+    if(u32NeedReset)
     {
         /* Reset CPU only to reset to new vector page */
         goto reset;
@@ -352,32 +353,33 @@ int main(void)
 
 _VERIFY_FAIL:
 #if 1
-    {/* debug */
+    {
+        /* debug */
         while(1) {}
     }
 #else
     /* if verify failed, modified NuBL3x firmware version to 0, and do OTA update after reboot */
-    if (u8FailNuBL3x&BIT0)
+    if(u8FailNuBL3x & BIT0)
     {
         FW_INFO_T FwInfo;
 
         /* Clear NuBL3x firmware version to 0 */
         FwInfo.mData.au32ExtInfo[0] = 0;
         /* NuBL32 */
-        if (NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 0, NUBL32_FW_INFO_BASE) != 0)
+        if(NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 0, NUBL32_FW_INFO_BASE) != 0)
         {
             printf("\nClear NuBL32 F/W version failed.\n");
         }
     }
 
-    if ((u8FailNuBL3x&BIT1))
+    if((u8FailNuBL3x & BIT1))
     {
         FW_INFO_T FwInfo;
 
         /* Clear NuBL3x firmware version to 0 */
         FwInfo.mData.au32ExtInfo[0] = 0;
         /* NuBL33 */
-        if (NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 1, NUBL33_FW_INFO_BASE) != 0)
+        if(NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 1, NUBL33_FW_INFO_BASE) != 0)
         {
             printf("\nClear NuBL33 F/W version failed.\n");
         }
@@ -388,11 +390,11 @@ _VERIFY_FAIL:
     FMC_ENABLE_AP_UPDATE();
     /* init OTA */
     OTA_Init(__HSI, (ISP_INFO_T *)&g_NuBL2ISPInfo);
-    if (OTA_TaskProcess() == 0)
+    if(OTA_TaskProcess() == 0)
     {
         /* check OTA status and re-boot for update firmware */
         printf("OTA update for BL3x verify failed: SYS:%d, APP:%d\n", FMC_Read(SYS_FW_OTA_STATUS_BASE), FMC_Read(APP_FW_OTA_STATUS_BASE));
-        if ((FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1)||FMC_Read(APP_FW_OTA_STATUS_BASE) == 1)
+        if((FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1) || FMC_Read(APP_FW_OTA_STATUS_BASE) == 1)
         {
             u32NeedReset = TRUE;
         }
@@ -436,12 +438,13 @@ int main(void)
     FMC_Open();
     FMC_ENABLE_AP_UPDATE();
 
-    #if (OTA_DEMO_WITH_APP)
-    {/* for App Demo */
+#if (OTA_DEMO_WITH_APP)
+    {
+        /* for App Demo */
         FMC_Erase(OTA_STATUS_BASE);
         FMC_Write(OTA_STATUS_BASE, 0x1UL);
     }
-    #endif
+#endif
 
     /* Enable WDT and check if system reset by WDT */
     WdtEnableAndCheck();
@@ -459,11 +462,11 @@ int main(void)
     printf("check OTA status:%d\n", FMC_Read(OTA_STATUS_BASE));
 
     /* check OTA status for entry update mode */
-    if (FMC_Read(OTA_STATUS_BASE) == 1)
+    if(FMC_Read(OTA_STATUS_BASE) == 1)
     {
         /* init wifi module and connect to OTA server */
         OTA_Init(__HSI, (ISP_INFO_T *)((uint32_t)&g_NuBL2ISPInfo));
-        if (OTA_TaskProcess() == 0)
+        if(OTA_TaskProcess() == 0)
         {
             SYS_UnlockReg();
             FMC_Open();
@@ -472,12 +475,13 @@ int main(void)
             FMC_Erase(OTA_STATUS_BASE);
 
             printf("update done. Check OTA status: %d\n", FMC_Read(OTA_STATUS_BASE));
-            if ((FMC_Read(OTA_STATUS_BASE) == 1))
+            if((FMC_Read(OTA_STATUS_BASE) == 1))
             {
                 printf("[ERR]clear OTA status error\n");
             }
-            #if (OTA_DEMO_WITH_APP)
-            {/* for App Demo */
+#if (OTA_DEMO_WITH_APP)
+            {
+                /* for App Demo */
                 __set_PRIMASK(1); /* Disable all interrupt */
                 FMC_SetVectorPageAddr(NUBL32_FW_BASE);
 
@@ -487,7 +491,7 @@ int main(void)
                 SYS_ResetCPU();
                 while(1) {}
             }
-            #endif
+#endif
             goto reset;
         }
     }
@@ -535,32 +539,33 @@ int main(void)
 
 _VERIFY_FAIL:
 #if 1
-    {/* debug */
+    {
+        /* debug */
         while(1) {}
     }
 #else
     /* if verify failed, modified NuBL3x firmware version to 0, and do OTA update after reboot */
-    if (u8FailNuBL3x&BIT0)
+    if(u8FailNuBL3x & BIT0)
     {
         FW_INFO_T FwInfo;
 
         /* Clear NuBL3x firmware version to 0 */
         FwInfo.mData.au32ExtInfo[0] = 0;
         /* NuBL32 */
-        if (NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 0, NUBL32_FW_INFO_BASE) != 0)
+        if(NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 0, NUBL32_FW_INFO_BASE) != 0)
         {
             printf("\nClear NuBL32 F/W version failed.\n");
         }
     }
 
-    if ((u8FailNuBL3x&BIT1))
+    if((u8FailNuBL3x & BIT1))
     {
         FW_INFO_T FwInfo;
 
         /* Clear NuBL3x firmware version to 0 */
         FwInfo.mData.au32ExtInfo[0] = 0;
         /* NuBL33 */
-        if (NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 1, NUBL33_FW_INFO_BASE) != 0)
+        if(NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 1, NUBL33_FW_INFO_BASE) != 0)
         {
             printf("\nClear NuBL33 F/W version failed.\n");
         }
@@ -575,11 +580,11 @@ _VERIFY_FAIL:
 
     /* init OTA */
     OTA_Init(__HSI, (ISP_INFO_T *)((uint32_t)&g_NuBL2ISPInfo));
-    if (OTA_TaskProcess() == 0)
+    if(OTA_TaskProcess() == 0)
     {
         /* check OTA status and re-boot for update firmware */
         printf("OTA update for NuBL3x verify failed: SYS:%d, APP:%d\n", FMC_Read(SYS_FW_OTA_STATUS_BASE), FMC_Read(APP_FW_OTA_STATUS_BASE));
-        if ((FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1)||FMC_Read(APP_FW_OTA_STATUS_BASE) == 1)
+        if((FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1) || FMC_Read(APP_FW_OTA_STATUS_BASE) == 1)
         {
             u32NeedReset = TRUE;
         }
@@ -609,10 +614,10 @@ int32_t NuBL2_Init(void)
 {
     uint32_t au32CFG[4], u32XOMStatus;
 
-    if((sizeof(METADATA_T)%16) != 0)
+    if((sizeof(METADATA_T) % 16) != 0)
         return -1;
 
-    if((sizeof(FW_INFO_T)%16) != 0)
+    if((sizeof(FW_INFO_T) % 16) != 0)
         return -2;
 
     /* Unlock protected registers */
@@ -628,7 +633,7 @@ int32_t NuBL2_Init(void)
     printf("\t[CONFIG0         : 0x%08x]", au32CFG[0]);
     if(!(au32CFG[0]&BIT5))
     {
-        printf("\tBoot from MaskROM -> %s.\n", (au32CFG[0]&BIT7)?"APROM":"LDROM");
+        printf("\tBoot from MaskROM -> %s.\n", (au32CFG[0]&BIT7) ? "APROM" : "LDROM");
     }
     else
     {
@@ -639,11 +644,11 @@ int32_t NuBL2_Init(void)
     }
 
     u32XOMStatus = (uint32_t)FMC_GetXOMState(XOMR0);
-    printf("\t[XOM0            : %s]", (u32XOMStatus==1)?"Active":"Inactive");
-    printf("\tBase: 0x%08x; Page count: 0x%08x.\n", (FMC->XOMR0STS>>8), (FMC->XOMR0STS&0xFF));
+    printf("\t[XOM0            : %s]", (u32XOMStatus == 1) ? "Active" : "Inactive");
+    printf("\tBase: 0x%08x; Page count: 0x%08x.\n", (FMC->XOMR0STS >> 8), (FMC->XOMR0STS & 0xFF));
     u32XOMStatus = (uint32_t)FMC_GetXOMState(XOMR1);
-    printf("\t[XOM1            : %s]", (u32XOMStatus==1)?"Active":"Inactive");
-    printf("\tBase: 0x%08x; Page count: 0x%08x.\n", (FMC->XOMR1STS>>8), (FMC->XOMR1STS&0xFF));
+    printf("\t[XOM1            : %s]", (u32XOMStatus == 1) ? "Active" : "Inactive");
+    printf("\tBase: 0x%08x; Page count: 0x%08x.\n", (FMC->XOMR1STS >> 8), (FMC->XOMR1STS & 0xFF));
 
     return 0;
 }

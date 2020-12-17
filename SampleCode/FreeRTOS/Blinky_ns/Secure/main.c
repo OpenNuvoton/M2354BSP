@@ -38,26 +38,26 @@ void SysTick_Handler(void)
 
     switch(ticks++)
     {
-    case   0:
-        PB0 = 0;
-        PB1 = 1;
-        break;
-    case 10:
-        PB0 = 1;
-        PB1 = 0;
-        break;
-    case 30:
-        PB0 = 0;
-        PB1 = 0;
-        break;
-
-    default:
-        if(ticks > 50)
-        {
-            ticks = 0;
-            PB0 = 1;
+        case   0:
+            PB0 = 0;
             PB1 = 1;
-        }
+            break;
+        case 10:
+            PB0 = 1;
+            PB1 = 0;
+            break;
+        case 30:
+            PB0 = 0;
+            PB1 = 0;
+            break;
+
+        default:
+            if(ticks > 50)
+            {
+                ticks = 0;
+                PB0 = 1;
+                PB1 = 1;
+            }
     }
 }
 

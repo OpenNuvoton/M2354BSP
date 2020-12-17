@@ -166,10 +166,10 @@ static void _Open_SPI(void)
 
     /* Setup SPI1 multi-function pins */
     SYS->GPE_MFPL &= ~(SYS_GPE_MFPL_PE0MFP_Msk       | SYS_GPE_MFPL_PE1MFP_Msk);
-    SYS->GPE_MFPL |=  (SYS_GPE_MFPL_PE0MFP_SPI1_MOSI | SYS_GPE_MFPL_PE1MFP_SPI1_MISO);
+    SYS->GPE_MFPL |= (SYS_GPE_MFPL_PE0MFP_SPI1_MOSI | SYS_GPE_MFPL_PE1MFP_SPI1_MISO);
 
     SYS->GPH_MFPH &= ~(SYS_GPH_MFPH_PH8MFP_Msk | SYS_GPH_MFPH_PH9MFP_Msk);
-    SYS->GPH_MFPH |=  (SYS_GPH_MFPH_PH8MFP_SPI1_CLK | SYS_GPH_MFPH_PH9MFP_SPI1_SS);
+    SYS->GPH_MFPH |= (SYS_GPH_MFPH_PH8MFP_SPI1_CLK | SYS_GPH_MFPH_PH9MFP_SPI1_SS);
 
     /* Set IO to high slew rate */
     PE->SLEWCTL |= 3;
@@ -309,15 +309,15 @@ void _InitController(void)
 
     _Write0(0x2a);
     _Write1(0x02);
-    _Write1(0x00+2);
+    _Write1(0x00 + 2);
     _Write1(0x02);
-    _Write1(0x7F+2);
+    _Write1(0x7F + 2);
 
     _Write0(0x2b);
     _Write1(0x01);
-    _Write1(0x00+1);
+    _Write1(0x00 + 1);
     _Write1(0x01);
-    _Write1(0x9F+1);
+    _Write1(0x9F + 1);
 
     _Write0(0xF0); //Enable test command
     _Write1(0x01);
@@ -328,9 +328,9 @@ void _InitController(void)
     _Write1(0x05);
 
     _Write0(0x2c);
-    for(i=0; i<0x5000; i++)
+    for(i = 0; i < 0x5000; i++)
     {
-        _Write1(0x00>>8);
+        _Write1(0x00 >> 8);
         _Write1(0x00);
     }
 

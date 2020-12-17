@@ -46,7 +46,7 @@ extern volatile uint32_t g_u32SendbytesLen;
   */
 void OTA_SysValueInit(uint32_t u32HSI)
 {
-    uint8_t au8SendBuf[]="CONNECT0\r\n";
+    uint8_t au8SendBuf[] = "CONNECT0\r\n";
 #if (OTA_UPGRADE_FROM_SD)
     char au8NuBL32FileName[] = "NuBL32Fw.bin";
     char au8NuBL33FileName[] = "NuBL33Fw.bin";
@@ -185,7 +185,7 @@ uint8_t OTA_API_EraseFlash(uint32_t u32FlashAddr)
 //    FMC_Open();
     FMC_ENABLE_AP_UPDATE();
 
-    if (FMC_Erase(u32FlashAddr))
+    if(FMC_Erase(u32FlashAddr))
         u8Status = STATUS_FAILED;
     else
         u8Status = STATUS_SUCCESS;
@@ -229,11 +229,11 @@ uint8_t OTA_API_WriteFlash(uint32_t u32FlashAddr, uint32_t u32Data)
 /* the system does not support an RTC.                     */
 /* This function is not required in read-only cfg.         */
 
-unsigned long get_fattime (void)
+unsigned long get_fattime(void)
 {
     unsigned long tmr;
 
-    tmr=0x00000;
+    tmr = 0x00000;
 
     return tmr;
 }
@@ -251,7 +251,7 @@ void SDH_Process(void)
     unsigned int volatile ier;
 
     // FMI data abort interrupt
-    if (SDH0->GINTSTS & SDH_GINTSTS_DTAIF_Msk)
+    if(SDH0->GINTSTS & SDH_GINTSTS_DTAIF_Msk)
     {
         /* ResetAllEngine() */
         SDH0->GCTL |= SDH_GCTL_GCTLRST_Msk;
@@ -259,24 +259,24 @@ void SDH_Process(void)
 
     //----- SD interrupt status
     isr = SDH0->INTSTS;
-    if (isr & SDH_INTSTS_BLKDIF_Msk)
+    if(isr & SDH_INTSTS_BLKDIF_Msk)
     {
         // block down
         g_u8SDDataReadyFlag = TRUE;
         SDH0->INTSTS = SDH_INTSTS_BLKDIF_Msk;
     }
 
-    if (isr & SDH_INTSTS_CDIF_Msk)   // port 0 card detect
+    if(isr & SDH_INTSTS_CDIF_Msk)    // port 0 card detect
     {
         //----- SD interrupt status
         // it is work to delay 50 times for SD_CLK = 200KHz
         {
             int volatile i;         // delay 30 fail, 50 OK
-            for (i=0; i<0x500; i++);  // delay to make sure got updated value from REG_SDISR.
+            for(i = 0; i < 0x500; i++); // delay to make sure got updated value from REG_SDISR.
             isr = SDH0->INTSTS;
         }
 
-        if (isr & SDH_INTSTS_CDSTS_Msk)
+        if(isr & SDH_INTSTS_CDSTS_Msk)
         {
             printf("\n***** card remove !\n");
             SD0.IsCardInsert = FALSE;   // SDISR_CD_Card = 1 means card remove for GPIO mode
@@ -293,16 +293,16 @@ void SDH_Process(void)
     }
 
     // CRC error interrupt
-    if (isr & SDH_INTSTS_CRCIF_Msk)
+    if(isr & SDH_INTSTS_CRCIF_Msk)
     {
-        if (!(isr & SDH_INTSTS_CRC16_Msk))
+        if(!(isr & SDH_INTSTS_CRC16_Msk))
         {
             //printf("***** ISR sdioIntHandler(): CRC_16 error !\n");
             // handle CRC error
         }
-        else if (!(isr & SDH_INTSTS_CRC7_Msk))
+        else if(!(isr & SDH_INTSTS_CRC7_Msk))
         {
-            if (!g_u8R3Flag)
+            if(!g_u8R3Flag)
             {
                 //printf("***** ISR sdioIntHandler(): CRC_7 error !\n");
                 // handle CRC error
@@ -311,14 +311,14 @@ void SDH_Process(void)
         SDH0->INTSTS = SDH_INTSTS_CRCIF_Msk;      // clear interrupt flag
     }
 
-    if (isr & SDH_INTSTS_DITOIF_Msk)
+    if(isr & SDH_INTSTS_DITOIF_Msk)
     {
         printf("***** ISR: data in timeout !\n");
         SDH0->INTSTS |= SDH_INTSTS_DITOIF_Msk;
     }
 
     // Response in timeout interrupt
-    if (isr & SDH_INTSTS_RTOIF_Msk)
+    if(isr & SDH_INTSTS_RTOIF_Msk)
     {
         printf("***** ISR: response in timeout !\n");
         SDH0->INTSTS |= SDH_INTSTS_RTOIF_Msk;
@@ -390,9 +390,9 @@ uint8_t OTA_API_SDFwPackWriteOpen(uint8_t u8NuBLxSel)
     char *ptr;
 
     /* Get file name of firmware package */
-    if (u8NuBLxSel&BIT0)
+    if(u8NuBLxSel & BIT0)
         ptr = g_au8NuBL32FileName;
-    else if (u8NuBLxSel&BIT1)
+    else if(u8NuBLxSel & BIT1)
         ptr = g_au8NuBL33FileName;
     else
         return FR_INVALID_PARAMETER;
@@ -409,7 +409,7 @@ FwPackOpen:
         }
         else
         {
-            printf("new NuBL3%d FW package error!(0x%x)\n",((u8NuBLxSel&BIT0)==0)?2:3, res);
+            printf("new NuBL3%d FW package error!(0x%x)\n", ((u8NuBLxSel & BIT0) == 0) ? 2 : 3, res);
         }
     }
 
@@ -417,7 +417,7 @@ FwPackOpen:
     res = f_open(&g_FileObject, ptr, FA_WRITE);
     if(res != FR_OK)
     {
-        printf("open NuBL3%d FW package error!(0x%x)\n",((u8NuBLxSel&BIT0)==0)?2:3, res);
+        printf("open NuBL3%d FW package error!(0x%x)\n", ((u8NuBLxSel & BIT0) == 0) ? 2 : 3, res);
     }
     return res;
 }
@@ -442,7 +442,7 @@ uint8_t OTA_API_SDWrite(uint8_t * pu8Buffer, uint32_t u32BufferLen)
         printf("Write data error!(0x%x)\n", res);
     }
     /* Check writed data lentgh */
-    if (u32BufferLen != u16ByteWrite)
+    if(u32BufferLen != u16ByteWrite)
     {
         /* Write data length does not match. */
         res = FR_DISK_ERR;
@@ -464,9 +464,9 @@ uint8_t OTA_API_SDClose(uint8_t u8NuBLxSel)
     char *ptr;
 
     /* Get file name of firmware package */
-    if (u8NuBLxSel&BIT0)
+    if(u8NuBLxSel & BIT0)
         ptr = g_au8NuBL32FileName;
-    else if (u8NuBLxSel&BIT1)
+    else if(u8NuBLxSel & BIT1)
         ptr = g_au8NuBL33FileName;
     else
         return FR_INVALID_PARAMETER;
@@ -475,7 +475,7 @@ uint8_t OTA_API_SDClose(uint8_t u8NuBLxSel)
     res = f_close(&g_FileObject);
     if(res != FR_OK)
     {
-        printf("Close NuBL3%d FW package error!(0x%x)\n",((u8NuBLxSel&BIT0)==0)?2:3, res);
+        printf("Close NuBL3%d FW package error!(0x%x)\n", ((u8NuBLxSel & BIT0) == 0) ? 2 : 3, res);
     }
 
     return res;
@@ -494,9 +494,9 @@ uint8_t OTA_API_SDFwPackReadOpen(uint8_t u8NuBLxSel)
     char *ptr;
 
     /* Get file name of firmware package */
-    if (u8NuBLxSel&BIT0)
+    if(u8NuBLxSel & BIT0)
         ptr = g_au8NuBL32FileName;
-    else if (u8NuBLxSel&BIT1)
+    else if(u8NuBLxSel & BIT1)
         ptr = g_au8NuBL33FileName;
     else
         return FR_INVALID_PARAMETER;
@@ -505,7 +505,7 @@ uint8_t OTA_API_SDFwPackReadOpen(uint8_t u8NuBLxSel)
     res = f_open(&g_FileObject, ptr, FA_OPEN_EXISTING | FA_READ);
     if(res != FR_OK)
     {
-        printf("open NuBL3%d FW package error!(0x%x)\n",((u8NuBLxSel&BIT0)==0)?2:3, res);
+        printf("open NuBL3%d FW package error!(0x%x)\n", ((u8NuBLxSel & BIT0) == 0) ? 2 : 3, res);
     }
     return res;
 }

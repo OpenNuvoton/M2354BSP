@@ -52,7 +52,8 @@ FILE __stdin;
 void abort(void);
 
 __attribute__((weak, noreturn))
-void __aeabi_assert(const char* expr, const char* file, int line) {
+void __aeabi_assert(const char* expr, const char* file, int line)
+{
     char str[12], * p;
 
     fputs("*** assertion failed: ", stderr);
@@ -64,7 +65,8 @@ void __aeabi_assert(const char* expr, const char* file, int line) {
     p = str + sizeof(str);
     *--p = '\0';
     *--p = '\n';
-    while(line > 0) {
+    while(line > 0)
+    {
         *--p = '0' + (line % 10);
         line /= 10;
     }
@@ -75,7 +77,8 @@ void __aeabi_assert(const char* expr, const char* file, int line) {
 
 
 __attribute__((weak))
-void abort(void) {
+void abort(void)
+{
     for(;;);
 }
 
@@ -224,7 +227,7 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
 
 int32_t SH_Return(int32_t n32In_R0, int32_t n32In_R1, int32_t *pn32Out_R0)
 {
-	  (void)n32In_R1;
+    (void)n32In_R1;
 
     if(g_ICE_Conneced)
     {
@@ -253,16 +256,16 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
     uint32_t *sp = NULL;
     uint32_t i;
     uint32_t u32Reg;
-    uint32_t inst, addr,taddr,tdata;
+    uint32_t inst, addr, taddr, tdata;
     int32_t secure;
-    uint32_t rm,rn,rt, imm5, imm8;
+    uint32_t rm, rn, rt, imm5, imm8;
 
     /* It is casued by hardfault. Just process the hard fault */
     /* TODO: Implement your hardfault handle code here */
 
 
     /* Check the used stack */
-    secure = (lr & 0x40ul)?1:0;
+    secure = (lr & 0x40ul) ? 1 : 0;
     if(secure)
     {
         /* Secure stack used */
@@ -309,10 +312,11 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
 
     printf("Instruction code = %x\n", inst);
 
-    if((!secure) && ((addr & NS_OFFSET) == 0) )
+    if((!secure) && ((addr & NS_OFFSET) == 0))
     {
         printf("Non-secure CPU try to fetch secure code\n");
-    } else if(inst == 0xBEAB)
+    }
+    else if(inst == 0xBEAB)
     {
         printf("Execute BKPT without ICE connected\n");
     }
@@ -326,13 +330,13 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
         printf("LDR/STR rt=%x rm=%x rn=%x\n", rt, rm, rn);
         taddr = sp[rn] + sp[rm];
         tdata = sp[rt];
-        printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n",addr, inst,
-               (inst&BIT11)?"LDR":"STR",tdata, taddr);
+        printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n", addr, inst,
+               (inst & BIT11) ? "LDR" : "STR", tdata, taddr);
 
     }
     else if((inst >> 13) == 3)
     {
-        /* 011xxx	 Load/store word/byte (immediate offset) on page C2-327 of armv8m ref */
+        /* 011xxx    Load/store word/byte (immediate offset) on page C2-327 of armv8m ref */
         imm5 = (inst >> 6) & 0x1f;
         rn = (inst >> 3) & 0x7;
         rt = inst & 0x7;
@@ -340,12 +344,12 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
         printf("LDR/STR rt=%x rn=%x imm5=%x\n", rt, rn, imm5);
         taddr = sp[rn] + imm5;
         tdata = sp[rt];
-        printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n",addr, inst,
-               (inst&BIT11)?"LDR":"STR",tdata, taddr);
+        printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n", addr, inst,
+               (inst & BIT11) ? "LDR" : "STR", tdata, taddr);
     }
     else if((inst >> 12) == 8)
     {
-        /* 1000xx	 Load/store halfword (immediate offset) on page C2-328 */
+        /* 1000xx    Load/store halfword (immediate offset) on page C2-328 */
         imm5 = (inst >> 6) & 0x1f;
         rn = (inst >> 3) & 0x7;
         rt = inst & 0x7;
@@ -353,21 +357,21 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
         printf("LDRH/STRH rt=%x rn=%x imm5=%x\n", rt, rn, imm5);
         taddr = sp[rn] + imm5;
         tdata = sp[rt];
-        printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n",addr, inst,
-               (inst&BIT11)?"LDR":"STR",tdata, taddr);
+        printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n", addr, inst,
+               (inst & BIT11) ? "LDR" : "STR", tdata, taddr);
 
     }
     else if((inst >> 12) == 9)
     {
-        /* 1001xx	 Load/store (SP-relative) on page C2-328 */
+        /* 1001xx    Load/store (SP-relative) on page C2-328 */
         imm8 = inst & 0xff;
         rt = (inst >> 8) & 0x7;
 
         printf("LDRH/STRH rt=%x imm8=%x\n", rt, imm8);
         taddr = sp[6] + imm8;
         tdata = sp[rt];
-        printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n",addr, inst,
-               (inst&BIT11)?"LDR":"STR",tdata, taddr);
+        printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n", addr, inst,
+               (inst & BIT11) ? "LDR" : "STR", tdata, taddr);
     }
     else
     {
@@ -378,19 +382,19 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
     u32Reg = SCU->PVINTSTS;
     if(u32Reg)
     {
-        char const *master[] = {"CPU", 0, 0, "PDMA0", "SDH0", "CRPT", "USBH", 0,0,0,0,"PDMA1"};
-        char const *ipname[] = {"APB0","APB1",0,0,"GPIO","EBI","USBH","CRC","SDH0",0,"PDMA0","PDMA1"
-                                ,"SRAM0","SRAM1","FMC","FLASH","SCU","SYS","CRPT","KS","SIORAM"
+        char const *master[] = {"CPU", 0, 0, "PDMA0", "SDH0", "CRPT", "USBH", 0, 0, 0, 0, "PDMA1"};
+        char const *ipname[] = {"APB0", "APB1", 0, 0, "GPIO", "EBI", "USBH", "CRC", "SDH0", 0, "PDMA0", "PDMA1"
+                                , "SRAM0", "SRAM1", "FMC", "FLASH", "SCU", "SYS", "CRPT", "KS", "SIORAM"
                                };
-        const uint8_t info[] = {0x34,0x3C,0,0, 0x44,0x4C,0x54,0x5C,0x64,0,0x74,0x7C,0x84,0x8C,0x94,0x9C,0xA4,0xAC,0xB4,0xBC,0xC4};
+        const uint8_t info[] = {0x34, 0x3C, 0, 0, 0x44, 0x4C, 0x54, 0x5C, 0x64, 0, 0x74, 0x7C, 0x84, 0x8C, 0x94, 0x9C, 0xA4, 0xAC, 0xB4, 0xBC, 0xC4};
 
         /* Get violation address and source */
-        for(i=0; i< sizeof(ipname); i++)
+        for(i = 0; i < sizeof(ipname); i++)
         {
             if(u32Reg & (1 << i))
             {
-                printf("%s(0x%08x) Violation! ",ipname[i], M32(SCU_BASE+info[i]+4));
-                printf("Caused by %s\n",master[M32(SCU_BASE+(uint32_t)info[i])]);
+                printf("%s(0x%08x) Violation! ", ipname[i], M32(SCU_BASE + info[i] + 4));
+                printf("Caused by %s\n", master[M32(SCU_BASE + (uint32_t)info[i])]);
                 break;
             }
         }
@@ -398,7 +402,7 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
 
 
     /* Or *sp to remove compiler warning */
-    while(1U|*sp) {}
+    while(1U | *sp) {}
 
     return lr;
 }
@@ -452,7 +456,7 @@ void SendChar_ToUART(int ch)
     {
         if(ch == '\n')
         {
-            i32Tmp = i32Head+1;
+            i32Tmp = i32Head + 1;
             if(i32Tmp > BUF_SIZE) i32Tmp = 0;
             if(i32Tmp != i32Tail)
             {
@@ -462,7 +466,7 @@ void SendChar_ToUART(int ch)
         }
 
         // Push char
-        i32Tmp = i32Head+1;
+        i32Tmp = i32Head + 1;
         if(i32Tmp > BUF_SIZE) i32Tmp = 0;
         if(i32Tmp != i32Tail)
         {
@@ -490,7 +494,8 @@ void SendChar_ToUART(int ch)
         }
         else
             break; // FIFO full
-    } while(i32Tail != i32Head);
+    }
+    while(i32Tail != i32Head);
 }
 #endif
 
@@ -673,12 +678,14 @@ int fputc(int ch, FILE *stream)
 #if (defined(__GNUC__) && !defined(__ARMCC_VERSION))
 
 #if !defined(OS_USE_SEMIHOSTING)
-int _write (int fd, char *ptr, int len)
+int _write(int fd, char *ptr, int len)
 {
     int i = len;
 
-    while(i--) {
-        if(*ptr == '\n') {
+    while(i--)
+    {
+        if(*ptr == '\n')
+        {
             while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
             DEBUG_PORT->DAT = '\r';
         }
@@ -690,7 +697,7 @@ int _write (int fd, char *ptr, int len)
     return len;
 }
 
-int _read (int fd, char *ptr, int len)
+int _read(int fd, char *ptr, int len)
 {
 
     while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) != 0);

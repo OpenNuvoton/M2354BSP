@@ -40,47 +40,47 @@ int32_t PrepareKeys(void);
 
 void CRPT_IRQHandler(void)
 {
-    if (PRNG_GET_INT_FLAG(CRPT))
+    if(PRNG_GET_INT_FLAG(CRPT))
     {
         PRNG_CLR_INT_FLAG(CRPT);
     }
-    if (SHA_GET_INT_FLAG(CRPT))
+    if(SHA_GET_INT_FLAG(CRPT))
     {
         SHA_CLR_INT_FLAG(CRPT);
     }
-	if (RSA_GET_INT_FLAG(CRPT))
-	{
+    if(RSA_GET_INT_FLAG(CRPT))
+    {
         g_RSA_done = 1;
-        if (RSA_GET_INT_FLAG(CRPT)&CRPT_INTSTS_RSAEIF_Msk)
+        if(RSA_GET_INT_FLAG(CRPT)&CRPT_INTSTS_RSAEIF_Msk)
         {
             g_RSA_error = 1;
             printf("RSA error flag is set!!\n");
         }
-		RSA_CLR_INT_FLAG(CRPT);
-	}
+        RSA_CLR_INT_FLAG(CRPT);
+    }
 }
 
 void RSA_Hex2Reg(char *input, uint32_t *reg)
 {
-	int  	  i, si;
-	uint32_t  val32;
+    int       i, si;
+    uint32_t  val32;
 
-	si = (int)strlen(input)-1;
-	while (si >= 0)
-	{
-		val32 = 0;
-		for (i = 0; (i < 8) && (si >= 0); i++)
-		{
-			if (input[si] <= '9')
-				val32 |= (uint32_t)((input[si] - '0') << (i * 4));
-			else if ((input[si] <= 'z') && (input[si] >= 'a'))
-				val32 |= (uint32_t)((input[si] - 'a' + 10) << (i * 4));
-			else
-				val32 |= (uint32_t)((input[si] - 'A' + 10) << (i * 4));
-			si--;
-		}
-		*reg++ = val32;
-	}
+    si = (int)strlen(input) - 1;
+    while(si >= 0)
+    {
+        val32 = 0;
+        for(i = 0; (i < 8) && (si >= 0); i++)
+        {
+            if(input[si] <= '9')
+                val32 |= (uint32_t)((input[si] - '0') << (i * 4));
+            else if((input[si] <= 'z') && (input[si] >= 'a'))
+                val32 |= (uint32_t)((input[si] - 'a' + 10) << (i * 4));
+            else
+                val32 |= (uint32_t)((input[si] - 'A' + 10) << (i * 4));
+            si--;
+        }
+        *reg++ = val32;
+    }
 }
 
 void SYS_Init(void)
@@ -141,7 +141,7 @@ void EraseAllSramKey(void)
 
     /* Erase all keys in SRAM of key store */
     i32Ret = KS_EraseAll(KS_SRAM);
-    if (i32Ret == -1)
+    if(i32Ret == -1)
     {
         printf("\nErase all keys in SRAM of key store is failed!\n");
     }
@@ -152,56 +152,56 @@ int32_t PrepareKeys(void)
 {
     /* Create and read the private key number */
     RSA_Hex2Reg(d, (uint32_t *)&g_au32TmpBuf[0]);
-    g_i32PrivateKeyNum = KS_Write(KS_SRAM, KS_META_RSA_EXP|KS_META_2048|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32PrivateKeyNum == -1)
+    g_i32PrivateKeyNum = KS_Write(KS_SRAM, KS_META_RSA_EXP | KS_META_2048 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32PrivateKeyNum == -1)
         return -1;
 
     /* Create and read the P key number. P is equal to half of private/public key length. */
     RSA_Hex2Reg(P, (uint32_t *)&g_au32TmpBuf[0]);
-    g_i32PNum = KS_Write(KS_SRAM, KS_META_RSA_EXP|KS_META_1024|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32PNum == -1)
+    g_i32PNum = KS_Write(KS_SRAM, KS_META_RSA_EXP | KS_META_1024 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32PNum == -1)
         return -1;
 
     /* Create and read the Q key number. Q is equal to half of private/public key length. */
     RSA_Hex2Reg(Q, (uint32_t *)&g_au32TmpBuf[0]);
-    g_i32QNum = KS_Write(KS_SRAM, KS_META_RSA_EXP|KS_META_1024|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32QNum == -1)
+    g_i32QNum = KS_Write(KS_SRAM, KS_META_RSA_EXP | KS_META_1024 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32QNum == -1)
         return -1;
 
     /* Create and read the Cp key number. Cp is equal to private/public key length. */
     /* The Cp key is for Temporary use, it can be any value. */
-    g_i32CpNum = KS_Write(KS_SRAM, KS_META_RSA_EXP|KS_META_2048|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32CpNum == -1)
+    g_i32CpNum = KS_Write(KS_SRAM, KS_META_RSA_EXP | KS_META_2048 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32CpNum == -1)
         return -1;
 
     /* Create and read the Cq key number. Cq is equal to private/public key length. */
     /* The Cq key is for Temporary use, it can be any value. */
-    g_i32CqNum = KS_Write(KS_SRAM, KS_META_RSA_EXP|KS_META_2048|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32CqNum == -1)
+    g_i32CqNum = KS_Write(KS_SRAM, KS_META_RSA_EXP | KS_META_2048 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32CqNum == -1)
         return -1;
 
     /* Create and read the Dp key number. Dp is equal to half of private/public key length. */
     /* The Dp key is for Temporary use, it can be any value. */
-    g_i32DpNum = KS_Write(KS_SRAM, KS_META_RSA_EXP|KS_META_1024|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32DpNum == -1)
+    g_i32DpNum = KS_Write(KS_SRAM, KS_META_RSA_EXP | KS_META_1024 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32DpNum == -1)
         return -1;
 
     /* Create and read the Dq key number. Dq is equal to half of private/public key length. */
     /* The Rq key is for Temporary use, it can be any value. */
-    g_i32DqNum = KS_Write(KS_SRAM, KS_META_RSA_EXP|KS_META_1024|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32DqNum == -1)
+    g_i32DqNum = KS_Write(KS_SRAM, KS_META_RSA_EXP | KS_META_1024 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32DqNum == -1)
         return -1;
 
     /* Create and read the Rp key number. Rp is equal to private/public key length. */
     /* The Rp key is for Temporary use, it can be any value. */
-    g_i32RpNum = KS_Write(KS_SRAM, KS_META_RSA_EXP|KS_META_2048|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32RpNum == -1)
+    g_i32RpNum = KS_Write(KS_SRAM, KS_META_RSA_EXP | KS_META_2048 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32RpNum == -1)
         return -1;
 
     /* Create and read the Rq key number. Rq is equal to private/public key length. */
     /* The Rq key is for Temporary use, it can be any value. */
-    g_i32RqNum = KS_Write(KS_SRAM, KS_META_RSA_EXP|KS_META_2048|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32RqNum == -1)
+    g_i32RqNum = KS_Write(KS_SRAM, KS_META_RSA_EXP | KS_META_2048 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32RqNum == -1)
         return -1;
 
     printf("\n[The number of created keys in SRAM of key store] \n");
@@ -242,7 +242,7 @@ int32_t main(void)
     KS_Open();
 
     /* Prepare the keys in key store */
-    if (PrepareKeys() == -1)
+    if(PrepareKeys() == -1)
     {
         printf("\nCreate keys is failed!!\n");
 
@@ -268,7 +268,7 @@ int32_t main(void)
      *---------------------------------------*/
 
     /* Configure RSA operation mode and key length */
-    if (RSA_Open(CRPT, RSA_MODE_CRT, RSA_KEY_SIZE_2048, &s_sRSABuf, sizeof(s_sRSABuf), 1) != 0)
+    if(RSA_Open(CRPT, RSA_MODE_CRT, RSA_KEY_SIZE_2048, &s_sRSABuf, sizeof(s_sRSABuf), 1) != 0)
     {
         printf("\nRSA buffer size is incorrect!!\n");
         while(1);
@@ -276,17 +276,17 @@ int32_t main(void)
     /* Set RSA private key is read from SRAM of key store */
     RSA_SetKey_KS(CRPT, (uint32_t)g_i32PrivateKeyNum, KS_SRAM, 0);
     RSA_SetDMATransfer_KS(CRPT, Msg, N, (uint32_t)g_i32PNum, (uint32_t)g_i32QNum, (uint32_t)g_i32CpNum, (uint32_t)g_i32CqNum,
-                                     (uint32_t)g_i32DpNum, (uint32_t)g_i32DqNum, (uint32_t)g_i32RpNum, (uint32_t)g_i32RqNum);
+                          (uint32_t)g_i32DpNum, (uint32_t)g_i32DqNum, (uint32_t)g_i32RpNum, (uint32_t)g_i32RqNum);
     RSA_Start(CRPT);
 
     /* Waiting for RSA operation done */
-    while (!g_RSA_done);
+    while(!g_RSA_done);
 
     /* Check error flag */
-    if (g_RSA_error)
+    if(g_RSA_error)
     {
         printf("\nRSA has error!!\n");
-        while (1);
+        while(1);
     }
 
     /* Get RSA output result */
@@ -294,12 +294,12 @@ int32_t main(void)
     printf("\nRSA sign 1: %s\n", OutputResult);
 
     /* Verify the signature */
-    if (strcasecmp(OutputResult, Sign) == 0)
+    if(strcasecmp(OutputResult, Sign) == 0)
         printf("\nRSA signature 1 verify OK.\n\n");
     else
     {
         printf("\nRSA signature 1 verify failed!!\n\n");
-        while (1);
+        while(1);
     }
 
     /*--------------------------------------------------------------------------------
@@ -309,7 +309,7 @@ int32_t main(void)
     g_RSA_error = 0;
 
     /* Configure RSA operation mode and key length */
-    if (RSA_Open(CRPT, RSA_MODE_CRTBYPASS, RSA_KEY_SIZE_2048, &s_sRSABuf, sizeof(s_sRSABuf), 1) != 0)
+    if(RSA_Open(CRPT, RSA_MODE_CRTBYPASS, RSA_KEY_SIZE_2048, &s_sRSABuf, sizeof(s_sRSABuf), 1) != 0)
     {
         printf("\nRSA buffer size is incorrect!!\n");
         while(1);
@@ -317,17 +317,17 @@ int32_t main(void)
     /* Use the same key, and change Msg */
     RSA_SetKey_KS(CRPT, (uint32_t)g_i32PrivateKeyNum, KS_SRAM, 0);
     RSA_SetDMATransfer_KS(CRPT, Msg2, N, (uint32_t)g_i32PNum, (uint32_t)g_i32QNum, (uint32_t)g_i32CpNum, (uint32_t)g_i32CqNum,
-                                     (uint32_t)g_i32DpNum, (uint32_t)g_i32DqNum, (uint32_t)g_i32RpNum, (uint32_t)g_i32RqNum);
+                          (uint32_t)g_i32DpNum, (uint32_t)g_i32DqNum, (uint32_t)g_i32RpNum, (uint32_t)g_i32RqNum);
     RSA_Start(CRPT);
 
     /* Waiting for RSA operation done */
-    while (!g_RSA_done);
+    while(!g_RSA_done);
 
     /* Check error flag */
-    if (g_RSA_error)
+    if(g_RSA_error)
     {
         printf("\nRSA has error!!\n");
-        while (1);
+        while(1);
     }
 
     /* Get RSA output result */
@@ -335,19 +335,19 @@ int32_t main(void)
     printf("\nRSA sign 2: %s\n", OutputResult);
 
     /* Verify the message */
-    if (strcasecmp(OutputResult, Sign2) == 0)
+    if(strcasecmp(OutputResult, Sign2) == 0)
         printf("\nRSA signature 2 verify OK.\n\n");
     else
     {
         printf("\nRSA signature 2 verify failed!!\n\n");
-        while (1);
+        while(1);
     }
     printf("\nDone.\n");
 
     /* Erase all keys in SRAM of key store */
     EraseAllSramKey();
 
-    while (1);
+    while(1);
 }
 
 /*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

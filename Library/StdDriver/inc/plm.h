@@ -27,13 +27,13 @@ extern "C"
   @{
 */
 
-typedef enum 
+typedef enum
 {
-  PLM_VENDOR = 0,
-  PLM_OEM = 1,
-  PLM_DEPLOYED = 3,
-  PLM_RMA = 7
-}PLM_STAGE_T;
+    PLM_VENDOR = 0,
+    PLM_OEM = 1,
+    PLM_DEPLOYED = 3,
+    PLM_RMA = 7
+} PLM_STAGE_T;
 
 #define PLM_VCODE   (0x475A0000ul)  /*!< The key code for PLM_CTL write. */
 

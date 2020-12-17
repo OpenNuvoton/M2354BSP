@@ -51,24 +51,24 @@ uint32_t  get_timer0_counter()
 }
 
 
-static int myrand( void *rng_state, unsigned char *output, size_t len )
+static int myrand(void *rng_state, unsigned char *output, size_t len)
 {
 #if !defined(__OpenBSD__)
     size_t i;
 
-    if( rng_state != NULL )
+    if(rng_state != NULL)
         rng_state  = NULL;
 
-    for( i = 0; i < len; ++i )
+    for(i = 0; i < len; ++i)
         output[i] = rand();
 #else
-    if( rng_state != NULL )
+    if(rng_state != NULL)
         rng_state = NULL;
 
-    arc4random_buf( output, len );
+    arc4random_buf(output, len);
 #endif /* !OpenBSD */
 
-    return( 0 );
+    return(0);
 }
 
 
@@ -96,7 +96,7 @@ int ECDHTest(void)
     start_timer0();
 
     printf(" mbedtls ECDH setup        : ");
-    ret = mbedtls_ecdh_setup (&ecdh, curve);
+    ret = mbedtls_ecdh_setup(&ecdh, curve);
 
     if(ret == 0)
     {

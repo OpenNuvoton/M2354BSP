@@ -562,9 +562,9 @@ extern void SystemInit(void);
 
 #define EWWDT_S               ((EWWDT_T *) EWWDT_BASE)                    /*!< Extra Window Watch Dog Timer Pointer*/
 
-#define FVC_S                 ((FVC_T *) FVC_BASE)                        
-#define DPM_S                 ((DPM_T *) DPM_BASE)                        
-#define PLM_S                 ((PLM_T *) PLM_BASE)                        
+#define FVC_S                 ((FVC_T *) FVC_BASE)
+#define DPM_S                 ((DPM_T *) DPM_BASE)
+#define PLM_S                 ((PLM_T *) PLM_BASE)
 
 
 
@@ -644,8 +644,8 @@ extern void SystemInit(void);
 #define LCD_NS                 ((LCD_T *)(LCD_BASE+NS_OFFSET))                        /*!< LCD Pointer                         */
 #define DPM_NS                 ((DPM_T *)(DPM_BASE+NS_OFFSET))
 #define FMC_NS                 ((FMC_T *)(FMC_BASE+NS_OFFSET))                        /*!< Flash Memory Controller */
-#define SYS_NS                 ((SYS_T *)(SYS_BASE+NS_OFFSET)) 
-#define CLK_NS                 ((CLK_T *)(CLK_BASE+NS_OFFSET)) 
+#define SYS_NS                 ((SYS_T *)(SYS_BASE+NS_OFFSET))
+#define CLK_NS                 ((CLK_T *)(CLK_BASE+NS_OFFSET))
 
 
 /**@}*/ /* end of group PMODULE_NS */

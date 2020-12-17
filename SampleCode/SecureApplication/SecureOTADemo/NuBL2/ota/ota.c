@@ -32,7 +32,7 @@ static volatile uint32_t g_u32FwInfoWriteBytes = 0;
 static FW_INFO_T g_RecvFwInfo;
 static FW_INFO_T g_DecryptRecvFwInfo;
 static volatile uint32_t g_u32NuBL3xIdentifyPass = 0;
-static uint32_t g_au32WriteFwBuf[44*12/4];
+static uint32_t g_au32WriteFwBuf[44 * 12 / 4];
 static volatile uint8_t g_u8NuBL3xAuthSel = 0; /* Bit0:NuBL32, Bit1:NuBL33 */
 static uint32_t g_au32RawData[12];   /* Decrypted Command data */
 static uint32_t g_au32DecryptRawData[16];   /* Decrypted temp Command data */
@@ -78,7 +78,7 @@ int8_t OTA_TaskProcess(void)
 
 uint32_t Swap32(uint32_t val)
 {
-    return (val<<24) | ((val<<8)&0xff0000) | ((val>>8)&0xff00) | (val>>24);
+    return (val << 24) | ((val << 8) & 0xff0000) | ((val >> 8) & 0xff00) | (val >> 24);
 }
 
 static void NuBL_BytesSwap(char *buf, int32_t len)
@@ -86,10 +86,10 @@ static void NuBL_BytesSwap(char *buf, int32_t len)
     int32_t i;
     char    tmp;
 
-    for(i=0; i<(len/2); i++)
+    for(i = 0; i < (len / 2); i++)
     {
-        tmp = buf[len-i-1];
-        buf[len-i-1] = buf[i];
+        tmp = buf[len - i - 1];
+        buf[len - i - 1] = buf[i];
         buf[i] = tmp;
     }
 }
@@ -109,25 +109,25 @@ int32_t UpdateOTAStatus(uint8_t u8NuBL3xSel)
     FMC_ENABLE_AP_UPDATE();
 
 #if (OTA_UPGRADE_FROM_SD)
-    if (u8NuBL3xSel&BIT0)
+    if(u8NuBL3xSel & BIT0)
     {
         FMC_Write(SYS_FW_OTA_STATUS_BASE, 1);
-        if (FMC_Read(SYS_FW_OTA_STATUS_BASE) != 1)
+        if(FMC_Read(SYS_FW_OTA_STATUS_BASE) != 1)
         {
             return (-1001);
         }
     }
-    if (u8NuBL3xSel&BIT1)
+    if(u8NuBL3xSel & BIT1)
     {
         FMC_Write(APP_FW_OTA_STATUS_BASE, 1);
-        if (FMC_Read(APP_FW_OTA_STATUS_BASE) != 1)
+        if(FMC_Read(APP_FW_OTA_STATUS_BASE) != 1)
         {
             return (-1002);
         }
     }
 #else
     FMC_Write(OTA_STATUS_BASE, 1);
-    if (FMC_Read(OTA_STATUS_BASE) != 1)
+    if(FMC_Read(OTA_STATUS_BASE) != 1)
     {
         return (-1003);
     }
@@ -154,12 +154,12 @@ uint8_t EraseNewSysFwBlock(void)
 
     //printf("EraseNewSysFwBlock: u32FlashPageSize=0x%x(%d)\n", u32FlashPageSize, u32FlashPageSize);
 
-    for(i = 0U; i < (uint32_t)SYS_NEW_FW_BLOCK_SIZE; i+=u32FlashPageSize)
+    for(i = 0U; i < (uint32_t)SYS_NEW_FW_BLOCK_SIZE; i += u32FlashPageSize)
     {
         /* Erase page */
-        if (OTA_API_EraseFlash((uint32_t)SYS_FW_BASE + i) != 0U)
+        if(OTA_API_EraseFlash((uint32_t)SYS_FW_BASE + i) != 0U)
         {
-            printf("Erase fail(0x%x)\n", (uint32_t)SYS_FW_BASE+i);
+            printf("Erase fail(0x%x)\n", (uint32_t)SYS_FW_BASE + i);
             return STATUS_FAILED;
         }
     }
@@ -189,10 +189,10 @@ uint8_t EraseNewAppFwBlock(void)
 //    SYS_UnlockReg();
     FMC_Open();
     FMC_ENABLE_AP_UPDATE();
-    for(i = 0U; i < APP_NEW_FW_BLOCK_SIZE; i+=u32FlashPageSize)
+    for(i = 0U; i < APP_NEW_FW_BLOCK_SIZE; i += u32FlashPageSize)
     {
         // Erase page
-        if (OTA_API_EraseFlash((uint32_t)APP_FW_BASE + i) != 0U)
+        if(OTA_API_EraseFlash((uint32_t)APP_FW_BASE + i) != 0U)
         {
             printf("Erase fail(0x%x)\n", (uint32_t)APP_FW_BASE + i);
             return STATUS_FAILED;
@@ -232,14 +232,14 @@ uint8_t OTA_WriteNewFW(uint32_t u32Address, uint8_t* pu8Buff, uint32_t u32Size)
     uint16_t u16Idx;
 
     //DEBUG_MSG("OTA_WriteNewSysFW: addr 0x%x, size: 0x%d ~ \n", u32Address, u32Size);
-    for (u16Idx = 0U; u16Idx < u32Size; u16Idx += 4U)
+    for(u16Idx = 0U; u16Idx < u32Size; u16Idx += 4U)
     {
-        if (OTA_API_WriteFlash(u32Address, (uint32_t)((pu8Buff[u16Idx+3]<<24) | (pu8Buff[u16Idx+2]<<16) | (pu8Buff[u16Idx+1]<<8) | (pu8Buff[u16Idx]))))
+        if(OTA_API_WriteFlash(u32Address, (uint32_t)((pu8Buff[u16Idx + 3] << 24) | (pu8Buff[u16Idx + 2] << 16) | (pu8Buff[u16Idx + 1] << 8) | (pu8Buff[u16Idx]))))
             u8Status = STATUS_FAILED;
         else
             u8Status = STATUS_SUCCESS;
 
-        if (u8Status != STATUS_SUCCESS)
+        if(u8Status != STATUS_SUCCESS)
             break;
 
         u32Address += 4U;
@@ -274,7 +274,7 @@ int32_t NuBL2_CompareNuBL3xVer(uint32_t u32FwVer, int32_t i32Mode)
         return ret;
     }
 
-    NUBL_MSG("\nCompare NuBL3%d. \n\n", ((u32Mode&BIT0)==0)?2:3);
+    NUBL_MSG("\nCompare NuBL3%d. \n\n", ((u32Mode & BIT0) == 0) ? 2 : 3);
 
     memset(&FwInfo, 0x0, sizeof(FW_INFO_T));
 
@@ -283,26 +283,26 @@ int32_t NuBL2_CompareNuBL3xVer(uint32_t u32FwVer, int32_t i32Mode)
     /* Step 1. Get NuBL3x info */
     /* Get NuBL3x F/W info */
     len = sizeof(FW_INFO_T);
-    if(((uint32_t)i32Mode&BIT4) != BIT4)
+    if(((uint32_t)i32Mode & BIT4) != BIT4)
     {
-        if(((uint32_t)i32Mode&BIT0) == 0)
+        if(((uint32_t)i32Mode & BIT0) == 0)
             base = NUBL32_FW_INFO_BASE;   // encrypted NuBL32 info address
         else
             base = NUBL33_FW_INFO_BASE;   // encrypted NuBL32 info address
-        for(i=0; i<(len/4); i++)
-            infobuf[i] = FMC_Read(base + (i*4));
+        for(i = 0; i < (len / 4); i++)
+            infobuf[i] = FMC_Read(base + (i * 4));
     }
-    NUBL_MSG("Get NuBL3%d F/W info [Done]\n\n", ((u32Mode&BIT0)==0)?2:3);
+    NUBL_MSG("Get NuBL3%d F/W info [Done]\n\n", ((u32Mode & BIT0) == 0) ? 2 : 3);
 
     /* Step 2. Compare NuBL3x F/W version (enclosed in F/W info) */
     memcpy(&FwInfo, infobuf, sizeof(FW_INFO_T));
-    if (u32FwVer <= FwInfo.mData.au32ExtInfo[0])
+    if(u32FwVer <= FwInfo.mData.au32ExtInfo[0])
     {
-        NUBL_MSG("Remote NuBL3%d F/W version is [Older]\n\n", ((u32Mode&BIT0)==0)?2:3);
+        NUBL_MSG("Remote NuBL3%d F/W version is [Older]\n\n", ((u32Mode & BIT0) == 0) ? 2 : 3);
         ret = -3001;
         goto _exit_NuBL2_CompareNuBL3xVer;
     }
-    NUBL_MSG("Remote NuBL3%d F/W version is [Newer]\n\n", ((u32Mode&BIT0)==0)?2:3);
+    NUBL_MSG("Remote NuBL3%d F/W version is [Newer]\n\n", ((u32Mode & BIT0) == 0) ? 2 : 3);
 
     ret = 0;
 
@@ -333,17 +333,17 @@ int32_t CheckNuBL3xWriteSpace(uint32_t u32FwSize, int32_t i32Mode)
         return ret;
     }
 
-    if(((uint32_t)i32Mode&BIT0) == 0)
+    if(((uint32_t)i32Mode & BIT0) == 0)
         /* Get reserved NuBL32 flash size */
         u32ReservedSize = NUBL32_LIB_BASE - NUBL32_FW_BASE;
     else
         /* Get reserved NuBL33 flash size */
         u32ReservedSize = NUBL33_FW_INFO_BASE - NUBL33_FW_BASE;
 
-    if (u32FwSize > u32ReservedSize)
+    if(u32FwSize > u32ReservedSize)
     {
         /* Reserved flash space is not enough for new firmware */
-        DEBUG_MSG("\nCheck NuBL3%d firmware write space is not enough. %d : %d\n\n", ((u8Mode&BIT0)==0)?2:3, u32FwSize,u32ReservedSize);
+        DEBUG_MSG("\nCheck NuBL3%d firmware write space is not enough. %d : %d\n\n", ((u8Mode & BIT0) == 0) ? 2 : 3, u32FwSize, u32ReservedSize);
         ret = -1001;
     }
 
@@ -366,15 +366,15 @@ static int32_t _IsValidFlashRegion(uint32_t addr, uint32_t size)
     addr &= ~NS_OFFSET;
 
     /* Check address and length */
-    if((addr%4) != 0)
+    if((addr % 4) != 0)
         return ERR_INVALID_ADDRESS;
 
-    if(((size%4) != 0) || (size == 0))
+    if(((size % 4) != 0) || (size == 0))
         return ERR_INVALID_ADDRESS;
 
     if((addr < u32APROMSize) && (addr >= FMC_APROM_BASE))
     {
-        if(((addr+size) > u32APROMSize) || ((addr+size) < addr))
+        if(((addr + size) > u32APROMSize) || ((addr + size) < addr))
             return ERR_OVER_RANGE;
     }
     else if((addr < FMC_LDROM_END) && (addr >= FMC_LDROM_BASE))
@@ -417,9 +417,9 @@ int8_t VerifyNuBL3xIntegrityFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
     OTA_API_SDFwPackReadOpen(u8BLxSel);
     /* Read the FW INFO data from firmware package file */
     OTA_API_SDRead((uint8_t *)&FwInfoTmp, u32FwInfoSize, &u32ReadLen);
-    if (u32FwInfoSize != u32ReadLen)
+    if(u32FwInfoSize != u32ReadLen)
     {
-        printf("VerifyNuBL3xIntegrityFromSD: read NuBL3%d FW INFO length error!\n",((u8BLxSel&BIT0)==1)?2:3);
+        printf("VerifyNuBL3xIntegrityFromSD: read NuBL3%d FW INFO length error!\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3);
         return (-1);
     }
 
@@ -428,7 +428,7 @@ int8_t VerifyNuBL3xIntegrityFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
     /* Set read buffer length */
     u32ReadBufLen = sizeof(au32RawData);
     /* Set total read length by firmware region in FW INFO */
-    if ((FwInfoTmp.mData.au32FwRegion[1].u32Start == 0x0)&&(FwInfoTmp.mData.au32FwRegion[1].u32Size == 0x0))
+    if((FwInfoTmp.mData.au32FwRegion[1].u32Start == 0x0) && (FwInfoTmp.mData.au32FwRegion[1].u32Size == 0x0))
     {
         /* Only one valid firmware region in FW INFO */
         u32FwSize = FwInfoTmp.mData.au32FwRegion[0].u32Size;
@@ -445,25 +445,25 @@ int8_t VerifyNuBL3xIntegrityFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
     while(u32ReadBufLen <= u32ReadLen)
     {
         /* Read encrypted firmware data */
-        if (OTA_API_SDRead((uint8_t *)pu32ReadBuf, u32ReadBufLen, &u32ReadLen) != 0)
+        if(OTA_API_SDRead((uint8_t *)pu32ReadBuf, u32ReadBufLen, &u32ReadLen) != 0)
         {
-            printf("VerifyNuBL3xIntegrityFromSD: read NuBL3%d FW error!\n",((u8BLxSel&BIT0)==1)?2:3);
+            printf("VerifyNuBL3xIntegrityFromSD: read NuBL3%d FW error!\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3);
             i8Ret = (-2);
         }
 
-        if (u32ReadBufLen != u32ReadLen)
+        if(u32ReadBufLen != u32ReadLen)
         {
-            printf("VerifyNuBL3xIntegrityFromSD: read NuBL3%d FW last data!(u32ReadLen:%d)\n",((u8BLxSel&BIT0)==1)?2:3, u32ReadLen);
+            printf("VerifyNuBL3xIntegrityFromSD: read NuBL3%d FW last data!(u32ReadLen:%d)\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3, u32ReadLen);
             if(u32ReadLen)
             {
-                if (u8NotFirstRead == 0)
+                if(u8NotFirstRead == 0)
                 {
                     /* First Read Data */
                     memcpy((uint8_t *)&au32RawData, pu32ReadBuf, u32ReadBufLen);
                     /* Decrypt new firmware data */
                     cmd_AES256Decrypt(au32RawData, au32RawData, u32ReadBufLen, pu32Key3x, g_FwIV);
                     /* CFB mode need bofore 16 bytes to be decrypted current raw data correctly. */
-                    memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf+8, 16);
+                    memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf + 8, 16);
                     u8NotFirstRead = 1;
                 }
                 else
@@ -474,15 +474,15 @@ int8_t VerifyNuBL3xIntegrityFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
                     cmd_AES256Decrypt(au32DecryptRawData, au32DecryptRawData, u32DecryptDataLen, pu32Key3x, g_FwIV);
                     memcpy((uint8_t *)&au32RawData, (uint8_t *)&au32DecryptRawData + 16, u32ReadBufLen);
                     /* CFB mode need bofore 16 bytes to be decrypted current raw data correctly. */
-                    memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf+8, 16);
+                    memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf + 8, 16);
                 }
 
-                if (u32ShaState)
+                if(u32ShaState)
                 {
-                    if (u32FwSize <= u32ReadLen)
+                    if(u32FwSize <= u32ReadLen)
                     {
                         /* End of calculate hash */
-                        start = (uint32_t )&au32RawData[0];
+                        start = (uint32_t)&au32RawData[0];
                         len = u32FwSize;
                         end   = start + len;
                         NuBL_CalculateSHA256(start, end, (uint32_t *)&au32HashBuf[0], SHA_CONTI_END, SHA_SRC_SRAM);
@@ -502,14 +502,14 @@ int8_t VerifyNuBL3xIntegrityFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
         {
             if(u32ReadLen)
             {
-                if (u8NotFirstRead == 0)
+                if(u8NotFirstRead == 0)
                 {
                     /* First Read Data */
                     memcpy((uint8_t *)&au32RawData, pu32ReadBuf, u32ReadBufLen);
                     /* Decrypt new firmware data */
                     cmd_AES256Decrypt(au32RawData, au32RawData, u32ReadBufLen, pu32Key3x, g_FwIV);
                     /* CFB mode need bofore 16 bytes to be decrypted current raw data correctly. */
-                    memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf+8, 16);
+                    memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf + 8, 16);
                     u8NotFirstRead = 1;
                 }
                 else
@@ -520,23 +520,23 @@ int8_t VerifyNuBL3xIntegrityFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
                     cmd_AES256Decrypt(au32DecryptRawData, au32DecryptRawData, u32DecryptDataLen, pu32Key3x, g_FwIV);
                     memcpy((uint8_t *)&au32RawData, (uint8_t *)&au32DecryptRawData + 16, u32ReadBufLen);
                     /* CFB mode need bofore 16 bytes to be decrypted current raw data correctly. */
-                    memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf+8, 16);
+                    memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf + 8, 16);
                 }
 
-                if (u32ShaState == 0)
+                if(u32ShaState == 0)
                 {
                     /* Start of calculate hash */
-                    start = (uint32_t )&au32RawData[0];
+                    start = (uint32_t)&au32RawData[0];
                     len = u32ReadLen;
                     end   = start + len;
                     NuBL_CalculateSHA256(start, end, (uint32_t *)&au32HashBuf[0], SHA_CONTI_START, SHA_SRC_SRAM);
                 }
                 else
                 {
-                    if (u32FwSize <= u32ReadLen)
+                    if(u32FwSize <= u32ReadLen)
                     {
                         /* End of calculate hash */
-                        start = (uint32_t )&au32RawData[0];
+                        start = (uint32_t)&au32RawData[0];
                         len = u32FwSize;
                         end   = start + len;
                         NuBL_CalculateSHA256(start, end, (uint32_t *)&au32HashBuf[0], SHA_CONTI_END, SHA_SRC_SRAM);
@@ -545,7 +545,7 @@ int8_t VerifyNuBL3xIntegrityFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
                     else
                     {
                         /* Continuous of calculate hash */
-                        start = (uint32_t )&au32RawData[0];
+                        start = (uint32_t)&au32RawData[0];
                         len = u32ReadLen;
                         end   = start + len;
                         NuBL_CalculateSHA256(start, end, (uint32_t *)&au32HashBuf[0], SHA_CONTI_ING, SHA_SRC_SRAM);
@@ -563,11 +563,11 @@ int8_t VerifyNuBL3xIntegrityFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
     /* Verify NuBL3x FW hash */
     if(memcmp(&au32HashBuf, FwInfoTmp.au32FwHash, sizeof(au32HashBuf)) != 0)
     {
-        NUBL_MSG("Identify NuBL3%d FW Hash [FAIL]\n\n",((u8BLxSel&BIT1)==0)?2:3);
+        NUBL_MSG("Identify NuBL3%d FW Hash [FAIL]\n\n", ((u8BLxSel & BIT1) == 0) ? 2 : 3);
         return (-3);
     }
 
-    NUBL_MSG("Identify NuBL3%d FW Hash [PASS]\n\n",((u8BLxSel&BIT1)==0)?2:3);
+    NUBL_MSG("Identify NuBL3%d FW Hash [PASS]\n\n", ((u8BLxSel & BIT1) == 0) ? 2 : 3);
 
     return 0;
 }
@@ -597,14 +597,14 @@ int8_t UpdateNuBL3xFwFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
     OTA_API_SDFwPackReadOpen(u8BLxSel);
     /* Read the FW INFO data from firmware package file */
     OTA_API_SDRead((uint8_t *)&FwInfoTmp, u32FwInfoSize, &u32ReadLen);
-    if (u32FwInfoSize != u32ReadLen)
+    if(u32FwInfoSize != u32ReadLen)
     {
-        printf("UpdateNuBL3xFwFromSD: read NuBL3%d FW INFO length error!\n",((u8BLxSel&BIT0)==1)?2:3);
+        printf("UpdateNuBL3xFwFromSD: read NuBL3%d FW INFO length error!\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3);
         return (-1);
     }
 
     /* Get start address and size of new firmware from FW INFO */
-    u32LastWriteAddr = FwInfoTmp.mData.au32FwRegion[0].u32Start&(~NS_OFFSET);
+    u32LastWriteAddr = FwInfoTmp.mData.au32FwRegion[0].u32Start & (~NS_OFFSET);
     u32Fw1Size = FwInfoTmp.mData.au32FwRegion[0].u32Size;
     u32Fw1Start = FwInfoTmp.mData.au32FwRegion[0].u32Start;
     u32Fw2Size = FwInfoTmp.mData.au32FwRegion[1].u32Size;
@@ -618,25 +618,25 @@ int8_t UpdateNuBL3xFwFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
     while(u32ReadBufLen <= u32ReadLen)
     {
         /* Read the new firmware data from firmware package file */
-        if (OTA_API_SDRead((uint8_t *)pu32ReadBuf, u32ReadBufLen, &u32ReadLen) != 0)
+        if(OTA_API_SDRead((uint8_t *)pu32ReadBuf, u32ReadBufLen, &u32ReadLen) != 0)
         {
-            printf("UpdateNuBL3xFwFromSD: read NuBL3%d FW error!\n",((u8BLxSel&BIT0)==1)?2:3);
+            printf("UpdateNuBL3xFwFromSD: read NuBL3%d FW error!\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3);
             return (-2);
         }
-        if (u32ReadBufLen != u32ReadLen)
+        if(u32ReadBufLen != u32ReadLen)
         {
-            printf("UpdateNuBL3xFwFromSD: read NuBL3%d FW last data!(u32ReadLen:%d)\n",((u8BLxSel&BIT0)==1)?2:3, u32ReadLen);
+            printf("UpdateNuBL3xFwFromSD: read NuBL3%d FW last data!(u32ReadLen:%d)\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3, u32ReadLen);
         }
         if(u32ReadLen)
         {
-            if (u8NotFirstRead == 0)
+            if(u8NotFirstRead == 0)
             {
                 /* First Read Data */
                 memcpy((uint8_t *)&au32RawData, pu32ReadBuf, u32ReadBufLen);
                 /* Decrypt new firmware data */
                 cmd_AES256Decrypt(au32RawData, au32RawData, u32ReadBufLen, pu32Key3x, g_FwIV);
                 /* CFB mode need bofore 16 bytes to be decrypted current raw data correctly. */
-                memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf+8, 16);
+                memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf + 8, 16);
                 u8NotFirstRead = 1;
             }
             else
@@ -647,73 +647,73 @@ int8_t UpdateNuBL3xFwFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
                 cmd_AES256Decrypt(au32DecryptRawData, au32DecryptRawData, u32DecryptDataLen, pu32Key3x, g_FwIV);
                 memcpy((uint8_t *)&au32RawData, (uint8_t *)&au32DecryptRawData + 16, u32ReadBufLen);
                 /* CFB mode need bofore 16 bytes to be decrypted current raw data correctly. */
-                memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf+8, 16);
+                memcpy((uint8_t *)&au32DecryptRawData, pu32ReadBuf + 8, 16);
             }
 
             /* Check last write address is over FW1 start + FW1 size */
-            if(((u32LastWriteAddr&(~NS_OFFSET)) + u32ReadLen) > u32Fw1Start + u32Fw1Size)
+            if(((u32LastWriteAddr & (~NS_OFFSET)) + u32ReadLen) > u32Fw1Start + u32Fw1Size)
             {
                 uint32_t u32OverFwSize;
 
                 /* Calculate Fw2 size */
-                u32OverFwSize = (u32LastWriteAddr&(~NS_OFFSET)) + u32ReadLen - (u32Fw1Start + u32Fw1Size);
+                u32OverFwSize = (u32LastWriteAddr & (~NS_OFFSET)) + u32ReadLen - (u32Fw1Start + u32Fw1Size);
                 /* Check if last write address is more the payload size of one package than FW1 range */
-                if (u32OverFwSize < u32ReadBufLen)
+                if(u32OverFwSize < u32ReadBufLen)
                 {
                     /* Write new firmware data to flash */
-                    if (OTA_WriteNewFW(u32LastWriteAddr, (uint8_t *)&au32RawData, u32ReadLen - u32OverFwSize) != STATUS_SUCCESS)
+                    if(OTA_WriteNewFW(u32LastWriteAddr, (uint8_t *)&au32RawData, u32ReadLen - u32OverFwSize) != STATUS_SUCCESS)
                     {
-                        printf("UpdateNuBL3xFwFromSD: write new NuBL3%d FW to flash error\n",((u8BLxSel&BIT0)==1)?2:3);
+                        printf("UpdateNuBL3xFwFromSD: write new NuBL3%d FW to flash error\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3);
                         return (-3);
                     }
                     /* Check firmware size is not 0 in FW INFO decription */
-                    if (u32Fw2Size != 0)
+                    if(u32Fw2Size != 0)
                     {
                         /* Check write address of FW INFO is valid in system */
-                        if((i8Ret =_IsValidFlashRegion(u32Fw2Start, u32Fw2Size)) != 0)
+                        if((i8Ret = _IsValidFlashRegion(u32Fw2Start, u32Fw2Size)) != 0)
                             return i8Ret;
 
                         g_u32LastSysFwWriteAddr = u32Fw2Start;
-                        if (u32LastWriteAddr < u32Fw2Start)
+                        if(u32LastWriteAddr < u32Fw2Start)
                             u32LastWriteAddr = g_u32LastSysFwWriteAddr;
                         /* Write new firmware data to flash */
-                        if (OTA_WriteNewFW(u32LastWriteAddr, (uint8_t *)&au32RawData + (u32ReadLen - u32OverFwSize), u32OverFwSize) != STATUS_SUCCESS)
+                        if(OTA_WriteNewFW(u32LastWriteAddr, (uint8_t *)&au32RawData + (u32ReadLen - u32OverFwSize), u32OverFwSize) != STATUS_SUCCESS)
                         {
-                            printf("UpdateNuBL3xFwFromSD: write new NuBL3%d FW to flash error\n",((u8BLxSel&BIT0)==1)?2:3);
+                            printf("UpdateNuBL3xFwFromSD: write new NuBL3%d FW to flash error\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3);
                             return (-5);
                         }
                     }
                 }
                 else
                 {
-                    if (u32OverFwSize == u32ReadBufLen)
+                    if(u32OverFwSize == u32ReadBufLen)
                     {
                         /* Check firmware size is not 0 in FW INFO decription */
-                        if (FwInfoTmp.mData.au32FwRegion[1].u32Size != 0)
+                        if(FwInfoTmp.mData.au32FwRegion[1].u32Size != 0)
                         {
                             /* Check write address of FW INFO is valid in system */
-                            if((i8Ret =_IsValidFlashRegion(u32Fw2Start, u32Fw2Size)) != 0)
+                            if((i8Ret = _IsValidFlashRegion(u32Fw2Start, u32Fw2Size)) != 0)
                                 return i8Ret;
 
                             u32LastWriteAddr = u32Fw2Start;
                         }
                     }
                     /* Write new firmware data to flash */
-                    if(((g_u32LastSysFwWriteAddr&(~NS_OFFSET)) + u32ReadLen) < u32Fw2Start + u32Fw2Size)
+                    if(((g_u32LastSysFwWriteAddr & (~NS_OFFSET)) + u32ReadLen) < u32Fw2Start + u32Fw2Size)
                     {
-                        if (OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&au32RawData, u32ReadLen) != STATUS_SUCCESS)
+                        if(OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&au32RawData, u32ReadLen) != STATUS_SUCCESS)
                         {
-                            printf("UpdateNuBL3xFwFromSD: write new NuBL3%d FW to flash error\n",((u8BLxSel&BIT0)==1)?2:3);
+                            printf("UpdateNuBL3xFwFromSD: write new NuBL3%d FW to flash error\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3);
                             return (-7);
                         }
                     }
                     else
                     {
-                        if (u32Fw2Start + u32Fw2Size - (g_u32LastSysFwWriteAddr&(~NS_OFFSET)))
+                        if(u32Fw2Start + u32Fw2Size - (g_u32LastSysFwWriteAddr & (~NS_OFFSET)))
                         {
-                            if (OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&au32RawData, u32Fw2Start + u32Fw2Size - (g_u32LastSysFwWriteAddr&(~NS_OFFSET))) != STATUS_SUCCESS)
+                            if(OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&au32RawData, u32Fw2Start + u32Fw2Size - (g_u32LastSysFwWriteAddr & (~NS_OFFSET))) != STATUS_SUCCESS)
                             {
-                                printf("UpdateNuBL3xFwFromSD: write new NuBL3%d FW to flash error\n",((u8BLxSel&BIT0)==1)?2:3);
+                                printf("UpdateNuBL3xFwFromSD: write new NuBL3%d FW to flash error\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3);
                                 return (-7);
                             }
                         }
@@ -723,9 +723,9 @@ int8_t UpdateNuBL3xFwFromSD(uint8_t u8BLxSel, uint32_t pu32Key3x[])
             else
             {
                 /* Write new firmware data to flash */
-                if (OTA_WriteNewFW(u32LastWriteAddr, (uint8_t *)au32RawData, u32ReadLen) != STATUS_SUCCESS)
+                if(OTA_WriteNewFW(u32LastWriteAddr, (uint8_t *)au32RawData, u32ReadLen) != STATUS_SUCCESS)
                 {
-                    printf("UpdateNuBL3xFwFromSD: write new NuBL3%d FW to flash error\n",((u8BLxSel&BIT0)==1)?2:3);
+                    printf("UpdateNuBL3xFwFromSD: write new NuBL3%d FW to flash error\n", ((u8BLxSel & BIT0) == 1) ? 2 : 3);
 
                     return (-8);
                 }
@@ -762,13 +762,13 @@ int32_t OTA_VerifyAndUpdateNuBL3xFromSD(uint8_t u8BLxSel)
     NuBL2_GetNuBL3xECDHKeys((uint32_t *)gNuBL2_32Key, (uint32_t *)gNuBL2_33Key);
 
     /* Initial local variables for NuBL32 or NuBL33 */
-    if (u8BLxSel == BIT0)
+    if(u8BLxSel == BIT0)
     {
         /* Initial local variables for NuBL32 */
         i32Mode = 0;
         pNuBL3xKey = (uint32_t *)&gNuBL2_32Key;
     }
-    else if (u8BLxSel == BIT1)
+    else if(u8BLxSel == BIT1)
     {
         /* Initial local variables for NuBL33 */
         i32Mode = 1;
@@ -782,30 +782,30 @@ int32_t OTA_VerifyAndUpdateNuBL3xFromSD(uint8_t u8BLxSel)
     OTA_API_SDFwPackReadOpen(u8BLxSel);
     /* Read the FW INFO data from firmware package file */
     OTA_API_SDRead((uint8_t *)&FwInfoTmp, u32FwInfoSize, &u32ReadLen);
-    if (u32FwInfoSize != u32ReadLen)
+    if(u32FwInfoSize != u32ReadLen)
     {
-        printf("OTA_VerifyAndUpdateNuBL3xFromSD: read NuBL3%d FW INFO length error!\n",((i32Mode&BIT0)==0)?2:3);
+        printf("OTA_VerifyAndUpdateNuBL3xFromSD: read NuBL3%d FW INFO length error!\n", ((i32Mode & BIT0) == 0) ? 2 : 3);
         return (-1);
     }
     /* Close firmware package file */
     OTA_API_SDClose(u8BLxSel);
 
     /* Verify FW INFO */
-    if (NuBL2_ExecuteVerifyNuBL3x((uint32_t *)&FwInfoTmp, 0x10|i32Mode) != 0)
+    if(NuBL2_ExecuteVerifyNuBL3x((uint32_t *)&FwInfoTmp, 0x10 | i32Mode) != 0)
     {
-        printf("OTA_VerifyAndUpdateNuBL3xFromSD: identify new NuBL3%d FW package error!\n",((i32Mode&BIT0)==0)?2:3);
+        printf("OTA_VerifyAndUpdateNuBL3xFromSD: identify new NuBL3%d FW package error!\n", ((i32Mode & BIT0) == 0) ? 2 : 3);
         return (-2);
     }
     /* Verify NuBL3x FW hash */
-    if (VerifyNuBL3xIntegrityFromSD(u8BLxSel, pNuBL3xKey) != 0 )
+    if(VerifyNuBL3xIntegrityFromSD(u8BLxSel, pNuBL3xKey) != 0)
     {
-        printf("OTA_VerifyAndUpdateNuBL3xFromSD: Verify NuBL3%d FW Hash [FAIL]\n\n",((i32Mode&BIT0)==0)?2:3);
+        printf("OTA_VerifyAndUpdateNuBL3xFromSD: Verify NuBL3%d FW Hash [FAIL]\n\n", ((i32Mode & BIT0) == 0) ? 2 : 3);
         return (-3);
     }
-    printf("Identify NuBL3%d FW Hash [PASS]\n\n",((i32Mode&BIT0)==0)?2:3);
+    printf("Identify NuBL3%d FW Hash [PASS]\n\n", ((i32Mode & BIT0) == 0) ? 2 : 3);
 
     /* Get total flash size for new NuBL3x firmware */
-    if ((FwInfoTmp.mData.au32FwRegion[1].u32Start == 0x0)&&(FwInfoTmp.mData.au32FwRegion[1].u32Size == 0x0))
+    if((FwInfoTmp.mData.au32FwRegion[1].u32Start == 0x0) && (FwInfoTmp.mData.au32FwRegion[1].u32Size == 0x0))
     {
         /* Only one valid firmware region in FW INFO */
         u32FwSize = FwInfoTmp.mData.au32FwRegion[0].u32Size;
@@ -816,15 +816,15 @@ int32_t OTA_VerifyAndUpdateNuBL3xFromSD(uint8_t u8BLxSel)
         u32FwSize = FwInfoTmp.mData.au32FwRegion[0].u32Size + FwInfoTmp.mData.au32FwRegion[1].u32Size;
     }
     /* Check NuBL3x flash size is enough to write. */
-    if (CheckNuBL3xWriteSpace(u32FwSize,i32Mode) != 0)
+    if(CheckNuBL3xWriteSpace(u32FwSize, i32Mode) != 0)
     {
         /* NuBL3x flash size is not enough for new firmware */
-        printf("OTA_VerifyAndUpdateNuBL3xFromSD: NuBL3%d flash size is not enough!\n",((i32Mode&BIT0)==0)?2:3);
+        printf("OTA_VerifyAndUpdateNuBL3xFromSD: NuBL3%d flash size is not enough!\n", ((i32Mode & BIT0) == 0) ? 2 : 3);
         i32Status = (-4);
     }
 
     /* Set flash address of NuBL32 or NuBL33 FW INFO */
-    if (i32Mode == 0)
+    if(i32Mode == 0)
         u32FwInfoBase = NUBL32_FW_INFO_BASE;
     else
         u32FwInfoBase = NUBL33_FW_INFO_BASE;
@@ -834,9 +834,9 @@ int32_t OTA_VerifyAndUpdateNuBL3xFromSD(uint8_t u8BLxSel)
     FMC_Open();
     FMC_ENABLE_AP_UPDATE();
     /* Update NuBL32, NuBL33 FW INFO to flash */
-    if (NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfoTmp, sizeof(FW_INFO_T), i32Mode, u32FwInfoBase) != 0)
+    if(NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfoTmp, sizeof(FW_INFO_T), i32Mode, u32FwInfoBase) != 0)
     {
-        printf("OTA_VerifyAndUpdateNuBL3xFromSD: NuBL3%d FW INFO write error\n",((i32Mode&BIT0)==0)?2:3);
+        printf("OTA_VerifyAndUpdateNuBL3xFromSD: NuBL3%d FW INFO write error\n", ((i32Mode & BIT0) == 0) ? 2 : 3);
         i32Status = (-5);
     }
 
@@ -851,9 +851,9 @@ int32_t OTA_VerifyAndUpdateNuBL3xFromSD(uint8_t u8BLxSel)
         EraseNewAppFwBlock();
     }
     /* Update NuBL32,NuBL33 firmware */
-    if (UpdateNuBL3xFwFromSD(u8BLxSel, pNuBL3xKey) != 0)
+    if(UpdateNuBL3xFwFromSD(u8BLxSel, pNuBL3xKey) != 0)
     {
-        printf("OTA_VerifyAndUpdateNuBL3xFromSD: Update NuBL3%d firmware was failed\n",((i32Mode&BIT0)==0)?2:3);
+        printf("OTA_VerifyAndUpdateNuBL3xFromSD: Update NuBL3%d firmware was failed\n", ((i32Mode & BIT0) == 0) ? 2 : 3);
         i32Status = (-6);
     }
 
@@ -973,7 +973,7 @@ int32_t IspInfo_Init(ISP_INFO_T *pISPInfo)
 ////    msg[7] = BL_ReadUCID(3);
 
     /* Copy IV to ISP Info */
-    memcpy(pISPInfo->au32AESIV, R, (128/8));
+    memcpy(pISPInfo->au32AESIV, R, (128 / 8));
     /* Change endian for IV */
     pISPInfo->au32AESIV[0] = __REV(pISPInfo->au32AESIV[0]); // ByteSwap32
     pISPInfo->au32AESIV[1] = __REV(pISPInfo->au32AESIV[1]); // ByteSwap32
@@ -1009,7 +1009,7 @@ int32_t OTA_Init(uint32_t u32HSI, ISP_INFO_T *pISPInfo)
     /* This global structure need to be initialized before re-connect, because client and server key was changed to random public key. */
     //IspInfo_Init((ISP_INFO_T *)&g_ISPInfo);
     i32Ret = IspInfo_Init(pISPInfo);
-    if (i32Ret)
+    if(i32Ret)
     {
         printf("OTA_Init: ISPInfo initial failed!\n");
         return i32Ret;
@@ -1085,18 +1085,18 @@ int32_t OTA_ForceUpdate(void)
     /* Update OTA status */
 #if (OTA_UPGRADE_FROM_SD)
     FMC_Write(SYS_FW_OTA_STATUS_BASE, 1);
-    if (FMC_Read(SYS_FW_OTA_STATUS_BASE) != 1)
+    if(FMC_Read(SYS_FW_OTA_STATUS_BASE) != 1)
     {
         return (-1001);
     }
     FMC_Write(APP_FW_OTA_STATUS_BASE, 1);
-    if (FMC_Read(APP_FW_OTA_STATUS_BASE) != 1)
+    if(FMC_Read(APP_FW_OTA_STATUS_BASE) != 1)
     {
         return (-1002);
     }
 #else
     FMC_Write(OTA_STATUS_BASE, 1);
-    if (FMC_Read(OTA_STATUS_BASE) != 1)
+    if(FMC_Read(OTA_STATUS_BASE) != 1)
     {
         return (-1003);
     }
@@ -1135,7 +1135,7 @@ int32_t OTA_GetBLxFwVer(uint32_t * pu32FwVer, uint8_t u8Mode)
         return ret;
     }
 
-    NUBL_MSG("\nGet NuBL3%d. \n\n", ((u8Mode&BIT0)==0)?2:3);
+    NUBL_MSG("\nGet NuBL3%d. \n\n", ((u8Mode & BIT0) == 0) ? 2 : 3);
 
     memset(&FwInfo, 0x0, sizeof(FW_INFO_T));
 
@@ -1144,23 +1144,23 @@ int32_t OTA_GetBLxFwVer(uint32_t * pu32FwVer, uint8_t u8Mode)
     /* Step 1. Get NuBL3x info */
     /* Get NuBL3x F/W info */
     len = sizeof(FW_INFO_T);
-    if((u8Mode&BIT4) != BIT4)
+    if((u8Mode & BIT4) != BIT4)
     {
         FMC_Open();
-        if((u8Mode&BIT0) == 0)
+        if((u8Mode & BIT0) == 0)
             base = NUBL32_FW_INFO_BASE;   // encrypted NuBL32 info address
         else
             base = NUBL33_FW_INFO_BASE;   // encrypted NuBL33 info address
-        for(i=0; i<(len/4); i++)
-            infobuf[i] = FMC_Read(base + (i*4));
+        for(i = 0; i < (len / 4); i++)
+            infobuf[i] = FMC_Read(base + (i * 4));
     }
-    NUBL_MSG("Get NuBL3%d F/W info [Done]\n\n", ((u8Mode&BIT0)==0)?2:3);
+    NUBL_MSG("Get NuBL3%d F/W info [Done]\n\n", ((u8Mode & BIT0) == 0) ? 2 : 3);
 
     /* Step 2. Get NuBL3x F/W version (enclosed in F/W info) */
     memcpy(&FwInfo, infobuf, sizeof(FW_INFO_T));
     memcpy(pu32FwVer, &FwInfo.mData.au32ExtInfo[0], sizeof(uint32_t));
 
-    NUBL_MSG(" NuBL3%d F/W version is [0x%08x]\n\n", ((u8Mode&BIT0)==0)?2:3, FwInfo.mData.au32ExtInfo[0]);
+    NUBL_MSG(" NuBL3%d F/W version is [0x%08x]\n\n", ((u8Mode & BIT0) == 0) ? 2 : 3, FwInfo.mData.au32ExtInfo[0]);
 
     ret = 0;
 #if 0
@@ -1215,10 +1215,10 @@ int32_t FwUpgradePreCheck(ISP_INFO_T *pISPInfo, CMD_PACKET_T *pCmd, FW_INFO_T *p
     /* Can pre-check free space of SD card before write NuBL3x firmware package. */
 
     /* New a NuBL3x Firmware package file. */
-    if (OTA_API_SDFwPackWriteOpen(g_u8NuBL3xAuthSel) == 0)
+    if(OTA_API_SDFwPackWriteOpen(g_u8NuBL3xAuthSel) == 0)
     {
         /* Write FW INFO to file. */
-        if (OTA_API_SDWrite((uint8_t *)&g_RecvFwInfo, sizeof(g_RecvFwInfo)) != 0)
+        if(OTA_API_SDWrite((uint8_t *)&g_RecvFwInfo, sizeof(g_RecvFwInfo)) != 0)
         {
             /* Write FW INFO to file has error. close file */
             OTA_API_SDClose(g_u8NuBL3xAuthSel);
@@ -1241,7 +1241,7 @@ int32_t FwUpgradePreCheck(ISP_INFO_T *pISPInfo, CMD_PACKET_T *pCmd, FW_INFO_T *p
 #else /* Update on the fly */
 
     /* Check NuBL3x flash size is enough to write. */
-    if (CheckNuBL3xWriteSpace(pFwInfo->mData.au32FwRegion[0].u32Size,i32Mode) != 0)
+    if(CheckNuBL3xWriteSpace(pFwInfo->mData.au32FwRegion[0].u32Size, i32Mode) != 0)
     {
         /* NuBL3x flash size is not enough for new firmware */
         /* Generate response command and send it out */
@@ -1254,7 +1254,7 @@ int32_t FwUpgradePreCheck(ISP_INFO_T *pISPInfo, CMD_PACKET_T *pCmd, FW_INFO_T *p
     FMC_Open();
     FMC_ENABLE_AP_UPDATE();
 
-    if ((FMC_Read(OTA_STATUS_BASE) != 1))
+    if((FMC_Read(OTA_STATUS_BASE) != 1))
     {
         FMC_Erase(OTA_STATUS_BASE);
         FMC_Write(OTA_STATUS_BASE, 0x1UL);
@@ -1280,7 +1280,7 @@ int32_t FwUpgradePreCheck(ISP_INFO_T *pISPInfo, CMD_PACKET_T *pCmd, FW_INFO_T *p
 //        }
     }
 
-    if (i32Mode == 0)
+    if(i32Mode == 0)
         u32FwInfoBase = NUBL32_FW_INFO_BASE;
     else
         u32FwInfoBase = NUBL33_FW_INFO_BASE;
@@ -1289,9 +1289,9 @@ int32_t FwUpgradePreCheck(ISP_INFO_T *pISPInfo, CMD_PACKET_T *pCmd, FW_INFO_T *p
     FMC_Open();
     FMC_ENABLE_AP_UPDATE();
     /* Update NuBL3x FW INFO */
-    if (NuBL2_UpdateNuBL3xFwInfo((uint32_t *)((uint32_t)pFwInfo), sizeof(FW_INFO_T), i32Mode, u32FwInfoBase) != 0)
+    if(NuBL2_UpdateNuBL3xFwInfo((uint32_t *)((uint32_t)pFwInfo), sizeof(FW_INFO_T), i32Mode, u32FwInfoBase) != 0)
     {
-        printf("NuBL3%d FW INFO write error\n", ((i32Mode&BIT0)==0)?2:3);
+        printf("NuBL3%d FW INFO write error\n", ((i32Mode & BIT0) == 0) ? 2 : 3);
         /* Generate response command and send it out */
         OTA_GenRspPacket(pCmd, pCmd->u16PacketID, pISPInfo, ERR_ISP_WRITE);
     }
@@ -1317,20 +1317,20 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
     memset(&cmd, 0x0, sizeof(CMD_PACKET_T));
     memcpy(&cmd, pISPInfo->rcvbuf, sizeof(cmd));
 
-    DEBUG_MSG("MassWriteReqProcess(PID:%d)\n",cmd.u16PacketID);
+    DEBUG_MSG("MassWriteReqProcess(PID:%d)\n", cmd.u16PacketID);
 
-    u32RecvPackageSize =(cmd.u16PacketID * 48); // maximum data length is 48
+    u32RecvPackageSize = (cmd.u16PacketID * 48); // maximum data length is 48
 
     SYS_UnlockReg();
     FMC_Open();
     /* Config update information by Firmware identity result */
-    if (g_u8NuBL3xAuthSel == BIT0)
+    if(g_u8NuBL3xAuthSel == BIT0)
     {
         /* NuBL32 */
         i32Mode = 0;
         pNuBL3xKey = (uint32_t *)((uint32_t)&gNuBL2_32Key);
     }
-    else if (g_u8NuBL3xAuthSel == BIT1)
+    else if(g_u8NuBL3xAuthSel == BIT1)
     {
         /* NuBL33 */
         i32Mode = 1;
@@ -1338,10 +1338,10 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
     }
 
     /* Verify received FW_INFO from server */
-    if (g_u32NuBL3xIdentifyPass == 0)
+    if(g_u32NuBL3xIdentifyPass == 0)
     {
         /* Check if FW_INFO has received finished, or copy to buffer. */
-        if (u32RecvPackageSize >= FW_INFO_SIZE)
+        if(u32RecvPackageSize >= FW_INFO_SIZE)
         {
             printf("MassWriteReqProcess: FW INFO verify\n");
             memcpy((uint8_t *)&g_RecvFwInfo, g_au32WriteFwBuf, sizeof(g_RecvFwInfo));
@@ -1350,7 +1350,7 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
             /* Clear g_u32FwInfoWriteBytes */
             g_u32FwInfoWriteBytes = 0;
             /* Verify NuBL3x identity */
-            if (NuBL2_ExecuteVerifyNuBL3x((uint32_t *)((uint32_t)&g_DecryptRecvFwInfo), 0x10|i32Mode) != 0)
+            if(NuBL2_ExecuteVerifyNuBL3x((uint32_t *)((uint32_t)&g_DecryptRecvFwInfo), 0x10 | i32Mode) != 0)
             {
                 printf("MassWriteReqProcess: identify error\n");
                 /* Generate response command and send it out */
@@ -1360,21 +1360,21 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
             {
 //                uint32_t u32FwInfoBase;
 
-                printf("MassWriteReqProcess: NuBL3%d identify pass\n",((i32Mode&BIT0)==0)?2:3);
+                printf("MassWriteReqProcess: NuBL3%d identify pass\n", ((i32Mode & BIT0) == 0) ? 2 : 3);
                 g_u32NuBL3xIdentifyPass = 1;
 
                 /* Check firmware version in FW INFO. */
                 /* TODO: need verify local FW INFO hash first. */
-                if (NuBL2_CompareNuBL3xVer(g_RecvFwInfo.mData.au32ExtInfo[0], i32Mode) != 0)
+                if(NuBL2_CompareNuBL3xVer(g_RecvFwInfo.mData.au32ExtInfo[0], i32Mode) != 0)
                 {
-                    printf("MassWriteReqProcess: remote NuBL3%d Firmware is old in FW INFO.\n",((i32Mode&BIT0)==0)?2:3);
+                    printf("MassWriteReqProcess: remote NuBL3%d Firmware is old in FW INFO.\n", ((i32Mode & BIT0) == 0) ? 2 : 3);
                     /* Generate response command and send it out */
                     OTA_GenRspPacket(&cmd, cmd.u16PacketID, pISPInfo, ERR_OLD_FW_VER);
 #if (OTA_UPGRADE_FROM_SD)
                     goto _CheckOTAStatus;
 #else
-                    printf("g_u8NuBL3xAuthSel:0x%x\n",g_u8NuBL3xAuthSel);
-                    if (g_u8NuBL3xAuthSel == BIT1)
+                    printf("g_u8NuBL3xAuthSel:0x%x\n", g_u8NuBL3xAuthSel);
+                    if(g_u8NuBL3xAuthSel == BIT1)
                     {
 //                        SYS_UnlockReg();
 //                        FMC_Open();
@@ -1387,7 +1387,7 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
                         FMC_Open();
                         //check current firmware
                         printf("VECMAP = 0x%x\n", FMC_GetVECMAP());
-                        if (FMC_GetVECMAP() == NUBL2_FW_BASE)
+                        if(FMC_GetVECMAP() == NUBL2_FW_BASE)
                         {
                             /* disconnect local wifi connection */
                             OTA_API_TransferConnClose();
@@ -1404,9 +1404,9 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
                 }
                 /* Check flash space and update OTA status before firmware upgrade */
                 i32Ret = FwUpgradePreCheck(pISPInfo, &cmd, &g_RecvFwInfo, i32Mode);
-                if (i32Ret != 0)
+                if(i32Ret != 0)
                 {
-                    if (i32Ret == 1)
+                    if(i32Ret == 1)
                     {
                         printf("MassWriteReqProcess: re-boot for entry update mode\n");
                         return 0;
@@ -1435,7 +1435,7 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
         }
         else /* keep encrypt FW_INFO to g_au32FwInfoBuf[160] */
         {
-            memcpy((uint8_t *)&g_au32WriteFwBuf[g_u32FwInfoWriteBytes/4], (uint8_t *)cmd.au32Data, cmd.u16Len);
+            memcpy((uint8_t *)&g_au32WriteFwBuf[g_u32FwInfoWriteBytes / 4], (uint8_t *)cmd.au32Data, cmd.u16Len);
             g_u32FwInfoWriteBytes += (cmd.u16Len);
 
             /* Send write response to host */
@@ -1454,7 +1454,7 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
 
 #if (OTA_UPGRADE_FROM_SD)
     /* Write new firmware package file to SD card */
-    if (OTA_API_SDWrite((uint8_t *)&g_au32RawData, sizeof(g_au32RawData)) != 0)
+    if(OTA_API_SDWrite((uint8_t *)&g_au32RawData, sizeof(g_au32RawData)) != 0)
     {
         /* Close firmware package file */
         OTA_API_SDClose(g_u8NuBL3xAuthSel);
@@ -1464,7 +1464,7 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
     }
     g_u32LastSysFwWriteAddr += sizeof(g_au32RawData);
 #else /* Update on the fly */
-    if (cmd.u16PacketID == 7)
+    if(cmd.u16PacketID == 7)
     {
         /* First raw data package */
         cmd_AES256Decrypt(g_au32RawData, g_au32RawData, sizeof(g_au32RawData), pNuBL3xKey, g_FwIV);
@@ -1481,16 +1481,16 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
     }
 
     /* Check last write address is over FW1 start + FW1 size */
-    if(((g_u32LastSysFwWriteAddr&(~NS_OFFSET)) + cmd.u16Len) > u32Fw1Start + u32Fw1Size)
+    if(((g_u32LastSysFwWriteAddr & (~NS_OFFSET)) + cmd.u16Len) > u32Fw1Start + u32Fw1Size)
     {
         uint32_t u32OverFwSize;
 
-        u32OverFwSize = (g_u32LastSysFwWriteAddr&(~NS_OFFSET)) + cmd.u16Len - (u32Fw1Start + u32Fw1Size);
+        u32OverFwSize = (g_u32LastSysFwWriteAddr & (~NS_OFFSET)) + cmd.u16Len - (u32Fw1Start + u32Fw1Size);
         /* Check if last write address is more the payload size of one package than FW1 range */
-        if (u32OverFwSize < sizeof(g_au32RawData))
+        if(u32OverFwSize < sizeof(g_au32RawData))
         {
             /* Write new firmware data to flash */
-            if (OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&g_au32RawData, cmd.u16Len - u32OverFwSize) != STATUS_SUCCESS)
+            if(OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&g_au32RawData, cmd.u16Len - u32OverFwSize) != STATUS_SUCCESS)
             {
                 printf("MassWriteReqProcess: write new system firmware to flash error\n");
                 /* Generate response command and send it out */
@@ -1499,15 +1499,15 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
                 return (-1);
             }
 
-            if (g_RecvFwInfo.mData.au32FwRegion[1].u32Size != 0)
+            if(g_RecvFwInfo.mData.au32FwRegion[1].u32Size != 0)
             {
                 /* Check write address of FW INFO is valid in system */
-                if((i32Ret =_IsValidFlashRegion(g_RecvFwInfo.mData.au32FwRegion[1].u32Start, g_RecvFwInfo.mData.au32FwRegion[1].u32Size)) != 0)
+                if((i32Ret = _IsValidFlashRegion(g_RecvFwInfo.mData.au32FwRegion[1].u32Start, g_RecvFwInfo.mData.au32FwRegion[1].u32Size)) != 0)
                     return i32Ret;
 
                 g_u32LastSysFwWriteAddr = g_RecvFwInfo.mData.au32FwRegion[1].u32Start;
                 /* Write new firmware data to flash */
-                if (OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&g_au32RawData + (cmd.u16Len - u32OverFwSize), u32OverFwSize) != STATUS_SUCCESS)
+                if(OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&g_au32RawData + (cmd.u16Len - u32OverFwSize), u32OverFwSize) != STATUS_SUCCESS)
                 {
                     printf("MassWriteReqProcess: write new system firmware to flash error\n");
                     /* Generate response command and send it out */
@@ -1519,19 +1519,19 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
         }
         else
         {
-            if (u32OverFwSize == sizeof(g_au32RawData))
+            if(u32OverFwSize == sizeof(g_au32RawData))
             {
-                if (g_RecvFwInfo.mData.au32FwRegion[1].u32Size != 0)
+                if(g_RecvFwInfo.mData.au32FwRegion[1].u32Size != 0)
                 {
                     /* Check write address of FW INFO is valid in system */
-                    if((i32Ret =_IsValidFlashRegion(g_RecvFwInfo.mData.au32FwRegion[1].u32Start, g_RecvFwInfo.mData.au32FwRegion[1].u32Size)) != 0)
+                    if((i32Ret = _IsValidFlashRegion(g_RecvFwInfo.mData.au32FwRegion[1].u32Start, g_RecvFwInfo.mData.au32FwRegion[1].u32Size)) != 0)
                         return i32Ret;
 
                     g_u32LastSysFwWriteAddr = g_RecvFwInfo.mData.au32FwRegion[1].u32Start;
                 }
             }
             /* Write new firmware data to flash */
-            if (OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&g_au32RawData, cmd.u16Len) != STATUS_SUCCESS)
+            if(OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&g_au32RawData, cmd.u16Len) != STATUS_SUCCESS)
             {
                 printf("MassWriteReqProcess: write new system firmware to flash error\n");
                 /* Generate response command and send it out */
@@ -1544,7 +1544,7 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
     else
     {
         /* Write new firmware data to flash */
-        if (OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&g_au32RawData, cmd.u16Len) != STATUS_SUCCESS)
+        if(OTA_WriteNewFW(g_u32LastSysFwWriteAddr, (uint8_t *)&g_au32RawData, cmd.u16Len) != STATUS_SUCCESS)
         {
             printf("MassWriteReqProcess: write new system firmware to flash error\n");
             /* Generate response command and send it out */
@@ -1555,7 +1555,7 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
     }
 #endif
 
-    if ((cmd.u16Len) < MAX_PAYLOAD_SIZE)
+    if((cmd.u16Len) < MAX_PAYLOAD_SIZE)
     {
         /* Case: update on the fly method for only NuBL32 update done, NuBL32 need not to be updated. */
         g_u8IsNuBL3xFwDone = 1;
@@ -1567,11 +1567,11 @@ int32_t MassWriteReqProcess(ISP_INFO_T *pISPInfo)
         FMC_Open();
         FMC_ENABLE_AP_UPDATE();
         /* Update OTA status */
-        if (g_u8NuBL3xAuthSel&BIT0)
+        if(g_u8NuBL3xAuthSel & BIT0)
         {
             FMC_Write(SYS_FW_OTA_STATUS_BASE, 1);
         }
-        if (g_u8NuBL3xAuthSel&BIT1)
+        if(g_u8NuBL3xAuthSel & BIT1)
         {
             FMC_Write(APP_FW_OTA_STATUS_BASE, 1);
         }
@@ -1588,11 +1588,11 @@ _CheckOTAStatus:
     FMC_ENABLE_AP_UPDATE();
 
     /* Check OTA status */
-    if ((FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1) || (FMC_Read(APP_FW_OTA_STATUS_BASE) == 1))
+    if((FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1) || (FMC_Read(APP_FW_OTA_STATUS_BASE) == 1))
         goto _UpdateDone;
     else
     {
-        if (g_u8NuBL3xAuthSel == BIT1)
+        if(g_u8NuBL3xAuthSel == BIT1)
         {
             goto _DisConn;
         }
@@ -1601,7 +1601,7 @@ _CheckOTAStatus:
     }
 #else
 #if 0
-    if (FMC_Read(OTA_STATUS_BASE) != 1)
+    if(FMC_Read(OTA_STATUS_BASE) != 1)
         return 0;
 #endif
 #endif
@@ -1659,14 +1659,14 @@ int32_t DisConnectReqProcess(void)
     /* This global structure need to be initialized before re-connect, because client and server key was changed to random public key. */
     i32Ret = IspInfo_Init(g_pISPInfo);
 
-    if (u32IsUpgradeDone)
+    if(u32IsUpgradeDone)
     {
         /* Set Reset flag for transfer task */
         OTA_API_SetResetFlag();
     }
 
 #if (!(OTA_UPGRADE_FROM_SD))
-    if (u32IsUpgradeDone)
+    if(u32IsUpgradeDone)
     {
         printf("g_u8IsFwUpgradeDone\n");
         g_u8IsFwUpgradeDone = TRUE;
@@ -1707,81 +1707,81 @@ int32_t OTACmdReqProcess(ISP_INFO_T *pISPInfo)
     {
         switch(cmd.u16CmdID)
         {
-        case CMD_ECDH_PUB0:
-            /* Get Server public key 0 */
-            memcpy(pISPInfo->ServerPubKey.au32Key0, cmd.au32Data, cmd.u16Len);
-            for(i=0; i<8; i++)
-                DEBUG_MSG("Get pub0[%d]: 0x%08x.\n", i, pISPInfo->ServerPubKey.au32Key0[i]);
+            case CMD_ECDH_PUB0:
+                /* Get Server public key 0 */
+                memcpy(pISPInfo->ServerPubKey.au32Key0, cmd.au32Data, cmd.u16Len);
+                for(i = 0; i < 8; i++)
+                    DEBUG_MSG("Get pub0[%d]: 0x%08x.\n", i, pISPInfo->ServerPubKey.au32Key0[i]);
 
-            /* Response status ok */
-            memset(cmd.au32Data, 0x0, sizeof(cmd.au32Data));
-            cmd.au32Data[0] = STS_OK;
-            cmd.u16Len      = (4 * 1);
-            u32Ret = cmd.u16CmdID;
-            break;
-        case CMD_ECDH_PUB1:
-            /* Get Server public key 1 and generate ist ECDH AES key */
-            memcpy(pISPInfo->ServerPubKey.au32Key1, cmd.au32Data, cmd.u16Len);
-            for(i=0; i<8; i++)
-                DEBUG_MSG("Get pub1[%d]: 0x%08x.\n", i, pISPInfo->ServerPubKey.au32Key1[i]);
-
-            /* Identify Host public key */
-            if(((uint32_t)IdentifyPublicKey((uint32_t *)pISPInfo->ServerPubKey.au32Key0, 0)&BIT2) != BIT2)
-            {
-                /* Response key authentication error */
-                cmd.au32Data[0] = ERR_AUTH_KEY;
-                cmd.u16Len      = (4 * 1);
-                u32Ret = -1;
-                break;
-            }
-            /* Response status ok */
-            memset(cmd.au32Data, 0x0, sizeof(cmd.au32Data));
-            cmd.au32Data[0] = STS_OK;
-            cmd.u16Len      = (4 * 1);
-            u32Ret = cmd.u16CmdID;
-            break;
-        case CMD_AUTH_KEY:
-            /* compare NuBL3x pubKey from host */
-            g_u8NuBL3xAuthSel = (uint8_t)VerifyNuBL3xKeyHash(((CMD_AUTH_KEY_REQ_T *)&cmd)->au32KeyHash);
-            printf("g_u8NuBL3xAuthSel: 0x%x\n", g_u8NuBL3xAuthSel);
-            memset(cmd.au32Data, 0x0, sizeof(cmd.au32Data));
-            if ((g_u8NuBL3xAuthSel == BIT0)||(g_u8NuBL3xAuthSel == BIT1)||(g_u8NuBL3xAuthSel == (BIT0|BIT1)))
-            {
-                /* verify pass */
+                /* Response status ok */
+                memset(cmd.au32Data, 0x0, sizeof(cmd.au32Data));
                 cmd.au32Data[0] = STS_OK;
                 cmd.u16Len      = (4 * 1);
                 u32Ret = cmd.u16CmdID;
-            }
-            else
-            {
-                /* verify failed */
-                cmd.au32Data[0] = ERR_AUTH_KEY;
+                break;
+            case CMD_ECDH_PUB1:
+                /* Get Server public key 1 and generate ist ECDH AES key */
+                memcpy(pISPInfo->ServerPubKey.au32Key1, cmd.au32Data, cmd.u16Len);
+                for(i = 0; i < 8; i++)
+                    DEBUG_MSG("Get pub1[%d]: 0x%08x.\n", i, pISPInfo->ServerPubKey.au32Key1[i]);
+
+                /* Identify Host public key */
+                if(((uint32_t)IdentifyPublicKey((uint32_t *)pISPInfo->ServerPubKey.au32Key0, 0)&BIT2) != BIT2)
+                {
+                    /* Response key authentication error */
+                    cmd.au32Data[0] = ERR_AUTH_KEY;
+                    cmd.u16Len      = (4 * 1);
+                    u32Ret = -1;
+                    break;
+                }
+                /* Response status ok */
+                memset(cmd.au32Data, 0x0, sizeof(cmd.au32Data));
+                cmd.au32Data[0] = STS_OK;
                 cmd.u16Len      = (4 * 1);
-                u32Ret = -1;
-            }
-            /* clear g_u32NuBL3xIdentifyPass for re-verify FW INFO */
-            g_u32NuBL3xIdentifyPass = 0;
-            /* clear g_u32FwInfoWriteBytes */
-            g_u32FwInfoWriteBytes = 0;
-            break;
-        case CMD_MASS_WRITE:
-            memcpy(pISPInfo->rcvbuf, &cmd, sizeof(cmd));
-            MassWriteReqProcess(pISPInfo);
-            return 0;
-        //break;
-        case CMD_DISCONNECT:
-            /* get F/W upgrade done inform and keep to global structure. */
-            g_u32SetFwUpgradeDone = cmd.au32Data[0];
+                u32Ret = cmd.u16CmdID;
+                break;
+            case CMD_AUTH_KEY:
+                /* compare NuBL3x pubKey from host */
+                g_u8NuBL3xAuthSel = (uint8_t)VerifyNuBL3xKeyHash(((CMD_AUTH_KEY_REQ_T *)&cmd)->au32KeyHash);
+                printf("g_u8NuBL3xAuthSel: 0x%x\n", g_u8NuBL3xAuthSel);
+                memset(cmd.au32Data, 0x0, sizeof(cmd.au32Data));
+                if((g_u8NuBL3xAuthSel == BIT0) || (g_u8NuBL3xAuthSel == BIT1) || (g_u8NuBL3xAuthSel == (BIT0 | BIT1)))
+                {
+                    /* verify pass */
+                    cmd.au32Data[0] = STS_OK;
+                    cmd.u16Len      = (4 * 1);
+                    u32Ret = cmd.u16CmdID;
+                }
+                else
+                {
+                    /* verify failed */
+                    cmd.au32Data[0] = ERR_AUTH_KEY;
+                    cmd.u16Len      = (4 * 1);
+                    u32Ret = -1;
+                }
+                /* clear g_u32NuBL3xIdentifyPass for re-verify FW INFO */
+                g_u32NuBL3xIdentifyPass = 0;
+                /* clear g_u32FwInfoWriteBytes */
+                g_u32FwInfoWriteBytes = 0;
+                break;
+            case CMD_MASS_WRITE:
+                memcpy(pISPInfo->rcvbuf, &cmd, sizeof(cmd));
+                MassWriteReqProcess(pISPInfo);
+                return 0;
+            //break;
+            case CMD_DISCONNECT:
+                /* get F/W upgrade done inform and keep to global structure. */
+                g_u32SetFwUpgradeDone = cmd.au32Data[0];
 
-            /* Response status ok */
-            cmd.au32Data[0] = STS_OK;
-            cmd.u16Len      = (4 * 1);
-            u32Ret = cmd.u16CmdID;
-            break;
+                /* Response status ok */
+                cmd.au32Data[0] = STS_OK;
+                cmd.u16Len      = (4 * 1);
+                u32Ret = cmd.u16CmdID;
+                break;
 
-        default:
-            printf("Invalid command: 0x%x\n", cmd.u16CmdID);
-            break;
+            default:
+                printf("Invalid command: 0x%x\n", cmd.u16CmdID);
+                break;
         }
     }
     if(u32Ret == -1)
@@ -1814,88 +1814,88 @@ void OTA_CallBackHandler(uint8_t* pu8Buff, uint32_t u32Len, uint32_t u32StartIdx
     /* Copy received packet to receive buffer of ISP Info */
     memcpy(g_pISPInfo->rcvbuf, (uint32_t *)((uint32_t)pu8Buff), u32Len);
 
-    DEBUG_MSG("OTA_CallBackHandler(0x%x)\n",((CMD_PACKET_T *)g_pISPInfo->rcvbuf)->u16CmdID);
+    DEBUG_MSG("OTA_CallBackHandler(0x%x)\n", ((CMD_PACKET_T *)g_pISPInfo->rcvbuf)->u16CmdID);
 
     switch(((CMD_PACKET_T *)g_pISPInfo->rcvbuf)->u16CmdID)
     {
-    //NuBL1 libary commands process ---------------------------------------------------------------
-    case CMD_CONNECT:
-        DEBUG_MSG("CMD_CONNECT_REQ\n");
-        i32Ret = ParseCONNECT(g_pISPInfo);
-        /* Prepare NuBL2_32 and NuBL2_33 ECDH key for F/W decrypt */
-        NuBL2_GetNuBL3xECDHKeys((uint32_t *)((uint32_t)gNuBL2_32Key), (uint32_t *)((uint32_t)gNuBL2_33Key));
+        //NuBL1 libary commands process ---------------------------------------------------------------
+        case CMD_CONNECT:
+            DEBUG_MSG("CMD_CONNECT_REQ\n");
+            i32Ret = ParseCONNECT(g_pISPInfo);
+            /* Prepare NuBL2_32 and NuBL2_33 ECDH key for F/W decrypt */
+            NuBL2_GetNuBL3xECDHKeys((uint32_t *)((uint32_t)gNuBL2_32Key), (uint32_t *)((uint32_t)gNuBL2_33Key));
 
-        g_u32NuBL3xIdentifyPass = 0;
-        /* Send command packet */
-        OTA_API_SendFrame((uint8_t *) g_pISPInfo->rspbuf, MAX_FRAME_SIZE);
-        break;
+            g_u32NuBL3xIdentifyPass = 0;
+            /* Send command packet */
+            OTA_API_SendFrame((uint8_t *) g_pISPInfo->rspbuf, MAX_FRAME_SIZE);
+            break;
 
-    case CMD_ECDH_GET_RAND_PUB0:
-    case CMD_ECDH_GET_RAND_PUB1:
+        case CMD_ECDH_GET_RAND_PUB0:
+        case CMD_ECDH_GET_RAND_PUB1:
 
-        ECC_DriverISR(CRPT);
-        /* Enable CRYPTO power */
-        SYS->PSWCTL |= SYS_PSWCTL_CRPTPWREN_Msk;
+            ECC_DriverISR(CRPT);
+            /* Enable CRYPTO power */
+            SYS->PSWCTL |= SYS_PSWCTL_CRPTPWREN_Msk;
 
-        /* Enable CRYPTO clock */
-        CLK->AHBCLK |= CLK_AHBCLK_CRPTCKEN_Msk;
-        ECC_ENABLE_INT(CRPT);
-        NVIC_EnableIRQ(CRPT_IRQn);
+            /* Enable CRYPTO clock */
+            CLK->AHBCLK |= CLK_AHBCLK_CRPTCKEN_Msk;
+            ECC_ENABLE_INT(CRPT);
+            NVIC_EnableIRQ(CRPT_IRQn);
 
-    case CMD_ECDH_GET_PUB0:
-    case CMD_ECDH_GET_PUB1:
-    case CMD_ECDH_RAND_PUB0:
-    case CMD_ECDH_RAND_PUB1:
+        case CMD_ECDH_GET_PUB0:
+        case CMD_ECDH_GET_PUB1:
+        case CMD_ECDH_RAND_PUB0:
+        case CMD_ECDH_RAND_PUB1:
 
-        i32Ret = ParseECDH(g_pISPInfo);
-        /* Send command packet */
-        OTA_API_SendFrame((uint8_t *) g_pISPInfo->rspbuf, MAX_FRAME_SIZE);
-        break;
-    case CMD_SET_MASS_WRITE:
-    case CMD_RESET: //need ??(CHIP reset?System reset?CPU reset)
-        i32Ret = ParseCommands(g_pISPInfo);
-        /* Send command packet */
-        OTA_API_SendFrame((uint8_t *) g_pISPInfo->rspbuf, MAX_FRAME_SIZE);
-        break;
+            i32Ret = ParseECDH(g_pISPInfo);
+            /* Send command packet */
+            OTA_API_SendFrame((uint8_t *) g_pISPInfo->rspbuf, MAX_FRAME_SIZE);
+            break;
+        case CMD_SET_MASS_WRITE:
+        case CMD_RESET: //need ??(CHIP reset?System reset?CPU reset)
+            i32Ret = ParseCommands(g_pISPInfo);
+            /* Send command packet */
+            OTA_API_SendFrame((uint8_t *) g_pISPInfo->rspbuf, MAX_FRAME_SIZE);
+            break;
 
-    //OTA customized process ----------------------------------------------------------------------
-    case CMD_ECDH_PUB0:
-    {
-        uint32_t AESKey[8], i;
-        /* Generate 1st ECDH AES key */
-        /* Calculate (NuBL2 priv * Host pub) ECDH key. because NuBL2 has known the public key of host. */
-        if(GenCmdSessionKey(AESKey) != 0)
+        //OTA customized process ----------------------------------------------------------------------
+        case CMD_ECDH_PUB0:
         {
-            /* Clear key buffer */
-            memset(&AESKey, 0x0, sizeof(AESKey));
-            return ;
+            uint32_t AESKey[8], i;
+            /* Generate 1st ECDH AES key */
+            /* Calculate (NuBL2 priv * Host pub) ECDH key. because NuBL2 has known the public key of host. */
+            if(GenCmdSessionKey(AESKey) != 0)
+            {
+                /* Clear key buffer */
+                memset(&AESKey, 0x0, sizeof(AESKey));
+                return ;
+            }
+            for(i = 0; i < 8; i++)
+                AESKey[i] = Swap32(AESKey[i]);
+            NuBL_BytesSwap((char *)&AESKey, sizeof(AESKey));
+
+            /* Copy session key to ISP Info */
+            memcpy((void *)g_pISPInfo->au32AESKey, AESKey, sizeof(AESKey));
+            for(i = 0; i < 8; i++)
+                DEBUG_MSG("Gen 1st KEY[%d]: 0x%08x.\n", i, g_pISPInfo->au32AESKey[i]);
         }
-        for(i=0; i<8; i++)
-            AESKey[i] = Swap32(AESKey[i]);
-        NuBL_BytesSwap((char *)&AESKey, sizeof(AESKey));
+        case CMD_ECDH_PUB1:
+        case CMD_AUTH_KEY:
+        case CMD_MASS_WRITE:
+        case CMD_DISCONNECT:
+            /* OTA commands process */
+            OTACmdReqProcess(g_pISPInfo);
+            /* Send command packet */
+            OTA_API_SendFrame((uint8_t *) g_pISPInfo->rspbuf, MAX_FRAME_SIZE);
 
-        /* Copy session key to ISP Info */
-        memcpy((void *)g_pISPInfo->au32AESKey, AESKey, sizeof(AESKey));
-        for(i=0; i<8; i++)
-            DEBUG_MSG("Gen 1st KEY[%d]: 0x%08x.\n", i, g_pISPInfo->au32AESKey[i]);
-    }
-    case CMD_ECDH_PUB1:
-    case CMD_AUTH_KEY:
-    case CMD_MASS_WRITE:
-    case CMD_DISCONNECT:
-        /* OTA commands process */
-        OTACmdReqProcess(g_pISPInfo);
-        /* Send command packet */
-        OTA_API_SendFrame((uint8_t *) g_pISPInfo->rspbuf, MAX_FRAME_SIZE);
+            /* Disconnect Wifi connection */
+            if(((CMD_PACKET_T *)g_pISPInfo->rcvbuf)->u16CmdID == CMD_DISCONNECT)
+                DisConnectReqProcess();
+            break;
 
-        /* Disconnect Wifi connection */
-        if (((CMD_PACKET_T *)g_pISPInfo->rcvbuf)->u16CmdID == CMD_DISCONNECT)
-            DisConnectReqProcess();
-        break;
-
-    default:
-        printf("Invalid command: 0x%x\n", ((CMD_PACKET_T *)g_pISPInfo->rcvbuf)->u16CmdID);
-        break;
+        default:
+            printf("Invalid command: 0x%x\n", ((CMD_PACKET_T *)g_pISPInfo->rcvbuf)->u16CmdID);
+            break;
     }
 }
 

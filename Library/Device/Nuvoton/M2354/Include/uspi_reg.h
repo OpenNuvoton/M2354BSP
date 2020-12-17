@@ -19,7 +19,7 @@
 /**
     @addtogroup USPI SPI Mode of USCI Controller(USPI)
     Memory Mapped Structure for USPI Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -452,7 +452,7 @@ typedef struct
 /**
     @addtogroup USPI_CONST USPI Bit Field Definition
     Constant Definitions for USPI Controller
-  @{ 
+  @{
 */
 
 #define USPI_CTL_FUNMODE_Pos             (0)                                               /*!< USPI_T::CTL: FUNMODE Position          */

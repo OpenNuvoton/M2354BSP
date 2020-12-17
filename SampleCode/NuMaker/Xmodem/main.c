@@ -23,10 +23,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC, HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HIRC, HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -49,7 +49,7 @@ void SYS_Init(void)
 int32_t main(void)
 {
     int32_t i32Err;
-    
+
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -71,10 +71,10 @@ int32_t main(void)
     printf("Waiting for Xmodem data transfer ...\n");
 
     /* Waiting for debug message print out */
-    while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXEMPTY_Msk)==0);
+    while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXEMPTY_Msk) == 0);
 
     i32Err = Xmodem(0x80000);
-    
+
     if(i32Err < 0)
     {
         printf("Xmodem transfer fail!\n");
@@ -84,14 +84,14 @@ int32_t main(void)
     {
         printf("Xomdem transfer done!\n");
         printf("Total trnasfer size is %d\n", i32Err);
-        
+
         printf("press any key to read back the transfer file.\n");
         getchar();
         printf("Waiting for receiver ...\n");
-        
-        
+
+
         i32Err = XmodemSend((uint8_t *)0x80000, i32Err);
-        
+
         if(i32Err < 0)
         {
             printf("Xmodem transfer fail!\n");
@@ -99,9 +99,9 @@ int32_t main(void)
         else
         {
             printf("Transfer done.\nTotal trasnfer size is %d\n", i32Err);
-            
+
         }
-        
+
     }
 
     while(1);

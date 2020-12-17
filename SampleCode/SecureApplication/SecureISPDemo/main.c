@@ -81,6 +81,6 @@ int32_t main(void)
     printf("[ SecureISP Demo (VECMAP: 0x%x) ]\n\n", FMC_GetVECMAP());
 
     ExecuteSecureISP();
-    
+
     while(1) {}
 }

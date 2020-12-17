@@ -23,7 +23,8 @@
   @{
 */
 
-typedef enum _RNG_KEY_SIZE {
+typedef enum _RNG_KEY_SIZE
+{
     KEY_128 = 0,
     KEY_192 = 2,
     KEY_224 = 3,
@@ -162,7 +163,7 @@ int32_t RNG_Random(uint32_t *pu32Buf, int32_t nWords)
             return 0;
     }
 
-    for(i=0; i<nWords; i++)
+    for(i = 0; i < nWords; i++)
     {
         pu32Buf[i] = CRPT->PRNG_KEY[i];
     }
@@ -212,7 +213,7 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
 
     /* Reset seed select of PRNG */
     CRPT->PRNG_CTL = 0;
-    
+
 
     /* Enable SEEDGEN */
     TRNG->CTL |= TRNG_CTL_SEEDGEN_Msk;
@@ -252,7 +253,7 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
     }
 
     /* It is necessary to set ECC_N for ECDSA */
-    for(i=0; i<18; i++)
+    for(i = 0; i < 18; i++)
         CRPT->ECC_N[i] = au32ECC_N[i];
 
     CRPT->PRNG_KSCTL = 0;
@@ -404,7 +405,7 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
     }
 
     /* It is necessary to set ECC_N for ECDSA */
-    for(i=0; i<18; i++)
+    for(i = 0; i < 18; i++)
         CRPT->ECC_N[i] = au32ECC_N[i];
 
     CRPT->PRNG_KSCTL = 0;

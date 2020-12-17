@@ -111,24 +111,24 @@ int32_t main(void)
     u8Ch = (uint8_t)getchar();
     switch(u8Ch)
     {
-    case '0':
-        FMC_SetVectorPageAddr(0x4000);
-        break;
-    case '1':
-        FMC_SetVectorPageAddr(0x8000);
-        break;
-    case '2':
-        FMC_SetVectorPageAddr(0xC000);
-        break;
-    case '3':
-        FMC_SetVectorPageAddr(0x10000);
-        break;
-    case '4':
-        FMC_SetVectorPageAddr(0x100000);
-        break;
-    default:
-        FMC_SetVectorPageAddr(0x0);
-        break;
+        case '0':
+            FMC_SetVectorPageAddr(0x4000);
+            break;
+        case '1':
+            FMC_SetVectorPageAddr(0x8000);
+            break;
+        case '2':
+            FMC_SetVectorPageAddr(0xC000);
+            break;
+        case '3':
+            FMC_SetVectorPageAddr(0x10000);
+            break;
+        case '4':
+            FMC_SetVectorPageAddr(0x100000);
+            break;
+        default:
+            FMC_SetVectorPageAddr(0x0);
+            break;
     }
 
     /* Reset CPU only to reset to new vector page */

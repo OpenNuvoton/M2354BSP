@@ -63,14 +63,14 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/
     /* Enable TIMER module clock */
     CLK_EnableModuleClock(TMR0_MODULE);
     CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_PCLK0, 0);
-    
+
     /* Set Timer0 PWM output PB.5 and EPWM1 brake pin PB.7 (TPWM_TM_BRAKE2),
        Timers share the same brake pins with EPWM */
     SYS->GPB_MFPL &= ~(TM0_PB5_Msk | EPWM1_BRAKE0_PB7_Msk);
@@ -99,7 +99,7 @@ int main(void)
 
     /* Init System, peripheral clock and multi-function I/O */
     SYS_Init();
-    
+
     /* Init UART for printf */
     UART_Init();
 

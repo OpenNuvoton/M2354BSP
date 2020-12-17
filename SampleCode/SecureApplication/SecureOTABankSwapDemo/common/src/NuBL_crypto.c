@@ -18,7 +18,7 @@
 
 static uint32_t Swap32(uint32_t val)
 {
-    return (val<<24) | ((val<<8)&0xff0000) | ((val>>8)&0xff00) | (val>>24);
+    return (val << 24) | ((val << 8) & 0xff0000) | ((val >> 8) & 0xff00) | (val >> 24);
 }
 
 static void ResetCrypto(void)
@@ -52,7 +52,7 @@ int32_t NuBL_CalculateSHA256(uint32_t start, uint32_t end, uint32_t digest[], E_
 
     if((mode == SHA_ONESHOT) || (mode == SHA_CONTI_START))
     {
-        NUBL_MSG("\n[Start SHA256 from 0x%x to 0x%x. (size: %d) (mode: %d)] (%s)\n", start, end, bytes, mode, (src==SHA_SRC_SRAM)?"SRAM":"Flash");
+        NUBL_MSG("\n[Start SHA256 from 0x%x to 0x%x. (size: %d) (mode: %d)] (%s)\n", start, end, bytes, mode, (src == SHA_SRC_SRAM) ? "SRAM" : "Flash");
         /* Reset CRYPTO module */
         ResetCrypto();
 
@@ -83,7 +83,7 @@ int32_t NuBL_CalculateSHA256(uint32_t start, uint32_t end, uint32_t digest[], E_
             }
             else if(src == SHA_SRC_FLASH)
             {
-                data = FMC_Read(addr&0x0FFFFFFF);
+                data = FMC_Read(addr & 0x0FFFFFFF);
                 addr += 4;
                 bytes -= 4;
             }
@@ -104,8 +104,8 @@ int32_t NuBL_CalculateSHA256(uint32_t start, uint32_t end, uint32_t digest[], E_
                     CRPT->HMAC_DATIN = data;
                     while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk);
 
-                    for(i=0; i<8; i++)
-                        digest[i] = *(uint32_t *)((uint32_t)&(CRPT->HMAC_DGST[0]) + ((uint32_t)i*4));
+                    for(i = 0; i < 8; i++)
+                        digest[i] = *(uint32_t *)((uint32_t) & (CRPT->HMAC_DGST[0]) + ((uint32_t)i * 4));
 
                     NUBL_MSG("\t[SHA256 done]\n");
 
@@ -294,7 +294,7 @@ int32_t NuBL_ECCInitCurve(void)
     /* Use ECC polling mode */
     NVIC_DisableIRQ(CRPT_IRQn);
 
-    for(i=0; i<18; i++)
+    for(i = 0; i < 18; i++)
     {
         CRPT->ECC_A[i]  = 0UL;
         CRPT->ECC_B[i]  = 0UL;

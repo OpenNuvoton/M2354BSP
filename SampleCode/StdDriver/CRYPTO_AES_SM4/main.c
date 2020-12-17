@@ -18,7 +18,7 @@ void SYS_Init(void);
 void DumpBuffHex(const uint8_t *pucBuff, int nBytes);
 
 
-static uint32_t au32MyAESKey[8] = {0x01234567,0x89abcdef,0xfedcba98,0x76543210};
+static uint32_t au32MyAESKey[8] = {0x01234567, 0x89abcdef, 0xfedcba98, 0x76543210};
 
 
 static uint32_t au32MyAESIV[4] =
@@ -34,16 +34,16 @@ uint8_t au8InputData[] =
 __attribute__((aligned(4))) static uint8_t au8InputData[] =
 {
 #endif
-    0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0xfe,0xdc,0xba,0x98,0x76,0x54,0x32,0x10
+    0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
 };
 
 
 __attribute__((aligned(4))) static uint8_t g_au8Out[] = {0};
 
 
-static const uint8_t g_au8Golden1[] = {0x68,0x1e,0xdf,0x34,0xd2,0x06,0x96,0x5e,0x86,0xb3,0xe9,0x4f,0x53,0x6e,0x42,0x46};
-static const uint8_t g_au8Golden2[] = {0x59,0x52,0x98,0xc7,0xc6,0xfd,0x27,0x1f,0x04,0x02,0xf8,0x04,0xc3,0x3d,0x3f,0x66};
-    
+static const uint8_t g_au8Golden1[] = {0x68, 0x1e, 0xdf, 0x34, 0xd2, 0x06, 0x96, 0x5e, 0x86, 0xb3, 0xe9, 0x4f, 0x53, 0x6e, 0x42, 0x46};
+static const uint8_t g_au8Golden2[] = {0x59, 0x52, 0x98, 0xc7, 0xc6, 0xfd, 0x27, 0x1f, 0x04, 0x02, 0xf8, 0x04, 0xc3, 0x3d, 0x3f, 0x66};
+
 
 
 
@@ -109,7 +109,7 @@ void SYS_Init(void)
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* ENable CAN module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
@@ -124,7 +124,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;    
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
 }
 
@@ -163,8 +163,8 @@ int32_t main(void)
 
     printf("Source:\n");
     DumpBuffHex(au8InputData, sizeof(au8InputData));
-    
-    
+
+
     /*---------------------------------------
      *  Encrypt
      *---------------------------------------*/
@@ -184,7 +184,7 @@ int32_t main(void)
     DumpBuffHex(au8OutputData, sizeof(au8InputData));
 
     /* Compare with golden pattern 1 */
-    for(i=0;i<16;i++)
+    for(i = 0; i < 16; i++)
     {
         if(au8OutputData[i] != g_au8Golden1[i])
         {
@@ -195,7 +195,7 @@ int32_t main(void)
             while(1);
         }
     }
-    
+
     /*---------------------------------------
      *  Decrypt
      *---------------------------------------*/
@@ -223,16 +223,16 @@ int32_t main(void)
         }
     }
 
-    
+
     //------------------------------------------------------------
     // Encrypt 1000000 times
-    
+
     printf("Encrypt 1000000 times.\nRunning .");
-    for(i=0;i<1000000;i++)
+    for(i = 0; i < 1000000; i++)
     {
         if((i & 0x3fff) == 0)
             printf(".");
-        
+
         AES_Open(CRPT, 0, 1, SM4_MODE_ECB, AES_KEY_SIZE_128, AES_IN_OUT_SWAP);
         AES_SetKey(CRPT, 0, au32MyAESKey, AES_KEY_SIZE_128);
         AES_SetInitVect(CRPT, 0, au32MyAESIV);
@@ -246,7 +246,7 @@ int32_t main(void)
         while(!g_AES_done);
     }
     printf(" Done!\n");
-    
+
     printf("AES decrypt done.\nResult:\n");
     DumpBuffHex(au8InputData, sizeof(au8InputData));
 
@@ -262,8 +262,8 @@ int32_t main(void)
             break;
         }
     }
-    
-    
+
+
     if(i32Err)
     {
         printf("TEST FAILED!\n");

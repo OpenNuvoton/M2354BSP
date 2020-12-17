@@ -369,7 +369,8 @@ static int32_t ProcessISP(ISP_INFO_T *pISPInfo)
 
     CommandHandlerInit();
 
-    do {
+    do
+    {
         /* Stage 1.*/
         ret = ProcessConnect(pISPInfo);
         if((ret == -1) || (ret == CMD_DISCONNECT) || (ret == CMD_RESYNC))
@@ -396,7 +397,8 @@ static int32_t ProcessISP(ISP_INFO_T *pISPInfo)
                 printf("\n[FAIL, ProcessCommands]\n");
             break;
         }
-    } while(0);
+    }
+    while(0);
 
     printf("\n[Exit ProcessISP]\n");
 
@@ -418,14 +420,14 @@ static int32_t SecureISPInit(ISP_INFO_T *pISPInfo, uint32_t reserved, E_ISP_MODE
     printf("\nIn [SecureISPInit mode: %d]\n", mode);
 
     /* Init USBD ISP mdoe ...... */
-    if((mode&USB_MODE) == USB_MODE)
+    if((mode & USB_MODE) == USB_MODE)
     {
         if((mode & RESYNC_ISP) == 0x0)
             USBDISPInit(pISPInfo, NULL);
     }
 
     /* Init UART1 ISP mdoe ...... */
-    if((mode&UART_MODE) == UART_MODE)
+    if((mode & UART_MODE) == UART_MODE)
     {
         if((mode & RESYNC_ISP) == 0x0)
             UART1ISPInit(pISPInfo);
@@ -460,7 +462,7 @@ int32_t ExecuteSecureISP(void)
         {
             memset((void *)((uint32_t)&g_ISPInfo), 0x0, sizeof(ISP_INFO_T));
 
-            if((ISPmode&UART_MODE) == UART_MODE)
+            if((ISPmode & UART_MODE) == UART_MODE)
             {
                 /* Configure UART1 clock source */
                 g_ISPInfo.UARTClockFreq = __HIRC;

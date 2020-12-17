@@ -18,9 +18,9 @@ extern "C"
 //#define ENABLE_MSG
 
 #if defined(ENABLE_MSG)
- #define NUBL_MSG       printf  /* enable debug message */
+#define NUBL_MSG       printf  /* enable debug message */
 #else
- #define NUBL_MSG(...)
+#define NUBL_MSG(...)
 #endif
 
 #include "CommandHandler.h"
@@ -50,7 +50,7 @@ extern "C"
 */
 #define EMULATE_OTP_REGION      1
 #if (EMULATE_OTP_REGION == 1)
- #define NUBL2_PUBKEY_HASH_BASE (NUBL2_FW_BASE - (1024*10)) // 118K
+#define NUBL2_PUBKEY_HASH_BASE (NUBL2_FW_BASE - (1024*10)) // 118K
 #endif
 #define DIRECT_VERIFY_NUBL3x_PUBKEY
 #endif
@@ -73,28 +73,28 @@ typedef struct
 {
     uint32_t        u32Start;   /* 32-bits */
     uint32_t        u32Size;    /* 32-bits */
-/*
-    bit[28]:    Indicate Secure/Non-secure flash.
-                1: Non-secure flash / 0: Secure flash
-    bit[30]:    1: Use Flash CRC32 checksum page by page to calculate Hash.
-                0: Direct read flash data to calculate Hash.
-*/
+    /*
+        bit[28]:    Indicate Secure/Non-secure flash.
+                    1: Non-secure flash / 0: Secure flash
+        bit[30]:    1: Use Flash CRC32 checksum page by page to calculate Hash.
+                    0: Direct read flash data to calculate Hash.
+    */
 } __attribute__((packed)) FW_REGION_T;
 
 typedef struct
 {
     uint32_t        u32AuthCFGs;        /* 4-bytes */
-                        /*
-                            bit[1:0]:   Verification method, 1: ECDSA / 0: ECDH
-                            bit[2]:     1: Info Hash includes PDID / 0: Not include PDID
-                            bit[3]:     1: Info Hash includes UID / 0: Not include UID
-                            bit[4]:     1: Info Hash inculdes UICD / 0: Not include UICD
-                            bit[31:5]:  Reserved
-                        */
+    /*
+        bit[1:0]:   Verification method, 1: ECDSA / 0: ECDH
+        bit[2]:     1: Info Hash includes PDID / 0: Not include PDID
+        bit[3]:     1: Info Hash includes UID / 0: Not include UID
+        bit[4]:     1: Info Hash inculdes UICD / 0: Not include UICD
+        bit[31:5]:  Reserved
+    */
     uint32_t        u32FwRegionLen;     /* 4-bytes */
     FW_REGION_T     au32FwRegion[2];    /* (8*2) bytes */
     uint32_t        u32ExtInfoLen;      /* 4-bytes */
-    uint32_t        au32ExtInfo[41-4];     /* 20-bytes (includes extend info and dummy data to meet METADATA_T size limitation */
+    uint32_t        au32ExtInfo[41 - 4];   /* 20-bytes (includes extend info and dummy data to meet METADATA_T size limitation */
 } __attribute__((packed)) METADATA_T;
 /* Size MUST be multiple of 16 bytes due to AES256 encrypt/decrypt limitation */
 

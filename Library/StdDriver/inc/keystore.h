@@ -35,7 +35,7 @@ typedef enum KSMEM
     KS_SRAM  = 0,     /*!< Volatile Memory                                */
     KS_FLASH = 1,    /*!< Non-volatile Memory                            */
     KS_OTP   = 2     /*!< One-Time Programming Memory                    */
-}KS_MEM_Type;
+} KS_MEM_Type;
 
 #define KS_OP_READ      (0 << KS_CTL_OPMODE_Pos)
 #define KS_OP_WRITE     (1 << KS_CTL_OPMODE_Pos)
@@ -79,7 +79,7 @@ typedef enum KSMEM
 
 #define KS_META_BOOT    ( 1ul << KS_METADATA_BS_Pos)    /*!< Key only used for boot ROM only                */
 
-#define KS_META_READABLE (1ul << KS_METADATA_READABLE_Pos)  /*!< Allow the key to be read by software       */  
+#define KS_META_READABLE (1ul << KS_METADATA_READABLE_Pos)  /*!< Allow the key to be read by software       */
 
 #define KS_META_PRIV     (1ul << KS_METADATA_PRIV_Pos)  /*!< Privilege key                                  */
 #define KS_META_NONPRIV  (0ul << KS_METADATA_PRIV_Pos)  /*!< Non-privilege key                              */

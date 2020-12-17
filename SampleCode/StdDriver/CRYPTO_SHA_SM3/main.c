@@ -35,7 +35,7 @@ void SYS_Init(void)
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* ENable CRYPTO module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
@@ -50,7 +50,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;    
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
 }
 
@@ -152,12 +152,12 @@ int main(void)
 
     pu8 = (uint8_t *)hash;
     printf("\nOutput Hash:\n");
-    for(i=0;i<32;i++)
+    for(i = 0; i < 32; i++)
     {
         printf("%02x", *pu8++);
     }
     printf("\n");
-    
+
 
     printf("The result should be:\n");
     // The result should be:
@@ -174,19 +174,19 @@ int main(void)
 
     printf("\nOutput Hash:\n");
     pu8 = (uint8_t *)hash;
-    for(i=0;i<32;i++)
+    for(i = 0; i < 32; i++)
     {
         printf("%02x", *pu8++);
     }
     printf("\n");
-    
-    
+
+
 
     printf("The result should be:\n");
     // The result should be:
     printf("debe9ff92275b8a138604889c18e5a4d6fdb70e5387e5765293dcba39c0c5732\n\n");
 
-    
+
     printf("Demo Finished.\n");
-    while(1){}
+    while(1) {}
 }

@@ -20,7 +20,7 @@
 /**
     @addtogroup CLK System Clock Controller(CLK)
     Memory Mapped Structure for CLK Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -69,7 +69,7 @@ typedef struct
      * |[7]     |PDEN      |System Power-down Enable (Write Protect)
      * |        |          |When this bit is set to 1, Power-down mode is enabled and the chip keeps active till the CPU sleep mode is also active and then the chip enters Power-down mode.
      * |        |          |When chip wakes up from Power-down mode, this bit is auto cleared. Users need to set this bit again for next Power-down.
-     * |        |          |In Power-down mode, HXT, HIRC, HIRC48, PLL and system clock will be disabled and ignored the clock source selection. 
+     * |        |          |In Power-down mode, HXT, HIRC, HIRC48, PLL and system clock will be disabled and ignored the clock source selection.
      * |        |          |The clocks of peripheral are not controlled by Power-down mode, if the peripheral clock source is from LXT, LIRC or MIRC.
      * |        |          |0 = Chip operating normally or chip in idle mode because of WFI command.
      * |        |          |1 = Chip waits CPU sleep command WFI and then enters Power-down mode.
@@ -94,7 +94,7 @@ typedef struct
      * |        |          |0 = 48 MHz internal high speed RC oscillator (HIRC48) Disabled.
      * |        |          |1 = 48 MHz internal high speed RC oscillator (HIRC48) Enabled.
      * |        |          |Note 1: This bit is write protected. Refer to the SYS_REGLCTL register.
-     * |        |          |Note 2: HIRC48 cannot be disabled and HIRC48EN will always read as 1 if HCLK clock source is selected from HIRC48.     
+     * |        |          |Note 2: HIRC48 cannot be disabled and HIRC48EN will always read as 1 if HCLK clock source is selected from HIRC48.
      * |[20]    |MIRC1P2MEN|MIRC1P2M Enable Bit (Write Protect)
      * |        |          |0 = 1.2 MHz internal medium speed RC oscillator (MIRC1P2M) Disabled.
      * |        |          |1 = 1.2 MHz internal medium speed RC oscillator (MIRC1P2M) Enabled.
@@ -104,7 +104,7 @@ typedef struct
      * |        |          |0 = 4 MHz internal medium speed RC oscillator (MIRC) Disabled.
      * |        |          |1 = 4 MHz internal medium speed RC oscillator (MIRC) Enabled.
      * |        |          |Note 1: This bit is write protected. Refer to the SYS_REGLCTL register.
-     * |        |          |Note 2: MIRC cannot be disabled and MIRC will always read as 1 if HCLK clock source is selected from MIRC.          
+     * |        |          |Note 2: MIRC cannot be disabled and MIRC will always read as 1 if HCLK clock source is selected from MIRC.
      * @var CLK_T::AHBCLK
      * Offset: 0x04  AHB Devices Clock Enable Control Register
      * ---------------------------------------------------------------------------------------------------
@@ -134,12 +134,12 @@ typedef struct
      * |[12]    |CRPTCKEN  |Cryptographic Accelerator Clock Enable Bit
      * |        |          |0 = Cryptographic Accelerator clock Disabled.
      * |        |          |1 = Cryptographic Accelerator clock Enabled.
-     * |[13]    |KSCKEN    |Key Store Clock Enable Bit 
+     * |[13]    |KSCKEN    |Key Store Clock Enable Bit
      * |        |          |0 = Key store clock Disabled.
      * |        |          |1 = Key store clock Enabled.
      * |[14]    |TRACECKEN |Trace Clock Enable Bit
      * |        |          |0 = Trace clock Disabled.
-     * |        |          |1 = Trace clock Enabled.  
+     * |        |          |1 = Trace clock Enabled.
      * |[15]    |FMCIDLE   |Flash Memory Controller Clock Enable Bit in IDLE Mode
      * |        |          |0 = FMC clock Disabled when chip is under IDLE mode.
      * |        |          |1 = FMC clock Enabled when chip is under IDLE mode.
@@ -148,37 +148,37 @@ typedef struct
      * |        |          |1 = USB HOST 1.1 peripheral clock Enabled.
      * |[20]    |SRAM0CKEN |SRAM Bank0 Controller Clock Enable Bit
      * |        |          |0 = SRAM bank0 clock Disabled.
-     * |        |          |1 = SRAM bank0 clock Enabled.  
+     * |        |          |1 = SRAM bank0 clock Enabled.
      * |[21]    |SRAM1CKEN |SRAM Bank1 Controller Clock Enable Bit
      * |        |          |0 = SRAM bank1 clock Disabled.
-     * |        |          |1 = SRAM bank1 clock Enabled.   
+     * |        |          |1 = SRAM bank1 clock Enabled.
      * |[22]    |SRAM2CKEN |SRAM Bank2 Controller Clock Enable Bit
      * |        |          |0 = SRAM bank2 clock Disabled.
-     * |        |          |1 = SRAM bank2 clock Enabled.  
-     * |[24]    |GPACKEN   |GPIOA Clock Enable Bit 
+     * |        |          |1 = SRAM bank2 clock Enabled.
+     * |[24]    |GPACKEN   |GPIOA Clock Enable Bit
      * |        |          |0 = GPIOA port clock Disabled.
      * |        |          |1 = GPIOA port clock Enabled.
-     * |[25]    |GPBCKEN   |GPIOB Clock Enable Bit 
+     * |[25]    |GPBCKEN   |GPIOB Clock Enable Bit
      * |        |          |0 = GPIOB port clock Disabled.
-     * |        |          |1 = GPIOB port clock Enabled.     
-     * |[26]    |GPCCKEN   |GPIOC Clock Enable Bit 
+     * |        |          |1 = GPIOB port clock Enabled.
+     * |[26]    |GPCCKEN   |GPIOC Clock Enable Bit
      * |        |          |0 = GPIOC port clock Disabled.
-     * |        |          |1 = GPIOC port clock Enabled.          
-     * |[27]    |GPDCKEN   |GPIOD Clock Enable Bit 
+     * |        |          |1 = GPIOC port clock Enabled.
+     * |[27]    |GPDCKEN   |GPIOD Clock Enable Bit
      * |        |          |0 = GPIOD port clock Disabled.
-     * |        |          |1 = GPIOD port clock Enabled.   
-     * |[28]    |GPECKEN   |GPIOE Clock Enable Bit 
+     * |        |          |1 = GPIOD port clock Enabled.
+     * |[28]    |GPECKEN   |GPIOE Clock Enable Bit
      * |        |          |0 = GPIOE port clock Disabled.
-     * |        |          |1 = GPIOE port clock Enabled.        
-     * |[29]    |GPFCKEN   |GPIOF Clock Enable Bit 
+     * |        |          |1 = GPIOE port clock Enabled.
+     * |[29]    |GPFCKEN   |GPIOF Clock Enable Bit
      * |        |          |0 = GPIOF port clock Disabled.
-     * |        |          |1 = GPIOF port clock Enabled.           
-     * |[30]    |GPGCKEN   |GPIOG Clock Enable Bit 
+     * |        |          |1 = GPIOF port clock Enabled.
+     * |[30]    |GPGCKEN   |GPIOG Clock Enable Bit
      * |        |          |0 = GPIOG port clock Disabled.
-     * |        |          |1 = GPIOG port clock Enabled.          
-     * |[31]    |GPHCKEN   |GPIOH Clock Enable Bit 
+     * |        |          |1 = GPIOG port clock Enabled.
+     * |[31]    |GPHCKEN   |GPIOH Clock Enable Bit
      * |        |          |0 = GPIOH port clock Disabled.
-     * |        |          |1 = GPIOH port clock Enabled.       
+     * |        |          |1 = GPIOH port clock Enabled.
      * @var CLK_T::APBCLK0
      * Offset: 0x08  APB Devices Clock Enable Control Register 0
      * ---------------------------------------------------------------------------------------------------
@@ -269,7 +269,7 @@ typedef struct
      * |[31]    |EWDTCKEN |Extra Watchdog Timer Clock Enable Bit (Write Protect)
      * |        |          |0 = Extra Watchdog timer and Extra Windows watchdog timer clock Disabled.
      * |        |          |1 = Extra Watchdog timer and Extra Windows watchdog timer clock Enabled.
-     * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.     
+     * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
      * @var CLK_T::APBCLK1
      * Offset: 0x0C  APB Devices Clock Enable Control Register 1
      * ---------------------------------------------------------------------------------------------------
@@ -289,7 +289,7 @@ typedef struct
      * |        |          |1 = Timer4 clock Enabled.
      * |[5]     |TMR5CKEN  |Timer5 Clock Enable Bit
      * |        |          |0 = Timer5 clock Disabled.
-     * |        |          |1 = Timer5 clock Enabled.     
+     * |        |          |1 = Timer5 clock Enabled.
      * |[6]     |SPI3CKEN  |SPI3 Clock Enable Bit
      * |        |          |0 = SPI3 clock Disabled.
      * |        |          |1 = SPI3 clock Enabled.
@@ -331,7 +331,7 @@ typedef struct
      * |        |          |1 = ECAP1 clock Enabled.
      * |[28]    |LCDCPCKEN |LCD Charge Pump Clock Enable Bit
      * |        |          |0 = LCD charge pump clock Disabled.
-     * |        |          |1 = LCD charge pump clock Enabled.    
+     * |        |          |1 = LCD charge pump clock Enabled.
      * @var CLK_T::CLKSEL0
      * Offset: 0x10  Clock Source Select Control Register 0
      * ---------------------------------------------------------------------------------------------------
@@ -345,7 +345,7 @@ typedef struct
      * |        |          |011 = Clock source from LIRC.
      * |        |          |100 = Reserved.
      * |        |          |101 = Clock source from HIRC48.
-     * |        |          |110 = Clock source from MIRC. 
+     * |        |          |110 = Clock source from MIRC.
      * |        |          |111 = Clock source from HIRC.
      * |        |          |Note: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |[5:3]   |STCLKSEL  |SysTick Clock Source Selection (Write Protect)
@@ -356,7 +356,7 @@ typedef struct
      * |        |          |011 = Clock source from HCLK/2.
      * |        |          |111 = Clock source from HIRC/2.
      * |        |          |Others = Reserved.
-     * |        |          |Note1: if SysTick clock source is not from HCLK (i.e SYST_CTRL[2] = 0),  
+     * |        |          |Note1: if SysTick clock source is not from HCLK (i.e SYST_CTRL[2] = 0),
      * |        |          |SysTick need to enable EXSTCKEN(CLK_AHBCLK[4]) and clock frequency must less than or equal to HCLK/2.
      * |        |          |Note2: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |[8]     |USBSEL    |USB Clock Source Selection (Write Protect)
@@ -391,7 +391,7 @@ typedef struct
      * |        |          |01 = Clock source from 32.768 kHz external low speed crystal oscillator (LXT).
      * |        |          |10 = Clock source from HCLK/2048.
      * |        |          |11 = Clock source from 32 kHz internal low speed RC oscillator (LIRC).
-     * |        |          |Note: These bits are write protected. Refer to the SYS_REGLCTL register.     
+     * |        |          |Note: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |[7:6]   |EWWDTSEL  |Extra Window Watchdog Timer Clock Source Selection (Write Protect)
      * |        |          |10 = Clock source from HCLK/2048.
      * |        |          |11 = Clock source from 32 kHz internal low speed RC oscillator (LIRC).
@@ -494,21 +494,21 @@ typedef struct
      * |        |          |010 = Clock source from 32.768 kHz external low speed crystal oscillator (LXT).
      * |        |          |011 = Clock source from 12 MHz internal high speed RC oscillator (HIRC).
      * |        |          |100 = Clock source from PCLK1.
-     * |        |          |Others = Reserved.     
+     * |        |          |Others = Reserved.
      * |[26:24] |UART2SEL  |UART2 Clock Source Selection
      * |        |          |000 = Clock source from 4~24 MHz external high speed crystal oscillator (HXT).
      * |        |          |001 = Clock source from PLL.
      * |        |          |010 = Clock source from 32.768 kHz external low speed crystal oscillator (LXT).
      * |        |          |011 = Clock source from 12 MHz internal high speed RC oscillator (HIRC).
      * |        |          |100 = Clock source from PCLK0.
-     * |        |          |Others = Reserved.     
+     * |        |          |Others = Reserved.
      * |[32:28] |UART3SEL  |UART3 Clock Source Selection
      * |        |          |000 = Clock source from 4~24 MHz external high speed crystal oscillator (HXT).
      * |        |          |001 = Clock source from PLL.
      * |        |          |010 = Clock source from 32.768 kHz external low speed crystal oscillator (LXT).
      * |        |          |011 = Clock source from 12 MHz internal high speed RC oscillator (HIRC).
      * |        |          |100 = Clock source from PCLK1.
-     * |        |          |Others = Reserved.          
+     * |        |          |Others = Reserved.
      * @var CLK_T::CLKSEL3
      * Offset: 0x1C  Clock Source Select Control Register 3
      * ---------------------------------------------------------------------------------------------------
@@ -536,7 +536,7 @@ typedef struct
      * |        |          |011 = Clock source from external clock TM4 pin.
      * |        |          |100 = Clock source from 4 MHz internal medium speed RC oscillator (MIRC).
      * |        |          |101 = Clock source from 32 kHz internal low speed RC oscillator (LIRC).
-     * |        |          |110 = Reserved.     
+     * |        |          |110 = Reserved.
      * |        |          |111 = Clock source from 12 MHz internal high speed RC oscillator (HIRC).
      * |[14:12] |TMR5SEL   |TIMER5 Clock Source Selection
      * |        |          |000 = Clock source from 4~24 MHz external high speed crystal oscillator (HXT).
@@ -545,7 +545,7 @@ typedef struct
      * |        |          |011 = Clock source from external clock TM5 pin.
      * |        |          |100 = Clock source from 4 MHz internal medium speed RC oscillator (MIRC).
      * |        |          |101 = Clock source from 32 kHz internal low speed RC oscillator (LIRC).
-     * |        |          |110 = Reserved.         
+     * |        |          |110 = Reserved.
      * |        |          |111 = Clock source from 12 MHz internal high speed RC oscillator (HIRC).
      * |[17:16] |I2S0SEL   |I2S0 Clock Source Selection
      * |        |          |00 = Clock source from HXT clock.
@@ -558,14 +558,14 @@ typedef struct
      * |        |          |010 = Clock source from 32.768 kHz external low speed crystal oscillator (LXT).
      * |        |          |011 = Clock source from 12 MHz internal high speed RC oscillator (HIRC).
      * |        |          |100 = Clock source from PCLK0.
-     * |        |          |Others = Reserved.               
+     * |        |          |Others = Reserved.
      * |[28:30] |UART5SEL  |UART5 Clock Source Selection
      * |        |          |000 = Clock source from 4~24 MHz external high speed crystal oscillator (HXT).
      * |        |          |001 = Clock source from PLL.
      * |        |          |010 = Clock source from 32.768 kHz external low speed crystal oscillator (LXT).
      * |        |          |011 = Clock source from 12 MHz internal high speed RC oscillator (HIRC).
      * |        |          |100 = Clock source from PCLK1.
-     * |        |          |Others = Reserved.  
+     * |        |          |Others = Reserved.
      * @var CLK_T::CLKDIV0
      * Offset: 0x20  Clock Divider Number Register 0
      * ---------------------------------------------------------------------------------------------------
@@ -647,8 +647,8 @@ typedef struct
      * |        |          |0 = 4~24 MHz external high speed crystal oscillator (HXT) clock is not stable or disabled.
      * |        |          |1 = 4~24 MHz external high speed crystal oscillator (HXT) clock is stable and enabled.
      * |[1]     |LXTSTB    |LXT Clock Source Stable Flag (Read Only)
-     * |        |          |LXT clock source can be selected as extLXT or LIRC32 by setting C32KS(RTC_LXTCTL[7]). 
-     * |        |          |If C32KS is set to 0 the LXT stable flag is set when extLXT clock source is stable. 
+     * |        |          |LXT clock source can be selected as extLXT or LIRC32 by setting C32KS(RTC_LXTCTL[7]).
+     * |        |          |If C32KS is set to 0 the LXT stable flag is set when extLXT clock source is stable.
      * |        |          |If C32KS is set to 1 the LXT stable flag is set when LIRC32 clock source is stable.
      * |        |          |0 = 32.768 kHz external low speed crystal oscillator (LXT) clock is not stable or disabled.
      * |        |          |1 = 32.768 kHz external low speed crystal oscillator (LXT) clock is stabled and enabled.
@@ -663,8 +663,8 @@ typedef struct
      * |        |          |1 = 12 MHz internal high speed RC oscillator (HIRC) clock is stable and enabled.
      * |[5]     |MIRCSTB   |MIRC Clock Source Stable Flag (Read Only)
      * |        |          |0 = 4 MHz internal medium speed RC oscillator (MIRC) clock is not stable or disabled.
-     * |        |          |1 = 4 MHz internal medium speed RC oscillator (MIRC) clock is stable and enabled. 
-     * |[6]     |HIRC48STB |HIRC48 Clock Source Stable Flag (Read Only)     
+     * |        |          |1 = 4 MHz internal medium speed RC oscillator (MIRC) clock is stable and enabled.
+     * |[6]     |HIRC48STB |HIRC48 Clock Source Stable Flag (Read Only)
      * |        |          |0 = 48 MHz internal high speed RC oscillator (HIRC48) clock is not stable or disabled.
      * |        |          |1 = 48 MHz internal high speed RC oscillator (HIRC48) clock is stable and enabled.
      * |[7]     |CLKSFAIL  |Clock Switching Fail Flag (Read Only)
@@ -780,20 +780,20 @@ typedef struct
      * |        |          |111 = Reserved.
      * |        |          |Note: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |[4]     |VDROPEN   |Standby Power Down Mode Regulator Output Voltage Drop Enable Bit (Write Protect)
-     * |        |          |If this bit be asserted, regulator output voltage drop to 0.9V when SPD mode. 
-     * |        |          |0 = Regulator voltage auto drop function Disabled. 
+     * |        |          |If this bit be asserted, regulator output voltage drop to 0.9V when SPD mode.
+     * |        |          |0 = Regulator voltage auto drop function Disabled.
      * |        |          |1 = Regulator voltage auto drop function Enabled. (default)
      * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
-     * |[7]     |WRBUSY    |Write Busy Flag (Read Only) 
+     * |[7]     |WRBUSY    |Write Busy Flag (Read Only)
      * |        |          |If CLK_PMUCTL be written, this bit be asserted automatic by hardware, and be de-asserted when write procedure finish.
-     * |        |          |0 = CLK_PMUCTL write ready. 
+     * |        |          |0 = CLK_PMUCTL write ready.
      * |        |          |1 = CLK_PMUCTL write ignore.
      * |[8]     |WKTMREN   |Wake-up Timer Enable Bit (Write Protect)
      * |        |          |0 = Wake-up timer Disable in Deep Power-down mode or Standby Power-down mode.
      * |        |          |1 = Wake-up timer Enabled in Deep Power-down mode or Standby Power-down mode.
      * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
      * |[11:9]  |WKTMRIS   |Wake-up Timer Time-out Interval Select (Write Protect)
-     * |        |          |These bits control wake-up timer time-out interval when chip under Deep Power-down mode or Standby Power-down mode.   
+     * |        |          |These bits control wake-up timer time-out interval when chip under Deep Power-down mode or Standby Power-down mode.
      * |        |          |000 = Time-out interval is 410 LIRC clocks (12.8ms).
      * |        |          |001 = Time-out interval is 819 LIRC clocks (25.6ms).
      * |        |          |010 = Time-out interval is 1638 LIRC clocks (51.2ms).
@@ -803,7 +803,7 @@ typedef struct
      * |        |          |110 = Time-out interval is 52429 LIRC clocks (1638.4ms).
      * |        |          |111 = Time-out interval is 209715 LIRC clocks (6553.6ms).
      * |[17:16] |WKPINEN0  |Wake-up Pin 0 Enable (Write Protect)
-     * |        |          |This is control register for GPC.0 to wake-up pin.     
+     * |        |          |This is control register for GPC.0 to wake-up pin.
      * |        |          |00 = Wake-up pin Disable in Deep Power-down mode.
      * |        |          |01 = Wake-up pin rising edge Enabled in Deep Power-down mode.
      * |        |          |10 = Wake-up pin falling edge Enabled in Deep Power-down mode.
@@ -823,28 +823,28 @@ typedef struct
      * |        |          |1 = RTC wake-up Enabled in Deep Power-down mode or Standby Power-down mode.
      * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
      * |[25:24] |WKPINEN1  |Wake-up Pin 1 Enable (Write Protect)
-     * |        |          |This is control register for GPB.0 to wake-up pin.     
+     * |        |          |This is control register for GPB.0 to wake-up pin.
      * |        |          |00 = Wake-up pin Disable in Deep Power-down mode.
      * |        |          |01 = Wake-up pin rising edge Enabled in Deep Power-down mode.
      * |        |          |10 = Wake-up pin falling edge Enabled in Deep Power-down mode.
      * |        |          |11 = Wake-up pin both edge Enabled in Deep Power-down mode.
      * |        |          |Note: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |[27:26] |WKPINEN2  |Wake-up Pin 2 Enable (Write Protect)
-     * |        |          |This is control register for GPB.2 to wake-up pin.     
+     * |        |          |This is control register for GPB.2 to wake-up pin.
      * |        |          |00 = Wake-up pin Disable in Deep Power-down mode.
      * |        |          |01 = Wake-up pin rising edge Enabled in Deep Power-down mode.
      * |        |          |10 = Wake-up pin falling edge Enabled in Deep Power-down mode.
      * |        |          |11 = Wake-up pin both edge Enabled in Deep Power-down mode.
      * |        |          |Note: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |[29:28] |WKPINEN3  |Wake-up Pin 3 Enable (Write Protect)
-     * |        |          |This is control register for GPB.12 to wake-up pin.     
+     * |        |          |This is control register for GPB.12 to wake-up pin.
      * |        |          |00 = Wake-up pin Disable in Deep Power-down mode.
      * |        |          |01 = Wake-up pin rising edge Enabled in Deep Power-down mode.
      * |        |          |10 = Wake-up pin falling edge Enabled in Deep Power-down mode.
      * |        |          |11 = Wake-up pin both edge Enabled in Deep Power-down mode.
      * |        |          |Note: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |[31:30] |WKPINEN4  |Wake-up Pin 4 Enable (Write Protect)
-     * |        |          |This is control register for GPF.6 to wake-up pin.     
+     * |        |          |This is control register for GPF.6 to wake-up pin.
      * |        |          |00 = Wake-up pin Disable in Deep Power-down mode.
      * |        |          |01 = Wake-up pin rising edge Enabled in Deep Power-down mode.
      * |        |          |10 = Wake-up pin falling edge Enabled in Deep Power-down mode.
@@ -857,7 +857,7 @@ typedef struct
      * | :----: | :----:   | :---- |
      * |[0]     |PINWK0    |Pin 0 Wake-up Flag (Read Only)
      * |        |          |This flag indicates that wake-up of chip from Deep Power-down mode (DPD) was requested by a transition of the Wake-up pin (GPC.0).
-     * |        |          |This flag is cleared when DPD mode is entered.      
+     * |        |          |This flag is cleared when DPD mode is entered.
      * |[1]     |TMRWK     |Timer Wake-up Flag (Read Only)
      * |        |          |This flag indicates that wake-up of chip from Deep Power-down mode (DPD) or Standby Power-down (SPD) mode was requested by wakeup timer time-out.
      * |        |          |This flag is cleared when DPD or SPD mode is entered.
@@ -866,16 +866,16 @@ typedef struct
      * |        |          |This flag is cleared when DPD or SPD mode is entered.
      * |[3]     |PINWK1    |Pin 1 Wake-up Flag (Read Only)
      * |        |          |This flag indicates that wake-up of chip from Deep Power-down mode (DPD) was requested by a transition of the Wake-up pin (GPB.0).
-     * |        |          |This flag is cleared when DPD mode is entered.  
+     * |        |          |This flag is cleared when DPD mode is entered.
      * |[4]     |PINWK2    |Pin 2 Wake-up Flag (Read Only)
      * |        |          |This flag indicates that wake-up of chip from Deep Power-down mode (DPD) was requested by a transition of the Wake-up pin (GPB.2).
-     * |        |          |This flag is cleared when DPD mode is entered. 
+     * |        |          |This flag is cleared when DPD mode is entered.
      * |[5]     |PINWK3    |Pin 3 Wake-up Flag (Read Only)
      * |        |          |This flag indicates that wake-up of chip from Deep Power-down mode (DPD) was requested by a transition of the Wake-up pin (GPB.12).
-     * |        |          |This flag is cleared when DPD mode is entered. 
+     * |        |          |This flag is cleared when DPD mode is entered.
      * |[6]     |PINWK4    |Pin 4 Wake-up Flag (Read Only)
      * |        |          |This flag indicates that wake-up of chip from Deep Power-down mode (DPD) was requested by a transition of the Wake-up pin (GPF.6).
-     * |        |          |This flag is cleared when DPD mode is entered. 
+     * |        |          |This flag is cleared when DPD mode is entered.
      * |[8]     |GPAWK     |GPA Wake-up Flag (Read Only)
      * |        |          |This flag indicates that wake-up of chip from Standby Power-down mode (SPD) was requested by a transition of selected one GPA group pins.
      * |        |          |This flag is cleared when SPD mode is entered.
@@ -898,8 +898,8 @@ typedef struct
      * |        |          |This flag indicates that wake-up of device from Standby Power-down mode (SPD) was requested with a ACMP transition.
      * |        |          |This flag is cleared when SPD mode is entered.
      * |[15]    |TAMPERWK  |Tamper Wake-up Flag (Read Only)
-     * |        |          |This flag indicates that wakeup of device from Standby Power-down mode (SPD) was requested with a Tamper event occurred. 
-     * |        |          |This flag is cleared when SPD mode is entered.     
+     * |        |          |This flag indicates that wakeup of device from Standby Power-down mode (SPD) was requested with a Tamper event occurred.
+     * |        |          |This flag is cleared when SPD mode is entered.
      * |[31]    |CLRWK     |Clear Wake-up Flag
      * |        |          |0 = No clear.
      * |        |          |1 = Clear all wake-up flag.
@@ -960,7 +960,7 @@ typedef struct
      * |        |          |1111 = GPA.15 wake-up function enabled.
      * |[8]     |DBEN      |GPA Input Signal De-bounce Enable Bit
      * |        |          |The DBEN bit is used to enable the de-bounce function for each corresponding IO.
-     * |        |          |If the input signal pulse width cannot be sampled by continuous two de-bounce sample cycle, the input signal transition is seen as the signal bounce and will not trigger the wakeup. 
+     * |        |          |If the input signal pulse width cannot be sampled by continuous two de-bounce sample cycle, the input signal transition is seen as the signal bounce and will not trigger the wakeup.
      * |        |          |The de-bounce clock source is the 32 kHz internal low speed RC oscillator (LIRC).
      * |        |          |0 = Standby power-down wake-up pin De-bounce function Disable.
      * |        |          |1 = Standby power-down wake-up pin De-bounce function Enable.
@@ -1141,7 +1141,7 @@ typedef struct
 /**
     @addtogroup CLK_CONST CLK Bit Field Definition
     Constant Definitions for CLK Controller
-  @{ 
+  @{
 */
 
 #define CLK_PWRCTL_HXTEN_Pos             (0)                                               /*!< CLK_T::PWRCTL: HXTEN Position          */

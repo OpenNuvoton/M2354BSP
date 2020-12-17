@@ -20,7 +20,7 @@
 /**
     @addtogroup EWWDT Extra Window Watchdog Timer(EWWDT)
     Memory Mapped Structure for EWWDT Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -111,7 +111,7 @@ typedef struct
 /**
     @addtogroup WWDT_CONST WWDT Bit Field Definition
     Constant Definitions for WWDT Controller
-  @{ 
+  @{
 */
 
 #define EWWDT_RLDCNT_RLDCNT_Pos           (0)                                               /*!< EWWDT_T::RLDCNT: RLDCNT Position        */

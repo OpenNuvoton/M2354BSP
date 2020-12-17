@@ -19,7 +19,7 @@
 /**
     @addtogroup SC Smart Card Host Interface Controller(SC)
     Memory Mapped Structure for SC Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -667,7 +667,7 @@ typedef struct
 /**
     @addtogroup SC_CONST SC Bit Field Definition
     Constant Definitions for SC Controller
-  @{ 
+  @{
 */
 
 #define SC_DAT_DAT_Pos                   (0)                                               /*!< SC_T::DAT: DAT Position                */

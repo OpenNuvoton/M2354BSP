@@ -221,7 +221,7 @@ typedef struct
   * @details    This macro is used to enable LCD blinking.
   */
 #define LCD_BLINKING_ON()       (LCD->FCTL |= LCD_FCTL_BLINK_Msk)
-    
+
 /**
   * @brief      Set LCD Blinking OFF
   *

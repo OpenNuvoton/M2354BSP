@@ -19,7 +19,7 @@
 /**
     @addtogroup HDIV Hardware Divider(HDIV)
     Memory Mapped Structure for HDIV Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -85,7 +85,7 @@ typedef struct
 /**
     @addtogroup HDIV_CONST HDIV Bit Field Definition
     Constant Definitions for HDIV Controller
-  @{ 
+  @{
 */
 
 #define HDIV_DIVIDEND_DIVIDEND_Pos       (0)                                               /*!< HDIV_T::DIVIDEND: DIVIDEND Position    */

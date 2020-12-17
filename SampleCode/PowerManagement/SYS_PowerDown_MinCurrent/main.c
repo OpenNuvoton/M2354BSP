@@ -2,7 +2,7 @@
  * @file     main.c
  * @version  V3.00
  * @brief    Demonstrate how to minimize power consumption when entering power down mode.
- * 
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
@@ -33,9 +33,9 @@ void PowerDownFunction(void)
 {
     /* Check if all the debug messages are finished */
     UART_WAIT_TX_EMPTY(DEBUG_PORT);
-    
+
     /* Select Power-down mode */
-    CLK_SetPowerDownMode(CLK_PMUCTL_PDMSEL_PD);    
+    CLK_SetPowerDownMode(CLK_PMUCTL_PDMSEL_PD);
 
     /* Enter to Power-down mode */
     CLK_PowerDown();
@@ -117,66 +117,66 @@ void UART0_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int32_t main(void)
 {
-    uint32_t u32Config[4];       
+    uint32_t u32Config[4];
 
     /* Unlock protected registers */
     SYS_UnlockReg();
 
     /* Disable Tamper function from Config3 */
-    FMC_Open();  
-    FMC_ENABLE_CFG_UPDATE();   
+    FMC_Open();
+    FMC_ENABLE_CFG_UPDATE();
 
-    u32Config[0] = FMC_Read(FMC_USER_CONFIG_0);   
-    u32Config[1] = FMC_Read(FMC_USER_CONFIG_1);   
-    u32Config[2] = FMC_Read(FMC_USER_CONFIG_2);       
-    u32Config[3] = FMC_Read(FMC_USER_CONFIG_3);  
-  
-    if( ((u32Config[3] & 0xFFFF0000) != 0x5AA50000))
+    u32Config[0] = FMC_Read(FMC_USER_CONFIG_0);
+    u32Config[1] = FMC_Read(FMC_USER_CONFIG_1);
+    u32Config[2] = FMC_Read(FMC_USER_CONFIG_2);
+    u32Config[3] = FMC_Read(FMC_USER_CONFIG_3);
+
+    if(((u32Config[3] & 0xFFFF0000) != 0x5AA50000))
     {
         u32Config[3] = ((u32Config[3] & (~0xFFFF0000)) | 0x5AA50000);
-        
-        FMC_Erase(FMC_USER_CONFIG_0);  
-        
+
+        FMC_Erase(FMC_USER_CONFIG_0);
+
         FMC_Write(FMC_USER_CONFIG_0, u32Config[0]);
         FMC_Write(FMC_USER_CONFIG_1, u32Config[1]);
-        FMC_Write(FMC_USER_CONFIG_2, u32Config[2]);        
+        FMC_Write(FMC_USER_CONFIG_2, u32Config[2]);
         FMC_Write(FMC_USER_CONFIG_3, u32Config[3]);
-        
-        SYS_ResetChip();   
-        while(1);       
-    }      
+
+        SYS_ResetChip();
+        while(1);
+    }
 
     /* Init System, peripheral clock and multi-function I/O */
-    SYS_Init();   
-    
+    SYS_Init();
+
     /* Lock protected registers */
     SYS_LockReg();
 
     /* Init UART0 for printf */
     UART0_Init();
-    
+
     printf("\n\nCPU @ %d Hz\n", SystemCoreClock);
     printf("+-------------------------------------------------------------+\n");
     printf("|  SYS_PowerDown_MinCurrent and Wake-up by PB.3 Sample Code   |\n");
-    printf("+-------------------------------------------------------------+\n\n");  
+    printf("+-------------------------------------------------------------+\n\n");
 
     printf("+-------------------------------------------------------------------------+\n");
     printf("| Operating sequence                                                      |\n");
     printf("|  1. Remove all continuous load, e.g. LED.                               |\n");
-    printf("|  2. Disable Tamper function from config3                                |\n");    
+    printf("|  2. Disable Tamper function from config3                                |\n");
     printf("|  3. Configure all GPIO as Quasi-bidirectional Mode                      |\n");
     printf("|  4. Disable LVR                                                         |\n");
     printf("|  5. Disable analog function, e.g. POR module                            |\n");
-    printf("|  6. Set main voltage regulator to DCDC mode                             |\n");   
-    printf("|  7. Disable unused SRAM                                                 |\n");    
-    printf("|  8. Disable unused clock, e.g. LIRC                                     |\n");    
-    printf("|  9. Disable unused crypto power switch                                  |\n");        
+    printf("|  6. Set main voltage regulator to DCDC mode                             |\n");
+    printf("|  7. Disable unused SRAM                                                 |\n");
+    printf("|  8. Disable unused clock, e.g. LIRC                                     |\n");
+    printf("|  9. Disable unused crypto power switch                                  |\n");
     printf("|  10. Enter to Power-Down                                                |\n");
     printf("|  11. Wait for PB.3 rising-edge interrupt event to wake-up the MCU       |\n");
     printf("+-------------------------------------------------------------------------+\n\n");
 
     /* Check if all the debug messages are finished */
-    UART_WAIT_TX_EMPTY(DEBUG_PORT);  
+    UART_WAIT_TX_EMPTY(DEBUG_PORT);
 
     /* Set function pin to GPIO mode expect UART pin to print message */
     SYS->GPA_MFPH = 0;
@@ -204,7 +204,7 @@ int32_t main(void)
     GPIO_SetMode(PE, GPIO_P0_TO_P15, GPIO_MODE_QUASI);
     GPIO_SetMode(PF, GPIO_P0_TO_P15, GPIO_MODE_QUASI);
     GPIO_SetMode(PG, GPIO_P0_TO_P15, GPIO_MODE_QUASI);
-    GPIO_SetMode(PH, GPIO_P0_TO_P15, GPIO_MODE_QUASI);    
+    GPIO_SetMode(PH, GPIO_P0_TO_P15, GPIO_MODE_QUASI);
 
     /* Configure PB.3 as Input mode and enable interrupt by rising edge trigger */
     GPIO_SetMode(PB, BIT3, GPIO_MODE_QUASI);
@@ -213,26 +213,26 @@ int32_t main(void)
 
     /* Unlock protected registers before entering Power-down mode */
     SYS_UnlockReg();
-       
+
     /* Disable LVR */
-    SYS_DISABLE_LVR();    
-    
+    SYS_DISABLE_LVR();
+
     /* Turn off internal analog POR circuit */
-    SYS_Disable_AnalogPORCircuit();   
-      
+    SYS_Disable_AnalogPORCircuit();
+
     /* Set main voltage regulator to DCDC mode */
     SYS_SetPowerRegulator(SYS_PLCTL_MVRS_DCDC);
-    
+
     /* Disable unused SRAM power expect SRAM bank0. SRAM bank0 is used to download code. */
-    SYS->SRAMPC0 = 0x2AAAA800;    
-    SYS->SRAMPC1 = 0x2AAA00AA;   
-    
+    SYS->SRAMPC0 = 0x2AAAA800;
+    SYS->SRAMPC1 = 0x2AAA00AA;
+
     /* Disable unused clock */
-    CLK->PWRCTL &= ~CLK_PWRCTL_LIRCEN_Msk;    
-    
-    /* Disable unused crypto power switch */    
-    SYS->PSWCTL = 0;    
-          
+    CLK->PWRCTL &= ~CLK_PWRCTL_LIRCEN_Msk;
+
+    /* Disable unused crypto power switch */
+    SYS->PSWCTL = 0;
+
     /* Enter to Power-down mode */
     printf("Enter to Power-Down ......\n");
     PowerDownFunction();

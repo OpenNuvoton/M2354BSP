@@ -37,15 +37,15 @@ void DPM_SetDebugDisable(uint32_t u32dpm)
     if(__PC()&NS_OFFSET) dpm = DPM_NS;
     else dpm = DPM;
 
-    if(u32dpm==SECURE_DPM)  /* Secure DPM */
+    if(u32dpm == SECURE_DPM) /* Secure DPM */
     {
         while(dpm->STS & DPM_STS_BUSY_Msk);
-        dpm->CTL = (DPM->CTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE|DPM_CTL_DBGDIS_Msk);
+        dpm->CTL = (DPM->CTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE | DPM_CTL_DBGDIS_Msk);
     }
     else    /* Non-secure DPM */
     {
         while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
-        dpm->NSCTL = (dpm->NSCTL & (~DPM_NSCTL_WVCODE_Msk)) | (DPM_NSCTL_WVCODE|DPM_NSCTL_DBGDIS_Msk);
+        dpm->NSCTL = (dpm->NSCTL & (~DPM_NSCTL_WVCODE_Msk)) | (DPM_NSCTL_WVCODE | DPM_NSCTL_DBGDIS_Msk);
     }
 }
 
@@ -65,15 +65,15 @@ void DPM_SetDebugLock(uint32_t u32dpm)
     if(__PC()&NS_OFFSET) dpm = DPM_NS;
     else dpm = DPM;
 
-    if(u32dpm==SECURE_DPM)  /* Secure DPM */
+    if(u32dpm == SECURE_DPM) /* Secure DPM */
     {
         while(dpm->STS & DPM_STS_BUSY_Msk);
-        dpm->CTL = (dpm->CTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE|DPM_CTL_LOCK_Msk);
+        dpm->CTL = (dpm->CTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE | DPM_CTL_LOCK_Msk);
     }
     else    /* Non-secure DPM */
     {
         while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
-        dpm->NSCTL = (dpm->NSCTL & (~DPM_NSCTL_WVCODE_Msk)) | (DPM_NSCTL_WVCODE|DPM_NSCTL_LOCK_Msk);
+        dpm->NSCTL = (dpm->NSCTL & (~DPM_NSCTL_WVCODE_Msk)) | (DPM_NSCTL_WVCODE | DPM_NSCTL_LOCK_Msk);
     }
 }
 
@@ -96,15 +96,15 @@ uint32_t DPM_GetDebugDisable(uint32_t u32dpm)
     if(__PC()&NS_OFFSET) dpm = DPM_NS;
     else dpm = DPM;
 
-    if(u32dpm==SECURE_DPM)  /* Secure DPM */
+    if(u32dpm == SECURE_DPM) /* Secure DPM */
     {
         while(dpm->STS & DPM_STS_BUSY_Msk);
-        u32RetVal = (dpm->STS & DPM_STS_DBGDIS_Msk)>>DPM_STS_DBGDIS_Pos;
+        u32RetVal = (dpm->STS & DPM_STS_DBGDIS_Msk) >> DPM_STS_DBGDIS_Pos;
     }
     else    /* Non-secure DPM */
     {
         while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
-        u32RetVal = (dpm->NSSTS & DPM_NSSTS_DBGDIS_Msk)>>DPM_NSSTS_DBGDIS_Pos;
+        u32RetVal = (dpm->NSSTS & DPM_NSSTS_DBGDIS_Msk) >> DPM_NSSTS_DBGDIS_Pos;
     }
 
     return u32RetVal;
@@ -129,15 +129,15 @@ uint32_t DPM_GetDebugLock(uint32_t u32dpm)
     if(__PC()&NS_OFFSET) dpm = DPM_NS;
     else dpm = DPM;
 
-    if(u32dpm==SECURE_DPM)  /* Secure DPM */
+    if(u32dpm == SECURE_DPM) /* Secure DPM */
     {
         while(dpm->STS & DPM_STS_BUSY_Msk);
-        u32RetVal = (dpm->STS & DPM_STS_LOCK_Msk)>>DPM_STS_LOCK_Pos;
+        u32RetVal = (dpm->STS & DPM_STS_LOCK_Msk) >> DPM_STS_LOCK_Pos;
     }
     else                    /* Non-secure DPM */
     {
         while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
-        u32RetVal = (dpm->NSSTS & DPM_NSSTS_LOCK_Msk)>>DPM_NSSTS_LOCK_Pos;
+        u32RetVal = (dpm->NSSTS & DPM_NSSTS_LOCK_Msk) >> DPM_NSSTS_LOCK_Pos;
     }
 
     return u32RetVal;
@@ -155,16 +155,16 @@ uint32_t DPM_GetDebugLock(uint32_t u32dpm)
   */
 uint32_t DPM_SetPasswordUpdate(uint32_t u32dpm, uint32_t au32Pwd[])
 {
-    uint32_t u32i, u32RetVal=0;
+    uint32_t u32i, u32RetVal = 0;
     DPM_T *dpm;
 
     if(__PC()&NS_OFFSET) dpm = DPM_NS;
     else dpm = DPM;
 
-    if(u32dpm==SECURE_DPM)  /* Secure DPM */
+    if(u32dpm == SECURE_DPM) /* Secure DPM */
     {
         /* Set Secure DPM password */
-        for(u32i=0; u32i<4; u32i++)
+        for(u32i = 0; u32i < 4; u32i++)
         {
             while(dpm->STS & DPM_STS_BUSY_Msk);
             dpm->SPW[u32i] = au32Pwd[u32i];
@@ -172,11 +172,11 @@ uint32_t DPM_SetPasswordUpdate(uint32_t u32dpm, uint32_t au32Pwd[])
 
         /* Set Secure DPM password update */
         while(dpm->STS & DPM_STS_BUSY_Msk);
-        dpm->CTL = (dpm->CTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE|DPM_CTL_PWUPD_Msk);
+        dpm->CTL = (dpm->CTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE | DPM_CTL_PWUPD_Msk);
 
         /* Check Secure DPM password update flag */
         while(dpm->STS & DPM_STS_BUSY_Msk);
-        u32RetVal = (dpm->STS & DPM_STS_PWUOK_Msk)>>DPM_STS_PWUOK_Pos;
+        u32RetVal = (dpm->STS & DPM_STS_PWUOK_Msk) >> DPM_STS_PWUOK_Pos;
 
         /* Clear Secure DPM password update flag */
         if(u32RetVal) dpm->STS = DPM_STS_PWUOK_Msk;
@@ -184,7 +184,7 @@ uint32_t DPM_SetPasswordUpdate(uint32_t u32dpm, uint32_t au32Pwd[])
     else    /* Non-secure DPM */
     {
         /* Set Non-secure DPM password */
-        for(u32i=0; u32i<4; u32i++)
+        for(u32i = 0; u32i < 4; u32i++)
         {
             while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
             dpm->NSPW[u32i] = au32Pwd[u32i];
@@ -192,11 +192,11 @@ uint32_t DPM_SetPasswordUpdate(uint32_t u32dpm, uint32_t au32Pwd[])
 
         /* Set Non-secure DPM password update */
         while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
-        dpm->NSCTL = (dpm->NSCTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE|DPM_NSCTL_PWUPD_Msk);
+        dpm->NSCTL = (dpm->NSCTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE | DPM_NSCTL_PWUPD_Msk);
 
         /* Check Non-secure DPM password update flag */
         while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
-        u32RetVal = (dpm->NSSTS & DPM_NSSTS_PWUOK_Msk)>>DPM_NSSTS_PWUOK_Pos;
+        u32RetVal = (dpm->NSSTS & DPM_NSSTS_PWUOK_Msk) >> DPM_NSSTS_PWUOK_Pos;
 
         /* Clear Non-secure DPM password update flag */
         if(u32RetVal) dpm->NSSTS = DPM_NSSTS_PWUOK_Msk;
@@ -218,24 +218,24 @@ uint32_t DPM_SetPasswordUpdate(uint32_t u32dpm, uint32_t au32Pwd[])
   */
 uint32_t DPM_SetPasswordCompare(uint32_t u32dpm, uint32_t au32Pwd[])
 {
-    uint32_t u32i, u32RetVal=0;
+    uint32_t u32i, u32RetVal = 0;
     DPM_T *dpm;
 
     if(__PC()&NS_OFFSET) dpm = DPM_NS;
     else dpm = DPM;
 
-    if(u32dpm==SECURE_DPM)  /* Secure DPM */
+    if(u32dpm == SECURE_DPM) /* Secure DPM */
     {
         /* Check Secure DPM password compare fail times maximum flag */
         while(dpm->STS & DPM_STS_BUSY_Msk);
         if(dpm->STS & DPM_STS_PWFMAX_Msk)
         {
-            u32RetVal=1;
+            u32RetVal = 1;
         }
         else
         {
             /* Set Secure DPM password */
-            for(u32i=0; u32i<4; u32i++)
+            for(u32i = 0; u32i < 4; u32i++)
             {
                 while(dpm->STS & DPM_STS_BUSY_Msk);
                 dpm->SPW[u32i] = au32Pwd[u32i];
@@ -243,7 +243,7 @@ uint32_t DPM_SetPasswordCompare(uint32_t u32dpm, uint32_t au32Pwd[])
 
             /* Set Secure DPM password cpmpare */
             while(dpm->STS & DPM_STS_BUSY_Msk);
-            dpm->CTL = (dpm->CTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE|DPM_CTL_PWCMP_Msk);
+            dpm->CTL = (dpm->CTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE | DPM_CTL_PWCMP_Msk);
         }
     }
     else    /* Non-secure DPM */
@@ -252,12 +252,12 @@ uint32_t DPM_SetPasswordCompare(uint32_t u32dpm, uint32_t au32Pwd[])
         while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
         if(dpm->NSSTS & DPM_NSSTS_PWFMAX_Msk)
         {
-            u32RetVal=1;
+            u32RetVal = 1;
         }
         else
         {
             /* Set Non-secure DPM password */
-            for(u32i=0; u32i<4; u32i++)
+            for(u32i = 0; u32i < 4; u32i++)
             {
                 while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
                 dpm->NSPW[u32i] = au32Pwd[u32i];
@@ -265,7 +265,7 @@ uint32_t DPM_SetPasswordCompare(uint32_t u32dpm, uint32_t au32Pwd[])
 
             /* Set Non-secure DPM password compare */
             while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
-            dpm->NSCTL = (dpm->NSCTL & (~DPM_NSCTL_WVCODE_Msk)) | (DPM_NSCTL_WVCODE|DPM_NSCTL_PWCMP_Msk);
+            dpm->NSCTL = (dpm->NSCTL & (~DPM_NSCTL_WVCODE_Msk)) | (DPM_NSCTL_WVCODE | DPM_NSCTL_PWCMP_Msk);
         }
     }
 
@@ -282,23 +282,23 @@ uint32_t DPM_SetPasswordCompare(uint32_t u32dpm, uint32_t au32Pwd[])
   */
 uint32_t DPM_GetPasswordErrorFlag(uint32_t u32dpm)
 {
-    uint32_t u32RetVal=0;
+    uint32_t u32RetVal = 0;
     DPM_T *dpm;
 
     if(__PC()&NS_OFFSET) dpm = DPM_NS;
     else dpm = DPM;
 
-    if(u32dpm==SECURE_DPM)  /* Secure DPM */
+    if(u32dpm == SECURE_DPM) /* Secure DPM */
     {
         /* Check Secure DPM password compare error flag */
         while(dpm->STS & DPM_STS_BUSY_Msk);
-        u32RetVal = (dpm->STS & DPM_STS_PWCERR_Msk)>>DPM_STS_PWCERR_Pos;
+        u32RetVal = (dpm->STS & DPM_STS_PWCERR_Msk) >> DPM_STS_PWCERR_Pos;
     }
     else    /* Non-secure DPM */
     {
         /* Check Non-secure DPM password compare error flag */
         while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
-        u32RetVal = (dpm->NSSTS & DPM_NSSTS_PWCERR_Msk)>>DPM_NSSTS_PWCERR_Pos;
+        u32RetVal = (dpm->NSSTS & DPM_NSSTS_PWCERR_Msk) >> DPM_NSSTS_PWCERR_Pos;
     }
 
     return u32RetVal;
@@ -315,7 +315,7 @@ uint32_t DPM_GetPasswordErrorFlag(uint32_t u32dpm)
 uint32_t DPM_GetIntFlag(void)
 {
     while(DPM->STS & DPM_STS_BUSY_Msk);
-    return (DPM->STS & DPM_STS_INT_Msk)>>DPM_STS_INT_Pos;
+    return (DPM->STS & DPM_STS_INT_Msk) >> DPM_STS_INT_Pos;
 }
 
 
@@ -334,7 +334,7 @@ void DPM_ClearPasswordErrorFlag(uint32_t u32dpm)
     if(__PC()&NS_OFFSET) dpm = DPM_NS;
     else dpm = DPM;
 
-    if(u32dpm==SECURE_DPM)  /* Secure DPM */
+    if(u32dpm == SECURE_DPM) /* Secure DPM */
     {
         while(dpm->STS & DPM_STS_BUSY_Msk);
         dpm->STS = DPM_STS_PWCERR_Msk;
@@ -361,15 +361,15 @@ void DPM_EnableDebuggerWriteAccess(uint32_t u32dpm)
     if(__PC()&NS_OFFSET) dpm = DPM_NS;
     else dpm = DPM;
 
-    if(u32dpm==SECURE_DPM)  /* Secure DPM */
+    if(u32dpm == SECURE_DPM) /* Secure DPM */
     {
         while(dpm->STS & DPM_STS_BUSY_Msk);
-        dpm->CTL = (dpm->CTL & (~(DPM_CTL_RVCODE_Msk|DPM_CTL_DACCWDIS_Msk))) | DPM_CTL_WVCODE;
+        dpm->CTL = (dpm->CTL & (~(DPM_CTL_RVCODE_Msk | DPM_CTL_DACCWDIS_Msk))) | DPM_CTL_WVCODE;
     }
     else    /* Non-secure DPM */
     {
         while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
-        dpm->NSCTL = (dpm->NSCTL & (~(DPM_NSCTL_RVCODE_Msk|DPM_NSCTL_DACCWDIS_Msk))) | DPM_NSCTL_WVCODE;
+        dpm->NSCTL = (dpm->NSCTL & (~(DPM_NSCTL_RVCODE_Msk | DPM_NSCTL_DACCWDIS_Msk))) | DPM_NSCTL_WVCODE;
     }
 }
 
@@ -388,15 +388,15 @@ void DPM_DisableDebuggerWriteAccess(uint32_t u32dpm)
     if(__PC()&NS_OFFSET) dpm = DPM_NS;
     else dpm = DPM;
 
-    if(u32dpm==SECURE_DPM)  /* Secure DPM */
+    if(u32dpm == SECURE_DPM) /* Secure DPM */
     {
         while(dpm->STS & DPM_STS_BUSY_Msk);
-        dpm->CTL = (dpm->CTL & (~DPM_CTL_RVCODE_Msk)) | (DPM_CTL_WVCODE|DPM_CTL_DACCWDIS_Msk);
+        dpm->CTL = (dpm->CTL & (~DPM_CTL_RVCODE_Msk)) | (DPM_CTL_WVCODE | DPM_CTL_DACCWDIS_Msk);
     }
     else    /* Non-secure DPM */
     {
         while(dpm->NSSTS & DPM_NSSTS_BUSY_Msk);
-        dpm->NSCTL = (dpm->NSCTL & (~DPM_NSCTL_RVCODE_Msk)) | (DPM_NSCTL_WVCODE|DPM_NSCTL_DACCWDIS_Msk);
+        dpm->NSCTL = (dpm->NSCTL & (~DPM_NSCTL_RVCODE_Msk)) | (DPM_NSCTL_WVCODE | DPM_NSCTL_DACCWDIS_Msk);
     }
 }
 

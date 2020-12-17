@@ -111,7 +111,7 @@ void ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
     uint32_t r0, r1, r2, r3, r12, pc, psr;
     uint32_t *stack;
 
-	  (void)psp;
+    (void)psp;
     stack = (uint32_t *)msp;
 
     /* Get information from stack */

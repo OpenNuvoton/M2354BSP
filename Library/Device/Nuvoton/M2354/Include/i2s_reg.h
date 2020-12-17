@@ -19,7 +19,7 @@
 /**
     @addtogroup I2S I2S Interface Controller(I2S)
     Memory Mapped Structure for I2S Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -472,7 +472,7 @@ typedef struct
 /**
     @addtogroup I2S_CONST I2S Bit Field Definition
     Constant Definitions for I2S Controller
-  @{ 
+  @{
 */
 
 #define I2S_CTL0_I2SEN_Pos               (0)                                               /*!< I2S_T::CTL0: I2SEN Position            */

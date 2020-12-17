@@ -85,7 +85,7 @@ int32_t KS_Read(KS_MEM_Type eType, int32_t i32KeyIdx, uint32_t au32Key[], uint32
         KS->STS = KS_STS_EIF_Msk | KS_STS_IF_Msk;
 
         /* Trigger to read the key */
-        KS->CTL = u32Cont | KS_OP_READ | KS_CTL_START_Msk | (KS->CTL & (KS_CTL_SILENT_Msk|KS_CTL_SCMB_Msk));
+        KS->CTL = u32Cont | KS_OP_READ | KS_CTL_START_Msk | (KS->CTL & (KS_CTL_SILENT_Msk | KS_CTL_SCMB_Msk));
         /* Waiting for key store processing */
         while(KS->STS & KS_STS_BUSY_Msk);
 
@@ -93,16 +93,17 @@ int32_t KS_Read(KS_MEM_Type eType, int32_t i32KeyIdx, uint32_t au32Key[], uint32
         cnt = i32Cnt;
         if(cnt > 8)
             cnt = 8;
-        for(i=0; i<cnt; i++)
+        for(i = 0; i < cnt; i++)
         {
-            au32Key[offset+i] = KS->KEY[i];
+            au32Key[offset + i] = KS->KEY[i];
             //printf("R[%d]:0x%08x\n", i, au32Key[offset+i]);
         }
 
         u32Cont = KS_CTL_CONT_Msk;
         i32Cnt -= 8;
         offset += 8;
-    } while(i32Cnt > 0);
+    }
+    while(i32Cnt > 0);
 
     /* Check error flag */
     if(KS->STS & KS_STS_EIF_Msk)
@@ -138,7 +139,7 @@ int32_t KS_Read(KS_MEM_Type eType, int32_t i32KeyIdx, uint32_t au32Key[], uint32
 
 uint32_t KS_GetKeyWordCnt(uint32_t u32Meta)
 {
-    const uint16_t au8CntTbl[21] = { 4,6,6,7,8,8,8,9,12,13,16,17,18,0,0,0,32,48,64,96,128 };
+    const uint16_t au8CntTbl[21] = { 4, 6, 6, 7, 8, 8, 8, 9, 12, 13, 16, 17, 18, 0, 0, 0, 32, 48, 64, 96, 128 };
     return au8CntTbl[((u32Meta & KS_METADATA_SIZE_Msk) >> KS_METADATA_SIZE_Pos)];
 }
 
@@ -218,16 +219,16 @@ int32_t KS_Write(KS_MEM_Type eType, uint32_t u32Meta, uint32_t au32Key[])
         cnt = i32Cnt;
         if(cnt > 8)
             cnt = 8;
-        for(i=0; i<cnt; i++)
+        for(i = 0; i < cnt; i++)
         {
-            KS->KEY[i] = au32Key[offset+i];
+            KS->KEY[i] = au32Key[offset + i];
         }
 
         /* Clear Status */
         KS->STS = KS_STS_EIF_Msk | KS_STS_IF_Msk;
 
         /* Write the key */
-        KS->CTL = u32Cont | KS_OP_WRITE | KS_CTL_START_Msk | (KS->CTL & (KS_CTL_SILENT_Msk|KS_CTL_SCMB_Msk));
+        KS->CTL = u32Cont | KS_OP_WRITE | KS_CTL_START_Msk | (KS->CTL & (KS_CTL_SILENT_Msk | KS_CTL_SCMB_Msk));
 
         u32Cont = KS_CTL_CONT_Msk;
         i32Cnt -= 8;
@@ -236,7 +237,8 @@ int32_t KS_Write(KS_MEM_Type eType, uint32_t u32Meta, uint32_t au32Key[])
         /* Waiting for key store processing */
         while(KS->STS & KS_STS_BUSY_Msk);
 
-    } while(i32Cnt > 0);
+    }
+    while(i32Cnt > 0);
 
     /* Check error flag */
     if(KS->STS & KS_STS_EIF_Msk)
@@ -271,7 +273,7 @@ int32_t KS_EraseKey(int32_t i32KeyIdx)
     KS->STS = KS_STS_EIF_Msk | KS_STS_IF_Msk;
 
     /* Erase the key */
-    KS->CTL = KS_OP_ERASE | KS_CTL_START_Msk  | (KS->CTL & (KS_CTL_SILENT_Msk|KS_CTL_SCMB_Msk));
+    KS->CTL = KS_OP_ERASE | KS_CTL_START_Msk  | (KS->CTL & (KS_CTL_SILENT_Msk | KS_CTL_SCMB_Msk));
 
     /* Waiting for processing */
     while(KS->STS & KS_STS_BUSY_Msk);
@@ -312,7 +314,7 @@ int32_t KS_EraseAll(KS_MEM_Type eType)
     KS->STS = KS_STS_EIF_Msk | KS_STS_IF_Msk;
 
     /* Erase the key */
-    KS->CTL = KS_OP_ERASE_ALL | KS_CTL_START_Msk  | (KS->CTL & (KS_CTL_SILENT_Msk|KS_CTL_SCMB_Msk));
+    KS->CTL = KS_OP_ERASE_ALL | KS_CTL_START_Msk  | (KS->CTL & (KS_CTL_SILENT_Msk | KS_CTL_SCMB_Msk));
 
     /* Waiting for processing */
     while(KS->STS & KS_STS_BUSY_Msk);
@@ -354,7 +356,7 @@ int32_t KS_RevokeKey(KS_MEM_Type eType, int32_t i32KeyIdx)
     KS->STS = KS_STS_EIF_Msk | KS_STS_IF_Msk;
 
     /* Erase the key */
-    KS->CTL = KS_OP_REVOKE | KS_CTL_START_Msk | (KS->CTL & (KS_CTL_SILENT_Msk|KS_CTL_SCMB_Msk));
+    KS->CTL = KS_OP_REVOKE | KS_CTL_START_Msk | (KS->CTL & (KS_CTL_SILENT_Msk | KS_CTL_SCMB_Msk));
 
     /* Waiting for processing */
     while(KS->STS & KS_STS_BUSY_Msk);
@@ -384,8 +386,8 @@ uint32_t KS_GetRemainSize(KS_MEM_Type mem)
     u32Reg = KS->REMAIN;
     //printf("KS Remain 0x%08x\n", u32Reg);
     //printf("SRAM remain %lu bytes, Flash remain %lu bytes\n",(u32Reg&KS_REMAIN_RRMNG_Msk) >> KS_REMAIN_RRMNG_Pos, (u32Reg&KS_REMAIN_FRMNG_Msk) >> KS_REMAIN_FRMNG_Pos);
-    u32SramRemain = (u32Reg&KS_REMAIN_RRMNG_Msk) >> KS_REMAIN_RRMNG_Pos;
-    u32FlashRemain = (u32Reg&KS_REMAIN_FRMNG_Msk) >> KS_REMAIN_FRMNG_Pos;
+    u32SramRemain = (u32Reg & KS_REMAIN_RRMNG_Msk) >> KS_REMAIN_RRMNG_Pos;
+    u32FlashRemain = (u32Reg & KS_REMAIN_FRMNG_Msk) >> KS_REMAIN_FRMNG_Pos;
 
     if(mem == KS_SRAM)
         return u32SramRemain;
@@ -453,7 +455,7 @@ uint32_t KS_GetRemainKeyCount(KS_MEM_Type mem)
   */
 int32_t KS_WriteOTP(int32_t i32KeyIdx, uint32_t u32Meta, uint32_t au32Key[])
 {
-    const uint16_t au8CntTbl[7] = {4,6,6,7,8,8,8};
+    const uint16_t au8CntTbl[7] = {4, 6, 6, 7, 8, 8, 8};
     int32_t i32Cnt;
     uint32_t u32Cont;
     int32_t offset, i, cnt, sidx;
@@ -485,16 +487,16 @@ int32_t KS_WriteOTP(int32_t i32KeyIdx, uint32_t u32Meta, uint32_t au32Key[])
         cnt = i32Cnt;
         if(cnt > 8)
             cnt = 8;
-        for(i=0; i<cnt; i++)
+        for(i = 0; i < cnt; i++)
         {
-            KS->KEY[i] = au32Key[offset+i];
+            KS->KEY[i] = au32Key[offset + i];
         }
 
         /* Clear Status */
         KS->STS = KS_STS_EIF_Msk | KS_STS_IF_Msk;
 
         /* Write the key */
-        KS->CTL = u32Cont | KS_OP_WRITE | KS_CTL_START_Msk | (KS->CTL & (KS_CTL_SILENT_Msk|KS_CTL_SCMB_Msk));
+        KS->CTL = u32Cont | KS_OP_WRITE | KS_CTL_START_Msk | (KS->CTL & (KS_CTL_SILENT_Msk | KS_CTL_SCMB_Msk));
 
         u32Cont = KS_CTL_CONT_Msk;
         i32Cnt -= 8;
@@ -503,7 +505,8 @@ int32_t KS_WriteOTP(int32_t i32KeyIdx, uint32_t u32Meta, uint32_t au32Key[])
         /* Waiting for key store processing */
         while(KS->STS & KS_STS_BUSY_Msk);
 
-    } while(i32Cnt > 0);
+    }
+    while(i32Cnt > 0);
 
     /* Check error flag */
     if(KS->STS & KS_STS_EIF_Msk)

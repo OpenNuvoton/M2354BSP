@@ -35,47 +35,47 @@ int32_t PrepareKeys(void);
 
 void CRPT_IRQHandler(void)
 {
-    if (PRNG_GET_INT_FLAG(CRPT))
+    if(PRNG_GET_INT_FLAG(CRPT))
     {
         PRNG_CLR_INT_FLAG(CRPT);
     }
-    if (SHA_GET_INT_FLAG(CRPT))
+    if(SHA_GET_INT_FLAG(CRPT))
     {
         SHA_CLR_INT_FLAG(CRPT);
     }
-	if (RSA_GET_INT_FLAG(CRPT))
-	{
+    if(RSA_GET_INT_FLAG(CRPT))
+    {
         g_RSA_done = 1;
-        if (RSA_GET_INT_FLAG(CRPT)&CRPT_INTSTS_RSAEIF_Msk)
+        if(RSA_GET_INT_FLAG(CRPT)&CRPT_INTSTS_RSAEIF_Msk)
         {
             g_RSA_error = 1;
             printf("RSA error flag is set!!\n");
         }
-		RSA_CLR_INT_FLAG(CRPT);
-	}
+        RSA_CLR_INT_FLAG(CRPT);
+    }
 }
 
 void RSA_Hex2Reg(char *input, uint32_t *reg)
 {
-	int  	  i, si;
-	uint32_t  val32;
+    int       i, si;
+    uint32_t  val32;
 
-	si = (int)strlen(input)-1;
-	while (si >= 0)
-	{
-		val32 = 0;
-		for (i = 0; (i < 8) && (si >= 0); i++)
-		{
-			if (input[si] <= '9')
-				val32 |= (uint32_t)((input[si] - '0') << (i * 4));
-			else if ((input[si] <= 'z') && (input[si] >= 'a'))
-				val32 |= (uint32_t)((input[si] - 'a' + 10) << (i * 4));
-			else
-				val32 |= (uint32_t)((input[si] - 'A' + 10) << (i * 4));
-			si--;
-		}
-		*reg++ = val32;
-	}
+    si = (int)strlen(input) - 1;
+    while(si >= 0)
+    {
+        val32 = 0;
+        for(i = 0; (i < 8) && (si >= 0); i++)
+        {
+            if(input[si] <= '9')
+                val32 |= (uint32_t)((input[si] - '0') << (i * 4));
+            else if((input[si] <= 'z') && (input[si] >= 'a'))
+                val32 |= (uint32_t)((input[si] - 'a' + 10) << (i * 4));
+            else
+                val32 |= (uint32_t)((input[si] - 'A' + 10) << (i * 4));
+            si--;
+        }
+        *reg++ = val32;
+    }
 }
 
 void SYS_Init(void)
@@ -136,7 +136,7 @@ void EraseAllFlashKey(void)
 
     /* Erase all keys in FLASH of key store */
     i32Ret = KS_EraseAll(KS_FLASH);
-    if (i32Ret == -1)
+    if(i32Ret == -1)
     {
         printf("\nErase all keys in FLASH of key store is failed!\n");
     }
@@ -147,14 +147,14 @@ int32_t PrepareKeys(void)
 {
     /* Create and read the private key number */
     RSA_Hex2Reg(d, (uint32_t *)&g_au32TmpBuf[0]);
-    g_i32PrivateKeyNum = KS_Write(KS_FLASH, KS_META_RSA_EXP|KS_META_2048|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32PrivateKeyNum == -1)
+    g_i32PrivateKeyNum = KS_Write(KS_FLASH, KS_META_RSA_EXP | KS_META_2048 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32PrivateKeyNum == -1)
         return -1;
 
     /* Create and read the public key number */
     RSA_Hex2Reg(E, (uint32_t *)&g_au32TmpBuf[0]);
-    g_i32PublicKeyNum = KS_Write(KS_FLASH, KS_META_RSA_EXP|KS_META_2048|KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
-    if (g_i32PublicKeyNum == -1)
+    g_i32PublicKeyNum = KS_Write(KS_FLASH, KS_META_RSA_EXP | KS_META_2048 | KS_META_READABLE, (uint32_t *)&g_au32TmpBuf[0]);
+    if(g_i32PublicKeyNum == -1)
         return -1;
 
     printf("\n[The number of created keys in FLASH of key store] \n");
@@ -188,7 +188,7 @@ int32_t main(void)
     KS_Open();
 
     /* Prepare the keys in key store */
-    if (PrepareKeys() == -1)
+    if(PrepareKeys() == -1)
     {
         printf("\nCreate keys is failed!!\n");
 
@@ -223,13 +223,13 @@ int32_t main(void)
     RSA_Start(CRPT);
 
     /* Waiting for RSA operation done */
-    while (!g_RSA_done);
+    while(!g_RSA_done);
 
     /* Check error flag */
-    if (g_RSA_error)
+    if(g_RSA_error)
     {
         printf("\nRSA has error!!\n");
-        while (1);
+        while(1);
     }
 
     /* Get RSA output result */
@@ -250,13 +250,13 @@ int32_t main(void)
     RSA_Start(CRPT);
 
     /* Waiting for RSA operation done */
-    while (!g_RSA_done);
+    while(!g_RSA_done);
 
     /* Check error flag */
-    if (g_RSA_error)
+    if(g_RSA_error)
     {
         printf("\nRSA has error!!\n");
-        while (1);
+        while(1);
     }
 
     /* Get RSA output result */
@@ -264,19 +264,19 @@ int32_t main(void)
     printf("\nRSA Output: %s\n", OutputResult);
 
     /* Verify the message */
-    if (strcasecmp(OutputResult, Msg) == 0)
+    if(strcasecmp(OutputResult, Msg) == 0)
         printf("\nRSA signature verify OK.\n");
     else
     {
         printf("\nRSA signature verify failed!!\n");
-        while (1);
+        while(1);
     }
     printf("\nDone.\n");
 
     /* Erase all keys in FLASH of key store */
     EraseAllFlashKey();
 
-    while (1);
+    while(1);
 }
 
 /*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

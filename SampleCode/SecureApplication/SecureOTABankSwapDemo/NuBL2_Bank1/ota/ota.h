@@ -21,7 +21,7 @@ extern "C"
 #define OTA_CLIENT 1
 
 #define WDT_RST_ENABLE 0
-    
+
 #define FW_INFO_SIZE     (0x150UL) /* Size of FW INFO */
 
 #define OTA_STATUS_BASE (0x48000) /* Base address of OTA status for OTA update from SD card method */

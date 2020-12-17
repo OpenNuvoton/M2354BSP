@@ -398,7 +398,7 @@ typedef struct
     __IO uint32_t DFCTL;                 /*!< [0x0100] Data Flash Function Control Register                             */
     __I  uint32_t RESERVE6;
     __IO uint32_t DFSTS;                 /*!< [0x0108] Data Flash Status Register                                       */
-    __O  uint32_t SCRKEY;		             /*!< [0x010c] Data Flash Scrambling Key Register                               */
+    __O  uint32_t SCRKEY;                    /*!< [0x010c] Data Flash Scrambling Key Register                               */
 
 } FMC_T;
 
@@ -618,7 +618,7 @@ typedef struct
 #define FMC_DFSTS_TMPCLRBUSY_Pos         (1)                                               /*!< FMC_T::DFSTS: TMPCLRBUSY Position    */
 #define FMC_DFSTS_TMPCLRBUSY_Msk         (0x1ul << FMC_DFSTS_TMPCLRBUSY_Pos)               /*!< FMC_T::DFSTS: TMPCLRBUSY Mask        */
 
-#define FMC_SCRKEY_SCRKEY_Pos            (0)	                                             /*!< FMC_T::SCRKEY: SCRKEY Position       */
+#define FMC_SCRKEY_SCRKEY_Pos            (0)                                                 /*!< FMC_T::SCRKEY: SCRKEY Position       */
 #define FMC_SCRKEY_SCRKEY_Msk            (0xfffffffful << FMC_SCRKEY_SCRKEY_Pos)           /*!< FMC_T::SCRKEY: SCRKEY Mask           */
 
 /**@}*/ /* FMC_CONST */

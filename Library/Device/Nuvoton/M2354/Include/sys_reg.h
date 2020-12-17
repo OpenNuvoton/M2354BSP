@@ -19,7 +19,7 @@
 /**
     @addtogroup SYS System Manger Controller(SYS)
     Memory Mapped Structure for SYS Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -57,8 +57,8 @@ typedef struct
      * |        |          |Note 1: Write 1 to clear this bit to 0.
      * |        |          |Note 2: Watchdog Timer register RSTF(WDT_CTL[2]) bit is set if the system has been reset by WDT time-out reset.
      * |        |          |Window Watchdog Timer register WWDTRF(WWDT_STATUS[1]) bit is set if the system has been reset by WWDT time-out reset.
-     * |        |          |Note 3: Extra Watchdog Timer register RSTF(EWDT_CTL[2]) bit is set if the system has been reset by EWDT time-out reset. 
-     * |        |          |Extra Window Watchdog Timer register WWDTRF(EWWDT_STATUS[1]) bit is set if the system has been reset by EWWDT time-out reset.     
+     * |        |          |Note 3: Extra Watchdog Timer register RSTF(EWDT_CTL[2]) bit is set if the system has been reset by EWDT time-out reset.
+     * |        |          |Extra Window Watchdog Timer register WWDTRF(EWWDT_STATUS[1]) bit is set if the system has been reset by EWWDT time-out reset.
      * |[3]     |LVRF      |LVR Reset Flag
      * |        |          |The LVR reset flag is set by the "Reset Signal" from the Low Voltage Reset Controller to indicate the previous reset source.
      * |        |          |0 = No reset from LVR.
@@ -275,7 +275,7 @@ typedef struct
      * |        |          |1 = Timer4 controller reset.
      * |[21]    |TMR5RST   |Timer5 Controller Reset
      * |        |          |0 = Timer5 controller normal operation.
-     * |        |          |1 = Timer5 controller reset.     
+     * |        |          |1 = Timer5 controller reset.
      * |[22]    |QEI0RST   |QEI0 Controller Reset
      * |        |          |0 = QEI0 controller normal operation.
      * |        |          |1 = QEI0 controller reset.
@@ -345,7 +345,7 @@ typedef struct
      * |        |          |111 = 256 system clock (HCLK).
      * |        |          |Note: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |[23]    |STB       |Circuit Stable Flag (Read Only)
-     * |        |          |This bit indicates LVR and BOD already stable, system cannot detect LVR and BOD event when this bit is not set.     
+     * |        |          |This bit indicates LVR and BOD already stable, system cannot detect LVR and BOD event when this bit is not set.
      * |        |          |0 = LVR and BOD is not stable.
      * |        |          |1 = LVR and BOD already stable.
      * |[18:16] |BODVL     |Brown-out Detector Threshold Voltage Selection (Write Protect)
@@ -668,7 +668,7 @@ typedef struct
      * |        |          |10 = Power shut down mode.
      * |        |          |11 = Reserved (Write Ignore).
      * |        |          |Note 1: These bits are write protected. Refer to the SYS_REGLCTL register.
-     * |        |          |Note 2: Write ignore when PCBUSY is 1.   
+     * |        |          |Note 2: Write ignore when PCBUSY is 1.
      * |[5:4]   |SRAM0PM2  |Bank0 SRAM Power Mode Select 2 (Write Protect)
      * |        |          |This field can control SRAM bank0 selection 2 (8k) power mode for range 0x2000_2000 - 0x2000_3FFF.
      * |        |          |00 = Normal mode.
@@ -774,11 +774,11 @@ typedef struct
      * |        |          |Note 1: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |        |          |Note 2: Write ignore when PCBUSY is 1.
      * |[31]    |PCBUSY    |Power Changing Busy Flag (Read Only)
-     * |        |          |This bit indicate SRAM power changing. 
-     * |        |          |0 = SRAM power change finish. 
+     * |        |          |This bit indicate SRAM power changing.
+     * |        |          |0 = SRAM power change finish.
      * |        |          |1 = SRAM power changing.
      * @var SYS_T::SRAMPC1
-     * Offset: 0xE0  SRAM Power Mode Control Register 1 
+     * Offset: 0xE0  SRAM Power Mode Control Register 1
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
      * | :----: | :----:   | :---- |
@@ -790,7 +790,7 @@ typedef struct
      * |        |          |11 = Reserved (Write Ignore).
      * |        |          |Note 1: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |        |          |Note 2: Write ignore when PCBUSY is 1.
-     * |[3:2]   |SRAM2PM3  |Bank2 SRAM Power Mode Select 3 (Write Protect)    
+     * |[3:2]   |SRAM2PM3  |Bank2 SRAM Power Mode Select 3 (Write Protect)
      * |        |          |This field can control bank2 sram3 (16k) power mode for range 0x2003_4000 - 0x2003_7FFF.
      * |        |          |00 = Normal mode.
      * |        |          |01 = Retention mode.
@@ -829,7 +829,7 @@ typedef struct
      * |        |          |10 = Power shut down mode.
      * |        |          |11 = Reserved (Write Ignore).
      * |        |          |Note 1: These bits are write protected. Refer to the SYS_REGLCTL register.
-     * |        |          |Note 2: Write ignore when PCBUSY is 1.  
+     * |        |          |Note 2: Write ignore when PCBUSY is 1.
      * |[21:20] |PDMA0     |PDMA SRAM Power Mode Select (Write Protect)
      * |        |          |This field can control PDMA0 (always secure) sram power mode.
      * |        |          |00 = Normal mode.
@@ -853,7 +853,7 @@ typedef struct
      * |        |          |10 = Power shut down mode.
      * |        |          |11 = Reserved (Write Ignore).
      * |        |          |Note 1: These bits are write protected. Refer to the SYS_REGLCTL register.
-     * |        |          |Note 2: Write ignore when PCBUSY is 1.    
+     * |        |          |Note 2: Write ignore when PCBUSY is 1.
      * |[27:26] |RSA       |RSA SRAM Power Mode Select (Write Protect)
      * |        |          |This field can control RSA sram power mode.
      * |        |          |00 = Normal mode.
@@ -861,7 +861,7 @@ typedef struct
      * |        |          |10 = Power shut down mode.
      * |        |          |11 = Reserved (Write Ignore).
      * |        |          |Note 1: These bits are write protected. Refer to the SYS_REGLCTL register.
-     * |        |          |Note 2: Write ignore when PCBUSY is 1.     
+     * |        |          |Note 2: Write ignore when PCBUSY is 1.
      * |        |          |Note 3: If CRPTPWREN of SYS_PSWCTL is set to 1, RSA SRAM is auto set to normal mode by hardware.
      * |[29:28] |KS        |Key Store SRAM Power Mode Select (Write Protect)
      * |        |          |This field can control Key Store sram power mode.
@@ -870,10 +870,10 @@ typedef struct
      * |        |          |10 = Power shut down mode.
      * |        |          |11 = Reserved (Write Ignore).
      * |        |          |Note 1: These bits are write protected. Refer to the SYS_REGLCTL register.
-     * |        |          |Note 2: Write ignore when PCBUSY is 1.      
+     * |        |          |Note 2: Write ignore when PCBUSY is 1.
      * |[31]    |PCBUSY    |Power Changing Busy Flag (Read Only)
-     * |        |          |This bit indicate SRAM power changing. 
-     * |        |          |0 = SRAM power change finish. 
+     * |        |          |This bit indicate SRAM power changing.
+     * |        |          |0 = SRAM power change finish.
      * |        |          |1 = SRAM power changing.
      * @var SYS_T::TCTL48M
      * Offset: 0xE4  HIRC 48M Trim Control Register
@@ -959,7 +959,7 @@ typedef struct
      * |        |          |When the over boundary function is set, if there occurs the over boundary condition, this flag will be set.
      * |        |          |0 = Over boundary condition did not occur.
      * |        |          |1 = Over boundary condition occurred.
-     * |        |          |Note: Write 1 to clear this flag.  
+     * |        |          |Note: Write 1 to clear this flag.
      * @var SYS_T::TCTL12M
      * Offset: 0xF0  HIRC 12M Trim Control Register
      * ---------------------------------------------------------------------------------------------------
@@ -989,7 +989,7 @@ typedef struct
      * |        |          |11 = Trim retry count limitation is 512 loops.
      * |[9]     |BOUNDEN   |Boundary Enable Bit
      * |        |          |0 = Boundary function is disable.
-     * |        |          |1 = Boundary function is enable.  
+     * |        |          |1 = Boundary function is enable.
      * |[8]     |CESTOPEN  |Clock Error Stop Enable Bit
      * |        |          |0 = The trim operation is keep going if clock is inaccuracy.
      * |        |          |1 = The trim operation is stopped if clock is inaccuracy.
@@ -1044,7 +1044,7 @@ typedef struct
      * |        |          |When the over boundary function is set, if there occurs the over boundary condition, this flag will be set.
      * |        |          |0 = Over boundary condition did not occur.
      * |        |          |1 = Over boundary condition occurred.
-     * |        |          |Note: Write 1 to clear this flag.     
+     * |        |          |Note: Write 1 to clear this flag.
      * @var SYS_T::REGLCTL
      * Offset: 0x100  Register Lock Control Register
      * ---------------------------------------------------------------------------------------------------
@@ -1066,7 +1066,7 @@ typedef struct
      * |[0]     |INTRTEN   |CPU Interrupt Realtime Enable Bit
      * |        |          |When this bit is 0, the latency of CPU entering interrupt service routine (ISR) will be various but shorter.
      * |        |          |When this bit is 1, the latency of CPU entering ISR will be kept constant.
-     * |        |          |0 = CPU Interrupt Realtime Disabled. 
+     * |        |          |0 = CPU Interrupt Realtime Disabled.
      * |        |          |1 = CPU Interrupt Realtime Enabled.
      * @var SYS_T::PORCTL1
      * Offset: 0x1EC  Power-on Reset Controller Register 1
@@ -1110,10 +1110,10 @@ typedef struct
      * |        |          |1 = Set main voltage regulator to DCDC.
      * |        |          |Note 1: This bit is write protected. Refer to the SYS_REGLCTL register.
      * |        |          |Note 2: This bit not be reset when wake-up from Standby Power-down mode(SPD).
-     * |[7]     |WRBUSY    |Write Busy Flag 
+     * |[7]     |WRBUSY    |Write Busy Flag
      * |        |          |If SYS_PLCTL be written, this bit be asserted automatic by hardware, and be de-asserted when write procedure finish.
      * |        |          |0 = SYS_PLCTL register is ready for write operation.
-     * |        |          |1 = SYS_PLCTL register is busy on the last write operation. Other write operations are ignored. 
+     * |        |          |1 = SYS_PLCTL register is busy on the last write operation. Other write operations are ignored.
      * |[21:16] |LVSSTEP   |LDO Voltage Scaling Step (Write Protect)
      * |        |          |The LVSSTEP value is LDO voltage rising step.
      * |        |          |LDO voltage scaling step = (LVSSTEP + 1) * 10mV.
@@ -1128,7 +1128,7 @@ typedef struct
      * |Bits    |Field     |Descriptions
      * | :----: | :----:   | :---- |
      * |[0]     |PLCBUSY   |Power Level Change Busy Bit (Read Only)
-     * |        |          |This bit is set by hardware when power level is changing. 
+     * |        |          |This bit is set by hardware when power level is changing.
      * |        |          |After power level change is completed, this bit will be cleared automatically by hardware.
      * |        |          |0 = Power level change is completed.
      * |        |          |1 = Power level change is ongoing.
@@ -1150,7 +1150,7 @@ typedef struct
      * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
      * |[3]     |LCONS     |Inductor for DC-DC Connect Status (Read Only)
      * |        |          |0 = Inductor connect between Vsw and LDO_CAP pin.
-     * |        |          |This bit is valid when current main voltage regulator type is DCDC (CURMVRS (SYS_PLSTS[12])=1). 
+     * |        |          |This bit is valid when current main voltage regulator type is DCDC (CURMVRS (SYS_PLSTS[12])=1).
      * |        |          |If current main voltage regulator type is LDO (CURMVRS (SYS_PLSTS[12])=0), this bit is set to 1.
      * |        |          |0 = Inductor connect between Vsw and LDO_CAP pin.
      * |        |          |1 = No Inductor connect between Vsw and LDO_CAP pin.
@@ -1215,7 +1215,7 @@ typedef struct
     __IO uint32_t GPG_MFOS;              /*!< [0x0098] GPIOG Multiple Function Output Select Register                   */
     __IO uint32_t GPH_MFOS;              /*!< [0x009c] GPIOH Multiple Function Output Select Register                   */
     __IO uint32_t VTORSET;               /*!< [0x00A0] VTOR Setting Register                                            */
-    __I  uint32_t RESERVE3[7];    
+    __I  uint32_t RESERVE3[7];
     __IO uint32_t SRAMICTL;              /*!< [0x00C0] System SRAM Interrupt Enable Control Register                    */
     __I  uint32_t SRAMSTS;               /*!< [0x00C4] System SRAM Parity Error Status Register                         */
     __I  uint32_t SRAMEADR;              /*!< [0x00C8] System SRAM Parity Check Error Address Register                  */
@@ -1234,7 +1234,7 @@ typedef struct
     __IO uint32_t CPUCFG;                /*!< [0x01D8] CPU General Configuration Register                               */
     __IO uint32_t BATLDCTL;              /*!< [0x01DC] Battery Loss Detector Control Register                           */
     __IO uint32_t OVDCTL;                /*!< [0x01E0] Over Voltage Detector Control Register                           */
-    __I  uint32_t RESERVE8[2];   
+    __I  uint32_t RESERVE8[2];
     __IO uint32_t PORCTL1;               /*!< [0x01EC] Power-on Reset Controller Register 1                             */
     __I  uint32_t RESERVE9[1];
     __IO uint32_t PSWCTL;                /*!< [0x01F4] Power Switch Control Register                                    */
@@ -1249,7 +1249,7 @@ typedef struct
 /**
     @addtogroup SYS_CONST SYS Bit Field Definition
     Constant Definitions for SYS Controller
-  @{ 
+  @{
 */
 
 #define SYS_PDID_PDID_Pos                (0)                                               /*!< SYS_T::PDID: PDID Position             */
@@ -2503,7 +2503,7 @@ typedef struct
 /**
     @addtogroup INT_CONST INT Bit Field Definition
     Constant Definitions for INT Controller
-  @{ 
+  @{
 */
 
 #define SYS_NMIEN_BODOUT_Pos             (0)                                               /*!< SYS_INT_T::NMIEN: BODOUT Position         */

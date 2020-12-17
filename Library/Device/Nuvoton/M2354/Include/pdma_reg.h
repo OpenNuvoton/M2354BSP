@@ -19,7 +19,7 @@
 /**
     @addtogroup PDMA Peripheral Direct Memory Access Controller(PDMA)
     Memory Mapped Structure for PDMA Controller
-  @{ 
+  @{
 */
 
 
@@ -554,7 +554,7 @@ typedef struct
 /**
     @addtogroup PDMA_CONST PDMA Bit Field Definition
     Constant Definitions for PDMA Controller
-  @{ 
+  @{
 */
 
 #define PDMA_DSCT_CTL_OPMODE_Pos        (0)                                               /*!< PDMA_T::DSCT_CTL: OPMODE Position     */

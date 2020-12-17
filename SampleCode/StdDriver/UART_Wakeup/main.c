@@ -50,10 +50,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC and LXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_LXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_LXTEN_Msk);
 
     /* Wait for HIRC and LXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_LXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_LXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -297,7 +297,7 @@ void UART_PowerDownWakeUpTest(void)
     printf("\nCPU @ %dHz\n", SystemCoreClock);
 
     /* Enable UART wake-up and receive data available interrupt */
-    NVIC_EnableIRQ(UART1_IRQn);      
+    NVIC_EnableIRQ(UART1_IRQn);
     UART_EnableInt(UART1, UART_INTEN_WKIEN_Msk | UART_INTEN_RDAIEN_Msk | UART_INTEN_RXTOIEN_Msk);
 
     UART_PowerDown_TestItem();
@@ -326,9 +326,9 @@ void UART_PowerDownWakeUpTest(void)
 
     /* Enter to Power-down mode */
     PowerDownFunction();
-    
+
     /* Wait for all data transmission is finished */
-    while( (UART1->FIFOSTS & UART_FIFOSTS_RXIDLE_Msk) == 0 );
+    while((UART1->FIFOSTS & UART_FIFOSTS_RXIDLE_Msk) == 0);
 
     /* Lock protected registers after entering Power-down mode */
     SYS_LockReg();

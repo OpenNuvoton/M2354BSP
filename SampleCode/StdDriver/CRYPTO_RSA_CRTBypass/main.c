@@ -33,24 +33,24 @@ void DEBUG_PORT_Init(void);
 
 void CRPT_IRQHandler(void)
 {
-    if (PRNG_GET_INT_FLAG(CRPT))
+    if(PRNG_GET_INT_FLAG(CRPT))
     {
         PRNG_CLR_INT_FLAG(CRPT);
     }
-    if (SHA_GET_INT_FLAG(CRPT))
+    if(SHA_GET_INT_FLAG(CRPT))
     {
         SHA_CLR_INT_FLAG(CRPT);
     }
-	if (RSA_GET_INT_FLAG(CRPT))
-	{
+    if(RSA_GET_INT_FLAG(CRPT))
+    {
         g_RSA_done = 1;
-        if (RSA_GET_INT_FLAG(CRPT)&CRPT_INTSTS_RSAEIF_Msk)
+        if(RSA_GET_INT_FLAG(CRPT)&CRPT_INTSTS_RSAEIF_Msk)
         {
             g_RSA_error = 1;
             printf("RSA error flag is set!!\n");
         }
-		RSA_CLR_INT_FLAG(CRPT);
-	}
+        RSA_CLR_INT_FLAG(CRPT);
+    }
 }
 
 void SYS_Init(void)
@@ -134,7 +134,7 @@ int32_t main(void)
      *  RSA first sign with CRT mode
      *---------------------------------------*/
     /* Configure RSA operation mode and key length */
-    if (RSA_Open(CRPT, RSA_MODE_CRT, RSA_KEY_SIZE_2048, &s_sRSABuf, sizeof(s_sRSABuf), 0) != 0)
+    if(RSA_Open(CRPT, RSA_MODE_CRT, RSA_KEY_SIZE_2048, &s_sRSABuf, sizeof(s_sRSABuf), 0) != 0)
     {
         printf("\nRSA buffer size is incorrect!!\n");
         while(1);
@@ -145,13 +145,13 @@ int32_t main(void)
     RSA_Start(CRPT);
 
     /* Waiting for RSA operation done */
-    while (!g_RSA_done);
+    while(!g_RSA_done);
 
     /* Check error flag */
-    if (g_RSA_error)
+    if(g_RSA_error)
     {
         printf("\nRSA has error!!\n");
-        while (1);
+        while(1);
     }
 
     /* Get RSA output result */
@@ -159,12 +159,12 @@ int32_t main(void)
     printf("\nRSA sign 1: %s\n", OutputResult);
 
     /* Verify the signature */
-    if (strcasecmp(OutputResult, Sign) == 0)
+    if(strcasecmp(OutputResult, Sign) == 0)
         printf("\nRSA signature 1 verify OK.\n\n");
     else
     {
         printf("\nRSA signature 1 verify failed!!\n\n");
-        while (1);
+        while(1);
     }
 
     /*--------------------------------------------------------------------------------
@@ -174,7 +174,7 @@ int32_t main(void)
     g_RSA_error = 0;
 
     /* Configure RSA operation mode and key length */
-    if (RSA_Open(CRPT, RSA_MODE_CRTBYPASS, RSA_KEY_SIZE_2048, &s_sRSABuf, sizeof(s_sRSABuf), 0) != 0)
+    if(RSA_Open(CRPT, RSA_MODE_CRTBYPASS, RSA_KEY_SIZE_2048, &s_sRSABuf, sizeof(s_sRSABuf), 0) != 0)
     {
         printf("\nRSA buffer size is incorrect!!\n");
         while(1);
@@ -184,13 +184,13 @@ int32_t main(void)
     RSA_Start(CRPT);
 
     /* Waiting for RSA operation done */
-    while (!g_RSA_done);
+    while(!g_RSA_done);
 
     /* Check error flag */
-    if (g_RSA_error)
+    if(g_RSA_error)
     {
         printf("\nRSA has error!!\n");
-        while (1);
+        while(1);
     }
 
     /* Get RSA output result */
@@ -198,15 +198,15 @@ int32_t main(void)
     printf("\nRSA sign 2: %s\n", OutputResult);
 
     /* Verify the signature */
-    if (strcasecmp(OutputResult, Sign2) == 0)
+    if(strcasecmp(OutputResult, Sign2) == 0)
         printf("\nRSA signature 2 verify OK.\n\n");
     else
     {
         printf("\nRSA signature 2 verify failed!!\n\n");
-        while (1);
+        while(1);
     }
     printf("\nDone.\n");
-    while (1);
+    while(1);
 }
 
 /*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

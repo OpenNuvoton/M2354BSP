@@ -78,7 +78,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ void SYS_Init(void)
 
     /* Waiting for clock ready */
     CLK_WaitClockReady(CLK_STATUS_LIRCSTB_Msk);
-    
+
     /* Enable WDT module clock */
     CLK_EnableModuleClock(WDT_MODULE);
     CLK_SetModuleClock(WDT_MODULE, CLK_CLKSEL1_WDTSEL_LIRC, 0);

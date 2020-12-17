@@ -78,8 +78,8 @@ void SYS_Init(void)
     /* Enable EPWM0 module clock */
     CLK_EnableModuleClock(EPWM0_MODULE);
 
-	/* Select EPWM0 module clock source */
-	CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
+    /* Select EPWM0 module clock source */
+    CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
 
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */

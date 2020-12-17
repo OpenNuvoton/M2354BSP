@@ -20,7 +20,7 @@
 /**
   @addtogroup ECAP Enhanced Input Capture Timer(ECAP)
   Memory Mapped Structure for ECAP Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -251,7 +251,7 @@ typedef struct
 /**
   @addtogroup ECAP_CONST ECAP Bit Field Definition
   Constant Definitions for ECAP Controller
-  @{ 
+  @{
 */
 
 #define ECAP_CNT_CNT_Pos                 (0)                                               /*!< ECAP_T::CNT: CNT Position              */

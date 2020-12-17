@@ -282,7 +282,7 @@ void EPWM_DisableADCTrigger(EPWM_T *epwm, uint32_t u32ChannelNum)
 int32_t EPWM_EnableADCTriggerPrescale(EPWM_T *epwm, uint32_t u32ChannelNum, uint32_t u32Prescale, uint32_t u32PrescaleCnt)
 {
     /* User can write only when PSCENn(n = 0 ~ 5) is 0 */
-    if ((epwm)->EADCPSCCTL & (1UL << u32ChannelNum))
+    if((epwm)->EADCPSCCTL & (1UL << u32ChannelNum))
         return (-1);
 
     if(u32ChannelNum < 4UL)
@@ -297,7 +297,7 @@ int32_t EPWM_EnableADCTriggerPrescale(EPWM_T *epwm, uint32_t u32ChannelNum, uint
         (epwm)->EADCPSC1 = ((epwm)->EADCPSC1 & ~((EPWM_EADCPSC1_EADCPSC4_Msk) << ((u32ChannelNum - 4UL) << 3))) | \
                            (u32Prescale << ((u32ChannelNum - 4UL) << 3));
         (epwm)->EADCPSCNT1 = ((epwm)->EADCPSCNT1 & ~((EPWM_EADCPSCNT1_PSCNT4_Msk) << ((u32ChannelNum - 4UL) << 3))) | \
-                           (u32PrescaleCnt << ((u32ChannelNum - 4UL) << 3));
+                             (u32PrescaleCnt << ((u32ChannelNum - 4UL) << 3));
     }
 
     (epwm)->EADCPSCCTL |= EPWM_EADCPSCCTL_PSCEN0_Msk << u32ChannelNum;
@@ -1548,7 +1548,7 @@ void EPWM_DisableFaultDetectOutput(EPWM_T *epwm, uint32_t u32ChannelNum)
 void EPWM_EnableFaultDetectDeglitch(EPWM_T *epwm, uint32_t u32ChannelNum, uint32_t u32DeglitchSmpCycle)
 {
     (epwm)->FDCTL[(u32ChannelNum)] = ((epwm)->FDCTL[(u32ChannelNum)] & (~EPWM_FDCTL0_DGSMPCYC_Msk)) | \
-                                      (EPWM_FDCTL0_FDDGEN_Msk | ((u32DeglitchSmpCycle) << EPWM_FDCTL0_DGSMPCYC_Pos));
+                                     (EPWM_FDCTL0_FDDGEN_Msk | ((u32DeglitchSmpCycle) << EPWM_FDCTL0_DGSMPCYC_Pos));
 }
 
 /**

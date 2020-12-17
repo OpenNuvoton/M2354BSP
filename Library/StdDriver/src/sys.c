@@ -204,7 +204,7 @@ void SYS_EnableBOD(int32_t i32Mode, uint32_t u32BODLevel)
     /* Enable Brown-out interrupt or reset function */
     /* Select Brown-out Detector threshold voltage */
     while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk);
-    SYS->BODCTL = (SYS->BODCTL & ~(SYS_BODCTL_BODRSTEN_Msk|SYS_BODCTL_BODVL_Msk)) |
+    SYS->BODCTL = (SYS->BODCTL & ~(SYS_BODCTL_BODRSTEN_Msk | SYS_BODCTL_BODVL_Msk)) |
                   ((uint32_t)i32Mode) | (u32BODLevel) | (SYS_BODCTL_BODEN_Msk);
 }
 

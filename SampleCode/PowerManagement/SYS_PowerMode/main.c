@@ -201,7 +201,7 @@ int32_t main(void)
 
     /* Set HCLK clock as MIRC */
     CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_MIRC, CLK_CLKDIV0_HCLK(1));
-    
+
     /* Set power level to 0.9V */
     printf("Set power level to 0.9V ");
     SYS_SetPowerLevel(SYS_PLCTL_PLSEL_PL3);

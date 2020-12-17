@@ -20,7 +20,7 @@
 /**
     @addtogroup UUART UART Mode of USCI Controller(UUART)
     Memory Mapped Structure for UUART Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -338,8 +338,8 @@ typedef struct
      * |[30]    |DGE       |Deglitch Enable Bit
      * |        |          |0 = Deglitch Disabled.
      * |        |          |1 = Deglitch Enabled.
-     * |        |          |Note: When this bit is set to logic 1, any pulse width less than about 300 ns will be considered a glitch and will be removed in the serial data input (RX). 
-     * |        |          |This bit acts only on RX line and has no effect on the transmitter logic.              
+     * |        |          |Note: When this bit is set to logic 1, any pulse width less than about 300 ns will be considered a glitch and will be removed in the serial data input (RX).
+     * |        |          |This bit acts only on RX line and has no effect on the transmitter logic.
      * |[31]    |PROTEN    |UART Protocol Enable Bit
      * |        |          |0 = UART Protocol Disabled.
      * |        |          |1 = UART Protocol Enabled.
@@ -447,7 +447,7 @@ typedef struct
 /**
     @addtogroup UUART_CONST UUART Bit Field Definition
     Constant Definitions for UUART Controller
-  @{ 
+  @{
 */
 
 #define UUART_CTL_FUNMODE_Pos            (0)                                               /*!< UUART_T::CTL: FUNMODE Position         */

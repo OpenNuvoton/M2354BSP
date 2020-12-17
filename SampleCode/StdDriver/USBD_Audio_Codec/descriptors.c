@@ -45,41 +45,41 @@ static uint8_t s_au8ConfigDescriptor[] =
     LEN_CONFIG,     /* bLength */
     DESC_CONFIG,    /* bDescriptorType */
     0xBE, 0x00,     /* wTotalLength */
-                    /*
-                       Configuration Descriptor                    (0x09)
-                       Interface Descriptor (Audio Class)          (0x09)
-                       Audio Control Interface Header Descriptor   (0x0A)
-                       Microphone - Audio Control
-                         Audio Control Input Terminal Descriptor   (0x0C)
-                         Audio Control Feature Unit Descriptor     (0x08)
-                         Audio Control Output Terminal Descriptor  (0x09)
-                       Speaker - Audio Control
-                         Audio Control Input Terminal Descriptor   (0x0C)
-                         Audio Control Feature Unit Descriptor     (0x0A)
-                         Audio Control Output Terminal Descriptor  (0x09)
-                       Microphone - Interface alternate 0
-                         Standard AS interface                     (0x09)
-                       Microphone - Interface alternate 1~6
-                         Standard AS interface                                         (0x09)
-                         Audio Streaming Class Specific Interface Descriptor           (0x07)
-                         Audio Streaming Format Type Descriptor                        (0x0B)
-                         Endpoint Descriptor                                           (0x07)
-                         Audio Streaming Class Specific Audio Data Endpoint Descriptor (0x07)
-                         *Each Interface alternate Summary                             (0x29)
-                       Speaker - Interface alternate 0
-                         Standard AS interface                     (0x09)
-                       Speaker - Interface alternate 1~4
-                         Standard AS interface                                         (0x09)
-                         Audio Streaming Class Specific Interface Descriptor           (0x07)
-                         Audio Streaming Format Type Descriptor                        (0x0B)
-                         Endpoint Descriptor                                           (0x09)
-                         Audio Streaming Class Specific Audio Data Endpoint Descriptor (0x07)
-                         *Each Interface alternate Summary                             (0x2B)
+    /*
+       Configuration Descriptor                    (0x09)
+       Interface Descriptor (Audio Class)          (0x09)
+       Audio Control Interface Header Descriptor   (0x0A)
+       Microphone - Audio Control
+         Audio Control Input Terminal Descriptor   (0x0C)
+         Audio Control Feature Unit Descriptor     (0x08)
+         Audio Control Output Terminal Descriptor  (0x09)
+       Speaker - Audio Control
+         Audio Control Input Terminal Descriptor   (0x0C)
+         Audio Control Feature Unit Descriptor     (0x0A)
+         Audio Control Output Terminal Descriptor  (0x09)
+       Microphone - Interface alternate 0
+         Standard AS interface                     (0x09)
+       Microphone - Interface alternate 1~6
+         Standard AS interface                                         (0x09)
+         Audio Streaming Class Specific Interface Descriptor           (0x07)
+         Audio Streaming Format Type Descriptor                        (0x0B)
+         Endpoint Descriptor                                           (0x07)
+         Audio Streaming Class Specific Audio Data Endpoint Descriptor (0x07)
+         *Each Interface alternate Summary                             (0x29)
+       Speaker - Interface alternate 0
+         Standard AS interface                     (0x09)
+       Speaker - Interface alternate 1~4
+         Standard AS interface                                         (0x09)
+         Audio Streaming Class Specific Interface Descriptor           (0x07)
+         Audio Streaming Format Type Descriptor                        (0x0B)
+         Endpoint Descriptor                                           (0x09)
+         Audio Streaming Class Specific Audio Data Endpoint Descriptor (0x07)
+         *Each Interface alternate Summary                             (0x2B)
 
-                       0x09 + 0x09 + 0x0A + (0x0C + 0x08 + 0x09) + (0x0C + 0x0A + 0x09) +
-                       0x09 + 0x29
-                       0x09 + 0x2B = 0xBE
-                    */
+       0x09 + 0x09 + 0x0A + (0x0C + 0x08 + 0x09) + (0x0C + 0x0A + 0x09) +
+       0x09 + 0x29
+       0x09 + 0x2B = 0xBE
+    */
     0x03,           /* bNumInterfaces - Interface 0, Interface 1 (Microphone), Interface 2 (Speaker) */
     0x01,           /* bConfigurationValue */
     0x00,           /* iConfiguration */
@@ -154,21 +154,21 @@ static uint8_t s_au8ConfigDescriptor[] =
     0x04,           /* bSourceID */
     0x01,           /* bControlSize - Size, in bytes, of the bmControls field: n */
     0x03,           /* bmaControls(0) */
-                    /* A bit set to 1 indicates that the mentioned
-                       Control is supported for master channel
-                       0:
-                       D0: Mute
-                       D1: Volume
-                       D2: Bass
-                       D3: Mid
-                       D4: Treble
-                       D5: Graphic Equalizer
-                       D6: Automatic Gain
-                       D7: Delay
-                       D8: Bass Boost
-                       D9: Loudness
-                       D10..(n*8-1): Reserved
-                    */
+    /* A bit set to 1 indicates that the mentioned
+       Control is supported for master channel
+       0:
+       D0: Mute
+       D1: Volume
+       D2: Bass
+       D3: Mid
+       D4: Treble
+       D5: Graphic Equalizer
+       D6: Automatic Gain
+       D7: Delay
+       D8: Bass Boost
+       D9: Loudness
+       D10..(n*8-1): Reserved
+    */
     0x00,           /* iFeature */
 
     /* Audio Control Output Terminal Descriptor - Microphone (Terminal ID 2 - Source ID 5) */
@@ -216,53 +216,53 @@ static uint8_t s_au8ConfigDescriptor[] =
     0x01,           /* bSourceID */
     0x01,           /* bControlSize - Size, in bytes, of the bmControls field: n */
     0x01,           /* bmaControls(0) */
-                    /* A bit set to 1 indicates that the mentioned
-                       Control is supported for master channel
-                       0:
-                       D0: Mute
-                       D1: Volume
-                       D2: Bass
-                       D3: Mid
-                       D4: Treble
-                       D5: Graphic Equalizer
-                       D6: Automatic Gain
-                       D7: Delay
-                       D8: Bass Boost
-                       D9: Loudness
-                       D10..(n*8-1): Reserved
-                    */
+    /* A bit set to 1 indicates that the mentioned
+       Control is supported for master channel
+       0:
+       D0: Mute
+       D1: Volume
+       D2: Bass
+       D3: Mid
+       D4: Treble
+       D5: Graphic Equalizer
+       D6: Automatic Gain
+       D7: Delay
+       D8: Bass Boost
+       D9: Loudness
+       D10..(n*8-1): Reserved
+    */
     0x02,           /* bmaControls(0) */
-                    /* A bit set to 1 indicates that the mentioned
-                       Control is supported for master channel
-                       0:
-                       D0: Mute
-                       D1: Volume
-                       D2: Bass
-                       D3: Mid
-                       D4: Treble
-                       D5: Graphic Equalizer
-                       D6: Automatic Gain
-                       D7: Delay
-                       D8: Bass Boost
-                       D9: Loudness
-                       D10..(n*8-1): Reserved
-                    */
+    /* A bit set to 1 indicates that the mentioned
+       Control is supported for master channel
+       0:
+       D0: Mute
+       D1: Volume
+       D2: Bass
+       D3: Mid
+       D4: Treble
+       D5: Graphic Equalizer
+       D6: Automatic Gain
+       D7: Delay
+       D8: Bass Boost
+       D9: Loudness
+       D10..(n*8-1): Reserved
+    */
     0x02,           /* bmaControls(0) */
-                    /* A bit set to 1 indicates that the mentioned
-                       Control is supported for master channel
-                       0:
-                       D0: Mute
-                       D1: Volume
-                       D2: Bass
-                       D3: Mid
-                       D4: Treble
-                       D5: Graphic Equalizer
-                       D6: Automatic Gain
-                       D7: Delay
-                       D8: Bass Boost
-                       D9: Loudness
-                       D10..(n*8-1): Reserved
-                    */
+    /* A bit set to 1 indicates that the mentioned
+       Control is supported for master channel
+       0:
+       D0: Mute
+       D1: Volume
+       D2: Bass
+       D3: Mid
+       D4: Treble
+       D5: Graphic Equalizer
+       D6: Automatic Gain
+       D7: Delay
+       D8: Bass Boost
+       D9: Loudness
+       D10..(n*8-1): Reserved
+    */
     0x00,           /* iFeature */
 
     /* Audio Control Output Terminal Descriptor - Speaker (UNIT ID 3 - Source ID 5) */
@@ -452,14 +452,14 @@ static uint8_t s_au8BOSDescriptor[] =
     DESC_CAPABILITY,/* bDescriptorType */
     CAP_USB20_EXT,  /* bDevCapabilityType, 0x02 is USB 2.0 Extension */
     0x06, 0x04, 0x00, 0x00  /* bmAttributes, 32 bits */
-                            /* bit 0 : Reserved. Must 0. */
-                            /* bit 1 : 1 to support LPM. */
-                            /* bit 2 : 1 to support BSL & Alternat HIRD. */
-                            /* bit 3 : 1 to recommend Baseline BESL. */
-                            /* bit 4 : 1 to recommand Deep BESL. */
-                            /* bit 11:8 : Recommend Baseline BESL value. Ignore by bit3 is zero. */
-                            /* bit 15:12 : Recommend Deep BESL value. Ignore by bit4 is zero. */
-                            /* bit 31:16 : Reserved. Must 0. */
+    /* bit 0 : Reserved. Must 0. */
+    /* bit 1 : 1 to support LPM. */
+    /* bit 2 : 1 to support BSL & Alternat HIRD. */
+    /* bit 3 : 1 to recommend Baseline BESL. */
+    /* bit 4 : 1 to recommand Deep BESL. */
+    /* bit 11:8 : Recommend Baseline BESL value. Ignore by bit3 is zero. */
+    /* bit 15:12 : Recommend Deep BESL value. Ignore by bit4 is zero. */
+    /* bit 31:16 : Reserved. Must 0. */
 };
 #endif
 

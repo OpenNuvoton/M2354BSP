@@ -109,19 +109,19 @@ void SYS_Init(void)
     CLK->PWRCTL |= CLK_PWRCTL_HIRCEN_Msk;
 
     /* Wait for HIRC clock ready */
-    while (!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk));
+    while(!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk));
 
     /* Select HCLK clock source as HIRC first */
-    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC; 
+    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC;
 
     /* Disable PLL clock before setting PLL frequency */
     CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
 
-    /* Set PLL clock as 96MHz from HIRC */ 
+    /* Set PLL clock as 96MHz from HIRC */
     CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
 
     /* Wait for PLL clock ready */
-    while (!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk)); 
+    while(!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
 
     /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
@@ -220,8 +220,8 @@ int main(void)
         if(s_u8CANPackageFlag)
         {
             s_u8CANPackageFlag = 0;
-            Address = (uint32_t)((s_rrMsg.Data[3]<<24)|(s_rrMsg.Data[2]<<16)|(s_rrMsg.Data[1]<<8)|s_rrMsg.Data[0]);
-            Data = (uint32_t)((s_rrMsg.Data[7]<<24)|(s_rrMsg.Data[6]<<16)|(s_rrMsg.Data[5]<<8)|s_rrMsg.Data[4]);
+            Address = (uint32_t)((s_rrMsg.Data[3] << 24) | (s_rrMsg.Data[2] << 16) | (s_rrMsg.Data[1] << 8) | s_rrMsg.Data[0]);
+            Data = (uint32_t)((s_rrMsg.Data[7] << 24) | (s_rrMsg.Data[6] << 16) | (s_rrMsg.Data[5] << 8) | s_rrMsg.Data[4]);
 
             if(Address == CMD_GET_DEVICEID)
             {

@@ -65,12 +65,12 @@ void RTC_Open(S_RTC_TIME_DATA_T *sPt)
         RTC->INIT = RTC_INIT_KEY;
         while(RTC->INIT != RTC_INIT_ACTIVE_Msk) {}
     }
-    
+
     if(sPt != 0)
     {
         /* Enable frequency dynamic compensation function */
         RTC->CLKFMT |= RTC_CLKFMT_DCOMPEN_Msk;
-        
+
         /* Set RTC date and time */
         RTC_SetDateAndTime(sPt);
     }
@@ -116,7 +116,7 @@ void RTC_32KCalibration(int32_t i32FrequencyX10000)
         i32RegFra = 0x0;
         i32RegInt++;
     }
-    
+
     /* Judge Integer part is reasonable */
     if((i32RegInt >= 0) && (i32RegInt <= 31))
     {
@@ -1050,7 +1050,7 @@ uint32_t RTC_SetClockSource(uint32_t u32ClkSrc)
         /* RTC clock source is external LXT */
         RTC->LXTCTL &= ~RTC_LXTCTL_RTCCKSEL_Msk;
         RTC->LXTCTL &= ~RTC_LXTCTL_C32KSEL_Msk;
-        
+
         return RTC_CLOCK_SOURCE_LXT;
     }
     else if(u32ClkSrc == RTC_CLOCK_SOURCE_LIRC32K)
@@ -1062,21 +1062,21 @@ uint32_t RTC_SetClockSource(uint32_t u32ClkSrc)
         RTC->LXTCTL |= RTC_LXTCTL_LIRC32KEN_Msk;
         RTC->LXTCTL &= ~RTC_LXTCTL_RTCCKSEL_Msk;
         RTC->LXTCTL |= RTC_LXTCTL_C32KSEL_Msk;
-        
+
         return RTC_CLOCK_SOURCE_LIRC32K;
     }
     else if(u32ClkSrc == RTC_CLOCK_SOURCE_LIRC)
     {
         /* RTC clock source is LIRC */
         RTC->LXTCTL |= RTC_LXTCTL_RTCCKSEL_Msk;
-        
+
         return RTC_CLOCK_SOURCE_LIRC;
     }
     else
     {
         /* Set the default RTC clock source is LIRC */
         RTC->LXTCTL |= RTC_LXTCTL_RTCCKSEL_Msk;
-        
+
         return RTC_CLOCK_SOURCE_LIRC;
     }
 }
@@ -1105,33 +1105,33 @@ uint32_t RTC_SetClockSource(uint32_t u32ClkSrc)
  * @details     This function is used to set specified GPIO operation mode controlled by RTC module.
  */
 void RTC_SetGPIOMode(uint32_t u32PFPin, uint32_t u32Mode, uint32_t u32DigitalCtl, uint32_t u32PullCtl, uint32_t u32OutputLevel)
-{        
+{
     uint32_t u32Offset;
-    
+
     if((u32PFPin == 4) || (u32PFPin == 5) || (u32PFPin == 6) || (u32PFPin == 7))
     {
         u32Offset = u32PFPin - 4;
-        
+
         RTC_SET_IOCTL_BY_RTC(RTC);
-                
-        RTC->GPIOCTL0 = (RTC->GPIOCTL0 & ~(0x3FUL << (u32Offset*8))) |
-                        (u32Mode << (u32Offset*8)) |
-                        (u32OutputLevel << ((u32Offset*8) + 2)) |
-                        (u32DigitalCtl << ((u32Offset*8) + 3)) |
-                        (u32PullCtl << ((u32Offset*8) + 4));
+
+        RTC->GPIOCTL0 = (RTC->GPIOCTL0 & ~(0x3FUL << (u32Offset * 8))) |
+                        (u32Mode << (u32Offset * 8)) |
+                        (u32OutputLevel << ((u32Offset * 8) + 2)) |
+                        (u32DigitalCtl << ((u32Offset * 8) + 3)) |
+                        (u32PullCtl << ((u32Offset * 8) + 4));
     }
-    
+
     if((u32PFPin == 8) || (u32PFPin == 9) || (u32PFPin == 10) || (u32PFPin == 11))
     {
         u32Offset = u32PFPin - 8;
-        
+
         RTC_SET_IOCTL_BY_RTC(RTC);
-                
-        RTC->GPIOCTL1 = (RTC->GPIOCTL1 & ~(0x3FUL << (u32Offset*8))) |
-                        (u32Mode << (u32Offset*8)) |
-                        (u32OutputLevel << ((u32Offset*8) + 2)) |
-                        (u32DigitalCtl << ((u32Offset*8) + 3)) |
-                        (u32PullCtl << ((u32Offset*8) + 4));
+
+        RTC->GPIOCTL1 = (RTC->GPIOCTL1 & ~(0x3FUL << (u32Offset * 8))) |
+                        (u32Mode << (u32Offset * 8)) |
+                        (u32OutputLevel << ((u32Offset * 8) + 2)) |
+                        (u32DigitalCtl << ((u32Offset * 8) + 3)) |
+                        (u32PullCtl << ((u32Offset * 8) + 4));
     }
 }
 
@@ -1149,21 +1149,21 @@ void RTC_SetGPIOMode(uint32_t u32PFPin, uint32_t u32Mode, uint32_t u32DigitalCtl
 void RTC_SetGPIOLevel(uint32_t u32PFPin, uint32_t u32OutputLevel)
 {
     uint32_t u32Offset;
-    
+
     if((u32PFPin == 4) || (u32PFPin == 5) || (u32PFPin == 6) || (u32PFPin == 7))
     {
         u32Offset = u32PFPin - 4;
-                        
-        RTC->GPIOCTL0 = (RTC->GPIOCTL0 & ~(0x4UL << (u32Offset*8))) |
-                        (u32OutputLevel << ((u32Offset*8) + 2));
+
+        RTC->GPIOCTL0 = (RTC->GPIOCTL0 & ~(0x4UL << (u32Offset * 8))) |
+                        (u32OutputLevel << ((u32Offset * 8) + 2));
     }
-    
+
     if((u32PFPin == 8) || (u32PFPin == 9) || (u32PFPin == 10) || (u32PFPin == 11))
     {
         u32Offset = u32PFPin - 8;
-                        
-        RTC->GPIOCTL1 = (RTC->GPIOCTL1 & ~(0x4UL << (u32Offset*8))) |
-                        (u32OutputLevel << ((u32Offset*8) + 2));
+
+        RTC->GPIOCTL1 = (RTC->GPIOCTL1 & ~(0x4UL << (u32Offset * 8))) |
+                        (u32OutputLevel << ((u32Offset * 8) + 2));
     }
 }
 

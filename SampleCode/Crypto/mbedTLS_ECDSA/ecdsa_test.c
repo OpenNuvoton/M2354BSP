@@ -52,24 +52,24 @@ uint32_t  get_timer0_counter()
     return TIMER0->CNT;
 }
 
-static int myrand( void *rng_state, unsigned char *output, size_t len )
+static int myrand(void *rng_state, unsigned char *output, size_t len)
 {
 #if !defined(__OpenBSD__)
     size_t i;
 
-    if( rng_state != NULL )
+    if(rng_state != NULL)
         rng_state  = NULL;
 
-    for( i = 0; i < len; ++i )
+    for(i = 0; i < len; ++i)
         output[i] = rand();
 #else
-    if( rng_state != NULL )
+    if(rng_state != NULL)
         rng_state = NULL;
 
-    arc4random_buf( output, len );
+    arc4random_buf(output, len);
 #endif /* !OpenBSD */
 
-    return( 0 );
+    return(0);
 }
 
 
@@ -85,8 +85,8 @@ int ECDSATest(void)
     const mbedtls_ecp_curve_info *curve_info = mbedtls_ecp_curve_info_from_grp_id(MBEDTLS_ECP_DP_SECP256K1);
 
     /* Initializes an ECDSA context. */
-    mbedtls_ecdsa_init( &ecdsa );
-    memset( buf, 0x2A, sizeof( buf ) );
+    mbedtls_ecdsa_init(&ecdsa);
+    memset(buf, 0x2A, sizeof(buf));
 
     printf(" mbedtls ECDSA init done  \n\n");
 
@@ -94,7 +94,7 @@ int ECDSATest(void)
     start_timer0();
 
     printf(" mbedtls ECDSA generate key       : ");
-    ret = mbedtls_ecdsa_genkey( &ecdsa, curve_info->grp_id, myrand, NULL );
+    ret = mbedtls_ecdsa_genkey(&ecdsa, curve_info->grp_id, myrand, NULL);
     if(ret == 0)
     {
         printf("passed");
@@ -114,7 +114,7 @@ int ECDSATest(void)
     start_timer0();
 
     printf(" mbedtls ECDSA key pair           : ");
-    ret = mbedtls_ecdsa_from_keypair( &ecdsa, &ecdsa );
+    ret = mbedtls_ecdsa_from_keypair(&ecdsa, &ecdsa);
     if(ret == 0)
     {
         printf("passed");
@@ -135,7 +135,7 @@ int ECDSATest(void)
 
     /* Computes the ECDSA signature and writes it to a buffer */
     printf(" mbedtls ECDSA signature generate : ");
-    ret = mbedtls_ecdsa_write_signature( &ecdsa, MBEDTLS_MD_SHA256, buf, curve_info->bit_size, tmp, &sig_len, myrand, NULL);
+    ret = mbedtls_ecdsa_write_signature(&ecdsa, MBEDTLS_MD_SHA256, buf, curve_info->bit_size, tmp, &sig_len, myrand, NULL);
     if(ret == 0)
     {
         printf("passed");

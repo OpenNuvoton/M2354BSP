@@ -26,23 +26,23 @@ int32_t FlashAccess_OnSRAM(void)
     u32Addr = APROM_TEST_BASE;
     FMC_Erase(u32Addr); /* Erase page */
 
-    for (u32Cnt = 0; u32Cnt < FMC_FLASH_PAGE_SIZE; u32Cnt += 4)
+    for(u32Cnt = 0; u32Cnt < FMC_FLASH_PAGE_SIZE; u32Cnt += 4)
     {
         /* Write Demo */
         u32Data = u32Cnt + 0x12345678;
         FMC_Write(u32Addr + u32Cnt, u32Data);
 
-        if ((u32Cnt & 0xf) == 0)
+        if((u32Cnt & 0xf) == 0)
             printf(".");
 
         /* Read Demo */
         u32RData = FMC_Read(u32Addr + u32Cnt);
 
-        if (u32Data != u32RData)
+        if(u32Data != u32RData)
         {
             printf("[Read/Write FAIL]\n");
 
-            while (1);
+            while(1);
         }
     }
     printf("\nISP function demo done.\n");

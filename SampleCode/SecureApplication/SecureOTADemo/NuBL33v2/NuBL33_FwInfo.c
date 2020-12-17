@@ -19,12 +19,12 @@
 //typedef struct
 //{
 //    ECC_PUBKEY_T    pubkey;             /* 64-bytes (256-bits + 256-bits) */
-//    
-//    METADATA_T      mData;              /* includes authenticate configuration, F/W regions and extend info */ 
-//        
+//
+//    METADATA_T      mData;              /* includes authenticate configuration, F/W regions and extend info */
+//
 //    uint32_t        au32FwHash[8];      /* 32-bytes (256-bits) */
-//    
-//    ECDSA_SIGN_T    sign;               /* 64-bytes (256-bits R + 256-bits S) */    
+//
+//    ECDSA_SIGN_T    sign;               /* 64-bytes (256-bits R + 256-bits S) */
 //
 //} __attribute__((packed)) FW_INFO_T;
 const FW_INFO_T g_FWinfoInitial =
@@ -41,16 +41,19 @@ const FW_INFO_T g_FWinfoInitial =
     },
     {/* metadata data - includes authenticate configuration, F/W regions and extend info */
         0x00000001, 0x00000010, {{NUBL33_FW_BASE, 0x00000000},
-        {0x00000000, 0x00000000}}, 0x00000094, {NUBL33_VER,
-        0x00000000, 0x00000000, 0x00000000, 0x00000000,
-        0x00000000, 0x00000000, 0x00000000, 0x00000000,
-        0x00000000, 0x00000000, 0x00000000, 0x00000000,
-        0x00000000, 0x00000000, 0x00000000, 0x00000000,
-        0x00000000, 0x00000000, 0x00000000, 0x00000000,
-        0x00000000, 0x00000000, 0x00000000, 0x00000000,
-        0x00000000, 0x00000000, 0x00000000, 0x00000000,
-        0x00000000, 0x00000000, 0x00000000, 0x00000000,
-        0x00000000, 0x00000000, 0x00000000, 0x00000000}
+            {0x00000000, 0x00000000}
+        }, 0x00000094, {
+            NUBL33_VER,
+            0x00000000, 0x00000000, 0x00000000, 0x00000000,
+            0x00000000, 0x00000000, 0x00000000, 0x00000000,
+            0x00000000, 0x00000000, 0x00000000, 0x00000000,
+            0x00000000, 0x00000000, 0x00000000, 0x00000000,
+            0x00000000, 0x00000000, 0x00000000, 0x00000000,
+            0x00000000, 0x00000000, 0x00000000, 0x00000000,
+            0x00000000, 0x00000000, 0x00000000, 0x00000000,
+            0x00000000, 0x00000000, 0x00000000, 0x00000000,
+            0x00000000, 0x00000000, 0x00000000, 0x00000000
+        }
     },
     {/* FW hash - 32-bytes (256-bits) */
         0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,

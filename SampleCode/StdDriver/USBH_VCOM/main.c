@@ -96,7 +96,7 @@ void  dump_buff_hex(uint8_t *pu8Buff, int i8Bytes)
 void  vcom_status_callback(CDC_DEV_T *cdev, uint8_t *pu8RData, int u8DataLen)
 {
     int i8Cnt;
-	  
+
     (void)cdev;
 
     printf("[VCOM STS] ");
@@ -109,7 +109,7 @@ void  vcom_rx_callback(CDC_DEV_T *cdev, uint8_t *pu8RData, int u8DataLen)
 {
     int i8Cnt;
 
-    (void)cdev; 
+    (void)cdev;
 
     //printf("[VCOM DATA %d] ", u8DataLen);
     for(i8Cnt = 0; i8Cnt < u8DataLen; i8Cnt++)

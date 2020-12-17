@@ -58,7 +58,7 @@ void ECC_Complete(CRPT_T *crpt);
 
 /**
   * @brief  Open PRNG function
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32KeySize   it is PRNG key size, including:
   *         - \ref PRNG_KEY_SIZE_64
   *         - \ref PRNG_KEY_SIZE_128
@@ -83,21 +83,21 @@ void PRNG_Open(CRPT_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32
 
 /**
   * @brief  Start to generate one PRNG key.
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @return None
   */
 void PRNG_Start(CRPT_T *crpt)
 {
     crpt->PRNG_CTL |= CRPT_PRNG_CTL_START_Msk;
-    
+
     /* Waiting for PRNG Busy */
-    while(crpt->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk){}
-    
+    while(crpt->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk) {}
+
 }
 
 /**
   * @brief  Read the PRNG key.
-  * @param[in]   crpt         The pointer of CRYPTO module 
+  * @param[in]   crpt         The pointer of CRYPTO module
   * @param[out]  u32RandKey  The key buffer to store newly generated PRNG key.
   * @return None
   */
@@ -116,7 +116,7 @@ void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[])
 
 /**
   * @brief  Open AES encrypt/decrypt function.
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32Channel   AES channel. Must be 0~3.
   * @param[in]  u32EncDec    1: AES encode;  0: AES decode
   * @param[in]  u32OpMode    AES operation mode, including:
@@ -152,7 +152,7 @@ void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec,
 
 /**
   * @brief  Start AES encrypt/decrypt
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  AES channel. Must be 0~3.
   * @param[in]  u32DMAMode  AES DMA control, including:
   *         - \ref CRYPTO_DMA_ONE_SHOT   One shop AES encrypt/decrypt.
@@ -169,7 +169,7 @@ void AES_Start(CRPT_T *crpt, int32_t u32Channel, uint32_t u32DMAMode)
 
 /**
   * @brief  Set AES keys
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  AES channel. Must be 0~3.
   * @param[in]  au32Keys    An word array contains AES keys.
   * @param[in]  u32KeySize is AES key size, including:
@@ -198,7 +198,7 @@ void AES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t
 
 /**
   * @brief  Set AES keys index of Key Store
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  mem         Memory type of Key Store key. it could be:
   *                              - \ref KS_SRAM
   *                              - \ref KS_FLASH
@@ -212,13 +212,13 @@ void AES_SetKey_KS(CRPT_T *crpt, KS_MEM_Type mem, int32_t i32KeyIdx)
     crpt->AES_KSCTL |= CRPT_AES_KSCTL_RSRC_Msk /* use KS */  |
                        ((uint32_t)mem << CRPT_AES_KSCTL_RSSRC_Pos) /* KS Memory type */ |
                        (uint32_t)i32KeyIdx /* key num */ ;
-    
+
 }
 
 
 /**
   * @brief  Set AES initial vectors
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  AES channel. Must be 0~3.
   * @param[in]  au32IV      A four entry word array contains AES initial vectors.
   * @return None
@@ -240,7 +240,7 @@ void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32IV[])
 
 /**
   * @brief  Set AES DMA transfer configuration.
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32Channel   AES channel. Must be 0~3.
   * @param[in]  u32SrcAddr   AES DMA source address
   * @param[in]  u32DstAddr   AES DMA destination address
@@ -259,7 +259,7 @@ void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr,
 
 /**
   * @brief  Open SHA encrypt function.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32OpMode   SHA operation mode, including:
   *         - \ref SHA_MODE_SHA1
   *         - \ref SHA_MODE_SHA224
@@ -285,7 +285,7 @@ void SHA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32SwapType, uint32_t h
 
 /**
   * @brief  Start SHA encrypt
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32DMAMode  TDES DMA control, including:
   *         - \ref CRYPTO_DMA_ONE_SHOT   One shop SHA encrypt.
   *         - \ref CRYPTO_DMA_CONTINUE   Continuous SHA encrypt.
@@ -300,7 +300,7 @@ void SHA_Start(CRPT_T *crpt, uint32_t u32DMAMode)
 
 /**
   * @brief  Set SHA DMA transfer
-  * @param[in]  crpt         The pointer of CRYPTO module 
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32SrcAddr   SHA DMA source address
   * @param[in]  u32TransCnt  SHA DMA transfer byte count
   * @return None
@@ -313,7 +313,7 @@ void SHA_SetDMATransfer(CRPT_T *crpt, uint32_t u32SrcAddr, uint32_t u32TransCnt)
 
 /**
   * @brief  Read the SHA digest.
-  * @param[in]   crpt       The pointer of CRYPTO module 
+  * @param[in]   crpt       The pointer of CRYPTO module
   * @param[out]  u32Digest  The SHA encrypt output digest.
   * @return None
   */
@@ -783,24 +783,24 @@ static const ECC_CURVE _Curve[] =
         CURVE_GF_P
     },
     {
-		CURVE_25519,
-		64,		// Echar
-		"0000000000000000000000000000000000000000000000000000000000076D06",  // "0000000000000000000000000000000000000000000000000000000000000003",
-		"0000000000000000000000000000000000000000000000000000000000000001",
-		"0000000000000000000000000000000000000000000000000000000000000009",
-		"20ae19a1b8a086b4e01edd2c7748d14c923d4d7e6d7c61b229e9c5a27eced3d9",
-		78,		// Epl
-		"7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffed",  // "115792089210356248762697446949407573530086143415290314195533631308867097853951",
-		78,		// Eol
-		"1000000000000000000000000000000014def9dea2f79cd65812631a5cf5d3ed",  // "115792089210356248762697446949407573529996955224135760342422259061068512044369",
-		255,	// key_len
-		10,
-		5,
-		2,
-		CURVE_GF_P
-    },    
-#endif    
-    
+        CURVE_25519,
+        64,     // Echar
+        "0000000000000000000000000000000000000000000000000000000000076D06",  // "0000000000000000000000000000000000000000000000000000000000000003",
+        "0000000000000000000000000000000000000000000000000000000000000001",
+        "0000000000000000000000000000000000000000000000000000000000000009",
+        "20ae19a1b8a086b4e01edd2c7748d14c923d4d7e6d7c61b229e9c5a27eced3d9",
+        78,     // Epl
+        "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffed",  // "115792089210356248762697446949407573530086143415290314195533631308867097853951",
+        78,     // Eol
+        "1000000000000000000000000000000014def9dea2f79cd65812631a5cf5d3ed",  // "115792089210356248762697446949407573529996955224135760342422259061068512044369",
+        255,    // key_len
+        10,
+        5,
+        2,
+        CURVE_GF_P
+    },
+#endif
+
 };
 #endif
 
@@ -850,8 +850,8 @@ static void dump_ecc_reg(char *str, uint32_t volatile regs[], int32_t count)
 static void dump_ecc_reg(char *str, uint32_t volatile regs[], int32_t count)
 {
     (void)str;
-	  (void)regs;
-	  (void)count;
+    (void)regs;
+    (void)count;
 }
 #endif
 static char  ch2hex(char ch)
@@ -959,7 +959,7 @@ static void Reg2Hex(int32_t count, uint32_t volatile reg[], char output[])
   * @param[in]  reg     Register array.
   * @param[in]  output  String buffer for output hex string.
   */
-void CRPT_Reg2Hex(int32_t count,volatile uint32_t reg[], char output[])
+void CRPT_Reg2Hex(int32_t count, volatile uint32_t reg[], char output[])
 {
     Reg2Hex(count, reg, output);
 }
@@ -1053,7 +1053,7 @@ static int  get_nibble_value(char c)
 
 /**
   * @brief  Check if the private key is located in valid range of curve.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  private_k   The input private key.
   * @return  1    Is valid.
@@ -1100,7 +1100,7 @@ int ECC_IsPrivateKeyValid(CRPT_T *crpt, E_ECC_CURVE ecc_curve,  char private_k[]
 
 /**
   * @brief  Given a private key and curve to generate the public key pair.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  private_k   The input private key.
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[out] public_k1   The output publick key 1.
@@ -1162,7 +1162,7 @@ int32_t  ECC_GeneratePublicKey(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *privat
 
 /**
   * @brief  Given a private key and curve to generate the public key pair.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  mem         Memory type of Key Store. It could be KS_SRAM, KS_FLASH or KS_OTP.
   * @param[in]  i32KeyIdx   Index of the key in Key Store.
@@ -1185,13 +1185,13 @@ int32_t  ECC_GeneratePublicKey_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Ty
 
     if(ret == 0)
     {
-        
+
         // key from key store
-        crpt->ECC_KSCTL = (mem << 6 )/* KS Memory Type */ |
+        crpt->ECC_KSCTL = (mem << 6)/* KS Memory Type */ |
                           (CRPT_ECC_KSCTL_RSRCK_Msk)/* Key from KS */ |
-                           u32ExtraOp | 
-                           (uint32_t)i32KeyIdx;
-        
+                          u32ExtraOp |
+                          (uint32_t)i32KeyIdx;
+
         /* set FSEL (Field selection) */
         if(pCurve->GF == (int)CURVE_GF_2M)
         {
@@ -1236,14 +1236,14 @@ int32_t  ECC_Mutiply(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char x1[], char y1[], 
 {
     int32_t  i, ret = 0;
 
-    if (ecc_init_curve(crpt, ecc_curve) != 0)
+    if(ecc_init_curve(crpt, ecc_curve) != 0)
     {
         ret = -1;
     }
-    
-    if (ret == 0)
+
+    if(ret == 0)
     {
-        for (i = 0; i < 9; i++)
+        for(i = 0; i < 9; i++)
         {
             crpt->ECC_X1[i] = 0UL;
             crpt->ECC_Y1[i] = 0UL;
@@ -1255,7 +1255,7 @@ int32_t  ECC_Mutiply(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char x1[], char y1[], 
         Hex2Reg(k, crpt->ECC_K);
 
         /* set FSEL (Field selection) */
-        if (pCurve->GF == (int)CURVE_GF_2M)
+        if(pCurve->GF == (int)CURVE_GF_2M)
         {
             crpt->ECC_CTL = 0UL;
         }
@@ -1267,29 +1267,29 @@ int32_t  ECC_Mutiply(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char x1[], char y1[], 
 
         g_ECC_done = g_ECCERR_done = 0UL;
 
-        if  (ecc_curve == CURVE_25519)
+        if(ecc_curve == CURVE_25519)
         {
             printf("!! Is curve-25519 !!\n");
-            crpt->ECC_CTL |= CRPT_ECC_CTL_SCAP_Msk;       
-            crpt->ECC_CTL |= CRPT_ECC_CTL_CSEL_Msk;      
-            
+            crpt->ECC_CTL |= CRPT_ECC_CTL_SCAP_Msk;
+            crpt->ECC_CTL |= CRPT_ECC_CTL_CSEL_Msk;
+
             /* If SCAP enabled, the curve order must be written to ECC_X2 */
             if(crpt->ECC_CTL & CRPT_ECC_CTL_SCAP_Msk)
             {
                 Hex2Reg(pCurve->Eorder, crpt->ECC_X2);
             }
         }
-        
+
         crpt->ECC_CTL |= ((uint32_t)pCurve->key_len << CRPT_ECC_CTL_CURVEM_Pos) |
                          ECCOP_POINT_MUL | CRPT_ECC_CTL_START_Msk;
 
-        while ((g_ECC_done | g_ECCERR_done) == 0UL)
+        while((g_ECC_done | g_ECCERR_done) == 0UL)
         {
         }
 
         Reg2Hex(pCurve->Echar, crpt->ECC_X1, x2);
         Reg2Hex(pCurve->Echar, crpt->ECC_Y1, y2);
-        
+
     }
 
     return ret;
@@ -1298,7 +1298,7 @@ int32_t  ECC_Mutiply(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char x1[], char y1[], 
 
 /**
   * @brief  Given a curve parameter, the other party's public key, and one's own private key to generate the secret Z.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  private_k   One's own private key.
   * @param[in]  public_k1   The other party's publick key 1.
@@ -1373,7 +1373,7 @@ int32_t  ECC_GenerateSecretZ(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *private_
 
 /**
   * @brief  Given a curve parameter, the other party's public key, and one's own private key to generate the secret Z.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  private_k   One's own private key.
   * @param[in]  public_k1   The other party's publick key 1.
@@ -1401,7 +1401,7 @@ int32_t ECC_GenerateSecretZ_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type 
 
     crpt->ECC_KSCTL = CRPT_ECC_KSCTL_ECDH_Msk | CRPT_ECC_KSCTL_RSRCK_Msk |
                       (mem << CRPT_ECC_KSCTL_RSSRCK_Pos)/* KS Memory Type */ |
-                       (uint32_t)i32KeyIdx;
+                      (uint32_t)i32KeyIdx;
 
     Hex2Reg(public_k1, crpt->ECC_X1);
     Hex2Reg(public_k2, crpt->ECC_Y1);
@@ -1415,9 +1415,9 @@ int32_t ECC_GenerateSecretZ_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type 
     {
         crpt->ECC_CTL = CRPT_ECC_CTL_FSEL_Msk;
     }
-    
+
     g_ECC_done = g_ECCERR_done = 0UL;
-    
+
     crpt->ECC_CTL |= ((uint32_t)pCurve->key_len << CRPT_ECC_CTL_CURVEM_Pos) |
                      ECCOP_POINT_MUL | CRPT_ECC_CTL_START_Msk;
 
@@ -1427,10 +1427,10 @@ int32_t ECC_GenerateSecretZ_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type 
         u32Tmp |= g_ECCERR_done;
     }
     while(u32Tmp == 0UL);
-    
+
     if(g_ECCERR_done)
         return -1;
-    
+
     return (crpt->ECC_KSSTS & 0x1f);
 
 }
@@ -1473,7 +1473,7 @@ static void run_ecc_codec(CRPT_T *crpt, uint32_t mode)
 
 /**
   * @brief  ECDSA digital signature generation.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  message     The hash value of source context.
   * @param[in]  d           The private key.
@@ -1497,7 +1497,7 @@ int32_t  ECC_GenerateSignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *messag
     if(ret == 0)
     {
         CRPT->ECC_KSCTL = 0;
-        
+
         /*
          *   1. Calculate e = HASH(m), where HASH is a cryptographic hashing algorithm, (i.e. SHA-1)
          *      (1) Use SHA to calculate e
@@ -1711,7 +1711,7 @@ int32_t  ECC_GenerateSignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *messag
 
 /**
   * @brief  ECDSA digital signature generation.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  message     The hash value of source context.
   * @param[in]  d           The private key.
@@ -1721,7 +1721,7 @@ int32_t  ECC_GenerateSignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *messag
   * @return  0    Success.
   * @return  -1   "ecc_curve" value is invalid.
   */
-int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message,KS_MEM_Type mem_d, int32_t i32KeyIdx_d,KS_MEM_Type mem_k, int32_t i32KeyIdx_k, char *R, char *S)
+int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_d, int32_t i32KeyIdx_d, KS_MEM_Type mem_k, int32_t i32KeyIdx_k, char *R, char *S)
 {
     uint32_t volatile temp_result1[18], temp_result2[18];
     int32_t  i, ret = 0;
@@ -1735,7 +1735,7 @@ int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *mes
     {
         CRPT->ECC_KSCTL = 0;
         CRPT->ECC_KSXY  = 0;
-        
+
         /*
          *   1. Calculate e = HASH(m), where HASH is a cryptographic hashing algorithm, (i.e. SHA-1)
          *      (1) Use SHA to calculate e
@@ -1763,11 +1763,11 @@ int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *mes
          *      (14) Wait for BUSY(CRPT_ECC_STS[0]) be cleared
          *      (15) Read X1 registers to get r
          */
-        
+
         /* 3-(4) Use k in Key Store */
         crpt->ECC_KSCTL = (mem_k << CRPT_ECC_KSCTL_RSSRCK_Pos)/* KS Memory Type */ |
-                           CRPT_ECC_KSCTL_RSRCK_Msk/* Key from KS */ |
-                           (uint32_t)i32KeyIdx_k;
+                          CRPT_ECC_KSCTL_RSRCK_Msk/* Key from KS */ |
+                          (uint32_t)i32KeyIdx_k;
 
         run_ecc_codec(crpt, ECCOP_POINT_MUL | OP_ECDSAR);
 
@@ -1793,7 +1793,7 @@ int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *mes
         }
 
         Reg2Hex(pCurve->Echar, temp_result1, R);
-        
+
 
         /*
          *   4. Compute s = k ? 1 กั (e + d กั r)(mod n). If s = 0, go to step 2
@@ -1834,23 +1834,23 @@ int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *mes
             crpt->ECC_N[i] = 0UL;
         }
         Hex2Reg(pCurve->Eorder, crpt->ECC_N);
-        
+
         /* 4-(2)(3)(4)(5) Use d, k in Key Store */
         crpt->ECC_CTL = 0;
         crpt->ECC_KSXY = CRPT_ECC_KSXY_RSRCXY_Msk |
                          (mem_k << CRPT_ECC_KSXY_RSSRCX_Pos) | ((uint32_t)i32KeyIdx_k << CRPT_ECC_KSXY_NUMX_Pos) | // Key Store index of k
                          (mem_d << CRPT_ECC_KSXY_RSSRCY_Pos) | ((uint32_t)i32KeyIdx_d << CRPT_ECC_KSXY_NUMY_Pos);  // Key Store index of d
-        
-        // 4-5 
-        for(i=0;i<18;i++)
+
+        // 4-5
+        for(i = 0; i < 18; i++)
         {
             crpt->ECC_X2[i] = temp_result1[i];
             crpt->ECC_Y2[i] = 0;
         }
         Hex2Reg(message, crpt->ECC_Y2);
-        
+
         run_ecc_codec(crpt, ECCOP_MODULE | OP_ECDSAS);
-        
+
         /*  4-11 Read X1 registers to get s */
         for(i = 0; i < 18; i++)
         {
@@ -1861,7 +1861,7 @@ int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *mes
         /* Clear KS Control */
         CRPT->ECC_KSCTL = 0;
         CRPT->ECC_KSXY = 0;
-        
+
     }  /* ret == 0 */
 
     return ret;
@@ -1870,7 +1870,7 @@ int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *mes
 
 /**
   * @brief  ECDSA digital signature verification.
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  message     The hash value of source context.
   * @param[in]  public_k1   The public key 1.
@@ -2213,7 +2213,7 @@ int32_t  ECC_VerifySignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message,
 
 /**
   * @brief  ECDSA signature verification with Key Store
-  * @param[in]  crpt        The pointer of CRYPTO module 
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  ecc_curve   The pre-defined ECC curve.
   * @param[in]  message     The hash value of source context.
   * @param[in]  public_k1   The public key 1.
@@ -2224,7 +2224,7 @@ int32_t  ECC_VerifySignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message,
   * @return  -1   "ecc_curve" value is invalid.
   * @return  -2   Verification failed.
   */
-int32_t  ECC_VerifySignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message,KS_MEM_Type mem_pk1, int32_t i32KeyIdx_pk1,KS_MEM_Type mem_pk2, int32_t i32KeyIdx_pk2, char *R, char *S)
+int32_t  ECC_VerifySignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_pk1, int32_t i32KeyIdx_pk1, KS_MEM_Type mem_pk2, int32_t i32KeyIdx_pk2, char *R, char *S)
 {
     uint32_t  temp_result1[18], temp_result2[18];
     uint32_t  temp_x[18], temp_y[18];
@@ -2448,20 +2448,20 @@ int32_t  ECC_VerifySignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *messa
             crpt->ECC_Y1[i] = 0UL;
         }
 
-        
-#if 0        
+
+#if 0
         Hex2Reg(public_k1, crpt->ECC_X1);
         Hex2Reg(public_k2, crpt->ECC_Y1);
 #else
-        
+
         /* 5-(2) Get the public key from key store */
         crpt->ECC_KSCTL = 0;
         crpt->ECC_KSXY = CRPT_ECC_KSXY_RSRCXY_Msk |
                          ((uint32_t)mem_pk1 << CRPT_ECC_KSXY_RSSRCX_Pos) | ((uint32_t)i32KeyIdx_pk1 << CRPT_ECC_KSXY_NUMX_Pos) | // Key Store index of pk1
                          ((uint32_t)mem_pk2 << CRPT_ECC_KSXY_RSSRCY_Pos) | ((uint32_t)i32KeyIdx_pk2 << CRPT_ECC_KSXY_NUMY_Pos);  // Key Store index of pk2
-        
-#endif        
-        
+
+#endif
+
         /* (10) Write u2 to K registers */
         for(i = 0; i < 18; i++)
         {
@@ -4297,14 +4297,14 @@ static ECC_CURVE * get_curve(E_ECC_CURVE ecc_curve)
   */
 void ECC_Complete(CRPT_T *crpt)
 {
-    if (crpt->INTSTS & CRPT_INTSTS_ECCIF_Msk)
+    if(crpt->INTSTS & CRPT_INTSTS_ECCIF_Msk)
     {
         g_ECC_done = 1UL;
         crpt->INTSTS = CRPT_INTSTS_ECCIF_Msk;
         /* printf("ECC done IRQ.\n"); */
     }
 
-    if (crpt->INTSTS & CRPT_INTSTS_ECCEIF_Msk)
+    if(crpt->INTSTS & CRPT_INTSTS_ECCEIF_Msk)
     {
         g_ECCERR_done = 1UL;
         crpt->INTSTS = CRPT_INTSTS_ECCEIF_Msk;

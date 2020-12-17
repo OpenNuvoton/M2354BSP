@@ -20,7 +20,7 @@
 /**
     @addtogroup UART Universal Asynchronous Receiver/Transmitter Controller(UART)
     Memory Mapped Structure for UART Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -617,11 +617,11 @@ typedef struct
      * |        |          |Note: The TX and RX will not disable immediately when this bit is set.
      * |        |          |The TX and RX complete current task before disable TX and RX.
      * |        |          |When TX and RX disable, the TXRXACT (UART_FIFOSTS[31]) is cleared.
-     * |[6]     |DGE       |Deglitch Enable Bit 
+     * |[6]     |DGE       |Deglitch Enable Bit
      * |        |          |0 = Deglitch Disabled.
      * |        |          |1 = Deglitch Enabled.
-     * |        |          |Note: When this bit is set to logic 1, any pulse width less than about 300 ns will be considered a glitch and will be removed in the serial data input (RX). 
-     * |        |          |This bit acts only on RX line and has no effect on the transmitter logic.     
+     * |        |          |Note: When this bit is set to logic 1, any pulse width less than about 300 ns will be considered a glitch and will be removed in the serial data input (RX).
+     * |        |          |This bit acts only on RX line and has no effect on the transmitter logic.
      * @var UART_T::LINCTL
      * Offset: 0x34  UART LIN Control Register
      * ---------------------------------------------------------------------------------------------------
@@ -854,7 +854,7 @@ typedef struct
 /**
     @addtogroup UART_CONST UART Bit Field Definition
     Constant Definitions for UART Controller
-  @{ 
+  @{
 */
 
 #define UART_DAT_DAT_Pos                 (0)                                               /*!< UART_T::DAT: DAT Position              */

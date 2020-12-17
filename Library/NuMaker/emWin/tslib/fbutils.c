@@ -121,32 +121,32 @@ void setcolor(unsigned colidx, unsigned value)
 
     switch(bytes_per_pixel)
     {
-    default:
-    case 1:
+        default:
+        case 1:
 #if 0
-        res = colidx;
-        red = (value >> 8) & 0xff00;
-        green = value & 0xff00;
-        blue = (value << 8) & 0xff00;
-        cmap.start = colidx;
-        cmap.len = 1;
-        cmap.red = &red;
-        cmap.green = &green;
-        cmap.blue = &blue;
-        cmap.transp = NULL;
+            res = colidx;
+            red = (value >> 8) & 0xff00;
+            green = value & 0xff00;
+            blue = (value << 8) & 0xff00;
+            cmap.start = colidx;
+            cmap.len = 1;
+            cmap.red = &red;
+            cmap.green = &green;
+            cmap.blue = &blue;
+            cmap.transp = NULL;
 #endif
-        break;
-    case 2:
+            break;
+        case 2:
 #if 0
-        red = (value >> 16) & 0xff;
-        green = (value >> 8) & 0xff;
-        blue = value & 0xff;
-        res = ((red >> (8 - red_length)) << red_offset) |
-              ((green >> (8 - green_length)) << green_offset) |
-              ((blue >> (8 - blue_length)) << blue_offset);
+            red = (value >> 16) & 0xff;
+            green = (value >> 8) & 0xff;
+            blue = value & 0xff;
+            res = ((red >> (8 - red_length)) << red_offset) |
+                  ((green >> (8 - green_length)) << green_offset) |
+                  ((blue >> (8 - blue_length)) << blue_offset);
 #endif
-    case 4:
-        res = value;
+        case 4:
+            res = value;
     }
     colormap [colidx] = value;
     GUI_SetColor(value);
@@ -161,25 +161,25 @@ static void __setpixel(union multiptr loc, unsigned xormode, unsigned color)
 {
     switch(bytes_per_pixel)
     {
-    case 1:
-    default:
-        if(xormode)
-            *loc.p8 ^= color;
-        else
-            *loc.p8 = color;
-        break;
-    case 2:
-        if(xormode)
-            *loc.p16 ^= color;
-        else
-            *loc.p16 = color;
-        break;
-    case 4:
-        if(xormode)
-            *loc.p32 ^= color;
-        else
-            *loc.p32 = color;
-        break;
+        case 1:
+        default:
+            if(xormode)
+                *loc.p8 ^= color;
+            else
+                *loc.p8 = color;
+            break;
+        case 2:
+            if(xormode)
+                *loc.p16 ^= color;
+            else
+                *loc.p16 = color;
+            break;
+        case 4:
+            if(xormode)
+                *loc.p32 ^= color;
+            else
+                *loc.p32 = color;
+            break;
     }
 }
 #endif

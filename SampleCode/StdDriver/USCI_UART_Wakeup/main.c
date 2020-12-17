@@ -181,20 +181,20 @@ void USCI_UART_DataWakeUp(void)
     uint32_t u32WakeupCount, u32PCLK;
     double fWakeupTime = 19.75;  /* unit: us */
 
-    /* Get PCLK */       
+    /* Get PCLK */
     u32PCLK = CLK_GetPCLK0Freq();
-    
-    /* Get Divider */    
-    u16regCLKDIV = (UUART0->BRGEN & UUART_BRGEN_CLKDIV_Msk)>>UUART_BRGEN_CLKDIV_Pos; 
-    u16regPDSCNT = (UUART0->BRGEN & UUART_BRGEN_PDSCNT_Msk)>>UUART_BRGEN_PDSCNT_Pos;      
-    
-    /* Calculate wake-up counter */     
-    u32WakeupCount = (uint32_t)(fWakeupTime*(u32PCLK/1000000)/((u16regCLKDIV+1)*(u16regPDSCNT+1)));
-    if(u32WakeupCount>15)
+
+    /* Get Divider */
+    u16regCLKDIV = (UUART0->BRGEN & UUART_BRGEN_CLKDIV_Msk) >> UUART_BRGEN_CLKDIV_Pos;
+    u16regPDSCNT = (UUART0->BRGEN & UUART_BRGEN_PDSCNT_Msk) >> UUART_BRGEN_PDSCNT_Pos;
+
+    /* Calculate wake-up counter */
+    u32WakeupCount = (uint32_t)(fWakeupTime * (u32PCLK / 1000000) / ((u16regCLKDIV + 1) * (u16regPDSCNT + 1)));
+    if(u32WakeupCount > 15)
     {
-        printf("Fail to calculate wake-up counter. USCI-UART would not get correct data after wake-up.\n");        
+        printf("Fail to calculate wake-up counter. USCI-UART would not get correct data after wake-up.\n");
     }
-    
+
     /* Enable UART data wake-up function */
     UUART_EnableWakeup(UUART0, UUART_PROTCTL_DATWKEN_Msk);
 

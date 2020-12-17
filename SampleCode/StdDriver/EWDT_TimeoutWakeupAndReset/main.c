@@ -30,7 +30,7 @@ void UART_Init(void);
  * @details     The EWDT_IRQHandler is default IRQ of EWDT, declared in startup_M2354.s.
  */
 void EWDT_IRQHandler(void)
-{    
+{
     if(g_u32WakeupCounts < 10)
     {
         EWDT_RESET_COUNTER();
@@ -78,7 +78,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ int main(void)
         printf("\nSystem enter to power-down mode ...\n");
         /* To check if all the debug messages are finished */
         while(!UART_IS_TX_EMPTY(DEBUG_PORT));
-        
+
         CLK_PowerDown();
 
         /* Check if EWDT time-out interrupt and wake-up occurred or not */

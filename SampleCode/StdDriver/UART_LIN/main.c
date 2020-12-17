@@ -81,10 +81,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC and HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HIRC and HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -139,7 +139,7 @@ void UART1_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int32_t main(void)
 {
-	  (void)g_u8SendData;
+    (void)g_u8SendData;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -222,7 +222,7 @@ void TestItem(void)
     printf("Please Select key (1~2): ");
 
     /* Forces a write of all user-space buffered data for the given output */
-    fflush(stdout);        
+    fflush(stdout);
 }
 
 void UART_FunctionTest(void)
@@ -235,7 +235,7 @@ void UART_FunctionTest(void)
         u32Item = (uint32_t)getchar();
         printf("%c\n", u32Item);
 
-        switch (u32Item)
+        switch(u32Item)
         {
             case '1':
                 LIN_Tx_FunctionTest();
@@ -248,10 +248,11 @@ void UART_FunctionTest(void)
             default:
                 break;
         }
-    }while (u32Item != 27);
+    }
+    while(u32Item != 27);
 
     printf("\nUART Demo Program End\n");
-    
+
 }
 
 void LIN_Tx_FunctionTest(void)
@@ -317,15 +318,15 @@ void LIN_Rx_FunctionTest(void)
     NVIC_EnableIRQ(UART1_IRQn);
 
     // Receive Header: break+sync+ID
-    UART1->LINCTL = UART_LINCTL_PID(LIN_ID) | UART_LINCTL_HSEL_BREAK_SYNC_ID | UART_LINCTL_SLVHDEN_Msk | 
+    UART1->LINCTL = UART_LINCTL_PID(LIN_ID) | UART_LINCTL_HSEL_BREAK_SYNC_ID | UART_LINCTL_SLVHDEN_Msk |
                     UART_LINCTL_IDPEN_Msk | UART_LINCTL_MUTE_Msk | UART_LINCTL_SLVEN_Msk;
 
     while(g_i32RxCounter < 9);
 
     printf("\n Receive Data:\n [ 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x 0x%x ] \n",
-            g_u8ReceiveData[0], g_u8ReceiveData[1], g_u8ReceiveData[2], g_u8ReceiveData[3],
-            g_u8ReceiveData[4], g_u8ReceiveData[5], g_u8ReceiveData[6], g_u8ReceiveData[7],
-            g_u8ReceiveData[8]);
+           g_u8ReceiveData[0], g_u8ReceiveData[1], g_u8ReceiveData[2], g_u8ReceiveData[3],
+           g_u8ReceiveData[4], g_u8ReceiveData[5], g_u8ReceiveData[6], g_u8ReceiveData[7],
+           g_u8ReceiveData[8]);
 
     NVIC_DisableIRQ(UART1_IRQn);
 

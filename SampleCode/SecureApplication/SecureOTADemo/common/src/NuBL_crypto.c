@@ -19,7 +19,7 @@
 #if 0
 static uint32_t Swap32(uint32_t val)
 {
-    return (val<<24) | ((val<<8)&0xff0000) | ((val>>8)&0xff00) | (val>>24);
+    return (val << 24) | ((val << 8) & 0xff0000) | ((val >> 8) & 0xff00) | (val >> 24);
 }
 #endif
 
@@ -54,7 +54,7 @@ int32_t NuBL_CalculateSHA256(uint32_t start, uint32_t end, uint32_t digest[], E_
 
     if((mode == SHA_ONESHOT) || (mode == SHA_CONTI_START))
     {
-        NUBL_MSG("\n[Start SHA256 from 0x%x to 0x%x. (size: %d) (mode: %d)] (%s)\n", start, end, bytes, mode, (src==SHA_SRC_SRAM)?"SRAM":"Flash");
+        NUBL_MSG("\n[Start SHA256 from 0x%x to 0x%x. (size: %d) (mode: %d)] (%s)\n", start, end, bytes, mode, (src == SHA_SRC_SRAM) ? "SRAM" : "Flash");
         /* Reset CRYPTO module */
         ResetCrypto();
 
@@ -85,7 +85,7 @@ int32_t NuBL_CalculateSHA256(uint32_t start, uint32_t end, uint32_t digest[], E_
             }
             else if(src == SHA_SRC_FLASH)
             {
-                data = FMC_Read(addr&0x0FFFFFFF);
+                data = FMC_Read(addr & 0x0FFFFFFF);
                 addr += 4;
                 bytes -= 4;
             }
@@ -106,8 +106,8 @@ int32_t NuBL_CalculateSHA256(uint32_t start, uint32_t end, uint32_t digest[], E_
                     CRPT->HMAC_DATIN = data;
                     while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk);
 
-                    for(i=0; i<8; i++)
-                        digest[i] = *(uint32_t *)((uint32_t)&(CRPT->HMAC_DGST[0]) + ((uint32_t)i*4));
+                    for(i = 0; i < 8; i++)
+                        digest[i] = *(uint32_t *)((uint32_t) & (CRPT->HMAC_DGST[0]) + ((uint32_t)i * 4));
 
                     NUBL_MSG("\t[SHA256 done]\n");
 
@@ -125,14 +125,14 @@ int32_t NuBL_CalculateSHA256(uint32_t start, uint32_t end, uint32_t digest[], E_
     }
 
     return 0;
-/*
-    Verify:
-        Input:
-            {0x30313233,0x34353637} or String "32107654"
-        Result:
-            6952CF8EACE972CD4F10567331B46D85104E9E57402364F205876D13F84F7E42
-            ==> Arraty {0x6952CF8E, 0xACE972CD, 0x4F105673....}
-*/
+    /*
+        Verify:
+            Input:
+                {0x30313233,0x34353637} or String "32107654"
+            Result:
+                6952CF8EACE972CD4F10567331B46D85104E9E57402364F205876D13F84F7E42
+                ==> Arraty {0x6952CF8E, 0xACE972CD, 0x4F105673....}
+    */
 }
 
 /**
@@ -296,7 +296,7 @@ int32_t NuBL_ECCInitCurve(void)
     /* Use ECC polling mode */
     NVIC_DisableIRQ(CRPT_IRQn);
 
-    for(i=0; i<18; i++)
+    for(i = 0; i < 18; i++)
     {
         CRPT->ECC_A[i]  = 0UL;
         CRPT->ECC_B[i]  = 0UL;
@@ -310,7 +310,7 @@ int32_t NuBL_ECCInitCurve(void)
     //char  Eb[144];
     //char  Px[144];
     //char  Py[144];
-        //"FFFFFFFF-00000001-00000000-00000000-00000000-FFFFFFFF-FFFFFFFF-FFFFFFFC",  /* "0000000000000000000000000000000000000000000000000000000000000003" */
+    //"FFFFFFFF-00000001-00000000-00000000-00000000-FFFFFFFF-FFFFFFFF-FFFFFFFC",  /* "0000000000000000000000000000000000000000000000000000000000000003" */
     CRPT->ECC_A[0] = 0xFFFFFFFC;
     CRPT->ECC_A[1] = 0xFFFFFFFF;
     CRPT->ECC_A[2] = 0xFFFFFFFF;
@@ -319,7 +319,7 @@ int32_t NuBL_ECCInitCurve(void)
     CRPT->ECC_A[5] = 0x00000000;
     CRPT->ECC_A[6] = 0x00000001;
     CRPT->ECC_A[7] = 0xFFFFFFFF;
-        //"5ac635d8-aa3a93e7-b3ebbd55-769886bc-651d06b0-cc53b0f6-3bce3c3e-27d2604b",
+    //"5ac635d8-aa3a93e7-b3ebbd55-769886bc-651d06b0-cc53b0f6-3bce3c3e-27d2604b",
     CRPT->ECC_B[0] = 0x27d2604b;
     CRPT->ECC_B[1] = 0x3bce3c3e;
     CRPT->ECC_B[2] = 0xcc53b0f6;
@@ -328,7 +328,7 @@ int32_t NuBL_ECCInitCurve(void)
     CRPT->ECC_B[5] = 0xb3ebbd55;
     CRPT->ECC_B[6] = 0xaa3a93e7;
     CRPT->ECC_B[7] = 0x5ac635d8;
-        //"6b17d1f2-e12c4247-f8bce6e5-63a440f2-77037d81-2deb33a0-f4a13945-d898c296",
+    //"6b17d1f2-e12c4247-f8bce6e5-63a440f2-77037d81-2deb33a0-f4a13945-d898c296",
     CRPT->ECC_X1[0] = 0xd898c296;
     CRPT->ECC_X1[1] = 0xf4a13945;
     CRPT->ECC_X1[2] = 0x2deb33a0;
@@ -337,7 +337,7 @@ int32_t NuBL_ECCInitCurve(void)
     CRPT->ECC_X1[5] = 0xf8bce6e5;
     CRPT->ECC_X1[6] = 0xe12c4247;
     CRPT->ECC_X1[7] = 0x6b17d1f2;
-        //"4fe342e2-fe1a7f9b-8ee7eb4a-7c0f9e16-2bce3357-6b315ece-cbb64068-37bf51f5",
+    //"4fe342e2-fe1a7f9b-8ee7eb4a-7c0f9e16-2bce3357-6b315ece-cbb64068-37bf51f5",
     CRPT->ECC_Y1[0] = 0x37bf51f5;
     CRPT->ECC_Y1[1] = 0xcbb64068;
     CRPT->ECC_Y1[2] = 0x6b315ece;
@@ -350,7 +350,7 @@ int32_t NuBL_ECCInitCurve(void)
     /* pCurve->GF == (int)CURVE_GF_P */
 
     //char  Pp[176];
-        //"FFFFFFFF-00000001-00000000-00000000-00000000-FFFFFFFF-FFFFFFFF-FFFFFFFF",  /* "115792089210356248762697446949407573530086143415290314195533631308867097853951" */
+    //"FFFFFFFF-00000001-00000000-00000000-00000000-FFFFFFFF-FFFFFFFF-FFFFFFFF",  /* "115792089210356248762697446949407573530086143415290314195533631308867097853951" */
     CRPT->ECC_N[0] = 0xFFFFFFFF;
     CRPT->ECC_N[1] = 0xFFFFFFFF;
     CRPT->ECC_N[2] = 0xFFFFFFFF;

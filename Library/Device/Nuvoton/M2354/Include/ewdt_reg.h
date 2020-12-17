@@ -9,7 +9,7 @@
 #ifndef __EWDT_REG_H__
 #define __EWDT_REG_H__
 
-/** 
+/**
   @addtogroup REGISTER Control Register
 
   @{
@@ -21,7 +21,7 @@
 /**
   @addtogroup EWDT Extra Watch Dog Timer Controller(EWDT)
   Memory Mapped Structure for EWDT Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -131,7 +131,7 @@ typedef struct
 /**
   @addtogroup EWDT_CONST WDT Bit Field Definition
   Constant Definitions for EWDT Controller
-  @{ 
+  @{
 */
 
 #define EWDT_CTL_RSTEN_Pos                (1)                                               /*!< EWDT_T::CTL: RSTEN Position             */

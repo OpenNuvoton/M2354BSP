@@ -16,7 +16,7 @@ void GPIO_SingleCycleIO_Test(void);
 
 
 #if (defined(__GNUC__) && !defined(__ARMCC_VERSION))
-__attribute__ ((used, long_call, section(".fastcode"))) void GPIO_SingleCycleIO_Test(void)
+__attribute__((used, long_call, section(".fastcode"))) void GPIO_SingleCycleIO_Test(void)
 #else
 void GPIO_SingleCycleIO_Test(void)
 #endif
@@ -33,60 +33,60 @@ void GPIO_SingleCycleIO_Test(void)
     TIMER0->CTL |= TIMER_CTL_CNTEN_Msk;
 
     /* Toggle PA.0 state 50 times */
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
 
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
 
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
 
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
 
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
-    PA0=1;
-    PA0=0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
+    PA0 = 1;
+    PA0 = 0;
 
     /* Get TIMER0 and TIMER2 counter */
     u32CounterTMR0 = TIMER0->CNT;
@@ -100,7 +100,7 @@ void GPIO_SingleCycleIO_Test(void)
     printf("Toggle speed measurement result\n");
     printf("=================================================\n");
     printf("GPIO Rising Edge Counts (A)        : %d\n",        u32CounterTMR2);
-    printf("Total Elapsed Time      (B)        : %.2f(us)\n",  (double)u32CounterTMR0/CyclesPerUs);
-    printf("Average Toggle Speed    (C)=(A)/(B): %.2f(MHz)\n", (double)(u32CounterTMR2*CyclesPerUs)/u32CounterTMR0);
+    printf("Total Elapsed Time      (B)        : %.2f(us)\n", (double)u32CounterTMR0 / CyclesPerUs);
+    printf("Average Toggle Speed    (C)=(A)/(B): %.2f(MHz)\n", (double)(u32CounterTMR2 * CyclesPerUs) / u32CounterTMR0);
 
 }

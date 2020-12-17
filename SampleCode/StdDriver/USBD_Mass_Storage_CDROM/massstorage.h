@@ -82,13 +82,13 @@
 
 static __INLINE uint32_t get_be32(uint8_t *pu8Buf)
 {
-    return ((uint32_t) (pu8Buf[0] << 24)) | ((uint32_t) (pu8Buf[1] << 16)) |
-           ((uint32_t) (pu8Buf[2] << 8)) | ((uint32_t) pu8Buf[3]);
+    return ((uint32_t)(pu8Buf[0] << 24)) | ((uint32_t)(pu8Buf[1] << 16)) |
+           ((uint32_t)(pu8Buf[2] << 8)) | ((uint32_t) pu8Buf[3]);
 }
 
 static __INLINE uint16_t get_be16(uint8_t * pu8Buf)
 {
-    return (((uint16_t) (pu8Buf[0] << 8)) | ((uint16_t) pu8Buf[1]));
+    return (((uint16_t)(pu8Buf[0] << 8)) | ((uint16_t) pu8Buf[1]));
 }
 
 /******************************************************************************/

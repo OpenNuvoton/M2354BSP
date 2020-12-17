@@ -22,7 +22,7 @@ static const uint32_t g_u32ArraySize = sizeof(g_au16Sine) / sizeof(uint16_t);
 static uint32_t g_u32Index = 0;
 
 void DAC_IRQHandler(void);
-void SYS_Init(void)		;
+void SYS_Init(void)     ;
 
 
 void DAC_IRQHandler(void)
@@ -53,10 +53,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC, HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HIRC, HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);

@@ -19,7 +19,7 @@
 /**
     @addtogroup RTC Real Time Clock Controller(RTC)
     Memory Mapped Structure for RTC Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -339,7 +339,7 @@ typedef struct
      * | :----: | :----:   | :---- |
      * |[31:0]  |SPARE     |Spare Register
      * |        |          |This field is used to store back-up information defined by user.
-     * |        |          |This field will be cleared by hardware automatically in the following conditions, a tamper pin event is detected, 
+     * |        |          |This field will be cleared by hardware automatically in the following conditions, a tamper pin event is detected,
      * |        |          |LXT clock fail/stop event occurs if LXTFCLR(RTC_SPRCTL[16]) is 1, or after Flash mass operation.
      * @var RTC_T::LXTCTL
      * Offset: 0x100  RTC 32.768 kHz Oscillator Control Register
@@ -367,7 +367,7 @@ typedef struct
      * |        |          |0 = Clock source from external low speed crystal oscillator (LXT) or internal low speed RC 32K oscillator (LIRC32K) depended on C32KSEL value.
      * |        |          |1 = Clock source from internal low speed RC oscillator (LIRC).
      * |[8]     |IOCTLSEL  |IO Pin Backup Control Selection
-     * |        |          |When low speed 32 kHz oscillator is disabled or TAMPxEN is disabled, 
+     * |        |          |When low speed 32 kHz oscillator is disabled or TAMPxEN is disabled,
      * |        |          |PF.4 pin (X32KO pin), PF.5 pin (X32KI pin) or PF.6~11 pin (TAMPERx pin) can be used as GPIO function.
      * |        |          |User can program IOCTLSEL to decide PF.4~11 I/O function is controlled by system power domain GPIO module or VBAT power domain RTC_GPIOCTL0/1 control register.
      * |        |          |0 = PF.4~11 pin I/O function is controlled by GPIO module.
@@ -710,7 +710,7 @@ typedef struct
      * |[16]    |SWLIRCF   |LXT Clock Detector Fail/Stop Switch LIRC32K Flag (Read Only)
      * |        |          |0 = Indicate RTC clock source from LXT.
      * |        |          |1 = Indicate RTC clock source from LIRC32K.
-     * |[17]    |LXTSLOWF  |LXT Slower Than LIRC32K Flag (Read Only) 
+     * |[17]    |LXTSLOWF  |LXT Slower Than LIRC32K Flag (Read Only)
      * |        |          |0 = LXT frequency faster than LIRC32K.
      * |        |          |1 = LXT frequency is slowly.
      * |        |          |Note: LXTSLOWF is vaild during CLKSTIF (RTC_INTSTS[25]) or CLKFIF (RTC_INTSTS[24]) rising.
@@ -767,7 +767,7 @@ typedef struct
 /**
     @addtogroup RTC_CONST RTC Bit Field Definition
     Constant Definitions for RTC Controller
-  @{ 
+  @{
 */
 
 #define RTC_INIT_ACTIVE_Pos              (0)                                               /*!< RTC_T::INIT: ACTIVE Position           */

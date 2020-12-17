@@ -746,7 +746,7 @@ extern "C"
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL |= CLK_PMUCTL_WKTMREN_Msk; \
     }while(0)
-    
+
 /**
   * @brief      Disable DPD Mode Wake-up Pin
   * @param      None
@@ -757,7 +757,7 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPINEN_Msk; \
-    }while(0) 
+    }while(0)
 
 /**
   * @brief      Disable DPD Mode Wake-up Pin 0
@@ -769,8 +769,8 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN0EN_Msk; \
-    }while(0)     
-    
+    }while(0)
+
 /**
   * @brief      Disable DPD Mode Wake-up Pin 1
   * @param      None
@@ -781,8 +781,8 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN1EN_Msk; \
-    }while(0)         
-  
+    }while(0)
+
 /**
   * @brief      Disable DPD Mode Wake-up Pin 2
   * @param      None
@@ -793,7 +793,7 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN2EN_Msk; \
-    }while(0)  
+    }while(0)
 
 /**
   * @brief      Disable DPD Mode Wake-up Pin 3
@@ -805,8 +805,8 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN3EN_Msk; \
-    }while(0) 
-    
+    }while(0)
+
 /**
   * @brief      Disable DPD Mode Wake-up Pin 4
   * @param      None
@@ -817,7 +817,7 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN4EN_Msk; \
-    }while(0) 
+    }while(0)
 
 /**
   * @brief      Disable SPD Mode ACMP Wake-up
@@ -829,8 +829,8 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL &= ~CLK_PMUCTL_ACMPSPWK_Msk; \
-    }while(0) 
-    
+    }while(0)
+
 /**
   * @brief      Enable SPD Mode ACMP Wake-up
   * @param      None
@@ -841,8 +841,8 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL |= CLK_PMUCTL_ACMPSPWK_Msk; \
-    }while(0)     
-    
+    }while(0)
+
 /**
   * @brief      Disable SPD and DPD Mode RTC Wake-up
   * @param      None
@@ -853,8 +853,8 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL &= ~CLK_PMUCTL_RTCWKEN_Msk; \
-    }while(0)    
-    
+    }while(0)
+
 /**
   * @brief      Enable SPD and DPD Mode RTC Wake-up
   * @param      None
@@ -865,8 +865,8 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL |= CLK_PMUCTL_RTCWKEN_Msk; \
-    }while(0)        
-    
+    }while(0)
+
 /**
  * @brief       Set Wake-up Timer Time-out Interval
  *
@@ -890,7 +890,7 @@ extern "C"
    do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL = (CLK->PMUCTL & (~CLK_PMUCTL_WKTMRIS_Msk)) | (u32Interval); \
-    }while(0)  
+    }while(0)
 
 /**
  * @brief       Set De-bounce Sampling Cycle Time
@@ -931,8 +931,8 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL &= ~CLK_PMUCTL_TAMPERWK_Msk; \
-    }while(0)    
-    
+    }while(0)
+
 /**
   * @brief      Enable SPD and DPD Mode RTC Wake-up
   * @param      None
@@ -943,8 +943,8 @@ extern "C"
     do{ \
         while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
         CLK->PMUCTL |= CLK_PMUCTL_TAMPERWK_Msk; \
-    }while(0)        
-    
+    }while(0)
+
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* static inline functions                                                                                 */
@@ -957,7 +957,7 @@ __STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us);
 /**
   * @brief      This function execute delay function.
   * @param[in]  us  Delay time. The Max value is (2^24-1) / CPU Clock(MHz). Ex:
-  *                             96MHz => 174762us, 84MHz => 199728us,   
+  *                             96MHz => 174762us, 84MHz => 199728us,
   *                             64MHz => 262143us, 48MHz => 349525us ...
   * @return     None
   * @details    Use the SysTick to generate the delay time and the UNIT is in us.

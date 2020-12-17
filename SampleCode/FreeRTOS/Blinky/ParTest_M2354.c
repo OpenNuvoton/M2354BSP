@@ -84,12 +84,12 @@
 
 /* Shift the LED bit into the correct position within the POW register to
 perform the desired operation. */
-#define partstON_SHIFT	( 16UL )
-#define partstOFF_SHIFT	( 0UL )
+#define partstON_SHIFT  ( 16UL )
+#define partstOFF_SHIFT ( 0UL )
 
 /*-----------------------------------------------------------*/
 
-void vParTestInitialise( void )
+void vParTestInitialise(void)
 {
 
     /*---------------------------------------------------------------------------------------------------------*/
@@ -124,11 +124,11 @@ void vParTestInitialise( void )
     UART0->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
 
     /* LED IO PA11*/
-    PA->MODE = (PA->MODE & (~(3ul << 11*2))) | GPIO_MODE_OUTPUT << 11*2;
+    PA->MODE = (PA->MODE & (~(3ul << 11 * 2))) | GPIO_MODE_OUTPUT << 11 * 2;
 
 #if 1 // ETM MFP
-    SYS->GPE_MFPH &= ~(TRACE_CLK_PE12_Msk|TRACE_DATA0_PE11_Msk|TRACE_DATA1_PE10_Msk|TRACE_DATA2_PE9_Msk|TRACE_DATA3_PE8_Msk);
-    SYS->GPE_MFPH |= TRACE_CLK_PE12|TRACE_DATA0_PE11|TRACE_DATA1_PE10|TRACE_DATA2_PE9|TRACE_DATA3_PE8;
+    SYS->GPE_MFPH &= ~(TRACE_CLK_PE12_Msk | TRACE_DATA0_PE11_Msk | TRACE_DATA1_PE10_Msk | TRACE_DATA2_PE9_Msk | TRACE_DATA3_PE8_Msk);
+    SYS->GPE_MFPH |= TRACE_CLK_PE12 | TRACE_DATA0_PE11 | TRACE_DATA1_PE10 | TRACE_DATA2_PE9 | TRACE_DATA3_PE8;
 #endif
 
 #if 0 //Enable CLK output
@@ -150,10 +150,10 @@ void vParTestInitialise( void )
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
+void vParTestSetLED(unsigned long ulLED, signed portBASE_TYPE xValue)
 {
     (void)ulLED;
-    if( xValue == pdTRUE )
+    if(xValue == pdTRUE)
     {
         /* Turn the LED on. */
         PA11 = 0;
@@ -166,7 +166,7 @@ void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
 }
 /*-----------------------------------------------------------*/
 
-void vParTestToggleLED( unsigned long ulLED )
+void vParTestToggleLED(unsigned long ulLED)
 {
     (void)ulLED;
     PA11 ^= 1;

@@ -20,9 +20,9 @@ extern "C"
 /* Wifi network settings, replace with your settings */
 #define WIFINAME            "VIZIO"
 #define WIFIPASS            "9624212766"
-#define WIFIIP				"192.168.1.100"
+#define WIFIIP              "192.168.1.100"
 #define WIFIPORT            (1111U)
-#define BUF_SIZE	128
+#define BUF_SIZE    128
 
 
 extern uint32_t CyclesPerUs;

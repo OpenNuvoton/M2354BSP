@@ -17,7 +17,8 @@
 /* Functions and variables declaration                                                                     */
 /*---------------------------------------------------------------------------------------------------------*/
 #define LCD_ALPHABET_NUM    7
-static S_LCD_CFG_T g_LCDCfg = {
+static S_LCD_CFG_T g_LCDCfg =
+{
     __LIRC,                     /*!< LCD clock source frequency */
     LCD_COM_DUTY_1_8,           /*!< COM duty */
     LCD_BIAS_LV_1_4,            /*!< Bias level */
@@ -27,7 +28,7 @@ static S_LCD_CFG_T g_LCDCfg = {
     LCD_LOW_DRIVING_AND_BUF_ON, /*!< Driving mode */
     LCD_VOLTAGE_SOURCE_CP,      /*!< Voltage source */
 };
-    
+
 void Configure_LCD_Pins(void);
 void SYS_Init(void);
 void UART_Init(void);
@@ -50,44 +51,44 @@ void Configure_LCD_Pins(void)
             SEG 33~36 : PH.7, PH.6, PH.5, PH.4
             SEG 37~39 : PG.4, PG.3, PG.2
     */
-    
+
     /* COM 0~5 */
-    SYS->GPC_MFPL = (SYS->GPC_MFPL & 
-                    ~(SYS_GPC_MFPL_PC0MFP_Msk | SYS_GPC_MFPL_PC1MFP_Msk | SYS_GPC_MFPL_PC2MFP_Msk | SYS_GPC_MFPL_PC3MFP_Msk | 
-                      SYS_GPC_MFPL_PC4MFP_Msk | SYS_GPC_MFPL_PC5MFP_Msk)) |
+    SYS->GPC_MFPL = (SYS->GPC_MFPL &
+                     ~(SYS_GPC_MFPL_PC0MFP_Msk | SYS_GPC_MFPL_PC1MFP_Msk | SYS_GPC_MFPL_PC2MFP_Msk | SYS_GPC_MFPL_PC3MFP_Msk |
+                       SYS_GPC_MFPL_PC4MFP_Msk | SYS_GPC_MFPL_PC5MFP_Msk)) |
                     (LCD_COM0_PC0 | LCD_COM1_PC1 | LCD_COM2_PC2 | LCD_COM3_PC3 | LCD_COM4_PC4 | LCD_COM5_PC5);
     /* COM 6~7 */
     SYS->GPD_MFPH = (SYS->GPD_MFPH & ~(SYS_GPD_MFPH_PD8MFP_Msk | SYS_GPD_MFPH_PD9MFP_Msk)) |
                     (LCD_COM6_PD8 | LCD_COM7_PD9);
-    
+
     /* SEG 0 */
     SYS->GPD_MFPH = (SYS->GPD_MFPH & ~SYS_GPD_MFPH_PD14MFP_Msk) | LCD_SEG0_PD14;
     /* SEG 1~4 */
     SYS->GPH_MFPH = (SYS->GPH_MFPH & ~(SYS_GPH_MFPH_PH11MFP_Msk | SYS_GPH_MFPH_PH10MFP_Msk | SYS_GPH_MFPH_PH9MFP_Msk | SYS_GPH_MFPH_PH8MFP_Msk)) |
                     (LCD_SEG1_PH11 | LCD_SEG2_PH10 | LCD_SEG3_PH9 | LCD_SEG4_PH8);
     /* SEG 5~12 */
-    SYS->GPE_MFPL = (SYS->GPE_MFPL & 
-                    ~(SYS_GPE_MFPL_PE0MFP_Msk | SYS_GPE_MFPL_PE1MFP_Msk | SYS_GPE_MFPL_PE2MFP_Msk | SYS_GPE_MFPL_PE3MFP_Msk |
-                      SYS_GPE_MFPL_PE4MFP_Msk | SYS_GPE_MFPL_PE5MFP_Msk | SYS_GPE_MFPL_PE6MFP_Msk | SYS_GPE_MFPL_PE7MFP_Msk)) |
+    SYS->GPE_MFPL = (SYS->GPE_MFPL &
+                     ~(SYS_GPE_MFPL_PE0MFP_Msk | SYS_GPE_MFPL_PE1MFP_Msk | SYS_GPE_MFPL_PE2MFP_Msk | SYS_GPE_MFPL_PE3MFP_Msk |
+                       SYS_GPE_MFPL_PE4MFP_Msk | SYS_GPE_MFPL_PE5MFP_Msk | SYS_GPE_MFPL_PE6MFP_Msk | SYS_GPE_MFPL_PE7MFP_Msk)) |
                     (LCD_SEG5_PE0 | LCD_SEG6_PE1 | LCD_SEG7_PE2 | LCD_SEG8_PE3 |
                      LCD_SEG9_PE4 | LCD_SEG10_PE5 | LCD_SEG11_PE6 | LCD_SEG12_PE7);
     /* SEG 13~14 */
     SYS->GPD_MFPL = (SYS->GPD_MFPL & ~(SYS_GPD_MFPL_PD6MFP_Msk | SYS_GPD_MFPL_PD7MFP_Msk)) | (LCD_SEG13_PD6 | LCD_SEG14_PD7);
     /* SEG 15~21 */
-    SYS->GPG_MFPH = (SYS->GPG_MFPH & 
-                    ~(SYS_GPG_MFPH_PG15MFP_Msk | SYS_GPG_MFPH_PG14MFP_Msk | SYS_GPG_MFPH_PG13MFP_Msk | SYS_GPG_MFPH_PG12MFP_Msk |
-                      SYS_GPG_MFPH_PG11MFP_Msk | SYS_GPG_MFPH_PG10MFP_Msk | SYS_GPG_MFPH_PG9MFP_Msk)) |
+    SYS->GPG_MFPH = (SYS->GPG_MFPH &
+                     ~(SYS_GPG_MFPH_PG15MFP_Msk | SYS_GPG_MFPH_PG14MFP_Msk | SYS_GPG_MFPH_PG13MFP_Msk | SYS_GPG_MFPH_PG12MFP_Msk |
+                       SYS_GPG_MFPH_PG11MFP_Msk | SYS_GPG_MFPH_PG10MFP_Msk | SYS_GPG_MFPH_PG9MFP_Msk)) |
                     (LCD_SEG15_PG15 | LCD_SEG16_PG14 | LCD_SEG17_PG13 | LCD_SEG18_PG12 |
                      LCD_SEG19_PG11 | LCD_SEG20_PG10 | LCD_SEG21_PG9);
     /* SEG 22~23 */
     SYS->GPE_MFPH = (SYS->GPE_MFPH & ~(SYS_GPE_MFPH_PE15MFP_Msk | SYS_GPE_MFPH_PE14MFP_Msk)) | (LCD_SEG22_PE15 | LCD_SEG23_PE14);
     /* SEG 24~29 */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & 
-                    ~(SYS_GPA_MFPL_PA0MFP_Msk | SYS_GPA_MFPL_PA1MFP_Msk | SYS_GPA_MFPL_PA2MFP_Msk | SYS_GPA_MFPL_PA3MFP_Msk |
-                      SYS_GPA_MFPL_PA4MFP_Msk | SYS_GPA_MFPL_PA5MFP_Msk)) |
-                    (LCD_SEG24_PA0 | LCD_SEG25_PA1 | LCD_SEG26_PA2 | LCD_SEG27_PA3 | LCD_SEG28_PA4 |LCD_SEG29_PA5);
+    SYS->GPA_MFPL = (SYS->GPA_MFPL &
+                     ~(SYS_GPA_MFPL_PA0MFP_Msk | SYS_GPA_MFPL_PA1MFP_Msk | SYS_GPA_MFPL_PA2MFP_Msk | SYS_GPA_MFPL_PA3MFP_Msk |
+                       SYS_GPA_MFPL_PA4MFP_Msk | SYS_GPA_MFPL_PA5MFP_Msk)) |
+                    (LCD_SEG24_PA0 | LCD_SEG25_PA1 | LCD_SEG26_PA2 | LCD_SEG27_PA3 | LCD_SEG28_PA4 | LCD_SEG29_PA5);
     /* SEG 30~32 */
-    SYS->GPE_MFPH = (SYS->GPE_MFPH & ~(SYS_GPE_MFPH_PE10MFP_Msk | SYS_GPE_MFPH_PE9MFP_Msk | SYS_GPE_MFPH_PE8MFP_Msk)) | 
+    SYS->GPE_MFPH = (SYS->GPE_MFPH & ~(SYS_GPE_MFPH_PE10MFP_Msk | SYS_GPE_MFPH_PE9MFP_Msk | SYS_GPE_MFPH_PE8MFP_Msk)) |
                     (LCD_SEG30_PE10 | LCD_SEG31_PE9 | LCD_SEG32_PE8);
     /* SEG 33~36 */
     SYS->GPH_MFPL = (SYS->GPH_MFPL & ~(SYS_GPH_MFPL_PH7MFP_Msk | SYS_GPH_MFPL_PH6MFP_Msk | SYS_GPH_MFPL_PH5MFP_Msk | SYS_GPH_MFPL_PH4MFP_Msk)) |
@@ -122,7 +123,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -159,7 +160,7 @@ int main(void)
 
     /* Unlock protected registers */
     SYS_UnlockReg();
-        
+
     /* Init System, peripheral clock and multi-function I/O */
     SYS_Init();
 
@@ -177,26 +178,26 @@ int main(void)
     printf("LCD configurations:\n");
     printf(" * Clock source is LIRC\n");
     printf(" * 8 COM, 40 SEG and 1/4 Bias\n");
-    printf(" * Driving waveform is Type-%c\n", (g_LCDCfg.u32WaveformType==LCD_PCTL_TYPE_Msk)?'B':'A');
+    printf(" * Driving waveform is Type-%c\n", (g_LCDCfg.u32WaveformType == LCD_PCTL_TYPE_Msk) ? 'B' : 'A');
     printf(" * Target frame rate is %dHz\n\n", g_LCDCfg.u32Framerate);
-    
+
     /* COM 0~5 */
     SYS->GPC_MFPL = (SYS->GPC_MFPL & ~(SYS_GPC_MFPL_PC0MFP_Msk | SYS_GPC_MFPL_PC1MFP_Msk | SYS_GPC_MFPL_PC2MFP_Msk | SYS_GPC_MFPL_PC3MFP_Msk | SYS_GPC_MFPL_PC4MFP_Msk | SYS_GPC_MFPL_PC5MFP_Msk)) |
                     (LCD_COM0_PC0 | LCD_COM1_PC1 | LCD_COM2_PC2 | LCD_COM3_PC3 | LCD_COM4_PC4 | LCD_COM5_PC5);
     /* COM 6~7 */
     SYS->GPD_MFPH = (SYS->GPD_MFPH & ~(SYS_GPD_MFPH_PD8MFP_Msk | SYS_GPD_MFPH_PD9MFP_Msk)) |
                     (LCD_COM6_PD8 | LCD_COM7_PD9);
-    
+
     /* Configure LCD multi-function pins */
     Configure_LCD_Pins();
-    
+
     /* Reset LCD module */
     SYS_ResetModule(LCD_RST);
-        
+
     /* LCD Initialize and calculate real frame rate */
     u32ActiveFPS = LCD_Open(&g_LCDCfg);
-    printf("Working frame rate is %dHz on Type-%c.\n\n", u32ActiveFPS, (g_LCDCfg.u32WaveformType==LCD_PCTL_TYPE_Msk)?'B':'A');
-    
+    printf("Working frame rate is %dHz on Type-%c.\n\n", u32ActiveFPS, (g_LCDCfg.u32WaveformType == LCD_PCTL_TYPE_Msk) ? 'B' : 'A');
+
     /* Enable charge pump clock MIRC and output voltage level 2 for 3.0V */
     CLK_EnableXtalRC(CLK_PWRCTL_MIRCEN_Msk);
     CLK_EnableModuleClock(LCDCP_MODULE);
@@ -205,7 +206,7 @@ int main(void)
 
     /* Enable LCD display */
     LCD_ENABLE_DISPLAY();
-    
+
     while(1)
     {
         idx = 0;
@@ -218,7 +219,7 @@ int main(void)
             printf("%c", input);
             if(input == 0xD) // "ENTER" key to exit current input
                 break;
-            
+
             strcat(text, &input);
             idx++;
             if(idx >= LCD_ALPHABET_NUM)

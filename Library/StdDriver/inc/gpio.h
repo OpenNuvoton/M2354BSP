@@ -113,8 +113,8 @@ extern "C"
  *
  *  If PA.0 pin status is high, then set PA.0 data output to low.
  */
- 
- 
+
+
 #if defined (SCU_INIT_IONSSET0_VAL) && (SCU_INIT_IONSSET0_VAL & BIT0 )
 #define PA0             PA0_NS  /*!< Specify PA.0 Pin Data Input/Output */
 #else
@@ -1140,7 +1140,7 @@ void GPIO_EnableInt(GPIO_T *port, uint32_t u32Pin, uint32_t u32IntAttribs);
 void GPIO_DisableInt(GPIO_T *port, uint32_t u32Pin);
 void GPIO_SetSlewCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode);
 void GPIO_SetPullCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode);
-	
+
 
 /**@}*/ /* end of group GPIO_EXPORTED_FUNCTIONS */
 

@@ -252,7 +252,7 @@ int32_t FMC_EraseXOM(uint32_t u32XomNum)
 
         if(i32Active)
         {
-            u32Addr = ( ( (uint32_t)(&FMC->XOMR0STS)[u32XomNum] ) & 0xFFFFFF00u ) >> 8u;
+            u32Addr = (((uint32_t)(&FMC->XOMR0STS)[u32XomNum]) & 0xFFFFFF00u) >> 8u;
 
             FMC->ISPCMD = FMC_ISPCMD_PAGE_ERASE;
             FMC->ISPADDR = u32Addr;
@@ -841,9 +841,9 @@ int32_t FMC_SwapBank(uint32_t u32Bank)
     FMC->ISPDAT = 0x5AA55AA5UL;
     FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
 
-    while (FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk) { }
+    while(FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk) { }
 
-    if (FMC->ISPCTL & FMC_ISPCTL_ISPFF_Msk)
+    if(FMC->ISPCTL & FMC_ISPCTL_ISPFF_Msk)
     {
         FMC->ISPCTL |= FMC_ISPCTL_ISPFF_Msk;
         ret = -1;

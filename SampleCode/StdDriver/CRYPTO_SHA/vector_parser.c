@@ -203,7 +203,7 @@ int GetNextPattern(void)
 
         if(g_pi8LineBuff[0] == '#')
             continue;
-    
+
         /* Get Length */
         if(strncmp(g_pi8LineBuff, "Len", 3) == 0)
         {
@@ -223,7 +223,7 @@ int GetNextPattern(void)
             Str2Hex(p, &g_au8ShaData[0], 0);
             continue;
         }
-        
+
         /* Get golden result */
         if(strncmp(g_pi8LineBuff, "MD", 2) == 0)
         {

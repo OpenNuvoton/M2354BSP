@@ -62,12 +62,12 @@ void MainTask(void)
     WM_MULTIBUF_Enable(1);
 #endif
 
-#ifdef __DEMO_160x128__    
+#ifdef __DEMO_160x128__
     i32Scale = 500;
 #else
     i32Scale = 1000;
-#endif    
-    
+#endif
+
     GUI_SetBkColor(GUI_BLACK);
     GUI_Clear();
     GUI_DrawBitmapEx(&bmM2354_320x240, 0, 5, 0, 0, i32Scale, i32Scale);

@@ -19,7 +19,7 @@
 /**
     @addtogroup SPI Serial Peripheral Interface Controller(SPI)
     Memory Mapped Structure for SPI Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -550,7 +550,7 @@ typedef struct
 /**
     @addtogroup SPI_CONST SPI Bit Field Definition
     Constant Definitions for SPI Controller
-  @{ 
+  @{
 */
 
 #define SPI_CTL_SPIEN_Pos                (0)                                               /*!< SPI_T::CTL: SPIEN Position             */

@@ -14,7 +14,7 @@
 /*---------------------------------------------------------------------------------------------------------*/
 void SYS_Init(void);
 void UART_Init(void);
-	
+
 
 void SYS_Init(void)
 {
@@ -41,7 +41,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -108,7 +108,7 @@ int main(void)
     printf("# Timer0 PWM_CH0 output frequency is 18000 Hz and duty is 50%%.\n");
     printf("# Timer1 PWM_CH0 output frequency is 10000 Hz and duty is 10%%.\n");
     printf("# Timer2 PWM_CH0 output frequency is  9000 Hz and duty is 75%%.\n");
-    printf("# Timer3 PWM_CH0 output frequency is  4000 Hz and duty is 20%%.\n");    
+    printf("# Timer3 PWM_CH0 output frequency is  4000 Hz and duty is 20%%.\n");
     printf("# Timer4 PWM_CH0 output frequency is 10000 Hz and duty is 40%%.\n");
     printf("# Timer5 PWM_CH1 output frequency is  5000 Hz and duty is 60%%.\n");
     printf("# I/O configuration:\n");

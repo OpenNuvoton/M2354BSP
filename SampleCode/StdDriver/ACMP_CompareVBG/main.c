@@ -42,7 +42,7 @@ void SYS_Init(void)
 
     /* Enable UART peripheral clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* Enable ACMP01 peripheral clock */
     CLK_EnableModuleClock(ACMP01_MODULE);
 

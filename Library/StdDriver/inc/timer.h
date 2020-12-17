@@ -396,7 +396,7 @@ __STATIC_INLINE void TIMER_DisableCaptureInt(TIMER_T *timer)
   */
 __STATIC_INLINE uint32_t TIMER_GetIntFlag(TIMER_T *timer)
 {
-    return (((timer->INTSTS & TIMER_INTSTS_TIF_Msk) == TIMER_INTSTS_TIF_Msk)? 1UL : 0UL);
+    return (((timer->INTSTS & TIMER_INTSTS_TIF_Msk) == TIMER_INTSTS_TIF_Msk) ? 1UL : 0UL);
 }
 
 /**
@@ -454,7 +454,7 @@ __STATIC_INLINE void TIMER_ClearCaptureIntFlag(TIMER_T *timer)
   */
 __STATIC_INLINE uint32_t TIMER_GetWakeupFlag(TIMER_T *timer)
 {
-    return (((timer->INTSTS & TIMER_INTSTS_TWKF_Msk) == TIMER_INTSTS_TWKF_Msk)? 1UL : 0UL);
+    return (((timer->INTSTS & TIMER_INTSTS_TWKF_Msk) == TIMER_INTSTS_TWKF_Msk) ? 1UL : 0UL);
 }
 
 /**

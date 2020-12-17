@@ -108,7 +108,7 @@ void SYS_Init(void)
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* ENable CRYPTO module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
@@ -123,7 +123,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;    
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
 }
 
@@ -227,7 +227,7 @@ int32_t main(void)
     /* Initial TRNG */
     RNG_Open();
 
-/*------------------------------------------------------------------------*/
+    /*------------------------------------------------------------------------*/
     /* Generate a private key A */
     GenPrivateKey(d, ECC_KEY_SIZE);
     printf("Private key A = %s\n", d);
@@ -248,7 +248,7 @@ int32_t main(void)
     printf("Elapsed time: %d.%d ms\n", u32Time / CyclesPerUs / 1000, u32Time / CyclesPerUs % 1000);
 
 
-/*------------------------------------------------------------------------*/
+    /*------------------------------------------------------------------------*/
     /* Generate a private key B */
     GenPrivateKey(d2, ECC_KEY_SIZE);
     printf("Private key  B = %s\n", d2);

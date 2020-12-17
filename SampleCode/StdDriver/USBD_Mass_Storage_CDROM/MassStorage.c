@@ -1383,10 +1383,10 @@ void MSC_ProcessCmd(void)
                 }
                 case UFI_MODE_SENSE_6:
                 {
-                    *(uint8_t *)((uint32_t)USBD_BUF_BASE + s_u32BulkBuf1+0) = 0x3;
-                    *(uint8_t *)((uint32_t)USBD_BUF_BASE + s_u32BulkBuf1+1) = 0x0;
-                    *(uint8_t *)((uint32_t)USBD_BUF_BASE + s_u32BulkBuf1+2) = 0x0;
-                    *(uint8_t *)((uint32_t)USBD_BUF_BASE + s_u32BulkBuf1+3) = 0x0;
+                    *(uint8_t *)((uint32_t)USBD_BUF_BASE + s_u32BulkBuf1 + 0) = 0x3;
+                    *(uint8_t *)((uint32_t)USBD_BUF_BASE + s_u32BulkBuf1 + 1) = 0x0;
+                    *(uint8_t *)((uint32_t)USBD_BUF_BASE + s_u32BulkBuf1 + 2) = 0x0;
+                    *(uint8_t *)((uint32_t)USBD_BUF_BASE + s_u32BulkBuf1 + 3) = 0x0;
                     USBD_SET_PAYLOAD_LEN(EP2, 4);
                     s_u8BulkState = BULK_IN;
                     s_sCSW.bCSWStatus = 0;
@@ -1474,7 +1474,7 @@ void MSC_AckCmd(void)
             case UFI_GET_EVENT_STATUS_NOTIFICATION:
             case UFI_SET_CDROM_SPEED:
             {
-                if (s_sCBW.dCBWDataTransferLength < STORAGE_BUFFER_SIZE)
+                if(s_sCBW.dCBWDataTransferLength < STORAGE_BUFFER_SIZE)
                     s_sCSW.dCSWDataResidue = 0;
                 else
                     s_sCSW.dCSWDataResidue = s_sCBW.dCBWDataTransferLength - STORAGE_BUFFER_SIZE;

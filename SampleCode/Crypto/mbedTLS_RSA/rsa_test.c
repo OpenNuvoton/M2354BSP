@@ -131,29 +131,29 @@ void start_timer0()
 
 uint32_t  get_timer0_counter()
 {
-    return TIMER0->CNT ? TIMER0->CNT : g_u32Ratio*g_tick_cnt;
+    return TIMER0->CNT ? TIMER0->CNT : g_u32Ratio * g_tick_cnt;
 }
 
 
 #if defined(MBEDTLS_PKCS1_V15)
-static int myrand( void *rng_state, unsigned char *output, size_t len )
+static int myrand(void *rng_state, unsigned char *output, size_t len)
 {
 #if !defined(__OpenBSD__)
     size_t i;
 
-    if( rng_state != NULL )
+    if(rng_state != NULL)
         rng_state  = NULL;
 
-    for( i = 0; i < len; ++i )
+    for(i = 0; i < len; ++i)
         output[i] = rand();
 #else
-    if( rng_state != NULL )
+    if(rng_state != NULL)
         rng_state = NULL;
 
-    arc4random_buf( output, len );
+    arc4random_buf(output, len);
 #endif /* !OpenBSD */
 
-    return( 0 );
+    return(0);
 }
 #endif /* MBEDTLS_PKCS1_V15 */
 
@@ -169,13 +169,13 @@ int PEMtoRSA(void)
 
     enable_sys_tick(1000);
     start_timer0();
-    for(u32Cnt = 0; u32Cnt<100000; u32Cnt++)
+    for(u32Cnt = 0; u32Cnt < 100000; u32Cnt++)
     {
         __NOP();
     }
 
     g_u32Time = get_timer0_counter();
-    g_u32Ratio = g_u32Time/g_tick_cnt;
+    g_u32Ratio = g_u32Time / g_tick_cnt;
 
 
     mbedtls_pk_init(&pk);
@@ -188,9 +188,9 @@ int PEMtoRSA(void)
     /*
      * Read the RSA private key
      */
-    if( ( ret = mbedtls_pk_parse_keyfile( &pk, "./private.pem", "" ) ) != 0 )
+    if((ret = mbedtls_pk_parse_keyfile(&pk, "./private.pem", "")) != 0)
     {
-        printf( " failed\n  ! mbedtls_pk_parse_keyfile returned -0x%04x\n", ret );
+        printf(" failed\n  ! mbedtls_pk_parse_keyfile returned -0x%04x\n", ret);
         return -1;
     }
 #else
@@ -218,7 +218,7 @@ int PEMtoRSA(void)
     printf("  mbedtls_rsa_check_privkey :");
     /* check RSA key */
     mbedtls_rsa_context *rsa = mbedtls_pk_rsa(pk);
-    if (mbedtls_rsa_check_privkey( rsa ) != 0 )
+    if(mbedtls_rsa_check_privkey(rsa) != 0)
     {
         printf("  failed\n !mbedtls_rsa_check_privkey\n");
         return -1;
@@ -240,7 +240,7 @@ int PEMtoRSA(void)
 /*
  * Checkup routine
  */
-int RSAEncryptWithHashTest( int verbose )
+int RSAEncryptWithHashTest(int verbose)
 {
     int ret = 0;
 #if defined(MBEDTLS_PKCS1_V15)
@@ -255,40 +255,40 @@ int RSAEncryptWithHashTest( int verbose )
 
     mbedtls_mpi K;
 
-    mbedtls_mpi_init( &K );
-    mbedtls_rsa_init( &rsa, MBEDTLS_RSA_PKCS_V15, 0 );
+    mbedtls_mpi_init(&K);
+    mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
 
-    MBEDTLS_MPI_CHK( mbedtls_mpi_read_string( &K, 16, RSA_N  ) );
-    MBEDTLS_MPI_CHK( mbedtls_rsa_import( &rsa, &K, NULL, NULL, NULL, NULL ) );
-    MBEDTLS_MPI_CHK( mbedtls_mpi_read_string( &K, 16, RSA_P  ) );
-    MBEDTLS_MPI_CHK( mbedtls_rsa_import( &rsa, NULL, &K, NULL, NULL, NULL ) );
-    MBEDTLS_MPI_CHK( mbedtls_mpi_read_string( &K, 16, RSA_Q  ) );
-    MBEDTLS_MPI_CHK( mbedtls_rsa_import( &rsa, NULL, NULL, &K, NULL, NULL ) );
-    MBEDTLS_MPI_CHK( mbedtls_mpi_read_string( &K, 16, RSA_D  ) );
-    MBEDTLS_MPI_CHK( mbedtls_rsa_import( &rsa, NULL, NULL, NULL, &K, NULL ) );
-    MBEDTLS_MPI_CHK( mbedtls_mpi_read_string( &K, 16, RSA_E  ) );
-    MBEDTLS_MPI_CHK( mbedtls_rsa_import( &rsa, NULL, NULL, NULL, NULL, &K ) );
+    MBEDTLS_MPI_CHK(mbedtls_mpi_read_string(&K, 16, RSA_N));
+    MBEDTLS_MPI_CHK(mbedtls_rsa_import(&rsa, &K, NULL, NULL, NULL, NULL));
+    MBEDTLS_MPI_CHK(mbedtls_mpi_read_string(&K, 16, RSA_P));
+    MBEDTLS_MPI_CHK(mbedtls_rsa_import(&rsa, NULL, &K, NULL, NULL, NULL));
+    MBEDTLS_MPI_CHK(mbedtls_mpi_read_string(&K, 16, RSA_Q));
+    MBEDTLS_MPI_CHK(mbedtls_rsa_import(&rsa, NULL, NULL, &K, NULL, NULL));
+    MBEDTLS_MPI_CHK(mbedtls_mpi_read_string(&K, 16, RSA_D));
+    MBEDTLS_MPI_CHK(mbedtls_rsa_import(&rsa, NULL, NULL, NULL, &K, NULL));
+    MBEDTLS_MPI_CHK(mbedtls_mpi_read_string(&K, 16, RSA_E));
+    MBEDTLS_MPI_CHK(mbedtls_rsa_import(&rsa, NULL, NULL, NULL, NULL, &K));
 
-    MBEDTLS_MPI_CHK( mbedtls_rsa_complete( &rsa ) );
+    MBEDTLS_MPI_CHK(mbedtls_rsa_complete(&rsa));
 
-    if( verbose != 0 )
-        printf( "\n  RSA key validation     : " );
+    if(verbose != 0)
+        printf("\n  RSA key validation     : ");
 
 
     enable_sys_tick(1000);
     start_timer0();
 
-    if( mbedtls_rsa_check_pubkey(  &rsa ) != 0 ||
-            mbedtls_rsa_check_privkey( &rsa ) != 0 )
+    if(mbedtls_rsa_check_pubkey(&rsa) != 0 ||
+            mbedtls_rsa_check_privkey(&rsa) != 0)
     {
-        if( verbose != 0 )
-            printf( "failed\n" );
+        if(verbose != 0)
+            printf("failed\n");
 
         ret = 1;
         goto cleanup;
     }
 
-    if( verbose != 0 )
+    if(verbose != 0)
     {
         printf("passed");
         g_u32Time = get_timer0_counter();
@@ -300,22 +300,22 @@ int RSAEncryptWithHashTest( int verbose )
     enable_sys_tick(1000);
     start_timer0();
 
-    printf( "  PKCS#1 encryption      : " );
+    printf("  PKCS#1 encryption      : ");
 
-    memcpy( rsa_plaintext, RSA_PT, PT_LEN );
+    memcpy(rsa_plaintext, RSA_PT, PT_LEN);
 
-    if( mbedtls_rsa_pkcs1_encrypt( &rsa, myrand, NULL, MBEDTLS_RSA_PUBLIC,
-                                   PT_LEN, rsa_plaintext,
-                                   rsa_ciphertext ) != 0 )
+    if(mbedtls_rsa_pkcs1_encrypt(&rsa, myrand, NULL, MBEDTLS_RSA_PUBLIC,
+                                 PT_LEN, rsa_plaintext,
+                                 rsa_ciphertext) != 0)
     {
-        if( verbose != 0 )
-            printf( "failed\n" );
+        if(verbose != 0)
+            printf("failed\n");
 
         ret = 1;
         goto cleanup;
     }
 
-    if( verbose != 0 )
+    if(verbose != 0)
     {
         printf("passed");
         g_u32Time = get_timer0_counter();
@@ -327,29 +327,29 @@ int RSAEncryptWithHashTest( int verbose )
     enable_sys_tick(1000);
     start_timer0();
 
-    printf( "  PKCS#1 decryption      : " );
+    printf("  PKCS#1 decryption      : ");
 
-    if( mbedtls_rsa_pkcs1_decrypt( &rsa, myrand, NULL, MBEDTLS_RSA_PRIVATE,
-                                   &len, rsa_ciphertext, rsa_decrypted,
-                                   sizeof(rsa_decrypted) ) != 0 )
+    if(mbedtls_rsa_pkcs1_decrypt(&rsa, myrand, NULL, MBEDTLS_RSA_PRIVATE,
+                                 &len, rsa_ciphertext, rsa_decrypted,
+                                 sizeof(rsa_decrypted)) != 0)
     {
-        if( verbose != 0 )
-            printf( "failed\n" );
+        if(verbose != 0)
+            printf("failed\n");
 
         ret = 1;
         goto cleanup;
     }
 
-    if( memcmp( rsa_decrypted, rsa_plaintext, len ) != 0 )
+    if(memcmp(rsa_decrypted, rsa_plaintext, len) != 0)
     {
-        if( verbose != 0 )
-            printf( "failed\n" );
+        if(verbose != 0)
+            printf("failed\n");
 
         ret = 1;
         goto cleanup;
     }
 
-    if( verbose != 0 )
+    if(verbose != 0)
     {
         printf("passed");
         g_u32Time = get_timer0_counter();
@@ -362,30 +362,30 @@ int RSAEncryptWithHashTest( int verbose )
 
 
 #if defined(MBEDTLS_SHA1_C)
-    if( verbose != 0 )
-        printf( "  PKCS#1 data sign       : " );
+    if(verbose != 0)
+        printf("  PKCS#1 data sign       : ");
 
-    if( mbedtls_sha1_ret( rsa_plaintext, PT_LEN, sha1sum ) != 0 )
+    if(mbedtls_sha1_ret(rsa_plaintext, PT_LEN, sha1sum) != 0)
     {
-        if( verbose != 0 )
-            printf( "failed\n" );
+        if(verbose != 0)
+            printf("failed\n");
 
-        return( 1 );
+        return(1);
     }
 
-    if( mbedtls_rsa_pkcs1_sign( &rsa, myrand, NULL,
-                                MBEDTLS_RSA_PRIVATE, MBEDTLS_MD_SHA1, 0,
-                                sha1sum, rsa_ciphertext ) != 0 )
+    if(mbedtls_rsa_pkcs1_sign(&rsa, myrand, NULL,
+                              MBEDTLS_RSA_PRIVATE, MBEDTLS_MD_SHA1, 0,
+                              sha1sum, rsa_ciphertext) != 0)
     {
-        if( verbose != 0 )
-            printf( "failed\n" );
+        if(verbose != 0)
+            printf("failed\n");
 
         ret = 1;
         goto cleanup;
     }
 
 
-    if( verbose != 0 )
+    if(verbose != 0)
     {
         printf("passed");
         g_u32Time = get_timer0_counter();
@@ -395,20 +395,20 @@ int RSAEncryptWithHashTest( int verbose )
     }
     enable_sys_tick(1000);
     start_timer0();
-    printf( "  PKCS#1 sig. verify     : " );
+    printf("  PKCS#1 sig. verify     : ");
 
-    if( mbedtls_rsa_pkcs1_verify( &rsa, NULL, NULL,
-                                  MBEDTLS_RSA_PUBLIC, MBEDTLS_MD_SHA1, 0,
-                                  sha1sum, rsa_ciphertext ) != 0 )
+    if(mbedtls_rsa_pkcs1_verify(&rsa, NULL, NULL,
+                                MBEDTLS_RSA_PUBLIC, MBEDTLS_MD_SHA1, 0,
+                                sha1sum, rsa_ciphertext) != 0)
     {
-        if( verbose != 0 )
-            printf( "failed\n" );
+        if(verbose != 0)
+            printf("failed\n");
 
         ret = 1;
         goto cleanup;
     }
 
-    if( verbose != 0 )
+    if(verbose != 0)
     {
         printf("passed");
         g_u32Time = get_timer0_counter();
@@ -420,14 +420,14 @@ int RSAEncryptWithHashTest( int verbose )
     start_timer0();
 #endif /* MBEDTLS_SHA1_C */
 
-    if( verbose != 0 )
-        printf( "\n" );
+    if(verbose != 0)
+        printf("\n");
 
 cleanup:
-    mbedtls_mpi_free( &K );
-    mbedtls_rsa_free( &rsa );
+    mbedtls_mpi_free(&K);
+    mbedtls_rsa_free(&rsa);
 #else /* MBEDTLS_PKCS1_V15 */
     ((void) verbose);
 #endif /* MBEDTLS_PKCS1_V15 */
-    return( ret );
+    return(ret);
 }

@@ -85,49 +85,49 @@ int main()
         printf("|  Boot from 0x%08X  |\n", FMC_GetVECMAP());
         printf("+------------------------+\n");
 
-        u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
+        u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk) >> FMC_ISPSTS_FBS_Pos);
         printf("\n BANK%d Loader processing \n\n", u32ExecBank);
 
         u32Loader0ChkSum = FMC_GetChkSum(FMC_APROM_BASE, LOADER_SIZE);
         u32Loader1ChkSum = FMC_GetChkSum(FMC_APROM_BANK0_END, LOADER_SIZE);
         printf(" Loader0 checksum: 0x%08x \n Loader1 checksum: 0x%08x\n", u32Loader0ChkSum, u32Loader1ChkSum);
 
-        u32App0ChkSum = FMC_GetChkSum(FMC_APROM_BASE+APP_BASE, APP_SIZE);
-        u32App1ChkSum = FMC_GetChkSum(FMC_APROM_BANK0_END+APP_BASE, APP_SIZE);
+        u32App0ChkSum = FMC_GetChkSum(FMC_APROM_BASE + APP_BASE, APP_SIZE);
+        u32App1ChkSum = FMC_GetChkSum(FMC_APROM_BANK0_END + APP_BASE, APP_SIZE);
         printf(" App0 checksum: 0x%08x \n App1 checksum: 0x%08x\n", u32App0ChkSum, u32App1ChkSum);
 
-        if( (u32ExecBank == 0) && ( u32Loader0ChkSum != u32Loader1ChkSum ) )
+        if((u32ExecBank == 0) && (u32Loader0ChkSum != u32Loader1ChkSum))
         {
-            printf("\n Create BANK%d Loader... \n",  u32ExecBank^1);
+            printf("\n Create BANK%d Loader... \n",  u32ExecBank ^ 1);
 
             /* Erase loader region */
-            for(i = LOADER_BASE; i < (LOADER_BASE + LOADER_SIZE); i+= FMC_FLASH_PAGE_SIZE)
+            for(i = LOADER_BASE; i < (LOADER_BASE + LOADER_SIZE); i += FMC_FLASH_PAGE_SIZE)
             {
-                FMC_Erase( FMC_BANK_SIZE*(u32ExecBank^1) + i );
+                FMC_Erase(FMC_BANK_SIZE * (u32ExecBank ^ 1) + i);
             }
             /* Create loader in the other bank */
-            for(i = LOADER_BASE; i < (LOADER_BASE + LOADER_SIZE); i+= 4)
+            for(i = LOADER_BASE; i < (LOADER_BASE + LOADER_SIZE); i += 4)
             {
-                FMC_Write( FMC_BANK_SIZE*(u32ExecBank^1) + i, FMC_Read( (FMC_BANK_SIZE*u32ExecBank) + i) );
+                FMC_Write(FMC_BANK_SIZE * (u32ExecBank ^ 1) + i, FMC_Read((FMC_BANK_SIZE * u32ExecBank) + i));
             }
-            printf(" Create Bank%d Loader completed! \n", (u32ExecBank^1) );
+            printf(" Create Bank%d Loader completed! \n", (u32ExecBank ^ 1));
         }
 
-        if( (u32ExecBank == 0) && ( (FMC_CheckAllOne( (FMC_APROM_BANK0_END + APP_BASE), APP_SIZE) )== READ_ALLONE_YES ) )
+        if((u32ExecBank == 0) && ((FMC_CheckAllOne((FMC_APROM_BANK0_END + APP_BASE), APP_SIZE)) == READ_ALLONE_YES))
         {
-            printf("\n Create BANK%d App... \n", u32ExecBank^1);
+            printf("\n Create BANK%d App... \n", u32ExecBank ^ 1);
 
             /* Erase app region */
-            for(i = APP_BASE; i < (APP_BASE + APP_SIZE); i+= FMC_FLASH_PAGE_SIZE)
+            for(i = APP_BASE; i < (APP_BASE + APP_SIZE); i += FMC_FLASH_PAGE_SIZE)
             {
-                FMC_Erase( FMC_BANK_SIZE*(u32ExecBank^1) + i );
+                FMC_Erase(FMC_BANK_SIZE * (u32ExecBank ^ 1) + i);
             }
             /* Create app in the other bank(just for test)*/
-            for(i = APP_BASE; i < (APP_BASE + APP_SIZE); i+= 4)
+            for(i = APP_BASE; i < (APP_BASE + APP_SIZE); i += 4)
             {
-                FMC_Write( FMC_BANK_SIZE*(u32ExecBank^1) + i, FMC_Read( (FMC_BANK_SIZE*u32ExecBank) + i) );
+                FMC_Write(FMC_BANK_SIZE * (u32ExecBank ^ 1) + i, FMC_Read((FMC_BANK_SIZE * u32ExecBank) + i));
             }
-            printf(" Create Bank%d App completed! \n", (u32ExecBank^1) );
+            printf(" Create Bank%d App completed! \n", (u32ExecBank ^ 1));
         }
 
         printf("\n Execute BANK%d APP? [y/n] \n", u32ExecBank);
@@ -141,14 +141,14 @@ int main()
         }
         else
         {
-            printf("\n Swap to BANK%d Loader? [y/n] \n", u32ExecBank^1);
+            printf("\n Swap to BANK%d Loader? [y/n] \n", u32ExecBank ^ 1);
             u8GetCh = (uint8_t)getchar();
 
             if(u8GetCh == 'y')
             {
                 /* Swap Bank */
                 printf("\n BANK%d Loader before swap \n", u32ExecBank);
-                FMC_SwapBank(u32ExecBank^1);
+                FMC_SwapBank(u32ExecBank ^ 1);
                 printf("\n Swap completed!\n");
             }
             else
@@ -157,6 +157,7 @@ int main()
             }
         }
 
-    } while(1);
+    }
+    while(1);
 
 }

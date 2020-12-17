@@ -59,15 +59,16 @@ char sBuf[20];
 char acVersion[40] = "Framewin: Version of emWin: ";
 
 #ifdef __DEMO_160x128__
-static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { FRAMEWIN_CreateIndirect, "Framewin", ID_FRAMEWIN_0, 0, 0, 160, 128, 0, 0x64, 0 },
-  { BUTTON_CreateIndirect, "NVT_Button_+1", ID_BUTTON_0, 10, 6, 50, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "NVT_Button_+10", ID_BUTTON_1, 10, 32, 50, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "NVT_Button_-1", ID_BUTTON_2, 10, 58, 50, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "NVT_Button_-10", ID_BUTTON_3, 10, 84, 50, 20, 0, 0x0, 0 },
-  { EDIT_CreateIndirect, "NVT_Edit", ID_EDIT_0, 80, 26, 60, 20, 0, 0x64, 0 },
-  { TEXT_CreateIndirect, "NVT_Text", ID_TEXT_0, 80, 2, 50, 20, 0, 0x64, 0 },
-  { BUTTON_CreateIndirect, "NVT_Button_Calibrate", ID_BUTTON_4, 90, 84, 60, 20, 0, 0x0, 0 },
+static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] =
+{
+    { FRAMEWIN_CreateIndirect, "Framewin", ID_FRAMEWIN_0, 0, 0, 160, 128, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "NVT_Button_+1", ID_BUTTON_0, 10, 6, 50, 20, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "NVT_Button_+10", ID_BUTTON_1, 10, 32, 50, 20, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "NVT_Button_-1", ID_BUTTON_2, 10, 58, 50, 20, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "NVT_Button_-10", ID_BUTTON_3, 10, 84, 50, 20, 0, 0x0, 0 },
+    { EDIT_CreateIndirect, "NVT_Edit", ID_EDIT_0, 80, 26, 60, 20, 0, 0x64, 0 },
+    { TEXT_CreateIndirect, "NVT_Text", ID_TEXT_0, 80, 2, 50, 20, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "NVT_Button_Calibrate", ID_BUTTON_4, 90, 84, 60, 20, 0, 0x0, 0 },
 #else
 // USER END
 
@@ -75,18 +76,19 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *
 *       _aDialogCreate
 */
-static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { FRAMEWIN_CreateIndirect, "Framewin", ID_FRAMEWIN_0, 0, 0, 320, 240, 0, 0x64, 0 },
-  { BUTTON_CreateIndirect, "NVT_Button_+1", ID_BUTTON_0, 43, 38, 80, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "NVT_Button_+10", ID_BUTTON_1, 43, 77, 80, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "NVT_Button_-1", ID_BUTTON_2, 45, 116, 80, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "NVT_Button_-10", ID_BUTTON_3, 46, 158, 80, 20, 0, 0x0, 0 },
-  { EDIT_CreateIndirect, "NVT_Edit", ID_EDIT_0, 204, 72, 80, 20, 0, 0x64, 0 },
-  { TEXT_CreateIndirect, "NVT_Text", ID_TEXT_0, 151, 74, 50, 20, 0, 0x64, 0 },
-  { BUTTON_CreateIndirect, "NVT_Button_Calibrate", ID_BUTTON_4, 204, 158, 80, 20, 0, 0x0, 0 },
-  // USER START (Optionally insert additional widgets)
-    #endif
-  // USER END
+static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] =
+{
+    { FRAMEWIN_CreateIndirect, "Framewin", ID_FRAMEWIN_0, 0, 0, 320, 240, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "NVT_Button_+1", ID_BUTTON_0, 43, 38, 80, 20, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "NVT_Button_+10", ID_BUTTON_1, 43, 77, 80, 20, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "NVT_Button_-1", ID_BUTTON_2, 45, 116, 80, 20, 0, 0x0, 0 },
+    { BUTTON_CreateIndirect, "NVT_Button_-10", ID_BUTTON_3, 46, 158, 80, 20, 0, 0x0, 0 },
+    { EDIT_CreateIndirect, "NVT_Edit", ID_EDIT_0, 204, 72, 80, 20, 0, 0x64, 0 },
+    { TEXT_CreateIndirect, "NVT_Text", ID_TEXT_0, 151, 74, 50, 20, 0, 0x64, 0 },
+    { BUTTON_CreateIndirect, "NVT_Button_Calibrate", ID_BUTTON_4, 204, 158, 80, 20, 0, 0x0, 0 },
+    // USER START (Optionally insert additional widgets)
+#endif
+    // USER END
 };
 
 /*********************************************************************
@@ -103,184 +105,193 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *
 *       _cbDialog
 */
-static void _cbDialog(WM_MESSAGE * pMsg) {
-  WM_HWIN hItem;
-  int     NCode;
-  int     Id;
-  // USER START (Optionally insert additional variables)
-  // USER END
+static void _cbDialog(WM_MESSAGE * pMsg)
+{
+    WM_HWIN hItem;
+    int     NCode;
+    int     Id;
+    // USER START (Optionally insert additional variables)
+    // USER END
 
-  switch (pMsg->MsgId) {
-  case WM_INIT_DIALOG:
-    //
-    // Initialization of 'NVT_Button_+1'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
-    BUTTON_SetText(hItem, "+ 1");
-    //
-    // Initialization of 'NVT_Button_+10'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
-    BUTTON_SetText(hItem, "+ 10");
-    //
-    // Initialization of 'NVT_Button_-1'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
-    BUTTON_SetText(hItem, "- 1");
-    //
-    // Initialization of 'NVT_Button_-10'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
-    BUTTON_SetText(hItem, "- 10");
-    //
-    // Initialization of 'NVT_Edit'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
-    EDIT_SetText(hItem, "2354");
-    //
-    // Initialization of 'NVT_Text'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
-    TEXT_SetText(hItem, "Result :");
-    //
-    // Initialization of 'NVT_Button_Calibrate'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
-    BUTTON_SetText(hItem, "Calibrate");
-    // USER START (Optionally insert additional code for further widget initialization)
-    value = 2354;
-    //
-    // Initialization of 'Framewin'
-    //
-    hItem = pMsg->hWin;
-    strcat(acVersion, GUI_GetVersionString());
-    FRAMEWIN_SetText(hItem, acVersion);
-    // USER END
-    break;
-  case WM_NOTIFY_PARENT:
-    Id    = WM_GetId(pMsg->hWinSrc);
-    NCode = pMsg->Data.v;
-    switch(Id) {
-    case ID_BUTTON_0: // Notifications sent by 'NVT_Button_+1'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
+    switch(pMsg->MsgId)
+    {
+        case WM_INIT_DIALOG:
+            //
+            // Initialization of 'NVT_Button_+1'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
+            BUTTON_SetText(hItem, "+ 1");
+            //
+            // Initialization of 'NVT_Button_+10'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+            BUTTON_SetText(hItem, "+ 10");
+            //
+            // Initialization of 'NVT_Button_-1'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+            BUTTON_SetText(hItem, "- 1");
+            //
+            // Initialization of 'NVT_Button_-10'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+            BUTTON_SetText(hItem, "- 10");
+            //
+            // Initialization of 'NVT_Edit'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
+            EDIT_SetText(hItem, "2354");
+            //
+            // Initialization of 'NVT_Text'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
+            TEXT_SetText(hItem, "Result :");
+            //
+            // Initialization of 'NVT_Button_Calibrate'
+            //
+            hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
+            BUTTON_SetText(hItem, "Calibrate");
+            // USER START (Optionally insert additional code for further widget initialization)
+            value = 2354;
+            //
+            // Initialization of 'Framewin'
+            //
+            hItem = pMsg->hWin;
+            strcat(acVersion, GUI_GetVersionString());
+            FRAMEWIN_SetText(hItem, acVersion);
+            // USER END
+            break;
+        case WM_NOTIFY_PARENT:
+            Id    = WM_GetId(pMsg->hWinSrc);
+            NCode = pMsg->Data.v;
+            switch(Id)
+            {
+                case ID_BUTTON_0: // Notifications sent by 'NVT_Button_+1'
+                    switch(NCode)
+                    {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            value += 1;
+                            sprintf(sBuf, "%d    ", value);
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
+                            EDIT_SetText(hItem, sBuf);
+                            // USER END
+                            break;
+                            // USER START (Optionally insert additional code for further notification handling)
+                            // USER END
+                    }
+                    break;
+                case ID_BUTTON_1: // Notifications sent by 'NVT_Button_+10'
+                    switch(NCode)
+                    {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            value += 10;
+                            sprintf(sBuf, "%d    ", value);
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
+                            EDIT_SetText(hItem, sBuf);
+                            // USER END
+                            break;
+                            // USER START (Optionally insert additional code for further notification handling)
+                            // USER END
+                    }
+                    break;
+                case ID_BUTTON_2: // Notifications sent by 'NVT_Button_-1'
+                    switch(NCode)
+                    {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            value -= 1;
+                            sprintf(sBuf, "%d    ", value);
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
+                            EDIT_SetText(hItem, sBuf);
+                            // USER END
+                            break;
+                            // USER START (Optionally insert additional code for further notification handling)
+                            // USER END
+                    }
+                    break;
+                case ID_BUTTON_3: // Notifications sent by 'NVT_Button_-10'
+                    switch(NCode)
+                    {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            value -= 10;
+                            sprintf(sBuf, "%d    ", value);
+                            hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
+                            EDIT_SetText(hItem, sBuf);
+                            // USER END
+                            break;
+                            // USER START (Optionally insert additional code for further notification handling)
+                            // USER END
+                    }
+                    break;
+                case ID_EDIT_0: // Notifications sent by 'NVT_Edit'
+                    switch(NCode)
+                    {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_VALUE_CHANGED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                            // USER START (Optionally insert additional code for further notification handling)
+                            // USER END
+                    }
+                    break;
+                case ID_BUTTON_4: // Notifications sent by 'NVT_Button_Calibrate'
+                    switch(NCode)
+                    {
+                        case WM_NOTIFICATION_CLICKED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            SYS_UnlockReg();
+                            FMC_Open();
+                            FMC_ENABLE_AP_UPDATE();
+                            FMC_Write(__DEMO_TSFILE_ADDR__ + 0x1C, 0x0);
+                            SYS_ResetCPU();
+                            while(1) {};
+                            // USER END
+                            break;
+                        case WM_NOTIFICATION_RELEASED:
+                            // USER START (Optionally insert code for reacting on notification message)
+                            // USER END
+                            break;
+                            // USER START (Optionally insert additional code for further notification handling)
+                            // USER END
+                    }
+                    break;
+                    // USER START (Optionally insert additional code for further Ids)
+                    // USER END
+            }
+            break;
+        // USER START (Optionally insert additional message handling)
         // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        value += 1;
-        sprintf(sBuf,"%d    ", value);
-        hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
-        EDIT_SetText(hItem, sBuf);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_1: // Notifications sent by 'NVT_Button_+10'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        value += 10;
-        sprintf(sBuf,"%d    ", value);
-        hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
-        EDIT_SetText(hItem, sBuf);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_2: // Notifications sent by 'NVT_Button_-1'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        value -= 1;
-        sprintf(sBuf,"%d    ", value);
-        hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
-        EDIT_SetText(hItem, sBuf);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_3: // Notifications sent by 'NVT_Button_-10'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        value -= 10;
-        sprintf(sBuf,"%d    ", value);
-        hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
-        EDIT_SetText(hItem, sBuf);
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_EDIT_0: // Notifications sent by 'NVT_Edit'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_4: // Notifications sent by 'NVT_Button_Calibrate'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        SYS_UnlockReg();
-        FMC_Open();
-        FMC_ENABLE_AP_UPDATE();
-        FMC_Write(__DEMO_TSFILE_ADDR__ + 0x1C, 0x0);
-        SYS_ResetCPU();
-        while(1) {};
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    // USER START (Optionally insert additional code for further Ids)
-    // USER END
+        default:
+            WM_DefaultProc(pMsg);
+            break;
     }
-    break;
-  // USER START (Optionally insert additional message handling)
-  // USER END
-  default:
-    WM_DefaultProc(pMsg);
-    break;
-  }
 }
 
 /*********************************************************************
@@ -294,11 +305,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *       CreateFramewin
 */
 WM_HWIN CreateFramewin(void);
-WM_HWIN CreateFramewin(void) {
-  WM_HWIN hWin;
+WM_HWIN CreateFramewin(void)
+{
+    WM_HWIN hWin;
 
-  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-  return hWin;
+    hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+    return hWin;
 }
 
 // USER START (Optionally insert additional public code)

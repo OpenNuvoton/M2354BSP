@@ -45,10 +45,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC and HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HIRC and HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -221,15 +221,15 @@ void USCI_UART_FunctionTest(void)
     UUART_ENABLE_TRANS_INT(UUART0, UUART_INTEN_RXENDIEN_Msk);
     NVIC_EnableIRQ(USCI0_IRQn);
 
-    while (g_i32Wait)
+    while(g_i32Wait)
     {
         u32Temp = g_u32comRtail;
 
-        if (g_u32comRhead != u32Temp)
+        if(g_u32comRhead != u32Temp)
         {
             u8InChar = g_au8RecData[g_u32comRhead];
 
-            while (UUART_IS_TX_FULL(UUART0)); /* Wait Tx is not full to transmit data */
+            while(UUART_IS_TX_FULL(UUART0));  /* Wait Tx is not full to transmit data */
 
             UUART_WRITE(UUART0, u8InChar);
             g_u32comRhead = (g_u32comRhead == (RXBUFSIZE - 1)) ? 0 : (g_u32comRhead + 1);

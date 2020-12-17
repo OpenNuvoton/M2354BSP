@@ -26,7 +26,8 @@ static volatile ISP_INFO_T g_NuBL2ISPInfo = {0};
 #define PLL_CLOCK       64000000
 
 /* For ECC NIST: Curve P-256 */
-const uint32_t g_au32Eorder[] = {
+const uint32_t g_au32Eorder[] =
+{
     0xFC632551, 0xF3B9CAC2, 0xA7179E84, 0xBCE6FAAD, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF
 };
 
@@ -154,11 +155,11 @@ void WdtEnableAndCheck(void)
 #if (WDT_RST_ENABLE)
     /* Check WDT config */
     u32Cfg = FMC_Read(FMC_CONFIG_BASE);
-    if((u32Cfg & (BIT31|BIT4|BIT3)) == ((BIT31|BIT4|BIT3)))
+    if((u32Cfg & (BIT31 | BIT4 | BIT3)) == ((BIT31 | BIT4 | BIT3)))
     {
         printf("[WRAN]WDT was disabled\n");
         FMC_ENABLE_CFG_UPDATE();
-        u32Cfg &= ~((BIT31|BIT4|BIT3));
+        u32Cfg &= ~((BIT31 | BIT4 | BIT3));
         FMC_Write(FMC_CONFIG_BASE, u32Cfg);
 
         //NVIC_SystemReset();
@@ -168,7 +169,7 @@ void WdtEnableAndCheck(void)
     else
         printf("WDT was enabled\n");
 #endif
-    if (SYS_IS_WDT_RST())
+    if(SYS_IS_WDT_RST())
     {
         /* upgrade done, clear OTA status */
         FMC_Write(OTA_STATUS_BASE, 0x1);
@@ -280,13 +281,13 @@ int32_t GetBLxFwVer(uint32_t * pu32FwVer, uint8_t u8Mode)
     uint32_t            *infobuf, base, len;
     FW_INFO_T           FwInfo;
 
-    if(!((u8Mode == 0) || (u8Mode == 1) || (u8Mode == BIT2) || (u8Mode == (1|BIT2))))
+    if(!((u8Mode == 0) || (u8Mode == 1) || (u8Mode == BIT2) || (u8Mode == (1 | BIT2))))
     {
         NUBL_MSG("\nGet NuBL3x Version FAIL. Invalid mode: 0x%x.\n\n", u8Mode);
         return ret;
     }
 
-    NUBL_MSG("\nGet NuBL3%d. \n\n", ((u8Mode&BIT0)==0)?2:3);
+    NUBL_MSG("\nGet NuBL3%d. \n\n", ((u8Mode & BIT0) == 0) ? 2 : 3);
 
     memset(&FwInfo, 0x0, sizeof(FW_INFO_T));
 
@@ -295,29 +296,29 @@ int32_t GetBLxFwVer(uint32_t * pu32FwVer, uint8_t u8Mode)
     /* Step 1. Get NuBL3x info */
     /* Get NuBL3x F/W info */
     len = sizeof(FW_INFO_T);
-    if((u8Mode&BIT4) != BIT4)
+    if((u8Mode & BIT4) != BIT4)
     {
         FMC_Open();
-        if((u8Mode&BIT0) == 0)
-            if ((u8Mode&BIT2) == 0)
+        if((u8Mode & BIT0) == 0)
+            if((u8Mode & BIT2) == 0)
                 base = NUBL32_FW_INFO_BASE;   // encrypted NuBL32 info address
             else
                 base = NUBL32_FW_INFO_BASE | FMC_BANK_SIZE;   // encrypted NuBL32 info address
-        else if ((u8Mode&BIT2) == 0)
+        else if((u8Mode & BIT2) == 0)
             base = NUBL33_FW_INFO_BASE;   // encrypted NuBL33 info address
         else
             base = NUBL33_FW_INFO_BASE | FMC_BANK_SIZE;   // encrypted NuBL33 info address
 
-        for(i=0; i<((int32_t)len/4); i++)
-            infobuf[i] = FMC_Read(base + ((uint32_t)i*4));
+        for(i = 0; i < ((int32_t)len / 4); i++)
+            infobuf[i] = FMC_Read(base + ((uint32_t)i * 4));
     }
-    NUBL_MSG("Get NuBL3%d F/W info [Done]\n\n", ((u8Mode&BIT0)==0)?2:3);
+    NUBL_MSG("Get NuBL3%d F/W info [Done]\n\n", ((u8Mode & BIT0) == 0) ? 2 : 3);
 
     /* Step 2. Get NuBL3x F/W version (enclosed in F/W info) */
     memcpy(&FwInfo, infobuf, sizeof(FW_INFO_T));
     memcpy(pu32FwVer, &FwInfo.mData.au32ExtInfo[0], sizeof(uint32_t));
 
-    NUBL_MSG(" NuBL3%d F/W version is [0x%08x]\n\n", ((u8Mode&BIT0)==0)?2:3, FwInfo.mData.au32ExtInfo[0]);
+    NUBL_MSG(" NuBL3%d F/W version is [0x%08x]\n\n", ((u8Mode & BIT0) == 0) ? 2 : 3, FwInfo.mData.au32ExtInfo[0]);
 
     ret = 0;
 
@@ -358,15 +359,15 @@ int8_t FlashBankSwapCheck(void)
     printf("[Bank0]\n\tNuBL32 verify Pass: %d, NuBL33 verify Pass: %d\n[Bank1]\n\tNuBL32 verify Pass: %d, NuBL33 verify Pass: %d\n\n", \
            u32NuBL32Bank0Pass, u32NuBL33Bank0Pass, u32NuBL32Bank1Pass, u32NuBL33Bank1Pass);
 #if 0
-    if (u32NuBL32Bank0Pass > u32NuBL32Bank1Pass)
+    if(u32NuBL32Bank0Pass > u32NuBL32Bank1Pass)
     {
         /* NuBL32 FWINFO */
-        if (FWCopy(NUBL32_FW_INFO_BASE, NUBL32_FW_INFO_BASE | FMC_BANK_SIZE, FW_INFO_SIZE) != 0)
+        if(FWCopy(NUBL32_FW_INFO_BASE, NUBL32_FW_INFO_BASE | FMC_BANK_SIZE, FW_INFO_SIZE) != 0)
         {
             printf("Copy NuBL32 FWINFO to bank1 has error!\n");
             return 0;
         }
-        if (FWCopy(NUBL32_FW_BASE, NUBL32_FW_BASE | FMC_BANK_SIZE, SYS_NEW_FW_BLOCK_SIZE) != 0)
+        if(FWCopy(NUBL32_FW_BASE, NUBL32_FW_BASE | FMC_BANK_SIZE, SYS_NEW_FW_BLOCK_SIZE) != 0)
         {
             printf("Copy NuBL32 to bank1 has error!\n");
             return 0;
@@ -374,15 +375,15 @@ int8_t FlashBankSwapCheck(void)
         printf("Copy NuBL32 and FWINFO to bank1\n");
     }
 
-    if (u32NuBL33Bank0Pass > u32NuBL33Bank1Pass)
+    if(u32NuBL33Bank0Pass > u32NuBL33Bank1Pass)
     {
         /* NuBL33 FWINFO */
-        if (FWCopy(NUBL33_FW_INFO_BASE, NUBL33_FW_INFO_BASE | FMC_BANK_SIZE, FW_INFO_SIZE) != 0)
+        if(FWCopy(NUBL33_FW_INFO_BASE, NUBL33_FW_INFO_BASE | FMC_BANK_SIZE, FW_INFO_SIZE) != 0)
         {
             printf("Copy NuBL33 FWINFO to bank1 has error!\n");
             return 0;
         }
-        if (FWCopy(NUBL33_FW_BASE, NUBL33_FW_BASE | FMC_BANK_SIZE, APP_NEW_FW_BLOCK_SIZE) != 0)
+        if(FWCopy(NUBL33_FW_BASE, NUBL33_FW_BASE | FMC_BANK_SIZE, APP_NEW_FW_BLOCK_SIZE) != 0)
         {
             printf("Copy NuBL33 to bank1 has error!\n");
             return 0;
@@ -390,15 +391,15 @@ int8_t FlashBankSwapCheck(void)
         printf("Copy NuBL33 and FWINFO to bank1\n");
     }
 
-    if (u32NuBL32Bank1Pass > u32NuBL32Bank0Pass)
+    if(u32NuBL32Bank1Pass > u32NuBL32Bank0Pass)
     {
         /* NuBL32 FWINFO */
-        if (FWCopy(NUBL32_FW_INFO_BASE | FMC_BANK_SIZE, NUBL32_FW_INFO_BASE, FW_INFO_SIZE) != 0)
+        if(FWCopy(NUBL32_FW_INFO_BASE | FMC_BANK_SIZE, NUBL32_FW_INFO_BASE, FW_INFO_SIZE) != 0)
         {
             printf("Copy NuBL32 FWINFO to bank0 has error!\n");
             return 0;
         }
-        if (FWCopy(NUBL32_FW_BASE | FMC_BANK_SIZE, NUBL32_FW_BASE, SYS_NEW_FW_BLOCK_SIZE) != 0)
+        if(FWCopy(NUBL32_FW_BASE | FMC_BANK_SIZE, NUBL32_FW_BASE, SYS_NEW_FW_BLOCK_SIZE) != 0)
         {
             printf("Copy NuBL32 to bank0 has error!\n");
             return 0;
@@ -406,15 +407,15 @@ int8_t FlashBankSwapCheck(void)
         printf("Copy NuBL32 and FWINFO to bank0\n");
     }
 
-    if (u32NuBL33Bank1Pass > u32NuBL33Bank0Pass)
+    if(u32NuBL33Bank1Pass > u32NuBL33Bank0Pass)
     {
         /* NuBL33 FWINFO */
-        if (FWCopy(NUBL33_FW_INFO_BASE | FMC_BANK_SIZE, NUBL33_FW_INFO_BASE, FW_INFO_SIZE) != 0)
+        if(FWCopy(NUBL33_FW_INFO_BASE | FMC_BANK_SIZE, NUBL33_FW_INFO_BASE, FW_INFO_SIZE) != 0)
         {
             printf("Copy NuBL33 FWINFO to bank0 has error!\n");
             return 0;
         }
-        if (FWCopy(NUBL33_FW_BASE | FMC_BANK_SIZE, NUBL33_FW_BASE, APP_NEW_FW_BLOCK_SIZE) != 0)
+        if(FWCopy(NUBL33_FW_BASE | FMC_BANK_SIZE, NUBL33_FW_BASE, APP_NEW_FW_BLOCK_SIZE) != 0)
         {
             printf("Copy NuBL33 to bank0 has error!\n");
             return 0;
@@ -423,25 +424,25 @@ int8_t FlashBankSwapCheck(void)
     }
 #endif
     /* Compare Firmware version */
-    if (GetBLxFwVer(&u32NuBL32Bank0Ver, 0) != 0)
+    if(GetBLxFwVer(&u32NuBL32Bank0Ver, 0) != 0)
     {
         printf("Get NuBL32 version in bank0 has error!\n");
         goto _FAIL;
     }
 
-    if (GetBLxFwVer(&u32NuBL32Bank1Ver, 0|BIT2) != 0)
+    if(GetBLxFwVer(&u32NuBL32Bank1Ver, 0 | BIT2) != 0)
     {
         printf("Get NuBL32 version in bank1 has error!\n");
         goto _FAIL;
     }
 
-    if (GetBLxFwVer(&u32NuBL33Bank0Ver, 1) != 0)
+    if(GetBLxFwVer(&u32NuBL33Bank0Ver, 1) != 0)
     {
         printf("Get NuBL33 version in bank0 has error!\n");
         goto _FAIL;
     }
 
-    if (GetBLxFwVer(&u32NuBL33Bank1Ver, 1|BIT2) != 0)
+    if(GetBLxFwVer(&u32NuBL33Bank1Ver, 1 | BIT2) != 0)
     {
         printf("Get NuBL33 version in bank1 has error!\n");
         goto _FAIL;
@@ -450,10 +451,10 @@ int8_t FlashBankSwapCheck(void)
     printf("[Bank0]\n\tNuBL32 Version: 0x%08x, NuBL33 Version: 0x%08x\n", u32NuBL32Bank0Ver, u32NuBL33Bank0Ver);
     printf("[Bank1]\n\tNuBL32 Version: 0x%08x, NuBL33 Version: 0x%08x\n\n", u32NuBL32Bank1Ver, u32NuBL33Bank1Ver);
 
-    if ((u32NuBL32Bank1Ver > u32NuBL32Bank0Ver) && u32NuBL32Bank1Ver != 0xFFFFFFFF)
+    if((u32NuBL32Bank1Ver > u32NuBL32Bank0Ver) && u32NuBL32Bank1Ver != 0xFFFFFFFF)
         return 1; /* Do bank swap */
 
-    if ((u32NuBL33Bank1Ver > u32NuBL33Bank0Ver) && (u32NuBL33Bank1Ver != 0xFFFFFFFF))
+    if((u32NuBL33Bank1Ver > u32NuBL33Bank0Ver) && (u32NuBL33Bank1Ver != 0xFFFFFFFF))
         return 1; /* Do bank swap */
 
     return 0; /* Don't bank swap */
@@ -494,7 +495,7 @@ int main(void)
     FMC_ENABLE_AP_UPDATE();
 
     /* Enable Flash mirror boundary */
-    if ((FMC->ISPSTS & FMC_ISPSTS_MIRBOUND_Msk) == 0)
+    if((FMC->ISPSTS & FMC_ISPSTS_MIRBOUND_Msk) == 0)
     {
         printf("Please enable Flash mirror boundary by ICP programming tool first.(FMC ISPSTS:0x%08x)\n", FMC->ISPSTS);
         while(1) {}
@@ -516,12 +517,12 @@ int main(void)
     printf("check OTA status:%d\n", FMC_Read(OTA_STATUS_BASE));
 
     /* check NuBL32/NuBL33 then decide to do bank swap or not. */
-    if (FlashBankSwapCheck() == 1)
+    if(FlashBankSwapCheck() == 1)
     {
         FMC_SwapBank(0x1);
     }
 
-    printf(" ------ Code on bank %d ------\n", (FMC->ISPSTS&FMC_ISPSTS_FBS_Msk)?1:0);
+    printf(" ------ Code on bank %d ------\n", (FMC->ISPSTS & FMC_ISPSTS_FBS_Msk) ? 1 : 0);
 
     /* normal boot */
     /* verify application firmware identity and integrity */
@@ -566,32 +567,33 @@ int main(void)
 
 _VERIFY_FAIL:
 #if 1
-    {   /* debug */
+    {
+        /* debug */
         while(1) {}
     }
 #else
     /* if verify failed, modified NuBL3x firmware version to 0, and do OTA update after reboot */
-    if (u8FailNuBL3x&BIT0)
+    if(u8FailNuBL3x & BIT0)
     {
         FW_INFO_T FwInfo;
 
         /* Clear NuBL3x firmware version to 0 */
         FwInfo.mData.au32ExtInfo[0] = 0;
         /* NuBL32 */
-        if (NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 0, NUBL32_FW_INFO_BASE) != 0)
+        if(NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 0, NUBL32_FW_INFO_BASE) != 0)
         {
             printf("\nClear NuBL32 F/W version failed.\n");
         }
     }
 
-    if ((u8FailNuBL3x&BIT1))
+    if((u8FailNuBL3x & BIT1))
     {
         FW_INFO_T FwInfo;
 
         /* Clear NuBL3x firmware version to 0 */
         FwInfo.mData.au32ExtInfo[0] = 0;
         /* NuBL33 */
-        if (NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 1, NUBL33_FW_INFO_BASE) != 0)
+        if(NuBL2_UpdateNuBL3xFwInfo((uint32_t *)&FwInfo, sizeof(FW_INFO_T), 1, NUBL33_FW_INFO_BASE) != 0)
         {
             printf("\nClear NuBL33 F/W version failed.\n");
         }
@@ -606,11 +608,11 @@ _VERIFY_FAIL:
 
     /* init OTA */
     OTA_Init(__HSI, (ISP_INFO_T *)&g_NuBL2ISPInfo);
-    if (OTA_TaskProcess() == 0)
+    if(OTA_TaskProcess() == 0)
     {
         /* check OTA status and re-boot for update firmware */
         printf("OTA update for NuBL3x verify failed: SYS:%d, APP:%d\n", FMC_Read(SYS_FW_OTA_STATUS_BASE), FMC_Read(APP_FW_OTA_STATUS_BASE));
-        if ((FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1)||FMC_Read(APP_FW_OTA_STATUS_BASE) == 1)
+        if((FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1) || FMC_Read(APP_FW_OTA_STATUS_BASE) == 1)
         {
             u32NeedReset = TRUE;
         }
@@ -640,10 +642,10 @@ int32_t NuBL2_Init(void)
 {
     uint32_t au32CFG[4], u32XOMStatus;
 
-    if((sizeof(METADATA_T)%16) != 0)
+    if((sizeof(METADATA_T) % 16) != 0)
         return -1;
 
-    if((sizeof(FW_INFO_T)%16) != 0)
+    if((sizeof(FW_INFO_T) % 16) != 0)
         return -2;
 
     /* Unlock protected registers */
@@ -659,7 +661,7 @@ int32_t NuBL2_Init(void)
     printf("\t[CONFIG0         : 0x%08x]", au32CFG[0]);
     if(!(au32CFG[0]&BIT5))
     {
-        printf("\tBoot from MaskROM -> %s.\n", (au32CFG[0]&BIT7)?"APROM":"LDROM");
+        printf("\tBoot from MaskROM -> %s.\n", (au32CFG[0]&BIT7) ? "APROM" : "LDROM");
     }
     else
     {
@@ -670,11 +672,11 @@ int32_t NuBL2_Init(void)
     }
 
     u32XOMStatus = FMC_GetXOMState(XOMR0);
-    printf("\t[XOM0            : %s]", (u32XOMStatus==1)?"Active":"Inactive");
-    printf("\tBase: 0x%08x; Page count: 0x%08x.\n", (FMC->XOMR0STS>>8), (FMC->XOMR0STS&0xFF));
+    printf("\t[XOM0            : %s]", (u32XOMStatus == 1) ? "Active" : "Inactive");
+    printf("\tBase: 0x%08x; Page count: 0x%08x.\n", (FMC->XOMR0STS >> 8), (FMC->XOMR0STS & 0xFF));
     u32XOMStatus = FMC_GetXOMState(XOMR1);
-    printf("\t[XOM1            : %s]", (u32XOMStatus==1)?"Active":"Inactive");
-    printf("\tBase: 0x%08x; Page count: 0x%08x.\n", (FMC->XOMR1STS>>8), (FMC->XOMR1STS&0xFF));
+    printf("\t[XOM1            : %s]", (u32XOMStatus == 1) ? "Active" : "Inactive");
+    printf("\tBase: 0x%08x; Page count: 0x%08x.\n", (FMC->XOMR1STS >> 8), (FMC->XOMR1STS & 0xFF));
 
     return 0;
 }

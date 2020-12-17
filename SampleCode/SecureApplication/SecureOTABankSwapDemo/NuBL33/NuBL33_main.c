@@ -51,7 +51,7 @@ int main(void)
         printf("\n[AuthCFG: 0x%08x]\n", cfg);
     }
 
-    if (BL32_GetBL33FwVer((uint32_t *)&u32FwVer) == 0)
+    if(BL32_GetBL33FwVer((uint32_t *)&u32FwVer) == 0)
         printf("NuBL33 Firmware Ver: 0x%08x\n\n", u32FwVer);
     else
         printf("NuBL33 Firmware Ver: N/A\n\n");

@@ -45,7 +45,7 @@ void PDMA0_IRQHandler(void)
         if(PDMA_GET_ABORT_STS(PDMA0) & PDMA_ABTSTS_ABTIF0_Msk)
             g_u32IsTestOver = 2;
         /* Clear abort flag of channel 0 */
-        PDMA_CLR_ABORT_FLAG(PDMA0,PDMA_ABTSTS_ABTIF0_Msk);
+        PDMA_CLR_ABORT_FLAG(PDMA0, PDMA_ABTSTS_ABTIF0_Msk);
     }
     else if(status & PDMA_INTSTS_TDIF_Msk)      /* done */
     {
@@ -53,7 +53,7 @@ void PDMA0_IRQHandler(void)
         if(PDMA_GET_TD_STS(PDMA0) & PDMA_TDSTS_TDIF0_Msk)
             g_u32IsTestOver = 1;
         /* Clear transfer done flag of channel 0 */
-        PDMA_CLR_TD_FLAG(PDMA0,PDMA_TDSTS_TDIF0_Msk);
+        PDMA_CLR_TD_FLAG(PDMA0, PDMA_TDSTS_TDIF0_Msk);
     }
     else
         printf("unknown interrupt !!\n");
@@ -175,29 +175,29 @@ int main(void)
         Total transfer length = PDMA_TEST_LENGTH * 32 bits
     ------------------------------------------------------------------------------------------------------*/
     /* Open Channel 0 */
-    PDMA_Open(PDMA0,1 << 0);
+    PDMA_Open(PDMA0, 1 << 0);
     /* Transfer count is PDMA_TEST_LENGTH, transfer width is 32 bits(one word) */
-    PDMA_SetTransferCnt(PDMA0,0, PDMA_WIDTH_32, PDMA_TEST_LENGTH);
+    PDMA_SetTransferCnt(PDMA0, 0, PDMA_WIDTH_32, PDMA_TEST_LENGTH);
     /* Set source address is au8SrcArray, destination address is au8DestArray, Source/Destination increment size is 32 bits(one word) */
-    PDMA_SetTransferAddr(PDMA0,0, (uint32_t)au8SrcArray, PDMA_SAR_INC, (uint32_t)au8DestArray, PDMA_DAR_INC);
+    PDMA_SetTransferAddr(PDMA0, 0, (uint32_t)au8SrcArray, PDMA_SAR_INC, (uint32_t)au8DestArray, PDMA_DAR_INC);
     /* Destination stride count is 1, Source stride count is 2, Transfer count of per stride is 1 */
-    PDMA_SetStride(PDMA0,0, 1, 2, 1);
+    PDMA_SetStride(PDMA0, 0, 1, 2, 1);
     /* Destination address interval count is 1, Source address interval count is 2, Repeat count is 1 */
-    PDMA_SetRepeat(PDMA0,0, PDMA_TEST_LENGTH/2, 1, 1);
+    PDMA_SetRepeat(PDMA0, 0, PDMA_TEST_LENGTH / 2, 1, 1);
     /* Request source is memory to memory */
-    PDMA_SetTransferMode(PDMA0,0, PDMA_MEM, FALSE, 0);
+    PDMA_SetTransferMode(PDMA0, 0, PDMA_MEM, FALSE, 0);
     /* Transfer type is burst transfer and burst size is 1 */
-    PDMA_SetBurstType(PDMA0,0, PDMA_REQ_BURST, PDMA_BURST_1);
+    PDMA_SetBurstType(PDMA0, 0, PDMA_REQ_BURST, PDMA_BURST_1);
 
     /* Enable interrupt */
-    PDMA_EnableInt(PDMA0,0, PDMA_INT_TRANS_DONE);
+    PDMA_EnableInt(PDMA0, 0, PDMA_INT_TRANS_DONE);
 
     /* Enable NVIC for PDMA0 */
     NVIC_EnableIRQ(PDMA0_IRQn);
     g_u32IsTestOver = 0;
 
     /* Generate a software request to trigger transfer with PDMA0 channel 2  */
-    PDMA_Trigger(PDMA0,0);
+    PDMA_Trigger(PDMA0, 0);
 
     /* Waiting for transfer done */
     while(g_u32IsTestOver == 0);

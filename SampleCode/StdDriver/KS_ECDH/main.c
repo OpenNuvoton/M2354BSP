@@ -18,43 +18,44 @@ void UART_Init(void);
 void CRPT_IRQHandler(void)
 {
     CRPT_T *crpt;
-    
+
     if(SCU->PNSSET[1] & SCU_PNSSET1_CRPT_Msk)
         crpt = CRPT_NS;
     else
         crpt = CRPT;
-		
-    
+
+
     ECC_DriverISR(crpt);
 }
 
 void DumpBuff(uint8_t *pucBuff, int nBytes)
 {
-    int nIdx, i,j;
+    int nIdx, i, j;
 
     nIdx = 0;
-    while (nBytes > 0) {
+    while(nBytes > 0)
+    {
         j = nBytes;
         if(j > 16)
         {
             j = 16;
         }
         printf("0x%04X  ", nIdx);
-        for (i = 0; i < j; i++)
+        for(i = 0; i < j; i++)
             printf("%02x ", pucBuff[nIdx + i]);
-        for (     ; i < 16; i++)
+        for(; i < 16; i++)
             printf("   ");
         printf("  ");
-        for (i = 0; i < j; i++)
+        for(i = 0; i < j; i++)
         {
-            if ((pucBuff[nIdx + i] >= 0x20) && (pucBuff[nIdx + i] < 127))
+            if((pucBuff[nIdx + i] >= 0x20) && (pucBuff[nIdx + i] < 127))
                 printf("%c", pucBuff[nIdx + i]);
             else
                 printf(".");
             nBytes--;
         }
-        
-        
+
+
         nIdx += j;
         printf("\n");
     }
@@ -78,10 +79,10 @@ void SYS_Init(void)
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* Enable CRYPTO module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
-    
+
     /* Enable Key Store module clock */
     CLK_EnableModuleClock(KS_MODULE);
 
@@ -96,7 +97,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;    
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
 }
 
@@ -123,11 +124,11 @@ int main(void)
     int32_t i32KeyIdx_d, i32ShareKeyIdx;
     uint32_t time;
     uint32_t au32ECC_N[18] = {0};
-    
+
     /* Public Key of B sdie. Gen by private key = 74C57C8F23BE25F0EF591CEF81E89D1DE08CFDD7E3CADC8670A757D07A961DF0 */
     char Qx[] = "43A5FC3C3347670FADC59972E0DE55E3FBC9055DA48F49DBA1A29E3CC602A2F6";
     char Qy[] = "6232E772198811E1EB541640B872DC137ABF1D01FB8F3AE60F3432D26091772F";
-    
+
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -136,18 +137,18 @@ int main(void)
 
     /* Init UART for printf */
     UART_Init();
-    
+
     printf("CPU @ %dHz\n", SystemCoreClock);
-    
+
     /* Init Key Store */
     KS_Open();
-    
+
     /* Enable CRPT interrupt */
     NVIC_EnableIRQ(CRPT_IRQn);
     ECC_ENABLE_INT(CRPT);
     SHA_ENABLE_INT(CRPT);
-    
-    for(i=0;i<18;i++)
+
+    for(i = 0; i < 18; i++)
         au32ECC_N[i] = 0;
     au32ECC_N[7] = 0xFFFFFFFFul;
     au32ECC_N[6] = 0x00000001ul;
@@ -156,20 +157,20 @@ int main(void)
     au32ECC_N[3] = 0x00000000ul;
     au32ECC_N[2] = 0xFFFFFFFFul;
     au32ECC_N[1] = 0xFFFFFFFFul;
-    au32ECC_N[0] = 0xFFFFFFFFul;    
-    
+    au32ECC_N[0] = 0xFFFFFFFFul;
+
     /* We need to prepare N first for RNG to generate a private key */
     err = RNG_ECDH_Init(PRNG_KEY_SIZE_256, au32ECC_N);
     if(err)
     {
         printf("PRNG ECDH Inital failed\n");
-        while(1){}
+        while(1) {}
     }
-    
-    
+
+
     /* Reset SysTick to measure time */
     SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
-    
+
     /*------------------------------------------------------------------------------*/
     /* Generate private key to Key Store */
     /* NOTE: The private key must be generated form RNG hardware when using ECDH with key store */
@@ -178,7 +179,7 @@ int main(void)
     {
         printf("[FAILED]\n");
         printf("Fail to write k to KS SRAM\n");
-        while(1){}
+        while(1) {}
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -190,13 +191,13 @@ int main(void)
         while(1);
     }
     printf("Share Key Idx for A Side = %d, remain size = %d\n", i32ShareKeyIdx, KS_GetRemainSize(KS_SRAM));
-    
+
     time = 0xffffff - SysTick->VAL;
 
     printf("Elapsed time: %d.%d ms\n", time / CyclesPerUs / 1000, time / CyclesPerUs % 1000);
 
     printf("Done!\n");
-    
+
     while(1) {}
 }
 

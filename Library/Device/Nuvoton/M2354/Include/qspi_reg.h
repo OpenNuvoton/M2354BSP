@@ -19,7 +19,7 @@
 /**
     @addtogroup QSPI Quad Serial Peripheral Interface Controller(QSPI)
     Memory Mapped Structure for QSPI Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -405,7 +405,7 @@ typedef struct
 /**
     @addtogroup QSPI_CONST QSPI Bit Field Definition
     Constant Definitions for QSPI Controller
-  @{ 
+  @{
 */
 
 #define QSPI_CTL_SPIEN_Pos                (0)                                               /*!< QSPI_T::CTL: SPIEN Position             */

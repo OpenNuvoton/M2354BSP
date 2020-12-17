@@ -27,7 +27,7 @@ static int32_t XMD_Write(uint32_t u32Addr, uint32_t u32Data)
 {
 
     FMC->ISPADDR = u32Addr;
-    if((u32Addr & (FMC_FLASH_PAGE_SIZE-1)) == 0)
+    if((u32Addr & (FMC_FLASH_PAGE_SIZE - 1)) == 0)
     {
         FMC->ISPCMD = FMC_ISPCMD_PAGE_ERASE;
         FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
@@ -222,12 +222,12 @@ START_RECEIVE:
                     {
                         for(j = 0; j < (bufsz + 3) / 4; j++)
                         {
-                            memcpy((uint8_t *)&u32Data, &s_au8XmdBuf[3+(j*0x4)], 4);
-                            
+                            memcpy((uint8_t *)&u32Data, &s_au8XmdBuf[3 + (j * 0x4)], 4);
+
                             u32StarAddr = u32DestAddr + (uint32_t)i32TransBytes;
 
-                            i32Err = XMD_Write(u32StarAddr+((uint32_t)j * 0x4), u32Data);
-                            
+                            i32Err = XMD_Write(u32StarAddr + ((uint32_t)j * 0x4), u32Data);
+
                             if(i32Err < 0)
                                 continue;
                         }
@@ -265,7 +265,7 @@ REJECT_RECEIVE:
   * @retval     -4  Transmit error.
   * @retval     -5  Unknown error.
   * @details    This function is used to send UART data through Xmodem transfer.
-  *             
+  *
   */
 int32_t XmodemSend(uint8_t *src, int32_t srcsz)
 {
@@ -301,7 +301,7 @@ int32_t XmodemSend(uint8_t *src, int32_t srcsz)
                 }
             }
         }
-        
+
         if(retry >= 160)
         {
             XMD_putc(XMD_CAN);

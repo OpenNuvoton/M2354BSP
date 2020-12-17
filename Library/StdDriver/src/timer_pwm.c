@@ -89,8 +89,8 @@ static uint32_t TPWM_GetModuleClockFreq(TIMER_T *timer)
 
     if(u32Src == 2UL)
     {
-        if((timer == TIMER0) || (timer == TIMER1) || 
-           (timer == TIMER4) || (timer == TIMER4_NS) || (timer == TIMER5) || (timer == TIMER5_NS))
+        if((timer == TIMER0) || (timer == TIMER1) ||
+                (timer == TIMER4) || (timer == TIMER4_NS) || (timer == TIMER5) || (timer == TIMER5_NS))
         {
             u32ClkFreq = CLK_GetPCLK0Freq();
         }
@@ -111,7 +111,7 @@ static uint32_t TPWM_GetModuleClockFreq(TIMER_T *timer)
 /**
   * @brief      Configure PWM Output Frequency and Duty Cycle
   *
-  * @param[in]  timer   	    The pointer of the specified Timer module. It could be TIMER0 ~ TIMER5.
+  * @param[in]  timer           The pointer of the specified Timer module. It could be TIMER0 ~ TIMER5.
   * @param[in]  u32Frequency    Target generator frequency.
   * @param[in]  u32DutyCycle    Target generator duty cycle percentage. Valid range are between 0~100. 10 means 10%, 20 means 20%...
   *
@@ -140,9 +140,9 @@ uint32_t TPWM_ConfigOutputFreqAndDuty(TIMER_T *timer, uint32_t u32Frequency, uin
 
     if((timer == TIMER4) || (timer == TIMER4_NS) || (timer == TIMER5) || (timer == TIMER5_NS))
         u32MaxCLKPSC = 0x100UL; // 8-bit clock prescale on TIMER4 and TIMER5 PWM
-    else 
+    else
         u32MaxCLKPSC = 0x1000UL; // 12-bit clock prescale on TIMER0 ~ TIMER3 PWM
-    
+
     /* Calculate u16PERIOD and u16PSC */
     for(u32Prescaler = 1UL; u32Prescaler <= u32MaxCLKPSC; u32Prescaler++)
     {
@@ -234,7 +234,7 @@ void TPWM_DisableDeadTime(TIMER_T *timer)
 /**
   * @brief      Enable PWM Counter
   *
-  * @param[in]  timer   	The pointer of the specified Timer module. It could be TIMER0 ~ TIMER5.
+  * @param[in]  timer       The pointer of the specified Timer module. It could be TIMER0 ~ TIMER5.
   *
   * @return     None
   *
@@ -248,7 +248,7 @@ void TPWM_EnableCounter(TIMER_T *timer)
 /**
   * @brief      Disable PWM Generator
   *
-  * @param[in]  timer   	The pointer of the specified Timer module. It could be TIMER0 ~ TIMER5.
+  * @param[in]  timer       The pointer of the specified Timer module. It could be TIMER0 ~ TIMER5.
   *
   * @return     None
   *
@@ -262,7 +262,7 @@ void TPWM_DisableCounter(TIMER_T *timer)
 /**
   * @brief      Enable Trigger ADC
   *
-  * @param[in]  timer   	    The pointer of the specified Timer module. It could be TIMER0 ~ TIMER5.
+  * @param[in]  timer           The pointer of the specified Timer module. It could be TIMER0 ~ TIMER5.
   * @param[in]  u32Condition    The condition to trigger ADC. It could be one of following conditions:
   *                                 - \ref TPWM_TRIGGER_EVENT_AT_ZERO_POINT
   *                                 - \ref TPWM_TRIGGER_EVENT_AT_PERIOD_POINT
@@ -299,7 +299,7 @@ void TPWM_DisableTriggerADC(TIMER_T *timer)
 /**
   * @brief      Enable Trigger PDMA
   *
-  * @param[in]  timer   	    The pointer of the specified Timer module. It could be TIMER4 or TIMER5.
+  * @param[in]  timer           The pointer of the specified Timer module. It could be TIMER4 or TIMER5.
   * @param[in]  u32Condition    The condition to trigger PDMA. It could be one of following conditions:
   *                                 - \ref TPWM_TRIGGER_EVENT_AT_PERIOD_POINT
   *                                 - \ref TPWM_TRIGGER_EVENT_AT_COMPARE_UP_POINT

@@ -51,7 +51,7 @@ void SYS_Init(void)
 int32_t main(void)
 {
     char ch;
-    int32_t i,r;
+    int32_t i, r;
 
 
     int32_t NumArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -132,7 +132,7 @@ int32_t main(void)
     printf("1 + 2 +..+ 10 = %d\n", XOM_Sum(NumArray, 10));
 
 
-    for(i=0; i<1000; i++)
+    for(i = 0; i < 1000; i++)
     {
         r = XOM_Add(500, 700);
         if(r != 1200)
@@ -142,9 +142,9 @@ int32_t main(void)
         }
     }
 
-    for(i=0; i<16; i++)
+    for(i = 0; i < 16; i++)
     {
-        printf("[%04x] = 0x%08x\n", 0x10000+i*4, M32(0x10000+i*4));
+        printf("[%04x] = 0x%08x\n", 0x10000 + i * 4, M32(0x10000 + i * 4));
     }
 
     while(1);

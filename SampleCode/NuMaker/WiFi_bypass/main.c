@@ -92,7 +92,7 @@ void WIFI_PORT_Init(void)
 int main()
 {
     int32_t i;
-    
+
     SYS_UnlockReg();
 
     SYS_Init();
@@ -125,14 +125,14 @@ int main()
 
     //FW_UPDATE_OFF = 0; // Set 0 to enable WIFI module firmware update.
     FW_UPDATE_OFF = 1; // Set 1 to Disable WIFI module firmware update.
-    
+
     putchar('.');
     CLK_SysTickLongDelay(1000000);
     LED_OFF = 0;
     RST_PIN = 1;
-    
+
     /* Waiting for module ready */
-    for(i=0;i<5;i++)
+    for(i = 0; i < 5; i++)
     {
         CLK_SysTickLongDelay(1000000);
         putchar('.');

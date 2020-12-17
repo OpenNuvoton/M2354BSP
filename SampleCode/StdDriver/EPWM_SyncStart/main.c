@@ -48,7 +48,7 @@ void SYS_Init(void)
     CLK_EnableModuleClock(EPWM0_MODULE);
     CLK_EnableModuleClock(EPWM1_MODULE);
 
-	/* Select EPWM module clock source */
+    /* Select EPWM module clock source */
     CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
     CLK_SetModuleClock(EPWM1_MODULE, CLK_CLKSEL2_EPWM1SEL_PCLK1, 0);
 

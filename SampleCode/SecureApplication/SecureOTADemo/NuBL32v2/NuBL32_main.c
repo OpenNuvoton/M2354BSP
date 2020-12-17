@@ -111,11 +111,11 @@ void BL32_OTA_Start(void)
     FMC_ENABLE_AP_UPDATE();
 
     printf("BL32_OTA_Start\n");
-    if (OTA_TaskProcess() == 0)
+    if(OTA_TaskProcess() == 0)
     {
 #if (OTA_UPGRADE_FROM_SD)
         printf("check OTA status: SYS:%d, APP:%d\n", FMC_Read(SYS_FW_OTA_STATUS_BASE), FMC_Read(APP_FW_OTA_STATUS_BASE));
-        if ((FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1)||FMC_Read(APP_FW_OTA_STATUS_BASE) == 1)
+        if((FMC_Read(SYS_FW_OTA_STATUS_BASE) == 1) || FMC_Read(APP_FW_OTA_STATUS_BASE) == 1)
         {
             printf("BL32_OTA_done\n");
 //            SYS_ResetChip();
@@ -123,7 +123,7 @@ void BL32_OTA_Start(void)
         }
 #else
         printf("check OTA status: %d\n", FMC_Read(OTA_STATUS_BASE));
-        if (FMC_Read(OTA_STATUS_BASE) == 1)
+        if(FMC_Read(OTA_STATUS_BASE) == 1)
         {
             printf("BL32_OTA_done\n");
 //            SYS_ResetChip();
@@ -218,7 +218,7 @@ void SysTick_Handler(void)
     static uint32_t u32Ticks;
 
 //    printf("Tick\n");
-    if (OTA_SysTickProcess(u32Ticks))
+    if(OTA_SysTickProcess(u32Ticks))
         u32Ticks = 0;
     else
         u32Ticks++;
@@ -283,7 +283,7 @@ void GPA_IRQHandler(void)
         GPIO_CLR_INT_FLAG(PA, BIT3);
         printf("PA.3 INT occurred.\n");
         i32Status = OTA_ForceUpdate();
-        if (i32Status)
+        if(i32Status)
         {
             printf("Force update firmware was failed(0x%x).\n", i32Status);
         }
@@ -340,11 +340,11 @@ void Nonsecure_Init(void)
         printf("CPU will halted at non-secure state\n");
 
         /* Set nonsecure MSP in nonsecure region */
-        __TZ_set_MSP_NS(NON_SECURE_SRAM_BASE+512);
+        __TZ_set_MSP_NS(NON_SECURE_SRAM_BASE + 512);
 
         /* Try to halted in non-secure state (SRAM) */
         M32(NON_SECURE_SRAM_BASE) = JUMP_HERE;
-        fp = (NonSecure_funcptr)(NON_SECURE_SRAM_BASE+1);
+        fp = (NonSecure_funcptr)(NON_SECURE_SRAM_BASE + 1);
         fp(0);
 
         while(1) {}
@@ -466,7 +466,7 @@ int main(void)
     printf("+--------------------------------+\n");
     printf("|    M2354 NuBL32 Sample Code    |\n");
     printf("+--------------------------------+\n\n");
-    if (OTA_GetBLxFwVer((uint32_t *)&u32FwVer, 0) == 0)
+    if(OTA_GetBLxFwVer((uint32_t *)&u32FwVer, 0) == 0)
         printf("NuBL32 Firmware Ver: 0x%08x\n\n", u32FwVer);
     else
         printf("NuBL32 Firmware Ver: N/A\n\n");

@@ -306,7 +306,7 @@ static void _DrawBk(void)
 #ifdef __DEMO_160x128__
 #else
     GUI_DrawBitmap(&bmSeggerLogo70x35, LOGO_DIST_BORDER, LOGO_DIST_BORDER);
-    GUI_DrawBitmap(&bmnuvoton_logo_70x35, LOGO_DIST_BORDER, LOGO_DIST_BORDER+bmnuvoton_logo_70x35.YSize);
+    GUI_DrawBitmap(&bmnuvoton_logo_70x35, LOGO_DIST_BORDER, LOGO_DIST_BORDER + bmnuvoton_logo_70x35.YSize);
 #endif
 }
 #endif
@@ -368,7 +368,7 @@ static void _DrawBkCircle(void)
 #ifdef __DEMO_160x128__
 #else
         GUI_DrawBitmap(&bmSeggerLogo70x35, LOGO_DIST_BORDER, LOGO_DIST_BORDER);
-        GUI_DrawBitmap(&bmnuvoton_logo_70x35, LOGO_DIST_BORDER, LOGO_DIST_BORDER+bmnuvoton_logo_70x35.YSize);
+        GUI_DrawBitmap(&bmnuvoton_logo_70x35, LOGO_DIST_BORDER, LOGO_DIST_BORDER + bmnuvoton_logo_70x35.YSize);
 #endif
         //
         // Delete helper devices
@@ -393,12 +393,12 @@ static void _DrawBkSimple(void)
 #ifdef __DEMO_160x128__
 #else
     GUI_DrawBitmap(&bmSeggerLogo70x35, LOGO_DIST_BORDER, LOGO_DIST_BORDER);
-    if (g_u8GUIItem == 1)
-        GUI_DrawBitmap(&bmnuvoton_logo_70x35, LOGO_DIST_BORDER+bmnuvoton_logo_70x35.XSize, LOGO_DIST_BORDER);
-    else if (g_u8GUIItem == 2)
+    if(g_u8GUIItem == 1)
+        GUI_DrawBitmap(&bmnuvoton_logo_70x35, LOGO_DIST_BORDER + bmnuvoton_logo_70x35.XSize, LOGO_DIST_BORDER);
+    else if(g_u8GUIItem == 2)
         GUI_DrawBitmap(&bmnuvoton_logo_70x35, (320 - bmnuvoton_logo_70x35.XSize), LOGO_DIST_BORDER);
     else
-    GUI_DrawBitmap(&bmnuvoton_logo_70x35, LOGO_DIST_BORDER, LOGO_DIST_BORDER+bmnuvoton_logo_70x35.YSize);
+        GUI_DrawBitmap(&bmnuvoton_logo_70x35, LOGO_DIST_BORDER, LOGO_DIST_BORDER + bmnuvoton_logo_70x35.YSize);
 #endif
 }
 

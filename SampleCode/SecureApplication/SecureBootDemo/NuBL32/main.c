@@ -62,11 +62,11 @@ void Nonsecure_Init(void)
         printf("CPU will halted at non-secure state\n");
 
         /* Set nonsecure MSP in nonsecure region */
-        __TZ_set_MSP_NS(NON_SECURE_SRAM_BASE+512);
+        __TZ_set_MSP_NS(NON_SECURE_SRAM_BASE + 512);
 
         /* Try to halted in non-secure state (SRAM) */
         M32(NON_SECURE_SRAM_BASE) = JUMP_HERE;
-        fp = (NonSecure_funcptr)(NON_SECURE_SRAM_BASE+1);
+        fp = (NonSecure_funcptr)(NON_SECURE_SRAM_BASE + 1);
         fp(0);
 
         while(1) {}

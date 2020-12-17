@@ -5,7 +5,7 @@
  * \version v2.3.0
  * \license MIT
  * \brief   Library for ESP8266 module using AT commands for embedded systems
- *	
+ *
 \verbatim
    ----------------------------------------------------------------------
     Copyright (c) 2016 Tilen Majerle
@@ -14,8 +14,8 @@
     obtaining a copy of this software and associated documentation
     files (the "Software"), to deal in the Software without restriction,
     including without limitation the rights to use, copy, modify, merge,
-    publish, distribute, sublicense, and/or sell copies of the Software, 
-    and to permit persons to whom the Software is furnished to do so, 
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
     subject to the following conditions:
 
     The above copyright notice and this permission notice shall be
@@ -26,7 +26,7 @@
     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
     AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     OTHER DEALINGS IN THE SOFTWARE.
    ----------------------------------------------------------------------
@@ -39,7 +39,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 /**
  * \defgroup        ESP ESP AT Parser
  * \brief           High level, application part of module
@@ -78,7 +78,7 @@ extern "C" {
  */
 
 /* Backward ocmpatibility definitions */
-#if !defined(ESP_SINGLE_CONN)       
+#if !defined(ESP_SINGLE_CONN)
 #define ESP_SINGLE_CONN             0   /*!< Single connection mode */
 #endif
 
@@ -104,7 +104,7 @@ extern "C" {
 /**
  * \}
  */
- 
+
 /**
  * \defgroup        ESP_Typedefs Typedefs
  * \brief           Library Typedefs
@@ -114,21 +114,22 @@ extern "C" {
 /**
  * \brief           ESP8266 library possible return statements on function calls
  */
-typedef enum _ESP_Result_t {
-	espOK = 0x00,                                       /*!< Everything is OK */
-	espERROR,                                           /*!< An error occurred */
+typedef enum _ESP_Result_t
+{
+    espOK = 0x00,                                       /*!< Everything is OK */
+    espERROR,                                           /*!< An error occurred */
     espLLERROR,                                         /*!< Low-level error */
     espSYSERROR,                                        /*!< System call error */
     espPARERROR,                                        /*!< Parameter error */
-	espDEVICENOTCONNECTED,                              /*!< Device is not connected to UART */
-	espTIMEOUT,                                         /*!< Timeout was detected when sending command to ESP module */
-	espNOHEAP,                                          /*!< Heap memory is not available */
-	espWIFINOTCONNECTED,                                /*!< Wifi is not connected to network */
-	espBUSY,                                            /*!< Device is busy, new command is not possible */
-	espINVALIDPARAMETERS,                               /*!< Parameters for functions are invalid */
+    espDEVICENOTCONNECTED,                              /*!< Device is not connected to UART */
+    espTIMEOUT,                                         /*!< Timeout was detected when sending command to ESP module */
+    espNOHEAP,                                          /*!< Heap memory is not available */
+    espWIFINOTCONNECTED,                                /*!< Wifi is not connected to network */
+    espBUSY,                                            /*!< Device is busy, new command is not possible */
+    espINVALIDPARAMETERS,                               /*!< Parameters for functions are invalid */
     espSENDERROR,                                       /*!< Error trying to send data on connection */
     espSSLERROR,                                        /*!< Connection SSL error, when there is already a connection with SSL */
-    
+
     espAPNOTFOUND,                                      /*!< AP was not found to connect to */
     espWRONGPASSWORD                                    /*!< Password is wrong */
 } ESP_Result_t;
@@ -136,16 +137,18 @@ typedef enum _ESP_Result_t {
 /**
  * \brief           ESP8266 modes of operation enumeration
  */
-typedef enum _ESP_Mode_t {
-	ESP_Mode_STA = 0x01,                                /*!< ESP in station mode */
-	ESP_Mode_AP = 0x02,                                 /*!< ESP as software Access Point mode */
-	ESP_Mode_STA_AP = 0x03                              /*!< ESP in both modes */
+typedef enum _ESP_Mode_t
+{
+    ESP_Mode_STA = 0x01,                                /*!< ESP in station mode */
+    ESP_Mode_AP = 0x02,                                 /*!< ESP as software Access Point mode */
+    ESP_Mode_STA_AP = 0x03                              /*!< ESP in both modes */
 } ESP_Mode_t;
 
 /**
  * \brief           Transfer mode enumeration
  */
-typedef enum _ESP_TransferMode_t {
+typedef enum _ESP_TransferMode_t
+{
     ESP_TransferMode_Normal = 0x00,                     /*!< Normal transfer mode of data packets */
     ESP_TransferMode_Transparent = 0x01                 /*!< UART<->WiFi transparent (passthrough) data mode */
 } ESP_TransferMode_t;
@@ -153,37 +156,41 @@ typedef enum _ESP_TransferMode_t {
 /**
  * \brief           Security settings for wifi network
  */
-typedef enum _ESP_Ecn_t {
-	ESP_Ecn_OPEN = 0x00,                                /*!< Wifi is open */
-	ESP_Ecn_WEP = 0x01,                                 /*!< Wired Equivalent Privacy option for wifi security. \note  This mode can't be used when setting up ESP8266 wifi */
-	ESP_Ecn_WPA_PSK = 0x02,                             /*!< Wi-Fi Protected Access */
-	ESP_Ecn_WPA2_PSK = 0x03,                            /*!< Wi-Fi Protected Access 2 */
-	ESP_Ecn_WPA_WPA2_PSK = 0x04,                        /*!< Wi-Fi Protected Access with both modes */
+typedef enum _ESP_Ecn_t
+{
+    ESP_Ecn_OPEN = 0x00,                                /*!< Wifi is open */
+    ESP_Ecn_WEP = 0x01,                                 /*!< Wired Equivalent Privacy option for wifi security. \note  This mode can't be used when setting up ESP8266 wifi */
+    ESP_Ecn_WPA_PSK = 0x02,                             /*!< Wi-Fi Protected Access */
+    ESP_Ecn_WPA2_PSK = 0x03,                            /*!< Wi-Fi Protected Access 2 */
+    ESP_Ecn_WPA_WPA2_PSK = 0x04,                        /*!< Wi-Fi Protected Access with both modes */
 } ESP_Ecn_t;
 
 /**
  * \brief           Firmware update statuses
  */
-typedef enum _ESP_FirmwareUpdate_t {
-	ESP_FirmwareUpdate_ServerFound = 0x01,              /*!< Server for update has been found */
-	ESP_FirmwareUpdate_Connected = 0x02,                /*!< We are connected to server for firmware */
-	ESP_FirmwareUpdate_GotEdition = 0x03,               /*!< We have firmware edition to download */
-	ESP_FirmwareUpdate_StartUpdate = 0x04,              /*!< Update has started */
+typedef enum _ESP_FirmwareUpdate_t
+{
+    ESP_FirmwareUpdate_ServerFound = 0x01,              /*!< Server for update has been found */
+    ESP_FirmwareUpdate_Connected = 0x02,                /*!< We are connected to server for firmware */
+    ESP_FirmwareUpdate_GotEdition = 0x03,               /*!< We have firmware edition to download */
+    ESP_FirmwareUpdate_StartUpdate = 0x04,              /*!< Update has started */
 } ESP_FirmwareUpdate_t;
 
 /**
  * \brief           Sleep mode enumeration
  */
-typedef enum _ESP_SleepMode_t {
-	ESP_SleepMode_Disable = 0x00,                       /*!< Sleep mode disabled */
-	ESP_SleepMode_Light = 0x01,                         /*!< Light sleep mode */
-	ESP_SleepMode_Modem = 0x02                          /*!< Model sleep mode */
+typedef enum _ESP_SleepMode_t
+{
+    ESP_SleepMode_Disable = 0x00,                       /*!< Sleep mode disabled */
+    ESP_SleepMode_Light = 0x01,                         /*!< Light sleep mode */
+    ESP_SleepMode_Modem = 0x02                          /*!< Model sleep mode */
 } ESP_SleepMode_t;
 
 /**
  * \brief           Event enumeration for callback
  */
-typedef enum _ESP_Event_t {
+typedef enum _ESP_Event_t
+{
     espEventIdle = 0x00,                                /*!< Stack went idle and is ready to accept new instruction */
     espEventDataReceived,                               /*!< Data were received on connection */
     espEventWifiConnected,                              /*!< Wifi has connected to network */
@@ -201,7 +208,8 @@ typedef enum _ESP_Event_t {
 /**
  * \brief           Parameters for callback processing
  */
-typedef struct _ESP_EventParams_t {
+typedef struct _ESP_EventParams_t
+{
     const void* CP1;                                    /*!< Constant void pointer number 1 */
     const void* CP2;                                    /*!< Constant void pointer number 2 */
     uint32_t UI;                                        /*!< Unsigned integer value */
@@ -215,52 +223,58 @@ typedef int (*ESP_EventCallback_t)(ESP_Event_t, ESP_EventParams_t *);
 /**
  * \brief           Connection type
  */
-typedef enum _ESP_CONN_Type_t {
-	ESP_CONN_Type_TCP = 0x00,                           /*!< Connection type is TCP */
-	ESP_CONN_Type_UDP = 0x01,                           /*!< Connection type is UDP */
-	ESP_CONN_Type_SSL = 0x02                            /*!< Connection type is SSL */
+typedef enum _ESP_CONN_Type_t
+{
+    ESP_CONN_Type_TCP = 0x00,                           /*!< Connection type is TCP */
+    ESP_CONN_Type_UDP = 0x01,                           /*!< Connection type is UDP */
+    ESP_CONN_Type_SSL = 0x02                            /*!< Connection type is SSL */
 } ESP_CONN_Type_t;
 
 /**
  * \brief           Connection structure
  */
-typedef struct _ESP_CONN_t {
-	uint8_t Number;                                     /*!< Connection number */
-	uint16_t RemotePort;                                /*!< Remote PORT number */
-	uint8_t RemoteIP[4];                                /*!< IP address of device */
+typedef struct _ESP_CONN_t
+{
+    uint8_t Number;                                     /*!< Connection number */
+    uint16_t RemotePort;                                /*!< Remote PORT number */
+    uint8_t RemoteIP[4];                                /*!< IP address of device */
     uint16_t LocalPort;                                 /*!< Local PORT number */
-	ESP_CONN_Type_t Type;                               /*!< Connection type. Parameter is valid only if connection is made as client */
+    ESP_CONN_Type_t Type;                               /*!< Connection type. Parameter is valid only if connection is made as client */
 #if ESP_CONN_SINGLEBUFFER
     uint8_t* Data;                                      /*!< Pointer to data array */
 #else
     uint8_t Data[ESP_CONNBUFFER_SIZE + 1];              /*!< Received data on connection */
 #endif
     uint16_t DataLength;                                /*!< Number of bytes received in connection packet */
-    
+
     uint32_t TotalBytesReceived;                        /*!< Number of total bytes so far received on connection */
     uint32_t DataStartTime;                             /*!< Current time in units of milliseconds when first data packet was received on connection */
-	union {
-		struct {
-			int Active:1;                               /*!< Status if connection is active */
-			int Client:1;                               /*!< Set to 1 if connection was made as client */
-            int SSL:1;                                  /*!< Connection has been made as SSL */
+    union
+    {
+        struct
+        {
+            int Active: 1;                              /*!< Status if connection is active */
+            int Client: 1;                              /*!< Set to 1 if connection was made as client */
+            int SSL: 1;                                 /*!< Connection has been made as SSL */
         } F;
-		uint8_t Value;                                  /*!< Value of entire union */
-	} Flags;                                            /*!< Connection flags management */
-    union {
-        struct {
-            int Connect:1;                              /*!< Connection was just connected, client or server */
-            int Closed:1;                               /*!< Connection was just disconnected, client or server */
-            int DataSent:1;                             /*!< Data were sent successfully */
-            int DataError:1;                            /*!< Error trying to send data */
-            int CallLastPartOfPacketReceived:1;         /*!< Data are processed synchronously. When there is last part of packet received and command is not idle, we must save notification for callback */
+        uint8_t Value;                                  /*!< Value of entire union */
+    } Flags;                                            /*!< Connection flags management */
+    union
+    {
+        struct
+        {
+            int Connect: 1;                             /*!< Connection was just connected, client or server */
+            int Closed: 1;                              /*!< Connection was just disconnected, client or server */
+            int DataSent: 1;                            /*!< Data were sent successfully */
+            int DataError: 1;                           /*!< Error trying to send data */
+            int CallLastPartOfPacketReceived: 1;        /*!< Data are processed synchronously. When there is last part of packet received and command is not idle, we must save notification for callback */
         } F;
         int Value;
     } Callback;                                         /*!< Flags for callback management */
-    
+
     void* Arg;                                          /*!< Custom connection argument */
     ESP_EventCallback_t Cb;                             /*!< Connection callback function */
-    
+
     uint32_t PollTimeInterval;                          /*!< Interval for poll callback when connection is active but nothing happens to it */
     uint32_t PollTime;                                  /*!< Internal next poll time */
 } ESP_CONN_t;
@@ -268,9 +282,10 @@ typedef struct _ESP_CONN_t {
 /**
  * \brief         IPD network data structure
  */
-typedef struct _ESP_IPD_t {
-	uint8_t InIPD;                                      /*!< Set to 1 when ESP is in IPD mode with data */
-	ESP_CONN_t* Conn;                                   /*!< Connection number where IPD is active */
+typedef struct _ESP_IPD_t
+{
+    uint8_t InIPD;                                      /*!< Set to 1 when ESP is in IPD mode with data */
+    ESP_CONN_t* Conn;                                   /*!< Connection number where IPD is active */
     uint16_t BytesRemaining;                            /*!< Remaining bytes to read from entire IPD statement */
     uint16_t BytesRead;                                 /*!< Bytes read in current packet */
 } ESP_IPD_t;
@@ -278,50 +293,55 @@ typedef struct _ESP_IPD_t {
 /**
  * \brief           Connected AP structure
  */
-typedef struct _ESP_ConnectedAP_t {
-	char SSID[20 + 1];                                  /*!< SSID network name */
-	uint8_t MAC[6];                                     /*!< MAC address of network */
-	uint8_t Channel;                                    /*!< Network channel */
-	int16_t RSSI;                                       /*!< Signal strength */
+typedef struct _ESP_ConnectedAP_t
+{
+    char SSID[20 + 1];                                  /*!< SSID network name */
+    uint8_t MAC[6];                                     /*!< MAC address of network */
+    uint8_t Channel;                                    /*!< Network channel */
+    int16_t RSSI;                                       /*!< Signal strength */
 } ESP_ConnectedAP_t;
 
 /**
  * \brief           AP station structure to use when searching for network
  */
-typedef struct _ESP_AP_t {
-	ESP_Ecn_t Ecn;                                      /*!< Security of Wi-Fi spot. This parameter has a value of \ref ESP_Ecn_t enumeration */
-	char SSID[20 + 1];                                  /*!< Service Set Identifier value. Wi-Fi spot name */
-	int16_t RSSI;                                       /*!< Signal strength of Wi-Fi spot */
-	uint8_t MAC[6];                                     /*!< MAC address of spot */
-	uint8_t Channel;                                    /*!< Wi-Fi channel */
-	int8_t Offset;                                      /*!< Frequency offset from base 2.4GHz in kHz */
-	uint8_t Calibration;                                /*!< Frequency offset calibration */
+typedef struct _ESP_AP_t
+{
+    ESP_Ecn_t Ecn;                                      /*!< Security of Wi-Fi spot. This parameter has a value of \ref ESP_Ecn_t enumeration */
+    char SSID[20 + 1];                                  /*!< Service Set Identifier value. Wi-Fi spot name */
+    int16_t RSSI;                                       /*!< Signal strength of Wi-Fi spot */
+    uint8_t MAC[6];                                     /*!< MAC address of spot */
+    uint8_t Channel;                                    /*!< Wi-Fi channel */
+    int8_t Offset;                                      /*!< Frequency offset from base 2.4GHz in kHz */
+    uint8_t Calibration;                                /*!< Frequency offset calibration */
 } ESP_AP_t;
 
 /**
  * \brief           Structure for connected station to softAP to ESP module
  */
-typedef struct _ESP_ConnectedStation_t {
-	uint8_t IP[4];                                      /*!< IP address of connected station */
-	uint8_t MAC[6];                                     /*!< MAC address of connected station */
+typedef struct _ESP_ConnectedStation_t
+{
+    uint8_t IP[4];                                      /*!< IP address of connected station */
+    uint8_t MAC[6];                                     /*!< MAC address of connected station */
 } ESP_ConnectedStation_t;
 
 /**
  * \brief           Access point configuration
  */
-typedef struct _ESP_APConfig_t {
-	char SSID[20];                                      /*!< Network public name for ESP AP mode */
-	char Pass[20];                                      /*!< Network password for ESP AP mode */
-	ESP_Ecn_t Ecn;                                      /*!< Security of Wi-Fi spot. This parameter can be a value of \ref ESP_Ecn_t enumeration */
-	uint8_t Channel;                                    /*!< Channel Wi-Fi is operating at */
-	uint8_t MaxConnections;                             /*!< Max number of stations that are allowed to connect to ESP AP, between 1 and 4 */
-	uint8_t Hidden;                                     /*!< Set to 1 if network is hidden (not broadcast) or zero if noz */
+typedef struct _ESP_APConfig_t
+{
+    char SSID[20];                                      /*!< Network public name for ESP AP mode */
+    char Pass[20];                                      /*!< Network password for ESP AP mode */
+    ESP_Ecn_t Ecn;                                      /*!< Security of Wi-Fi spot. This parameter can be a value of \ref ESP_Ecn_t enumeration */
+    uint8_t Channel;                                    /*!< Channel Wi-Fi is operating at */
+    uint8_t MaxConnections;                             /*!< Max number of stations that are allowed to connect to ESP AP, between 1 and 4 */
+    uint8_t Hidden;                                     /*!< Set to 1 if network is hidden (not broadcast) or zero if noz */
 } ESP_APConfig_t;
 
 /**
  * \brief           DNS structure
  */
-typedef struct _ESP_Domain_t {
+typedef struct _ESP_Domain_t
+{
     const char* Domain;                                 /*!< Domain name for IP */
     uint8_t IP[4];                                      /*!< IP for domain */
     uint8_t successful;                                 /*!< Status flag */
@@ -331,14 +351,16 @@ typedef struct _ESP_Domain_t {
  * \brief           GPIO mode enumeration
  * \note            This is not input/output structure but mode in which GPIO works (ESP documentation)
  */
-typedef enum _ESP_GPIO_Mode_t {
+typedef enum _ESP_GPIO_Mode_t
+{
     ESP_GPIO_Mode_GPIO = 0x03,                          /*!< Put GPIO to GPIO mode */
 } ESP_GPIO_Mode_t;
 
 /**
  * \brief           GPIO pull resistor setup
  */
-typedef enum _ESP_GPIO_Pull_t {
+typedef enum _ESP_GPIO_Pull_t
+{
     ESP_GPIO_Pull_UpDisabled = 0x00,                    /*!< Pull up is disabled */
     ESP_GPIO_Pull_UpEnabled = 0x01,                     /*!< Pull up is enabled */
 } ESP_GPIO_Pull_t;
@@ -346,7 +368,8 @@ typedef enum _ESP_GPIO_Pull_t {
 /**
  * \brief           GPIO pull resistor setup
  */
-typedef enum _ESP_GPIO_Dir_t {
+typedef enum _ESP_GPIO_Dir_t
+{
     ESP_GPIO_Dir_Input = 0x00,                          /*!< GPIO direction is input */
     ESP_GPIO_Dir_Output = 0x01,                         /*!< GPIO direction is output */
 } ESP_GPIO_Dir_t;
@@ -354,7 +377,8 @@ typedef enum _ESP_GPIO_Dir_t {
 /**
  * \brief           GPIO configuration structure
  */
-typedef struct _ESP_GPIO_t {
+typedef struct _ESP_GPIO_t
+{
     uint8_t Pin;                                        /*!< GPIO pin used for initialization */
     ESP_GPIO_Mode_t Mode;                               /*!< GPIO operating mode */
     ESP_GPIO_Pull_t Pull;                               /*!< Pull resistor setup */
@@ -364,7 +388,8 @@ typedef struct _ESP_GPIO_t {
 /**
  * \brief           Date and time structure
  */
-typedef struct _ESP_DateTime_t {
+typedef struct _ESP_DateTime_t
+{
     uint8_t Day;                                        /*!< Day in a week, Monday = 1, Sunday = 7 */
     uint8_t Date;                                       /*!< Day in month, 1st to 31st */
     uint8_t Month;                                      /*!< Month in year, 1st to 12th */
@@ -377,11 +402,12 @@ typedef struct _ESP_DateTime_t {
 /**
  * \brief           SNTP config structure
  */
-typedef struct _ESP_SNTP_t {
+typedef struct _ESP_SNTP_t
+{
     uint8_t Enable;                                     /*!< SNTP enable status */
     int8_t Timezone;                                    /*!< Timezone used for SNTP calculation, from -11 to 13 is valid number */
-    char* Addr[3];                                      /*!< Pointers to SNTP addresses. 
-                                                            \note When using structure for reading, 
+    char* Addr[3];                                      /*!< Pointers to SNTP addresses.
+                                                            \note When using structure for reading,
                                                                     these pointers must be prefilled with valid memory to save data
                                                                     to or set to NULL if entires should be ignored when reading */
 } ESP_SNTP_t;
@@ -389,7 +415,8 @@ typedef struct _ESP_SNTP_t {
 /**
  * \brief           SNTP config structure
  */
-typedef struct _ESP_DNS_t {
+typedef struct _ESP_DNS_t
+{
     uint8_t _ptr;                                       /*!< For internal use only */
     uint8_t Enable;                                     /*!< DNS enable custom servers */
     uint8_t Addr[2][4];                                 /*!< Memory for 2 IP addresses for DNS */
@@ -398,13 +425,14 @@ typedef struct _ESP_DNS_t {
 /**
  * \brief           Main ESP8266 working structure
  */
-typedef struct _ESP_t {
+typedef struct _ESP_t
+{
     evol uint32_t Time;                                 /*!< Current time in units of milliseconds */
     evol ESP_Result_t RetVal;                           /*!< Return value */
-    
+
     /*!< Low-Level management */
     ESP_LL_t LL;                                        /*!< Structure for Low-Level communication */
-    
+
     /*!< Active command informations */
     evol uint16_t ActiveCmd;                            /*!< Current active command for execution */
     evol uint16_t ActiveCmdSaved;                       /*!< Value of saved active CMD when necessary to change active command while processing one. */
@@ -413,79 +441,85 @@ typedef struct _ESP_t {
     evol ESP_Result_t ActiveResult;                     /*!< Result to return from function */
     evol uint32_t ActiveCmdTimeout;                     /*!< Timeout in units of MS for active command to finish */
 
-	uint32_t Timeout;                                   /*!< Timeout in milliseconds for command to return response */
-    
+    uint32_t Timeout;                                   /*!< Timeout in milliseconds for command to return response */
+
     /*!< RTOS support */
 #if ESP_RTOS
     ESP_RTOS_SYNC_t Sync;                               /*!< RTOS synchronization object */
 #endif
-    
+
     /*!< Station informations */
-	uint8_t STAIP[4];                                   /*!< Assigned IP address for station for ESP module */
-	uint8_t STAGateway[4];                              /*!< Gateway address for station ESP is using */
-	uint8_t STANetmask[4];                              /*!< Netmask address for station ESP is using */
-	uint8_t STAMAC[6];                                  /*!< MAC address for station of ESP module */
-    
+    uint8_t STAIP[4];                                   /*!< Assigned IP address for station for ESP module */
+    uint8_t STAGateway[4];                              /*!< Gateway address for station ESP is using */
+    uint8_t STANetmask[4];                              /*!< Netmask address for station ESP is using */
+    uint8_t STAMAC[6];                                  /*!< MAC address for station of ESP module */
+
     /*!< Access Point informations */
-	uint8_t APIP[4];                                    /*!< Assigned IP address for softAP for ESP module */
-	uint8_t APGateway[4];                               /*!< Gateway address ESP for softAP is using */
-	uint8_t APNetmask[4];                               /*!< Netmask address ESP for softAP is using */
-	uint8_t APMAC[6];                                   /*!< MAC address for softAP of ESP module */
+    uint8_t APIP[4];                                    /*!< Assigned IP address for softAP for ESP module */
+    uint8_t APGateway[4];                               /*!< Gateway address ESP for softAP is using */
+    uint8_t APNetmask[4];                               /*!< Netmask address ESP for softAP is using */
+    uint8_t APMAC[6];                                   /*!< MAC address for softAP of ESP module */
     ESP_APConfig_t APConf;                              /*!< Soft AP configuration */
-    
+
     /* Connections structure */
-	ESP_CONN_t Conn[ESP_MAX_CONNECTIONS];               /*!< Array of connections */
+    ESP_CONN_t Conn[ESP_MAX_CONNECTIONS];               /*!< Array of connections */
     uint8_t ActiveConns;                                /*!< Bit variable of active connections on ESP8266 from CIPSTATUS response */
     uint8_t ActiveConnsResp;                            /*!< List of active connections */
-    
+
     /*!< Incoming data structure */
     ESP_IPD_t IPD;                                      /*!< IPD network data structure */
-    
+
 #if ESP_SINGLE_CONN
     /*!< Transfer mode */
     ESP_TransferMode_t TransferMode;                    /*!< Data transfer mode in use */
 #endif
 
-	union {
-		struct {
-            int IsBlocking:1;                           /*!< Status whether action was called as blocking */
-            int Call_Idle:1;                            /*!< Status whether idle status event should be called before we can proceed with another action */
-            int InTransparentMode:1;                    /*!< Status whether we are currently in transparent mode and transfer is active */
-            int RTSForced:1;                            /*!< Status whether RTS pin was forced by user */
-		} F;
-		int Value;
-	} Flags;                                            /*!< Flags for library purpose */
-    
+    union
+    {
+        struct
+        {
+            int IsBlocking: 1;                          /*!< Status whether action was called as blocking */
+            int Call_Idle: 1;                           /*!< Status whether idle status event should be called before we can proceed with another action */
+            int InTransparentMode: 1;                   /*!< Status whether we are currently in transparent mode and transfer is active */
+            int RTSForced: 1;                           /*!< Status whether RTS pin was forced by user */
+        } F;
+        int Value;
+    } Flags;                                            /*!< Flags for library purpose */
+
     /*!< Callback management */
-    union {
-        struct {
-            int WifiConnected:1;                        /*!< Wifi just got connected */
-            int WifiDisconnected:1;                     /*!< Wifi just got disconnected */
-            int WifiGotIP:1;                            /*!< Wifi station just got IP address */
+    union
+    {
+        struct
+        {
+            int WifiConnected: 1;                       /*!< Wifi just got connected */
+            int WifiDisconnected: 1;                    /*!< Wifi just got disconnected */
+            int WifiGotIP: 1;                           /*!< Wifi station just got IP address */
         } F;
         int Value;
     } CallbackFlags;                                    /*!< List of global flags for callback events */
     ESP_EventCallback_t Callback;                       /*!< Pointer to callback function */
     ESP_EventParams_t CallbackParams;                   /*!< Callback parameters */
-    
+
     /*!< Events management with receive interaction */
-    union {
-        struct {
-            int RespOk:1;                               /*!< OK message response */
-            int RespError:1;                            /*!< Error message response */
-            int RespBracket:1;                          /*!< Bracket received (SMS messages) */
-            int RespReady:1;                            /*!< Ready statement was received */
-            
-            int RespConnectOk:1;                        /*!< n, CONNECT OK was returned from device */
-            int RespConnectFail:1;                      /*!< n, CONNECT FAIL was returned from device */
-            int RespConnectAlready:1;                   /*!< n, ALREADY CONNECTED was returned from device */
-            int RespCloseOk:1;                          /*!< n, CLOSE OK was returned from device */
-            int RespSendOk:1;                           /*!< n, SEND OK was returned from device */
-            int RespSendFail:1;                         /*!< n, SEND FAIL was returned from device */
-            
-            int RespWifiConnected:1;
-            int RespWifiDisconnected:1;
-            int RespWifiGotIp:1;
+    union
+    {
+        struct
+        {
+            int RespOk: 1;                              /*!< OK message response */
+            int RespError: 1;                           /*!< Error message response */
+            int RespBracket: 1;                         /*!< Bracket received (SMS messages) */
+            int RespReady: 1;                           /*!< Ready statement was received */
+
+            int RespConnectOk: 1;                       /*!< n, CONNECT OK was returned from device */
+            int RespConnectFail: 1;                     /*!< n, CONNECT FAIL was returned from device */
+            int RespConnectAlready: 1;                  /*!< n, ALREADY CONNECTED was returned from device */
+            int RespCloseOk: 1;                         /*!< n, CLOSE OK was returned from device */
+            int RespSendOk: 1;                          /*!< n, SEND OK was returned from device */
+            int RespSendFail: 1;                        /*!< n, SEND FAIL was returned from device */
+
+            int RespWifiConnected: 1;
+            int RespWifiDisconnected: 1;
+            int RespWifiGotIp: 1;
         } F;
         int Value;                                      /*!< Value containing all the flags in single memory */
     } Events;                                           /*!< Union holding all the required events for library internal processing */
@@ -590,7 +624,7 @@ ESP_Result_t ESP_GetLastReturnStatus(evol ESP_t* ESP);
  * \{
  *
  * System functions supports:
- *  
+ *
  *  - Read available RAM memory
  *  - Read ADC value
  *  - Config and read/write GPIO pins
@@ -678,7 +712,7 @@ ESP_Result_t ESP_SYS_GPIO_GetConfig(evol ESP_t* ESP, uint8_t gpionum, ESP_GPIO_t
  * Functions regarding ESP as station device connected to other WIFI networks.
  *
  * You can set or get IP address for station, set or get MAC address for station,
- * list available access points to connect to, 
+ * list available access points to connect to,
  * connect to access point and read informations about currently connected AP.
  */
 
@@ -779,7 +813,7 @@ ESP_Result_t ESP_STA_ListAccessPoints(evol ESP_t* ESP, ESP_AP_t* APs, uint16_t a
 
 /**
  * \defgroup        AP_API Access Point API
- * \brief           Functions regarding SoftAP (software Access Point) on ESP 
+ * \brief           Functions regarding SoftAP (software Access Point) on ESP
  * \{
  *
  * Functions regarding Access Point (AP) for ESP.
@@ -907,7 +941,7 @@ ESP_Result_t ESP_SERVER_SetTimeout(evol ESP_t* ESP, uint16_t timeout, uint32_t b
  * \brief           Connection management with client and server connection interaction
  * \{
  *
- * Connection API is the most important ESP feature since ESP 
+ * Connection API is the most important ESP feature since ESP
  * is wifi device to connect somewhere or listen for connections when in server mode.
  *
  * This section implements API functions for connecting to other servers as client
@@ -1141,7 +1175,7 @@ void ESP_DesertRTS(evol ESP_t* ESP);
 /**
  * \}
  */
- 
+
 /**
  * \defgroup        SNTP_API SNTP API
  * \brief           Simple network time protocol
@@ -1178,7 +1212,7 @@ ESP_Result_t ESP_SNTP_GetDateTime(evol ESP_t* ESP, ESP_DateTime_t* dt, uint32_t 
 /**
  * \}
  */
- 
+
 /**
  * \defgroup        DNS_API Domain name system API
  * \brief           Functions regarding domain name system
@@ -1214,11 +1248,11 @@ ESP_Result_t ESP_DNS_GetConfig(evol ESP_t* ESP, ESP_DNS_t* dns, uint8_t def, uin
  * \retval          Member of \ref ESP_Result_t enumeration
  */
 ESP_Result_t ESP_DNS_GetIp(evol ESP_t* ESP, const char* domain, uint8_t* ip, uint32_t blocking);
- 
+
 /**
  * \}
  */
- 
+
 /**
  * \defgroup        TRANSFER_API Transparent transfer API
  * \brief           Transfer based functions for UART <-> WIFI passthrough mode
@@ -1226,7 +1260,7 @@ ESP_Result_t ESP_DNS_GetIp(evol ESP_t* ESP, const char* domain, uint8_t* ip, uin
  * \{
  *
  * When transfer mode is set to transparent and connection to server is established,
- * any data sent to ESP device will be sent directly to server. 
+ * any data sent to ESP device will be sent directly to server.
  *
  * This mode can be used in case of streaming data for any applications or
  * for UART <-> WIFI passthrough mode to server directly.
@@ -1237,7 +1271,7 @@ ESP_Result_t ESP_DNS_GetIp(evol ESP_t* ESP, const char* domain, uint8_t* ip, uin
  *
  * Transfer mode can only be used when \ref ESP_SINGLE_CONN is enabled
  */
- 
+
 /**
  * \brief           Set mode for transfer, either normal or passthrough (stream) mode
  * \note            All connections have to be closed in order to set new mode type
@@ -1281,7 +1315,7 @@ ESP_Result_t ESP_TRANSFER_Stop(evol ESP_t* ESP, uint32_t blocking);
 /**
  * \}
  */
- 
+
 /**
  * \}
  */

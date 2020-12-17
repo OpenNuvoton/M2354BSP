@@ -4037,7 +4037,7 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
    do{ \
         while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
         SYS->BODCTL &= ~SYS_BODCTL_BODEN_Msk; \
-    }while(0)        
+    }while(0)
 
 /**
   * @brief      Enable Brown-out detector function
@@ -4050,7 +4050,7 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
    do{ \
         while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
         SYS->BODCTL |= SYS_BODCTL_BODEN_Msk; \
-    }while(0)      
+    }while(0)
 
 /**
   * @brief      Get Brown-out detector interrupt flag
@@ -4082,7 +4082,7 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
    do{ \
         while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
         SYS->BODCTL &= ~SYS_BODCTL_BODRSTEN_Msk; \
-    }while(0)      
+    }while(0)
 
 /**
   * @brief      Enable Brown-out detector reset function
@@ -4095,7 +4095,7 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
    do{ \
         while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
         SYS->BODCTL |= SYS_BODCTL_BODRSTEN_Msk; \
-    }while(0)       
+    }while(0)
 
 /**
   * @brief      Set Brown-out detector voltage level
@@ -4116,7 +4116,7 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
    do{ \
         while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
         SYS->BODCTL = (SYS->BODCTL & ~SYS_BODCTL_BODVL_Msk) | (u32Level); \
-    }while(0)   
+    }while(0)
 
 /**
   * @brief      Get reset source is from Brown-out detector reset
@@ -4192,7 +4192,7 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
    do{ \
         while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
         SYS->BODCTL &= ~SYS_BODCTL_LVREN_Msk; \
-    }while(0)  
+    }while(0)
 
 /**
   * @brief      Enable Low-Voltage-Reset function
@@ -4205,7 +4205,7 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
    do{ \
         while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
         SYS->BODCTL |= SYS_BODCTL_LVREN_Msk; \
-    }while(0)  
+    }while(0)
 
 /**
   * @brief      Disable Power-on Reset function

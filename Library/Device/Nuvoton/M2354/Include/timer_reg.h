@@ -19,7 +19,7 @@
 /**
     @addtogroup TIMER Timer Controller(TIMER)
     Memory Mapped Structure for TIMER Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -62,8 +62,8 @@ typedef struct
      * |[22]    |CAPSRC    |Capture Pin Source Selection
      * |        |          |0 = Capture Function source is from TMx_EXT (x= 0~5) pin.
      * |        |          |1 =  Capture Function source is from internal ACMP output signal, internal clock source (HIRC, LIRC, MIRC) or external clock (HXT, LXT).
-     * |        |          |Note1:  When CAPSRC = 1, user can set INTERCAPSEL (TIMERx_EXTCTL[10:8]) to decide which internal ACMP output signal or which clock is as timer capture source. 
-     * |        |          |Note2:  MIRC clock source is only available in Timer4 ~ Timer5. 
+     * |        |          |Note1:  When CAPSRC = 1, user can set INTERCAPSEL (TIMERx_EXTCTL[10:8]) to decide which internal ACMP output signal or which clock is as timer capture source.
+     * |        |          |Note2:  MIRC clock source is only available in Timer4 ~ Timer5.
      * |[23]    |WKEN      |Wake-up Function Enable Bit
      * |        |          |If this bit is set to 1, while timer interrupt flag TIF (TIMERx_INTSTS[0]) is 1 and INTEN (TIMERx_CTL[29]) is enabled, the timer interrupt signal will generate a wake-up trigger event to CPU.
      * |        |          |0 = Wake-up function Disabled if timer interrupt signal generated.
@@ -152,7 +152,7 @@ typedef struct
      * |Bits    |Field     |Descriptions
      * | :----: | :----:   | :---- |
      * |[23:0]  |CAPDAT    |Timer Capture Data Register
-     * |        |          |When CAPEN (TIMERx_EXTCTL[3]) bit is set,  the transition on the capture source matches the CAPEDGE (TIMERx_EXTCTL[14:12]) setting, 
+     * |        |          |When CAPEN (TIMERx_EXTCTL[3]) bit is set,  the transition on the capture source matches the CAPEDGE (TIMERx_EXTCTL[14:12]) setting,
      * |        |          |CAPIF (TIMERx_EINTSTS[0]) will set to 1 and the current timer counter value CNT (TIMERx_CNT[23:0]) will be auto-loaded into this CAPDAT field.
      * @var TIMER_T::EXTCTL
      * Offset: 0x14  Timer External Control Register
@@ -177,7 +177,7 @@ typedef struct
      * |        |          |1 = TMx_EXT (x= 0~5), ACMP, internal clock, or external clock detection Interrupt Enabled.
      * |        |          |Note: CAPIEN is used to enable timer capture interrupt.
      * |        |          |If CAPIEN enabled, timer will rise an interrupt when CAPIF (TIMERx_EINTSTS[0]) is 1.
-     * |        |          |For example, while CAPIEN = 1, CAPEN = 1, and CAPEDGE = 00, a 1 to 0 transition on the TMx_EXT pin, ACMP, internal clock, or external clock 
+     * |        |          |For example, while CAPIEN = 1, CAPEN = 1, and CAPEDGE = 00, a 1 to 0 transition on the TMx_EXT pin, ACMP, internal clock, or external clock
      * |        |          |will cause the CAPIF to be set then the interrupt signal is generated and sent to NVIC to inform CPU.
      * |[6]     |CAPDBEN   |Timer Capture De-bounce Enable Bit
      * |        |          |0 = TMx_EXT (x= 0~5) pin de-bounce or ACMP output de-bounce Disabled.
@@ -195,7 +195,7 @@ typedef struct
      * |        |          |100 = Capture Function source is from HIRC.
      * |        |          |101 = Capture Function source is from LIRC.
      * |        |          |101 = Capture Function source is from LIRC.
-     * |        |          |110 = Capture Function source is from MIRC, only available in Timer4 and Timer5. 
+     * |        |          |110 = Capture Function source is from MIRC, only available in Timer4 and Timer5.
      * |        |          |111 = Reserved.
      * |        |          |Note: These bits only available when CAPSRC (TIMERx_CTL[22]) is 1.
      * |[14:12] |CAPEDGE   |Timer Capture Edge Detect
@@ -813,7 +813,7 @@ typedef struct
 /**
     @addtogroup TIMER_CONST TIMER Bit Field Definition
     Constant Definitions for TIMER Controller
-  @{ 
+  @{
 */
 
 #define TIMER_CTL_PSC_Pos                (0)                                               /*!< TIMER_T::CTL: PSC Position             */

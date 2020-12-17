@@ -457,7 +457,7 @@ static void  hid_write_irq(UTR_T *utr)
         hdev->write_func(hdev, utr->ep->bEndpointAddress, ret, utr->buff, &(utr->data_len));
         free_utr(utr);
     }
-#endif    
+#endif
 }
 
 
@@ -738,7 +738,7 @@ int32_t usbh_hid_stop_int_write(HID_DEV_T *hdev, uint8_t ep_addr)
 
 #if 0 /* 2020.02.10. Do not quit, just free memory. */
     ret = usbh_quit_utr(utr);
-#endif    
+#endif
 
     usbh_free_mem(utr->buff, utr->ep->wMaxPacketSize);
     free_utr(utr);

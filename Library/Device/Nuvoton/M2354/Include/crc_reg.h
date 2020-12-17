@@ -20,7 +20,7 @@
 /**
     @addtogroup CRC Cyclic Redundancy Check Controller(CRC)
     Memory Mapped Structure for CRC Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -110,7 +110,7 @@ typedef struct
 /**
     @addtogroup CRC_CONST CRC Bit Field Definition
     Constant Definitions for CRC Controller
-  @{ 
+  @{
 */
 
 #define CRC_CTL_CRCEN_Pos                (0)                                               /*!< CRC_T::CTL: CRCEN Position             */

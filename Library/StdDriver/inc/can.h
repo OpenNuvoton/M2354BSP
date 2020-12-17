@@ -61,7 +61,7 @@ typedef struct
     uint32_t  Id;           /*!< Message ID */
     uint8_t   DLC;          /*!< Data length */
     uint8_t   Data[8];      /*!< Data */
-	  uint8_t   padding[3];   /*!< Just for padding for memory alignment*/
+    uint8_t   padding[3];   /*!< Just for padding for memory alignment*/
 } STR_CANMSG_T;
 
 /**

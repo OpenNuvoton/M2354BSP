@@ -30,7 +30,7 @@ void DEBUG_PORT_Init(void);
 int main(void)
 {
     uint32_t u32Addr, u32ISPData, i;
-	  int32_t i32Ret = 0;
+    int32_t i32Ret = 0;
 
     DEBUG_PORT_Init();
 
@@ -63,11 +63,11 @@ int main(void)
 
     FMC_ENABLE_AP_UPDATE();
 
-    for( u32Addr = NS_APROM_TEST_START_ADDR; u32Addr < NS_APROM_TEST_END_ADDR; u32Addr += FMC_FLASH_PAGE_SIZE )
+    for(u32Addr = NS_APROM_TEST_START_ADDR; u32Addr < NS_APROM_TEST_END_ADDR; u32Addr += FMC_FLASH_PAGE_SIZE)
     {
         i32Ret = FMC_Erase(u32Addr);
 
-        if( i32Ret != 0 )
+        if(i32Ret != 0)
         {
             printf("[%d] Error:  ISP Fail\n", __LINE__);
             while(1);
@@ -76,29 +76,29 @@ int main(void)
 
     printf("\n  Non Secure ISP erase test pass \n");
 
-    for( u32Addr = NS_APROM_TEST_START_ADDR; u32Addr < NS_APROM_TEST_END_ADDR; u32Addr += 4 )
+    for(u32Addr = NS_APROM_TEST_START_ADDR; u32Addr < NS_APROM_TEST_END_ADDR; u32Addr += 4)
     {
         u32ISPData = FMC_Read(u32Addr);
 
-        if( (FMC_NS->ISPSTS&FMC_ISPSTS_ISPFF_Msk) == FMC_ISPSTS_ISPFF_Msk )
+        if((FMC_NS->ISPSTS & FMC_ISPSTS_ISPFF_Msk) == FMC_ISPSTS_ISPFF_Msk)
         {
             printf("[%d] Error:  ISP Fail\n", __LINE__);
             while(1);
         }
-        if( u32ISPData != 0xFFFFFFFF )
+        if(u32ISPData != 0xFFFFFFFF)
         {
-            printf("[%d] ISP read rrror:  address[0x%x]  data[0x%x]  -> should be 0xFFFFFFFF\n", __LINE__, u32Addr, u32ISPData );
+            printf("[%d] ISP read rrror:  address[0x%x]  data[0x%x]  -> should be 0xFFFFFFFF\n", __LINE__, u32Addr, u32ISPData);
             while(1);
         }
 
     }
     printf("  Non Secure ISP erase check pass \n");
 
-    for( u32Addr = NS_APROM_TEST_START_ADDR; u32Addr < NS_APROM_TEST_END_ADDR; u32Addr += 4 )
+    for(u32Addr = NS_APROM_TEST_START_ADDR; u32Addr < NS_APROM_TEST_END_ADDR; u32Addr += 4)
     {
         FMC_Write(u32Addr, u32Addr);
 
-        if( (FMC_NS->ISPSTS&FMC_ISPSTS_ISPFF_Msk) == FMC_ISPSTS_ISPFF_Msk )
+        if((FMC_NS->ISPSTS & FMC_ISPSTS_ISPFF_Msk) == FMC_ISPSTS_ISPFF_Msk)
         {
             printf("[%d] Error:  ISP Fail\n", __LINE__);
             while(1);
@@ -107,18 +107,18 @@ int main(void)
 
     printf("  Non Secure ISP program test pass \n");
 
-    for( u32Addr = NS_APROM_TEST_START_ADDR; u32Addr < NS_APROM_TEST_END_ADDR; u32Addr += 4 )
+    for(u32Addr = NS_APROM_TEST_START_ADDR; u32Addr < NS_APROM_TEST_END_ADDR; u32Addr += 4)
     {
         u32ISPData = FMC_Read(u32Addr);
 
-        if( (FMC_NS->ISPSTS&FMC_ISPSTS_ISPFF_Msk) == FMC_ISPSTS_ISPFF_Msk )
+        if((FMC_NS->ISPSTS & FMC_ISPSTS_ISPFF_Msk) == FMC_ISPSTS_ISPFF_Msk)
         {
             printf("[%d] Error:  ISP Fail\n", __LINE__);
             while(1);
         }
-        if( u32ISPData != u32Addr )
+        if(u32ISPData != u32Addr)
         {
-            printf("[%d] ISP read rrror:  address[0x%x]  data[0x%x]  -> should be 0xFFFFFFFF\n", __LINE__, u32Addr, u32ISPData );
+            printf("[%d] ISP read rrror:  address[0x%x]  data[0x%x]  -> should be 0xFFFFFFFF\n", __LINE__, u32Addr, u32ISPData);
             while(1);
         }
 

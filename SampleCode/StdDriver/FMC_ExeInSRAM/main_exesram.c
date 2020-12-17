@@ -97,7 +97,7 @@ int32_t main(void)
 
     printf("Execute demo code in SRAM ==>\n");
 
-    func = (FUNC_PTR *)(SRAM_CODE_BASE+1);
+    func = (FUNC_PTR *)(SRAM_CODE_BASE + 1);
 
     func();   /* branch to exeinsram.o in SRAM  */
 

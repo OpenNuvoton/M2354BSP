@@ -91,10 +91,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
-    /*---------------------------------------------------------------------------------------------------------*/    
+    /*---------------------------------------------------------------------------------------------------------*/
     /* Enable LXT-32KHz */
     CLK_EnableXtalRC(CLK_PWRCTL_LXTEN_Msk);
 
@@ -103,7 +103,7 @@ void SYS_Init(void)
 
     /* Enable RTC module clock */
     CLK_EnableModuleClock(RTC_MODULE);
-    
+
     /* Set multi-function pins for RTC Tamper */
     SYS->GPF_MFPL &= ~(TAMPER0_PF6_Msk | TAMPER1_PF7_Msk);
     SYS->GPF_MFPH &= ~(TAMPER2_PF8_Msk | TAMPER3_PF9_Msk | TAMPER4_PF10_Msk | TAMPER5_PF11_Msk);

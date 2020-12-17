@@ -90,23 +90,23 @@ void SysTick_Handler(void)
 
     switch(ticks++)
     {
-    case   0:
-        LED_On(7u);
-        break;
-    case 400:
-        Secure_LED_On(6u);
-        break;
-    case 600:
-        LED_Off(7u);
-        break;
-    case 1000:
-        Secure_LED_Off(6u);
-        break;
-    default:
-        if(ticks > 1200)
-        {
-            ticks = 0;
-        }
+        case   0:
+            LED_On(7u);
+            break;
+        case 400:
+            Secure_LED_On(6u);
+            break;
+        case 600:
+            LED_Off(7u);
+            break;
+        case 1000:
+            Secure_LED_Off(6u);
+            break;
+        default:
+            if(ticks > 1200)
+            {
+                ticks = 0;
+            }
     }
 }
 
@@ -128,7 +128,7 @@ int main(void)
         printf("\n[AuthCFG: 0x%08x]\n", cfg);
     }
 
-    if (BL32_GetBL33FwVer((uint32_t *)&u32FwVer) == 0)
+    if(BL32_GetBL33FwVer((uint32_t *)&u32FwVer) == 0)
         printf("NuBL33 Firmware Ver: 0x%08x\n\n", u32FwVer);
     else
         printf("NuBL33 Firmware Ver: N/A\n\n");

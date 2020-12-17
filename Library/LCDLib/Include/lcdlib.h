@@ -28,7 +28,7 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Digit Zone Constant Definitions                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-#define ZONE_MAIN_DIGIT         0   /*!< Main digit display zone index */ 
+#define ZONE_MAIN_DIGIT         0   /*!< Main digit display zone index */
 #define ZONE_MAIN_DIG_CNT       7   /*!< Number of digits/texts, for number and alphabet display */
 #define ZONE_MAIN_SEG_NUM       14  /*!< Number of segments on each digit number */
 
@@ -51,7 +51,7 @@ extern "C"
 #define ZONE_NUMICRO_DIGIT      5   /*!< NuMicro digit display zone index */
 #define ZONE_NUMICRO_DIG_CNT    3   /*!< Number of digits */
 #define ZONE_NUMICRO_SEG_NUM    7   /*!< Number of segments on each digit number */
-                                        
+
 /*---------------------------------------------------------------------------------------------------------*/
 /*  COM and SEG Position of Symbol Constant Definitions                                                    */
 /*---------------------------------------------------------------------------------------------------------*/

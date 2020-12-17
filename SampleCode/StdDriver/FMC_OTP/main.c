@@ -158,9 +158,9 @@ int32_t main(void)
         }
     }
 
-    i32Ret = 	FMC_IsOTPLocked(u32i);
+    i32Ret =    FMC_IsOTPLocked(u32i);
 
-    if( i32Ret == 0 )
+    if(i32Ret == 0)
     {
         printf("\nOTP%d is still not locked   \n", u32i);
         printf("Lock OTP%d?  (y/n)   \n", u32i);
@@ -169,7 +169,7 @@ int32_t main(void)
         i32GetCh = getchar();
 
 
-        if((i32GetCh == 'y' )&& (g_u8ProgAbortFlag == 0))
+        if((i32GetCh == 'y') && (g_u8ProgAbortFlag == 0))
         {
             printf("\n\nWarnning: \n");
             printf("          If OTP lock is programed, each bit only can be programed from 1 to 0  \n");
@@ -199,7 +199,7 @@ int32_t main(void)
             g_u8ProgAbortFlag = 1;
         }
     }
-    else if( i32Ret == 1)
+    else if(i32Ret == 1)
     {
         printf("\nOTP%d is is already locked   \n", u32i);
     }

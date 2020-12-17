@@ -226,7 +226,7 @@ int main()
         printf("|  Boot from 0x%08X  |\n", FMC_GetVECMAP());
         printf("+------------------------+\n");
 
-        u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
+        u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk) >> FMC_ISPSTS_FBS_Pos);
         printf("\n BANK%d APP processing \n", u32ExecBank);
 
 
@@ -234,13 +234,13 @@ int main()
         u32ch = (uint32_t)getchar();
         if(u32ch == 'y')
         {
-            printf("\n Bank%d processing, downloaad data to Bank%d.\n", u32ExecBank, u32ExecBank^1);
+            printf("\n Bank%d processing, downloaad data to Bank%d.\n", u32ExecBank, u32ExecBank ^ 1);
 
             EnableSysTick(1000);
             StartTimer0();
 
             /* Dual bank background program address */
-            s_u32DbAddr   = FMC_BANK_SIZE*(u32ExecBank^1)+APP_BASE;
+            s_u32DbAddr   = FMC_BANK_SIZE * (u32ExecBank ^ 1) + APP_BASE;
             /* Dual bank background length */
             s_u32DbLength = APP_SIZE;
 
@@ -272,7 +272,8 @@ int main()
 
 
 
-    } while(1);
+    }
+    while(1);
 
 
 }

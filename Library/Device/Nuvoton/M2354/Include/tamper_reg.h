@@ -20,7 +20,7 @@
 /**
     @addtogroup Tamper Controller(TAMPER)
     Memory Mapped Structure for Tamper Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -627,7 +627,7 @@ typedef struct
 /**
     @addtogroup TAMPER_CONST Tamper Bit Field Definition
     Constant Definitions for Tamper Controller
-  @{ 
+  @{
 */
 
 #define TAMPER_INIT_TCORERST_Pos         (0)                                               /*!< TAMPER_T::INIT: TCORERST Position      */

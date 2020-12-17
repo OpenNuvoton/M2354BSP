@@ -113,7 +113,7 @@ static const char acMainDigitRawData[ZONE_MAIN_DIG_CNT][ZONE_MAIN_SEG_NUM][2] =
         {1, 35}, {1, 33}, {2, 35}, {3, 33},
         // M     // N
         {2, 33}, {2, 34},
-    },    
+    },
     {
         // digit 7, {com, seg}
         // A     // B     // C     // D
@@ -134,25 +134,25 @@ static const char acMainDigitRawData[ZONE_MAIN_DIG_CNT][ZONE_MAIN_SEG_NUM][2] =
  * Using this way that text segment can be consisted of each bit in the
  * following bit pattern:
  * @illustration
- *           
+ *
  *         ---A---
  *         |     |
  *         F     B
  *         |     |
- *         ---G--- 
- *         |     | 
+ *         ---G---
+ *         |     |
  *         E     C
- *         |     | 
+ *         |     |
  *         ---D---
  *
  *         ---0---
  *         |     |
  *         5     1
  *         |     |
- *         ---6--- 
- *         |     | 
+ *         ---6---
+ *         |     |
  *         4     2
- *         |     | 
+ *         |     |
  *         ---3---
  *
  *****************************************************************************/
@@ -259,28 +259,28 @@ static const char acTimeDigitRawData[ZONE_TIME_DIG_CNT][ZONE_TIME_SEG_NUM][2] =
         // A     // B     // C     // D
         {7,  2}, {6,  3}, {4,  3}, {4,  2},
         // E     // F     // G
-        {5,  2}, {6,  2}, {5 , 3},
+        {5,  2}, {6,  2}, {5, 3},
     },
     {
         // digit 2, {com, seg}
         // A     // B     // C     // D
         {7,  4}, {6,  5}, {4,  5}, {4,  4},
         // E     // F     // G
-        {5,  4}, {6,  4}, {5 , 5},
+        {5,  4}, {6,  4}, {5, 5},
     },
     {
         // digit 3, {com, seg}
         // A     // B     // C     // D
         {7,  6}, {6,  7}, {4,  7}, {4,  6},
         // E     // F     // G
-        {5,  6}, {6,  6}, {5 , 7},
+        {5,  6}, {6,  6}, {5, 7},
     },
     {
         // digit 4, {com, seg}
         // A     // B     // C     // D
         {7,  8}, {6,  9}, {4,  9}, {4,  8},
         // E     // F     // G
-        {5,  8}, {6,  8}, {5 , 9},
+        {5,  8}, {6,  8}, {5, 9},
     },
 };
 
@@ -389,7 +389,7 @@ static const uint16_t auMainDigitMap[] =
 
     0x1218, /* a */
     0x063C, /* b */
-    0x0618, /* c */ 
+    0x0618, /* c */
     0x061E, /* d */
     0x0A18, /* e */
     0x0231, /* f */
@@ -491,7 +491,7 @@ static const uint16_t auNuMicroDigitMap[] =
 };
 
 /* Zone information */
-static const LCD_ZONE_INFO_T g_LCDZoneInfo[]=
+static const LCD_ZONE_INFO_T g_LCDZoneInfo[] =
 {
     {ZONE_MAIN_DIG_CNT,     ZONE_MAIN_SEG_NUM},
     {ZONE_PPM_DIG_CNT,      ZONE_PPM_SEG_NUM},
@@ -536,27 +536,27 @@ void LCDLIB_Printf(uint32_t u32Zone, char *InputStr)
     uint32_t    i, index, ch, len;
     uint16_t    DispData;
     uint32_t    com, seg;
-                
+
     len = strlen(InputStr);
 
     /* Fill out all characters on display */
-    for (index = 0; index < g_LCDZoneInfo[u32Zone].u32DigitCnt; index++)
+    for(index = 0; index < g_LCDZoneInfo[u32Zone].u32DigitCnt; index++)
     {
-        if (index < len)
+        if(index < len)
         {
             ch = *InputStr;
         }
-        else           
+        else
         {
             /* Padding with SPACE */
             ch = 0x20;
         }
-        
+
         /* The Main Digit Table is an ASCII table beginning with "SPACE" (hex is 0x20) */
         ch       = ch - 0x20;
         DispData = *(g_LCDDispTable[u32Zone] + ch);
 
-        for (i = 0; i < g_LCDZoneInfo[u32Zone].u32MaxSegNum; i++)
+        for(i = 0; i < g_LCDZoneInfo[u32Zone].u32MaxSegNum; i++)
         {
             com = *(g_GetLCDComSeg[u32Zone]
                     + (index * g_LCDZoneInfo[u32Zone].u32MaxSegNum * 2)
@@ -567,14 +567,14 @@ void LCDLIB_Printf(uint32_t u32Zone, char *InputStr)
 
             /* Turn off display */
             LCD_SetPixel(com, seg, 0);
-            
-            if (DispData & (1 << i))
+
+            if(DispData & (1 << i))
             {
                 /* Turn on display */
                 LCD_SetPixel(com, seg, 1);
             }
         }
-        
+
         InputStr++;
     }
 }
@@ -608,7 +608,7 @@ void LCDLIB_PrintNumber(uint32_t u32Zone, uint32_t InputNum)
 
         DispData = *(g_LCDDispTable[u32Zone] + val);
 
-        for (i = 0; i < g_LCDZoneInfo[u32Zone].u32MaxSegNum; i++)
+        for(i = 0; i < g_LCDZoneInfo[u32Zone].u32MaxSegNum; i++)
         {
             com = *(g_GetLCDComSeg[u32Zone]
                     + (index * g_LCDZoneInfo[u32Zone].u32MaxSegNum * 2)
@@ -619,14 +619,14 @@ void LCDLIB_PrintNumber(uint32_t u32Zone, uint32_t InputNum)
 
             /* Turn off display */
             LCD_SetPixel(com, seg, 0);
-            
-            if (DispData & (1 << i))
+
+            if(DispData & (1 << i))
             {
                 /* Turn on display */
                 LCD_SetPixel(com, seg, 1);
             }
         }
-        
+
         div = div * 10;
     }
 }
@@ -652,12 +652,12 @@ void LCDLIB_PutChar(uint32_t u32Zone, uint32_t u32Index, uint8_t u8Ch)
         ch       = u8Ch - 0x20;
         DispData = *(g_LCDDispTable[u32Zone] + ch);
 
-        for (i = 0; i < g_LCDZoneInfo[u32Zone].u32MaxSegNum; i++)
+        for(i = 0; i < g_LCDZoneInfo[u32Zone].u32MaxSegNum; i++)
         {
             com = *(g_GetLCDComSeg[u32Zone]
                     + (u32Index * g_LCDZoneInfo[u32Zone].u32MaxSegNum * 2)
                     + (i * 2) + 0);
-            
+
             seg = *(g_GetLCDComSeg[u32Zone]
                     + (u32Index * g_LCDZoneInfo[u32Zone].u32MaxSegNum * 2)
                     + (i * 2) + 1);
@@ -665,7 +665,7 @@ void LCDLIB_PutChar(uint32_t u32Zone, uint32_t u32Index, uint8_t u8Ch)
             /* Turn off display */
             LCD_SetPixel(com, seg, 0);
 
-            if (DispData & (1 << i))
+            if(DispData & (1 << i))
             {
                 /* Turn on display */
                 LCD_SetPixel(com, seg, 1);
@@ -690,7 +690,7 @@ void LCDLIB_SetSymbol(uint32_t u32Symbol, uint32_t u32OnOff)
     com = (u32Symbol & 0xF);
     seg = ((u32Symbol & 0xFF0) >> 4);
 
-    if (u32OnOff)
+    if(u32OnOff)
         LCD_SetPixel(com, seg, 1); /* Turn on display */
     else
         LCD_SetPixel(com, seg, 0); /* Turn off display */

@@ -53,7 +53,7 @@ uint32_t TIMER_Open(TIMER_T *timer, uint32_t u32Mode, uint32_t u32Freq)
     {
         u32Cmpr = u32ClkFreq / u32Freq;
         u32Prescale = (u32Cmpr >> 24);  /* for 24 bits CMPDAT */
-        if (u32Prescale > 0UL)
+        if(u32Prescale > 0UL)
             u32Cmpr = u32Cmpr / (u32Prescale + 1UL);
     }
 
@@ -133,7 +133,7 @@ void TIMER_Delay(TIMER_T *timer, uint32_t u32Usec)
     {
         u32Cmpr = u32Usec * (u32ClkFreq / 1000000UL);
         u32Prescale = (u32Cmpr >> 24);  /* for 24 bits CMPDAT */
-        if (u32Prescale > 0UL)
+        if(u32Prescale > 0UL)
             u32Cmpr = u32Cmpr / (u32Prescale + 1UL);
     }
 
@@ -273,8 +273,8 @@ uint32_t TIMER_GetModuleClock(TIMER_T *timer)
 
     if(u32Src == 2UL)
     {
-        if((timer == TIMER0) || (timer == TIMER1) || 
-           (timer == TIMER4) || (timer == TIMER4_NS) || (timer == TIMER5) || (timer == TIMER5_NS))
+        if((timer == TIMER0) || (timer == TIMER1) ||
+                (timer == TIMER4) || (timer == TIMER4_NS) || (timer == TIMER5) || (timer == TIMER5_NS))
         {
             u32ClkFreq = CLK_GetPCLK0Freq();
         }

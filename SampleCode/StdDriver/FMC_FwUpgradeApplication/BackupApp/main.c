@@ -134,7 +134,7 @@ int main()
         printf("|  Boot from 0x%08X  |\n", FMC_GetVECMAP());
         printf("+------------------------+\n");
 
-        s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk)>>FMC_ISPSTS_FBS_Pos);
+        s_u32ExecBank = (uint32_t)((FMC->ISPSTS & FMC_ISPSTS_FBS_Msk) >> FMC_ISPSTS_FBS_Pos);
         printf("\n BANK%d APP processing (Backup firmware)\n", s_u32ExecBank);
 
 
@@ -156,7 +156,8 @@ int main()
             CLK_PowerDown();
         }
 
-    } while(1);
+    }
+    while(1);
 
 
 }

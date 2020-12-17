@@ -202,7 +202,7 @@ int main()
     UART_Open(UART0, 115200);
 
     enable_sys_tick(100);
-    
+
     printf("\n\n");
     printf("System clock:   %d Hz.\n", SystemCoreClock);
     printf("USB Host clock: %d Hz.\n", CLK_GetUSBFreq());

@@ -51,7 +51,7 @@ int32_t Secure_func(void)
 __NONSECURE_ENTRY
 int32_t Secure_LED_On(uint32_t num)
 {
-	  (void)num;
+    (void)num;
     printf("Secure LED On call by Non-secure\n");
     PA10 = 0;
     PB0 = 0;
@@ -61,7 +61,7 @@ int32_t Secure_LED_On(uint32_t num)
 __NONSECURE_ENTRY
 int32_t Secure_LED_Off(uint32_t num)
 {
-	  (void)num;
+    (void)num;
     printf("Secure LED Off call by Non-secure\n");
     PA10 = 1;
     PB0 = 1;
@@ -199,14 +199,14 @@ void Boot_Init(uint32_t u32BootBase)
   Main function
  *----------------------------------------------------------------------------*/
 int main(void)
-{   
+{
     SYS_UnlockReg();
 
     SYS_Init();
 
     /* UART is configured as debug port */
     DEBUG_PORT_Init();
-    
+
     printf("Secure is running ...\n");
 
     /* Init GPIO Port A for secure LED control */

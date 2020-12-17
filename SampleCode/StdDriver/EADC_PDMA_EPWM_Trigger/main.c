@@ -204,7 +204,7 @@ void EADC_FunctionTest(void)
 
             /* Configure the sample module 0 for analog input channel 2 and enable EPWM0 trigger source */
             EADC_ConfigSampleModule(EADC, g_u32SampleModuleNum, EADC_PWM0TG0_TRIGGER, 2);
-            EADC_ENABLE_SAMPLE_MODULE_PDMA(EADC, 1<<g_u32SampleModuleNum);
+            EADC_ENABLE_SAMPLE_MODULE_PDMA(EADC, 1 << g_u32SampleModuleNum);
 
             printf("Conversion result of channel 2:\n");
 
@@ -232,7 +232,7 @@ void EADC_FunctionTest(void)
             EADC_Open(EADC, EADC_CTL_DIFFEN_DIFFERENTIAL);
             /* Configure the sample module 0 for analog input channel 2 and software trigger source.*/
             EADC_ConfigSampleModule(EADC, g_u32SampleModuleNum, EADC_PWM0TG0_TRIGGER, 2);
-            EADC_ENABLE_SAMPLE_MODULE_PDMA(EADC, 1<<g_u32SampleModuleNum);
+            EADC_ENABLE_SAMPLE_MODULE_PDMA(EADC, 1 << g_u32SampleModuleNum);
 
             printf("Conversion result of channel 2:\n");
 

@@ -73,7 +73,7 @@ void UART0_Init()
 /*---------------------------------------------------------------------------------------------------------*/
 int32_t main(void)
 {
-    
+
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -98,7 +98,7 @@ int32_t main(void)
     printf("Testing ...\n\n");
 
     /* Configure PA.0 as output mode */
-    PA0=0;
+    PA0 = 0;
     GPIO_SetMode(PA, BIT0, GPIO_MODE_OUTPUT);
 
     /* Toggle PA.0 state 50 times and measure the toggle speed. */

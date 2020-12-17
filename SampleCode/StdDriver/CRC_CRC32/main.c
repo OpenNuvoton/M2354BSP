@@ -16,7 +16,7 @@ uint32_t GetFMCChecksum(uint32_t u32Address, uint32_t u32Size);
 uint32_t GetPDMAChecksum(uint32_t u32Address, uint32_t u32Size);
 void SYS_Init(void);
 void UART_Init(void);
-	
+
 
 uint32_t GetFMCChecksum(uint32_t u32Address, uint32_t u32Size)
 {
@@ -52,7 +52,7 @@ uint32_t GetPDMAChecksum(uint32_t u32Address, uint32_t u32Size)
         (0 << PDMA_DSCT_CTL_SAINC_Pos)   | (3 << PDMA_DSCT_CTL_DAINC_Pos) |
         (2 << PDMA_DSCT_CTL_TXWIDTH_Pos) | (((u32Size / 4) - 1) << PDMA_DSCT_CTL_TXCNT_Pos);
     g_DMA_DESC[0].u32Src    = (uint32_t)u32Address;
-    g_DMA_DESC[0].u32Dest   = (uint32_t)&(CRC->DAT);
+    g_DMA_DESC[0].u32Dest   = (uint32_t) & (CRC->DAT);
     g_DMA_DESC[0].u32Offset = 0;
 
     PDMA0->DSCT[0].CTL = PDMA_OP_SCATTER;
@@ -102,7 +102,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/

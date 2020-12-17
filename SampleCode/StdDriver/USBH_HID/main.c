@@ -150,7 +150,7 @@ void int_read_callback(HID_DEV_T *hdev, uint16_t u16EpAddr, int i8Status, uint8_
 #ifdef HAVE_INT_OUT
 void  int_write_callback(HID_DEV_T *hdev, uint16_t u16EpAddr, int i8Status, uint8_t *pu8WBuff, uint32_t *pu32DataLen)
 {
-    int i8MaxLen = (int)*pu32DataLen;
+    int i8MaxLen = (int) * pu32DataLen;
 
     (void)i8Status;
 

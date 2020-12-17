@@ -93,7 +93,7 @@ void SYS_Init(void)
     CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
 
     /* Wait for PLL clock ready */
-    while (!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
+    while(!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
 
     /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;

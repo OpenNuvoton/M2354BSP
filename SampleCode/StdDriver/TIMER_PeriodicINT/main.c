@@ -169,7 +169,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -218,7 +218,7 @@ int main(void)
 
     /* Init System, peripheral clock and multi-function I/O */
     SYS_Init();
-    
+
     /* Init UART for printf */
     UART_Init();
 
@@ -324,10 +324,10 @@ int main(void)
             u32InitCount = g_au32TMRINTCount[0];
 
             if((au32Counts[1] > (au32Counts[0] * 2 + 1)) || (au32Counts[1] < (au32Counts[0] * 2 - 1)) ||
-               (au32Counts[2] > (au32Counts[0] * 4 + 1)) || (au32Counts[2] < (au32Counts[0] * 4 - 1)) ||
-               (au32Counts[3] > (au32Counts[0] * 8 + 1)) || (au32Counts[3] < (au32Counts[0] * 8 - 1)) || 
-               (au32Counts[4] > (au32Counts[0] * 10 + 1)) || (au32Counts[4] < (au32Counts[0] * 10 - 1)) || 
-               (au32Counts[5] > (au32Counts[0] * 12 + 1)) || (au32Counts[5] < (au32Counts[0] * 12 - 1)))
+                    (au32Counts[2] > (au32Counts[0] * 4 + 1)) || (au32Counts[2] < (au32Counts[0] * 4 - 1)) ||
+                    (au32Counts[3] > (au32Counts[0] * 8 + 1)) || (au32Counts[3] < (au32Counts[0] * 8 - 1)) ||
+                    (au32Counts[4] > (au32Counts[0] * 10 + 1)) || (au32Counts[4] < (au32Counts[0] * 10 - 1)) ||
+                    (au32Counts[5] > (au32Counts[0] * 12 + 1)) || (au32Counts[5] < (au32Counts[0] * 12 - 1)))
             {
                 printf("*** FAIL ***\n");
                 while(1) {}

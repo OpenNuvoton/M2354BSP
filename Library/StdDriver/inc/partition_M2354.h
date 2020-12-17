@@ -12,14 +12,14 @@
 
 #if defined (__ARM_FEATURE_CMSE) &&  (__ARM_FEATURE_CMSE == 3U)
 
-/* 
+/*
    Default M2354 pritition configuration file is for non-TrustZone sample code only.
    If user wants to use TrurstZone, they should have their partition_m2354.h.
-   For TrustZone projects, path of local partition_m2354.h should be in the 
+   For TrustZone projects, path of local partition_m2354.h should be in the
    front of the include path list to make sure local partition_m2354.h is used.
-   
+
    It also apply to non-secure project of the TrustZone projects.
-   
+
 */
 # error "Link to default partition_M2354.h in secure mode. Please check your include path."
 

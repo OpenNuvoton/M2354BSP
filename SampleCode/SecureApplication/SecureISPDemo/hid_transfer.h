@@ -10,8 +10,8 @@
 #define __USBD_HID_H__
 
 /* Define the vendor id and product id */
-#define USBD_VID			0x0416
-#define USBD_PID      		0xD102      /* 0xD100 ~ 0xD1FF for secure boot - 0xD102 For M2351C */
+#define USBD_VID            0x0416
+#define USBD_PID            0xD102      /* 0xD100 ~ 0xD1FF for secure boot - 0xD102 For M2351C */
 
 /*!<Define HID Class Specific Request */
 #define GET_REPORT          0x01

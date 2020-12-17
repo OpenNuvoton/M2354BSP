@@ -26,7 +26,8 @@ __ALIGNED(4) uint8_t g_C[256] = { 0 };
 __ALIGNED(4) uint8_t g_T[256] = { 0 };
 
 
-typedef struct {
+typedef struct
+{
     char *pchKey;   /* The block cipher key */
     char *pchIV;    /* The initialization vector */
     char *pchA;     /* The additional authenticated data */
@@ -36,7 +37,8 @@ typedef struct {
 } GCM_TEST_T;
 
 /* Test items */
-const GCM_TEST_T sElements[] ={
+const GCM_TEST_T sElements[] =
+{
     {
         "FEFFE9928665731C6D6A8F9467308308",
         "CAFEBABEFACEDBADDECAF888",
@@ -194,7 +196,7 @@ void DumpBuffHex(uint8_t *pucBuff, int nBytes)
     {
         printf("0x%04X  ", i32Idx);
 
-        len = (nBytes < 16)?nBytes:16;
+        len = (nBytes < 16) ? nBytes : 16;
         for(i = 0; i < len; i++)
             printf("%02x ", pucBuff[i32Idx + i]);
         for(; i < 16; i++)
@@ -320,15 +322,15 @@ void bin2str(uint8_t *buf, uint32_t size, char *pstr)
 {
     int32_t i;
     uint8_t c;
-    
-    for(i=size-1;i >= 0;i--)
+
+    for(i = size - 1; i >= 0; i--)
     {
         c = buf[i] >> 4;
-        *pstr++ = (c >= 10)?c-10+'a':c+'0';
+        *pstr++ = (c >= 10) ? c - 10 + 'a' : c + '0';
         c = buf[i] & 0xf;
-        *pstr++ = (c >= 10)?c-10+'a':c+'0';
+        *pstr++ = (c >= 10) ? c - 10 + 'a' : c + '0';
     }
-    
+
     *pstr = '\0';
 }
 
@@ -371,7 +373,7 @@ int32_t ToBigEndian(uint8_t *pbuf, uint32_t u32Size)
 
         *((uint32_t *)pbuf) = u32Tmp;
     }
-    
+
     return 0;
 }
 
@@ -494,7 +496,7 @@ int32_t AES_GCMPacker(uint8_t *iv, uint32_t iv_len, uint8_t *A, uint32_t A_len, 
             else
                 pbuf[u32Offset + i] = 0; // padding zero
         }
-        
+
 #ifndef _SWAP
         ToBigEndian(&pbuf[u32Offset], A_len);
 #endif
@@ -539,7 +541,7 @@ int32_t AES_GCMEnc(uint8_t *key, uint32_t klen, uint8_t *iv, uint32_t ivlen, uin
     printf("key (%d):\n", klen);
     DumpBuffHex(key, klen);
 
-    printf("IV (%d):\n",ivlen);
+    printf("IV (%d):\n", ivlen);
     DumpBuffHex(iv, ivlen);
 
     printf("A (%d):\n", alen);
@@ -673,34 +675,34 @@ int32_t AES_GCMDec(uint8_t *key, uint32_t klen, uint8_t *iv, uint32_t ivlen, uin
 /*-----------------------------------------------------------------------------*/
 int main(void)
 {
-    int i,n;
-    uint32_t size, klen, plen, tlen,plen_aligned, alen, ivlen;
+    int i, n;
+    uint32_t size, klen, plen, tlen, plen_aligned, alen, ivlen;
 
     /* Init System, IP clock and multi-function I/O */
-    SYS_Init(); 
+    SYS_Init();
 
     /* Initialize UART0 */
-    UART0_Init();                      
+    UART0_Init();
 
     printf("+---------------------------------------+\n");
     printf("|               AES GCM Test            |\n");
     printf("+---------------------------------------+\n");
 
     NVIC_EnableIRQ(CRPT_IRQn);
-    
-    n = sizeof(sElements)/sizeof(GCM_TEST_T);
-    for(i=0;i<n;i++)
+
+    n = sizeof(sElements) / sizeof(GCM_TEST_T);
+    for(i = 0; i < n; i++)
     {
-        
+
         printf("\n============================================================================\n");
-        printf("Test iter %d/%d\n\n", i+1, n);
-        
-        
+        printf("Test iter %d/%d\n\n", i + 1, n);
+
+
         SYS->IPRST0 |= SYS_IPRST0_CRPTRST_Msk;
         SYS->IPRST0 ^= SYS_IPRST0_CRPTRST_Msk;
-        
+
         AES_ENABLE_INT(CRPT);
-        
+
         printf("key = %s\n", sElements[i].pchKey);
         printf("iv  = %s\n", sElements[i].pchIV);
         printf("A   = %s\n", sElements[i].pchA);
@@ -732,9 +734,9 @@ int main(void)
         if(memcmp(g_C, g_au8Out, plen))
         {
             printf("ERR: Encrypted data fail!\n");
-            while(1){}
+            while(1) {}
         }
-        
+
         if(memcmp(g_T, &g_au8Out[plen_aligned], tlen))
         {
             printf("ERR: Tag fail!");
@@ -757,9 +759,9 @@ int main(void)
         }
 
         printf("Test PASS!\n");
-    
+
     }
 
-    while(1){}
-        
+    while(1) {}
+
 }

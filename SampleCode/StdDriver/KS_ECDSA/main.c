@@ -43,24 +43,25 @@ void CRPT_IRQHandler(void)
 
 void DumpBuff(uint8_t *pucBuff, int nBytes)
 {
-    int nIdx, i,j;
+    int nIdx, i, j;
 
     nIdx = 0;
-    while (nBytes > 0) {
+    while(nBytes > 0)
+    {
         j = nBytes;
         if(j > 16)
         {
             j = 16;
         }
         printf("0x%04X  ", nIdx);
-        for (i = 0; i < j; i++)
+        for(i = 0; i < j; i++)
             printf("%02x ", pucBuff[nIdx + i]);
-        for (     ; i < 16; i++)
+        for(; i < 16; i++)
             printf("   ");
         printf("  ");
-        for (i = 0; i < j; i++)
+        for(i = 0; i < j; i++)
         {
-            if ((pucBuff[nIdx + i] >= 0x20) && (pucBuff[nIdx + i] < 127))
+            if((pucBuff[nIdx + i] >= 0x20) && (pucBuff[nIdx + i] < 127))
                 printf("%c", pucBuff[nIdx + i]);
             else
                 printf(".");
@@ -91,10 +92,10 @@ void SYS_Init(void)
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
-    
+
     /* Enable CRYPTO module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
-    
+
     /* Enable Key Store module clock */
     CLK_EnableModuleClock(KS_MODULE);
 
@@ -109,7 +110,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;    
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
 
 }
 
@@ -141,7 +142,7 @@ int main(void)
     char Qy[] = "0000000000000000000000000000000000000000000000000000000000000000";
     char R[]  = "0000000000000000000000000000000000000000000000000000000000000000";
     char S[]  = "0000000000000000000000000000000000000000000000000000000000000000";
-    char hash[]="0000000000000000000000000000000000000000000000000000000000000000";
+    char hash[] = "0000000000000000000000000000000000000000000000000000000000000000";
     uint32_t au32Key[8] = {0};
 
     /* Unlock protected registers */
@@ -178,7 +179,7 @@ int main(void)
     {
         printf("Fail to write key to Key Store!\n");
         KS_EraseAll(KS_SRAM);
-        while(1){}
+        while(1) {}
     }
     printf("i32KeyIdx_d = %d, remain size = %d\n", i32KeyIdx_d, KS_GetRemainSize(KS_SRAM));
 
@@ -186,7 +187,7 @@ int main(void)
     {
         /* Invalid key */
         printf("Current private key is not valid. You should set a new one.\n");
-        while(1){}
+        while(1) {}
     }
 
     /*------------------------------------------------------------------------------*/
@@ -197,7 +198,7 @@ int main(void)
     if(ECC_GeneratePublicKey(CRPT, CURVE_P_256, d, Qx, Qy) < 0)
     {
         printf("ECC key generation failed!!\n");
-        while(1){}
+        while(1) {}
     }
 
 #else
@@ -205,7 +206,7 @@ int main(void)
     if(ECC_GeneratePublicKey_KS(CRPT, CURVE_P_256, KS_SRAM, i32KeyIdx_d, Qx, Qy, 0) < 0)
     {
         printf("ECC key generation failed!!\n");
-        while(1){}
+        while(1) {}
     }
 #endif
     time = 0xffffff - SysTick->VAL;
@@ -239,7 +240,7 @@ int main(void)
     {
         /* Invalid key */
         printf("Current private key is not valid. You should set a new one.\n");
-        while(1){};
+        while(1) {};
     }
 
 #else
@@ -259,7 +260,7 @@ int main(void)
     if(err)
     {
         printf("PRNG ECDSA Inital failed\n");
-        while(1){}
+        while(1) {}
     }
 
     /* Generate a key to key store */
@@ -268,7 +269,7 @@ int main(void)
     if(i32KeyIdx_k < 0)
     {
         printf("Fail to write k to KS SRAM\n");
-        while(1){}
+        while(1) {}
     }
     printf("i32KeyIdx_k = %d, remain size = %d\n", i32KeyIdx_k, KS_GetRemainSize(KS_SRAM));
 #endif
@@ -276,7 +277,7 @@ int main(void)
     /*------------------------------------------------------------------------------*/
     /* Calculate the hash of the message */
     SHA_Open(CRPT, SHA_MODE_SHA256, SHA_IN_OUT_SWAP, 0);
-    SHA_SetDMATransfer(CRPT, (uint32_t)&msg[0], sizeof(msg)-1);
+    SHA_SetDMATransfer(CRPT, (uint32_t)&msg[0], sizeof(msg) - 1);
     g_SHA_done = 0;
     /* Start SHA calculation */
     SHA_Start(CRPT, CRYPTO_DMA_ONE_SHOT);
@@ -290,7 +291,7 @@ int main(void)
     printf(" msg = %s\n", msg);
     printf("Hash = ");
     pu8 = (uint8_t *)au32Key;
-    for(i=0;i<32;i++)
+    for(i = 0; i < 32; i++)
         printf("%02x", pu8[i]);
     printf("\n");
 
@@ -335,7 +336,7 @@ int main(void)
     if(i32KeyIdx_Qx < 0)
     {
         printf("Fail to write key to Key Store!\n");
-        while(1){}
+        while(1) {}
     }
     printf("i32KeyIdx_Qx = %d, remain size = %d\n", i32KeyIdx_Qx, KS_GetRemainSize(KS_SRAM));
 
@@ -344,12 +345,12 @@ int main(void)
     if(i32KeyIdx_Qy < 0)
     {
         printf("Fail to write key to Key Store!\n");
-        while(1){}
+        while(1) {}
     }
     printf("i32KeyIdx_Qy = %d, remain size = %d\n", i32KeyIdx_Qy, KS_GetRemainSize(KS_SRAM));
 
     SysTick->VAL = 0;
-    err = ECC_VerifySignature_KS(CRPT, CURVE_P_256, hash,KS_SRAM,i32KeyIdx_Qx, KS_SRAM, i32KeyIdx_Qy, R, S);
+    err = ECC_VerifySignature_KS(CRPT, CURVE_P_256, hash, KS_SRAM, i32KeyIdx_Qx, KS_SRAM, i32KeyIdx_Qy, R, S);
 
 #endif
     time = 0xffffff - SysTick->VAL;

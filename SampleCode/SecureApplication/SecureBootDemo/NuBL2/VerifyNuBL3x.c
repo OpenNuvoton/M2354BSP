@@ -78,7 +78,7 @@ void Cal_SHA256_Flash(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest)
                 CRPT->HMAC_DATIN = (uint32_t)data;
                 while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk);
 
-                for(i=0; i<8; i++)
+                for(i = 0; i < 8; i++)
                     pu32Digest[i] = *(uint32_t *)((uint32_t) & (CRPT->HMAC_DGST[0]) + ((uint32_t)i * 4));
             }
         }

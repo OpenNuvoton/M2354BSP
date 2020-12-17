@@ -55,68 +55,68 @@ extern "C"
   * @param      None
   * @return     None
   * @details    This macro enables DPM interrupt.
-  *             This macro is for Secure DPM and Secure region only.      
+  *             This macro is for Secure DPM and Secure region only.
   */
 #define DPM_ENABLE_INT() \
     do{ \
         while(DPM->STS & DPM_STS_BUSY_Msk); \
         DPM->CTL = (DPM->CTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE|DPM_CTL_INTEN_Msk); \
-    }while(0) 
-    
+    }while(0)
+
 /**
   * @brief      Disable DPM Interrupt
   * @param      None
   * @return     None
   * @details    This macro disables DPM interrupt.
-  *             This macro is for Secure DPM and Secure region only.  
+  *             This macro is for Secure DPM and Secure region only.
   */
 #define DPM_DISABLE_INT() \
     do{ \
         while(DPM->STS & DPM_STS_BUSY_Msk); \
         DPM->CTL = (DPM->CTL & (~(DPM_CTL_WVCODE_Msk|DPM_CTL_INTEN_Msk))) | (DPM_CTL_WVCODE); \
-    }while(0)                
-    
+    }while(0)
+
 /**
   * @brief      Enable Debugger to Access DPM Registers
   * @param      None
   * @return     None
   * @details    This macro enables debugger to access Secure and Non-secure DPM registers.
-  *             This macro is for Secure DPM and Secure region only.        
+  *             This macro is for Secure DPM and Secure region only.
   */
 #define DPM_ENABLE_DBG_ACCESS() \
     do{ \
         while(DPM->STS & DPM_STS_BUSY_Msk); \
         DPM->CTL = (DPM->CTL & (~(DPM_CTL_WVCODE_Msk|DPM_CTL_DACCDIS_Msk))) | (DPM_CTL_WVCODE); \
-    }while(0) 
-    
+    }while(0)
+
 /**
   * @brief      Disable Debugger to Access DPM Registers
   * @param      None
   * @return     None
   * @details    This macro disables debugger to access Secure and Non-secure DPM registers.
-  *             This macro is for Secure DPM and Secure region only.    
+  *             This macro is for Secure DPM and Secure region only.
   */
 #define DPM_DISABLE_DBG_ACCESS() \
     do{ \
         while(DPM->STS & DPM_STS_BUSY_Msk); \
         DPM->CTL = (DPM->CTL & (~DPM_CTL_WVCODE_Msk)) | (DPM_CTL_WVCODE|DPM_CTL_DACCDIS_Msk); \
-    }while(0)   
+    }while(0)
 
-    
+
 void DPM_SetDebugDisable(uint32_t u32dpm);
 void DPM_SetDebugLock(uint32_t u32dpm);
 uint32_t DPM_GetDebugDisable(uint32_t u32dpm);
 uint32_t DPM_GetDebugLock(uint32_t u32dpm);
 uint32_t DPM_SetPasswordUpdate(uint32_t u32dpm, uint32_t au32Pwd[]);
 uint32_t DPM_SetPasswordCompare(uint32_t u32dpm, uint32_t au32Pwd[]);
-uint32_t DPM_GetPasswordErrorFlag(uint32_t u32dpm);    
+uint32_t DPM_GetPasswordErrorFlag(uint32_t u32dpm);
 uint32_t DPM_GetIntFlag(void);
 void DPM_ClearPasswordErrorFlag(uint32_t u32dpm);
 void DPM_EnableDebuggerWriteAccess(uint32_t u32dpm);
 void DPM_DisableDebuggerWriteAccess(uint32_t u32dpm);
 
-    
-    
+
+
 /**@}*/ /* end of group DPM_EXPORTED_FUNCTIONS */
 
 /**@}*/ /* end of group DPM_Driver */

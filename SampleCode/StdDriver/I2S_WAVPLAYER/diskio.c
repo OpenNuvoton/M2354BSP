@@ -119,20 +119,20 @@ DRESULT disk_read
         {
             if(count == 1)
             {
-                ret = (DRESULT) (SDH_Read(pSDH, (uint8_t*)(&s_au32TmpBuffer), sector, count));
+                ret = (DRESULT)(SDH_Read(pSDH, (uint8_t*)(&s_au32TmpBuffer), sector, count));
                 memcpy(buff, (&s_au32TmpBuffer), count * (uint32_t)SD0.sectorSize);
             }
             else
             {
                 tmp_StartBufAddr = (((uint32_t)buff / 4 + 1) * 4);
-                ret = (DRESULT) (SDH_Read(pSDH, ((uint8_t*)tmp_StartBufAddr), sector, (count - 1)));
+                ret = (DRESULT)(SDH_Read(pSDH, ((uint8_t*)tmp_StartBufAddr), sector, (count - 1)));
                 memcpy(buff, (void*)tmp_StartBufAddr, ((uint32_t)SD0.sectorSize * (count - 1)));
-                ret = (DRESULT) (SDH_Read(pSDH, (uint8_t*)(&s_au32TmpBuffer), (sector + count - 1), 1));
+                ret = (DRESULT)(SDH_Read(pSDH, (uint8_t*)(&s_au32TmpBuffer), (sector + count - 1), 1));
                 memcpy((buff + ((uint32_t)SD0.sectorSize * (count - 1))), (void*)s_au32TmpBuffer, (uint32_t)SD0.sectorSize);
             }
         }
         else
-            ret = (DRESULT) (SDH_Read(pSDH, buff, sector, count));
+            ret = (DRESULT)(SDH_Read(pSDH, buff, sector, count));
     }
 //    else if (pdrv == 1)
 //        ret = (DRESULT) (SDH_Read(SDH1, buff, sector, count));
@@ -180,7 +180,7 @@ DRESULT disk_write
             if(count == 1)
             {
                 memcpy((&s_au32TmpBuffer), buff, count * (uint32_t)SD0.sectorSize);
-                ret = (DRESULT) (SDH_Write(pSDH, (uint8_t*)(&s_au32TmpBuffer), sector, count));
+                ret = (DRESULT)(SDH_Write(pSDH, (uint8_t*)(&s_au32TmpBuffer), sector, count));
             }
             else
             {
@@ -193,12 +193,12 @@ DRESULT disk_write
                     memcpy((void *)(tmp_StartBufAddr + u32BufIdx), (buff + u32BufIdx), 1);
                 }
 
-                ret = (DRESULT) (SDH_Write(pSDH, ((uint8_t*)tmp_StartBufAddr), sector, (count - 1)));
-                ret = (DRESULT) (SDH_Write(pSDH, (uint8_t*)(&s_au32TmpBuffer), (sector + count - 1), 1));
+                ret = (DRESULT)(SDH_Write(pSDH, ((uint8_t*)tmp_StartBufAddr), sector, (count - 1)));
+                ret = (DRESULT)(SDH_Write(pSDH, (uint8_t*)(&s_au32TmpBuffer), (sector + count - 1), 1));
             }
         }
         else
-            ret = (DRESULT) (SDH_Write(pSDH, (uint8_t *)(uint32_t)buff, sector, count));
+            ret = (DRESULT)(SDH_Write(pSDH, (uint8_t *)(uint32_t)buff, sector, count));
     }
 //    else if (pdrv == 1)
 //        ret = (DRESULT) (SDH_Write(SDH1, (uint8_t *)buff, sector, count));

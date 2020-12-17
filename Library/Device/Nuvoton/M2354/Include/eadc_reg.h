@@ -19,7 +19,7 @@
 /**
     @addtogroup EADC Enhanced Analog to Digital Converter(EADC)
     Memory Mapped Structure for EADC Controller
-  @{ 
+  @{
 */
 
 
@@ -566,7 +566,7 @@ typedef struct
 /**
     @addtogroup EADC_CONST EADC Bit Field Definition
     Constant Definitions for EADC Controller
-  @{ 
+  @{
 */
 
 #define EADC_DAT_RESULT_Pos              (0)                                                /*!< EADC_T::DAT: RESULT Position          */

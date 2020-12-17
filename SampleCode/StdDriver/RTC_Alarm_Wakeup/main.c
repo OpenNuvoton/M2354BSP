@@ -38,7 +38,7 @@ void RTC_IRQHandler(void)
 
         g_u8IsRTCAlarmINT++;
     }
-    
+
     if(RTC_GET_TICK_INT_FLAG(RTC) == 1)
     {
         /* Clear RTC tick interrupt flag */
@@ -71,7 +71,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/

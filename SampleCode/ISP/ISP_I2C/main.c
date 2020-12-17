@@ -39,19 +39,19 @@ void SYS_Init(void)
     CLK->PWRCTL |= CLK_PWRCTL_HIRCEN_Msk;
 
     /* Wait for HIRC clock ready */
-    while (!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk));
+    while(!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk));
 
     /* Select HCLK clock source as HIRC first */
-    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC; 
+    CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC;
 
     /* Disable PLL clock before setting PLL frequency */
     CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
 
-    /* Set PLL clock as 96MHz from HIRC */ 
+    /* Set PLL clock as 96MHz from HIRC */
     CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
 
     /* Wait for PLL clock ready */
-    while (!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk)); 
+    while(!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
 
     /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
@@ -112,9 +112,12 @@ int main(void)
     g_u32ApromSize = GetApromSize();
     g_u32DataFlashAddr = SCU->FNSADDR;
 
-    if (g_u32DataFlashAddr < g_u32ApromSize) {
+    if(g_u32DataFlashAddr < g_u32ApromSize)
+    {
         g_u32DataFlashSize = (g_u32ApromSize - g_u32DataFlashAddr);
-    } else {
+    }
+    else
+    {
         g_u32DataFlashSize = 0;
     }
 
@@ -127,15 +130,15 @@ int main(void)
     SysTick->CTRL = SysTick->CTRL | SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
 
     /* Wait for CMD_CONNECT command until Systick time-out */
-    while (1)
+    while(1)
     {
         /* Wait for CMD_CONNECT command */
-        if (g_u8I2cDataReady == 1)
+        if(g_u8I2cDataReady == 1)
         {
             goto _ISP;
         }
         /* Systick time-out, go to APROM */
-        if (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk)
+        if(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk)
         {
             goto _APROM;
         }
@@ -144,9 +147,9 @@ int main(void)
 _ISP:
 
     /* Parse command from master and send response back */
-    while (1)
+    while(1)
     {
-        if (g_u8I2cDataReady == 1)
+        if(g_u8I2cDataReady == 1)
         {
             /* Get command from I2C receive buffer */
             memcpy(au8CmdBuff, g_au8I2cRcvBuf, 64);
@@ -164,5 +167,5 @@ _APROM:
     SCB->AIRCR = (V6M_AIRCR_VECTKEY_DATA | V6M_AIRCR_SYSRESETREQ);
 
     /* Trap the CPU */
-    while (1);
+    while(1);
 }

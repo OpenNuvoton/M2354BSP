@@ -35,10 +35,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC and HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HIRC and HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -191,7 +191,7 @@ void AutoBaudRate_TxTest(void)
         printf("| Quit                                              - [ESC] |\n");
         printf("+-----------------------------------------------------------+\n\n");
         u32Item = (uint32_t)getchar();
-        if(u32Item == 27) break;        
+        if(u32Item == 27) break;
         printf("%c\n", u32Item);
 
         /* Set different baud rate */
@@ -211,7 +211,7 @@ void AutoBaudRate_TxTest(void)
         /* Send input pattern 0x1 for auto baud rate detection bit length is 1-bit */
         UART_WRITE(UART1, 0x1);
 
-    } 
+    }
     while(1);
 
 }
@@ -231,38 +231,38 @@ uint32_t GetUartBaudrate(UART_T* uart)
         case UART0_BASE:
             u8UartClkSrcSel = (CLK->CLKSEL2 & CLK_CLKSEL2_UART0SEL_Msk) >> CLK_CLKSEL2_UART0SEL_Pos;
             u8UartClkDivNum = (CLK->CLKDIV0 & CLK_CLKDIV0_UART0DIV_Msk) >> CLK_CLKDIV0_UART0DIV_Pos;
-            if(u8UartClkSrcSel == 4ul) 
-                au32ClkTbl[4] = CLK_GetPCLK0Freq();        
+            if(u8UartClkSrcSel == 4ul)
+                au32ClkTbl[4] = CLK_GetPCLK0Freq();
             break;
         case UART1_BASE:
             u8UartClkSrcSel = (CLK->CLKSEL2 & CLK_CLKSEL2_UART1SEL_Msk) >> CLK_CLKSEL2_UART1SEL_Pos;
             u8UartClkDivNum = (CLK->CLKDIV0 & CLK_CLKDIV0_UART1DIV_Msk) >> CLK_CLKDIV0_UART1DIV_Pos;
-            if(u8UartClkSrcSel == 4ul) 
-                au32ClkTbl[4] = CLK_GetPCLK1Freq();          
+            if(u8UartClkSrcSel == 4ul)
+                au32ClkTbl[4] = CLK_GetPCLK1Freq();
             break;
         case UART2_BASE:
             u8UartClkSrcSel = (CLK->CLKSEL2 & CLK_CLKSEL2_UART2SEL_Msk) >> CLK_CLKSEL2_UART2SEL_Pos;
             u8UartClkDivNum = (CLK->CLKDIV4 & CLK_CLKDIV4_UART2DIV_Msk) >> CLK_CLKDIV4_UART2DIV_Pos;
-            if(u8UartClkSrcSel == 4ul) 
-                au32ClkTbl[4] = CLK_GetPCLK0Freq();          
+            if(u8UartClkSrcSel == 4ul)
+                au32ClkTbl[4] = CLK_GetPCLK0Freq();
             break;
         case UART3_BASE:
             u8UartClkSrcSel = (CLK->CLKSEL2 & CLK_CLKSEL2_UART3SEL_Msk) >> CLK_CLKSEL2_UART3SEL_Pos;
             u8UartClkDivNum = (CLK->CLKDIV4 & CLK_CLKDIV4_UART3DIV_Msk) >> CLK_CLKDIV4_UART3DIV_Pos;
-            if(u8UartClkSrcSel == 4ul) 
-                au32ClkTbl[4] = CLK_GetPCLK1Freq();          
+            if(u8UartClkSrcSel == 4ul)
+                au32ClkTbl[4] = CLK_GetPCLK1Freq();
             break;
         case UART4_BASE:
             u8UartClkSrcSel = (CLK->CLKSEL3 & CLK_CLKSEL3_UART4SEL_Msk) >> CLK_CLKSEL3_UART4SEL_Pos;
             u8UartClkDivNum = (CLK->CLKDIV4 & CLK_CLKDIV4_UART4DIV_Msk) >> CLK_CLKDIV4_UART4DIV_Pos;
-            if(u8UartClkSrcSel == 4ul) 
-                au32ClkTbl[4] = CLK_GetPCLK0Freq();          
+            if(u8UartClkSrcSel == 4ul)
+                au32ClkTbl[4] = CLK_GetPCLK0Freq();
             break;
         case UART5_BASE:
             u8UartClkSrcSel = (CLK->CLKSEL3 & CLK_CLKSEL3_UART5SEL_Msk) >> CLK_CLKSEL3_UART5SEL_Pos;
             u8UartClkDivNum = (CLK->CLKDIV4 & CLK_CLKDIV4_UART5DIV_Msk) >> CLK_CLKDIV4_UART5DIV_Pos;
-            if(u8UartClkSrcSel == 4ul) 
-                au32ClkTbl[4] = CLK_GetPCLK1Freq();  
+            if(u8UartClkSrcSel == 4ul)
+                au32ClkTbl[4] = CLK_GetPCLK1Freq();
             break;
     }
 

@@ -526,7 +526,7 @@ int32_t main(void)
     g_au8MstTxData[2] = 0x00;
 
     for(u32i = 3; u32i < 100; u32i++)                              //Prepare others are transmit Data from 3 to 99 (97 bytes)
-        g_au8MstTxData[u32i] =(uint8_t) u32i;
+        g_au8MstTxData[u32i] = (uint8_t) u32i;
 
     /* Enable interrupt */
     PDMA_EnableInt(PDMA0, I2C_PDMA_CH, PDMA_INT_TRANS_DONE);

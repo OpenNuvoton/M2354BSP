@@ -362,7 +362,7 @@ int main(void)
     printf("[T] I/O Toggle Wake-up Mode\n");
     printf("[A] Address Match Wake-up Mode\n");
     printf("Select: ");
-    u8Ch =  (uint8_t)getchar();
+    u8Ch = (uint8_t)getchar();
 
     if((u8Ch == 'T') || (u8Ch == 't'))
     {

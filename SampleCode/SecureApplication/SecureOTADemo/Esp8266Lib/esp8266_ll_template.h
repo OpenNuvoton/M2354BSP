@@ -5,7 +5,7 @@
  * \ide     Keil uVision
  * \license GNU GPL v3
  * \brief   Low level, platform dependant, part for communicate with ESP module and platform.
- *  
+ *
 \verbatim
    ----------------------------------------------------------------------
     Copyright (c) 2016 Tilen Majerle
@@ -14,8 +14,8 @@
     obtaining a copy of this software and associated documentation
     files (the "Software"), to deal in the Software without restriction,
     including without limitation the rights to use, copy, modify, merge,
-    publish, distribute, sublicense, and/or sell copies of the Software, 
-    and to permit persons to whom the Software is furnished to do so, 
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
     subject to the following conditions:
 
     The above copyright notice and this permission notice shall be
@@ -26,7 +26,7 @@
     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
     AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     OTHER DEALINGS IN THE SOFTWARE.
    ----------------------------------------------------------------------
@@ -66,7 +66,7 @@ extern "C" {
  *
  * \par SYSCALL
  *
- * In order to RTOS, you need system call implementation. 
+ * In order to RTOS, you need system call implementation.
  * A part of implementation is done in template esp8266_ll_template.c file to show on which part you have to response in order to get mutex to work.
  *
  * \par Time configuration
@@ -89,7 +89,7 @@ extern "C" {
  * \brief    ESP Low-Level implementation including system calls for RTOS
  * \{
  */
-    
+
 #include "stdint.h"
 #include "stdio.h"
 
@@ -99,7 +99,7 @@ extern "C" {
 #if ESP_RTOS
 #include "cmsis_os.h"
 #endif /* ESP_RTOS */
-    
+
 /**
  * \defgroup LOWLEVEL_Typedefs
  * \brief    ESP Low-Level
@@ -108,10 +108,11 @@ extern "C" {
 
 /**
  * \brief   Loe-level control enumeration with supported callbacks
- * 
+ *
  * This enumeration is used in \ref ESP_LL_Callback function with param and result parameters to function
  */
-typedef enum _ESP_LL_Control_t {
+typedef enum _ESP_LL_Control_t
+{
     /**
      * \brief       Called to initialize low-level part of device, such as UART and GPIO configuration
      *
@@ -119,7 +120,7 @@ typedef enum _ESP_LL_Control_t {
      * \param[out]  *result: Pointer to \ref uint8_t variable with result. Set to 0 when OK, or non-zero on ERROR.
      */
     ESP_LL_Control_Init = 0x00,     /*!< Initialization control */
-    
+
     /**
      * \brief       Called to send data to ESP device
      *
@@ -127,7 +128,7 @@ typedef enum _ESP_LL_Control_t {
      * \param[out]  *result: Pointer to \ref uint8_t variable with result. Set to 0 when OK, or non-zero on ERROR.
      */
     ESP_LL_Control_Send,            /*!< Send data control */
-    
+
     /**
      * \brief       Called to set software RTS pin when necessary
      *
@@ -135,7 +136,7 @@ typedef enum _ESP_LL_Control_t {
      * \param[out]  *result: Pointer to \ref uint8_t variable with result. Set to 0 when OK, or non-zero on ERROR.
      */
     ESP_LL_Control_SetRTS,          /*!< Set software RTS control */
-    
+
     /**
      * \brief       Called to set reset pin when necessary
      *
@@ -143,7 +144,7 @@ typedef enum _ESP_LL_Control_t {
      * \param[out]  *result: Pointer to \ref uint8_t variable with result. Set to 0 when OK, or non-zero on ERROR.
      */
     ESP_LL_Control_SetReset,        /*!< Set reset control */
-    
+
     /**
      * \brief       Called to create system synchronization object on RTOS support
      *
@@ -151,7 +152,7 @@ typedef enum _ESP_LL_Control_t {
      * \param[out]  *result: Pointer to \ref uint8_t variable with result. Set to 0 when OK, or non-zero on ERROR.
      */
     ESP_LL_Control_SYS_Create,      /*!< Creates a synchronization object */
-    
+
     /**
      * \brief       Called to delete system synchronization object on RTOS support
      *
@@ -159,7 +160,7 @@ typedef enum _ESP_LL_Control_t {
      * \param[out]  *result: Pointer to \ref uint8_t variable with result. Set to 0 when OK, or non-zero on ERROR.
      */
     ESP_LL_Control_SYS_Delete,      /*!< Deletes a synchronization object */
-    
+
     /**
      * \brief       Called to grant access to sync object
      *
@@ -167,7 +168,7 @@ typedef enum _ESP_LL_Control_t {
      * \param[out]  *result: Pointer to \ref uint8_t variable with result. Set to 0 when OK, or non-zero on ERROR.
      */
     ESP_LL_Control_SYS_Request,     /*!< Requests grant for specific sync object */
-    
+
     /**
      * \brief       Called to release access from sync object
      *
@@ -180,7 +181,8 @@ typedef enum _ESP_LL_Control_t {
 /**
  * \brief   Structure for sending data to low-level part
  */
-typedef struct _ESP_LL_Send_t {
+typedef struct _ESP_LL_Send_t
+{
     const uint8_t* Data;            /*!< Pointer to data to send */
     uint16_t Count;                 /*!< Number of bytes to send */
     uint8_t Result;                 /*!< Result of last send */
@@ -190,17 +192,18 @@ typedef struct _ESP_LL_Send_t {
  * \brief   Low level structure for driver
  * \note    For now it has basic settings only without hardware flow control.
  */
-typedef struct _ESP_LL_t {
+typedef struct _ESP_LL_t
+{
     uint32_t Baudrate;          /*!< Baudrate to be used for UART */
 } ESP_LL_t;
-    
+
 /**
  * \}
  */
-    
+
 /* Include library */
 #include "esp8266.h"
-    
+
 /**
  * \defgroup LOWLEVEL_Macros
  * \brief    ESP Low-Level macros
@@ -211,7 +214,7 @@ typedef struct _ESP_LL_t {
 #define ESP_RTS_CLR         0   /*!< RTS should be set low */
 #define ESP_RESET_SET       1   /*!< Reset pin should be set */
 #define ESP_RESET_CLR       0   /*!< Reset pin should be cleared */
-    
+
 /**
  * \}
  */
@@ -231,7 +234,7 @@ typedef struct _ESP_LL_t {
  * \retval      0: Control command has not been processed
  */
 uint8_t ESP_LL_Callback(ESP_LL_Control_t ctrl, void* param, void* result);
-    
+
 /**
  * \}
  */

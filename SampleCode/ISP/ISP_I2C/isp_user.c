@@ -154,7 +154,7 @@ int ParseCmd(unsigned char *pucBuffer, uint8_t u8Len)
         }
 
         u32TotalLen -= u32SrcLen;
-        WriteData(u32StartAddress, u32StartAddress + u32SrcLen, (uint32_t *)((uint32_t)pucSrc) );
+        WriteData(u32StartAddress, u32StartAddress + u32SrcLen, (uint32_t *)((uint32_t)pucSrc));
         memset(pucSrc, 0, u32SrcLen);
         ReadData(u32StartAddress, u32StartAddress + u32SrcLen, (uint32_t *)((uint32_t)pucSrc));
         u32StartAddress += u32SrcLen;

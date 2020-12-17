@@ -39,7 +39,7 @@ uint32_t GetApromSize()
     {
         result = FMC_Read_User(size, &data);
 
-        if (result < 0)
+        if(result < 0)
         {
             return size;
         }
@@ -47,7 +47,8 @@ uint32_t GetApromSize()
         {
             size *= 2;
         }
-    } while (1);
+    }
+    while(1);
 }
 
 uint32_t CLK_GetPLLClockFreq(void)

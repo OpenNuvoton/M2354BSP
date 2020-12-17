@@ -54,8 +54,8 @@ int32_t Exec_VendorFunction(uint32_t *pu32Buf, uint32_t u32Len)
         memset(cmd.au32Data, 0x0, sizeof(cmd.au32Data));
         u32Return = u32Size;
 
-        for(i=0; i<(u32Size/4); i++)
-            cmd.au32Data[2+i] = FMC_Read(u32Addr + (i*4));
+        for(i = 0; i < (u32Size / 4); i++)
+            cmd.au32Data[2 + i] = FMC_Read(u32Addr + (i * 4));
     }
     else if(cmd.au32Data[1] == 0x3000) // write flash
     {
@@ -64,8 +64,8 @@ int32_t Exec_VendorFunction(uint32_t *pu32Buf, uint32_t u32Len)
 
         FMC_ENABLE_ISP();
         FMC_ENABLE_AP_UPDATE();
-        for(i=0; i<(u32Size/4); i++)
-            FMC_Write(u32Addr + (i*4), cmd.au32Data[4+i]);
+        for(i = 0; i < (u32Size / 4); i++)
+            FMC_Write(u32Addr + (i * 4), cmd.au32Data[4 + i]);
         FMC_DISABLE_AP_UPDATE();
 
         /* allocate response cmd data */

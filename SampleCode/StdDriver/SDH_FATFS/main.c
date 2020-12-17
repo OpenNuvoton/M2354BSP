@@ -50,7 +50,7 @@ void put_dump(
 void get_line(char *buff, int32_t i32Len);
 void put_rc(FRESULT rc);
 void SYS_Init(void);
-		
+
 
 void TMR0_IRQHandler(void)
 {
@@ -383,10 +383,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC, HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HIRC, HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -397,13 +397,13 @@ void SYS_Init(void)
     /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
 
-	/* Enable SDH0 module clock */
+    /* Enable SDH0 module clock */
     CLK_EnableModuleClock(SDH0_MODULE);
 
-	/* Enable Tiemr 0 module clock */
+    /* Enable Tiemr 0 module clock */
     CLK_EnableModuleClock(TMR0_MODULE);
 
-	/* Select Timer 0 module clock source as HXT */
+    /* Select Timer 0 module clock source as HXT */
     CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_HXT, 0);
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */

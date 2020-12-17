@@ -52,7 +52,7 @@ enum OperationNumber
 #if defined(__ARM_ARCH_7M__)     \
     || defined(__ARM_ARCH_7EM__) \
     || defined(__ARM_ARCH_6M__) \
-	|| defined(__ARM_ARCH_8M_BASE__)
+    || defined(__ARM_ARCH_8M_BASE__)
 #define AngelSWIInsn                    "bkpt"
 #define AngelSWIAsm                     bkpt
 #else
@@ -70,11 +70,11 @@ enum OperationNumber
 #endif
 
 static inline int
-__attribute__ ((always_inline))
-call_host (int reason, void* arg)
+__attribute__((always_inline))
+call_host(int reason, void* arg)
 {
     int value;
-    asm volatile (
+    asm volatile(
 
         " mov r0, %[rsn]  \n"
         " mov r1, %[arg]  \n"
@@ -85,8 +85,8 @@ call_host (int reason, void* arg)
 #endif
         " mov %[val], r0"
 
-        : [val] "=r" (value) /* Outputs */
-        : [rsn] "r" (reason), [arg] "r" (arg), [swi] "i" (AngelSWI) /* Inputs */
+        : [val] "=r"(value)  /* Outputs */
+        : [rsn] "r"(reason), [arg] "r"(arg), [swi] "i"(AngelSWI)    /* Inputs */
         : "r0", "r1", "r2", "r3", "ip", "lr", "memory", "cc"
         // Clobbers r0 and r1, and lr if in supervisor mode
     );
@@ -103,12 +103,12 @@ call_host (int reason, void* arg)
 
 // Function used in _exit() to return the status code as Angel exception.
 static inline void
-__attribute__ ((always_inline,noreturn))
-report_exception (int reason)
+__attribute__((always_inline, noreturn))
+report_exception(int reason)
 {
-    call_host (SEMIHOSTING_ReportException, (void*) reason);
+    call_host(SEMIHOSTING_ReportException, (void*) reason);
 
-    for (;;)
+    for(;;)
         ;
 }
 

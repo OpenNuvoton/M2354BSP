@@ -77,8 +77,8 @@
 
 static __INLINE uint32_t get_be32(uint8_t *pu8Buf)
 {
-    return ((uint32_t) (pu8Buf[0] << 24)) | ((uint32_t) (pu8Buf[1] << 16)) |
-           ((uint32_t) (pu8Buf[2] << 8)) | ((uint32_t) (pu8Buf[3]));
+    return ((uint32_t)(pu8Buf[0] << 24)) | ((uint32_t)(pu8Buf[1] << 16)) |
+           ((uint32_t)(pu8Buf[2] << 8)) | ((uint32_t)(pu8Buf[3]));
 }
 
 

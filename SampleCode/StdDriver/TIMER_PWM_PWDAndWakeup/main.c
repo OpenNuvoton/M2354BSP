@@ -19,7 +19,7 @@ void TMR4_IRQHandler(void);
 void TMR5_IRQHandler(void);
 void SYS_Init(void);
 void UART_Init(void);
-	
+
 /**
  * @brief       Timer4 IRQ
  *
@@ -58,7 +58,7 @@ void TMR5_IRQHandler(void)
 
         g_au32TMRINTCount[5]++;
     }
-    
+
     if(TPWM_GET_PWMINT_WAKEUP_STATUS(TIMER5) == 1)
     {
         TPWM_CLEAR_PWMINT_WAKEUP_STATUS(TIMER5);
@@ -90,10 +90,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Set multi-function pins for UART0 RXD and TXD */
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-    
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
-    /*---------------------------------------------------------------------------------------------------------*/    
+    /*---------------------------------------------------------------------------------------------------------*/
     /* Enable TIMER module clock */
     CLK_EnableModuleClock(TMR4_MODULE);
     CLK_EnableModuleClock(TMR5_MODULE);
@@ -140,7 +140,7 @@ int main(void)
     printf("+----------------------------------------------------------------+\n");
     printf("|    Timer4 and Timer5 PWM Power-down and Wake-up Sample Code    |\n");
     printf("+----------------------------------------------------------------+\n\n");
-    
+
     printf("# Timer4 PWM_CH0 output frequency is 1000 Hz and duty is 50%%.\n");
     printf("    - Enable period point interrupt\n");
     printf("# Timer5 PWM_CH1 output frequency is 100 Hz and duty is 60%%.\n");
@@ -150,7 +150,7 @@ int main(void)
     printf("    - Timer5 PWM_CH1 on PB.12\n");
     printf("# System will enter to power-down while TIMER4 period interrupt event has reached 200 times.\n");
     printf("  And wake-up by TIMER5 compare up interrupt event.\n\n");
-    
+
     /* Change Timer to PWM counter mode */
     TPWM_ENABLE_PWM_MODE(TIMER4);
     TPWM_ENABLE_PWM_MODE(TIMER5);
@@ -168,35 +168,35 @@ int main(void)
     /* Enable Timer4 and Timer5 NVIC */
     NVIC_EnableIRQ(TMR4_IRQn);
     NVIC_EnableIRQ(TMR5_IRQn);
-        
+
     /* Clear Timer4 and Timer5 interrupt counts to 0 */
     g_au32TMRINTCount[4] = g_au32TMRINTCount[5] = 0;
-    
+
     /* Enable Timer4 PWM period point interrupt */
     TPWM_ENABLE_PERIOD_INT(TIMER4);
-    
+
     /* Enable Timer5 PWM compare up point interrupt */
     TPWM_ENABLE_CMP_UP_INT(TIMER5);
-    
+
     /* Start Timer PWM counter */
     TPWM_START_COUNTER(TIMER4);
     TPWM_START_COUNTER(TIMER5);
-            
+
     /* System will enter to power-down while TIMER4 period interrupt event has reached 200 times */
     while(g_au32TMRINTCount[4] < 200) {}
-        
+
     /* Enable Timer5 PWM interrupt wake-up function */
     TPWM_ENABLE_PWMINT_WAKEUP(TIMER5);
-        
+
     printf("*** System in power-down mode and check the Timer4 and Timer5 PWM output waveform ***\n");
     printf("    - Timer5 PWM wake-up event interval is about 10 ms\n\n");
     while(IsDebugFifoEmpty() == 0) {}
-        
+
     while(1)
     {
         /* Unlock protected registers */
         SYS_UnlockReg();
-    
+
         CLK_PowerDown();
     }
 }

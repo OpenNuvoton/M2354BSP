@@ -14,12 +14,12 @@
 extern "C"
 {
 #endif
-    
+
 
 /*  Constant definitions */
 #define HASH_SIZE           256 /* bits */
 
-    
+
 ///* typedef enum declaration */
 //typedef enum
 //{

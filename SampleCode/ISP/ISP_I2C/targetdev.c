@@ -26,7 +26,7 @@ void GetDataFlashInfo(uint32_t *u32Addr, uint32_t *u32Size)
     FMC_ReadUser(CONFIG0, &uData);
 
     /* DFEN enable */
-    if ((uData & 0x01) == 0)
+    if((uData & 0x01) == 0)
     {
         FMC_ReadUser(CONFIG1, &uData);
 
@@ -34,7 +34,7 @@ void GetDataFlashInfo(uint32_t *u32Addr, uint32_t *u32Size)
         uData &= 0x000FFFFF;
 
         /* avoid CONFIG1 value from error */
-        if (uData > g_u32ApromSize || uData & (FMC_FLASH_PAGE_SIZE - 1))
+        if(uData > g_u32ApromSize || uData & (FMC_FLASH_PAGE_SIZE - 1))
         {
             uData = g_u32ApromSize;
         }

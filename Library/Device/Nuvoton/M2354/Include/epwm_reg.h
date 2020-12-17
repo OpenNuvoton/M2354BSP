@@ -21,7 +21,7 @@
 /**
   @addtogroup EPWM Enhanced Pulse Width Modulation Controller(EPWM)
   Memory Mapped Structure for EPWM Controller
-  @{ 
+  @{
 */
 
 typedef struct
@@ -2171,7 +2171,7 @@ typedef struct
 /**
   @addtogroup EPWM_CONST EPWM Bit Field Definition
   Constant Definitions for EPWM Controller
-  @{ 
+  @{
 */
 
 #define EPWM_CTL0_CTRLD0_Pos              (0)                                               /*!< EPWM_T::CTL0: CTRLD0 Position           */

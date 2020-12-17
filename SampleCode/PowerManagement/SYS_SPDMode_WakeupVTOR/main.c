@@ -19,7 +19,7 @@ void PowerDownFunction(void);
 void RTC_IRQHandler(void);
 
 extern uint32_t __Enter_SPD(void);
-static volatile uint32_t g_u32RTCTickINT=0;
+static volatile uint32_t g_u32RTCTickINT = 0;
 
 
 
@@ -40,7 +40,7 @@ void PowerDownFunction(void)
     __Enter_SPD();
 
     /* Initialization after wake-up from SPD */
-    if(CLK->PMUSTS&CLK_PMUSTS_RTCWK_Msk)
+    if(CLK->PMUSTS & CLK_PMUSTS_RTCWK_Msk)
     {
         SCB->VTOR = 0;                              /* Restore VTOR setting */
         SYS_UnlockReg();                            /* Unlock protected registers */
@@ -84,10 +84,10 @@ void RTC_Init(void)
     S_RTC_TIME_DATA_T sWriteRTC;
 
     /* Enable LXT clock if it is not enabled before */
-    if( (CLK->PWRCTL & CLK_PWRCTL_LXTEN_Msk) == 0 )
+    if((CLK->PWRCTL & CLK_PWRCTL_LXTEN_Msk) == 0)
     {
         CLK->PWRCTL |= CLK_PWRCTL_LXTEN_Msk;
-        while((CLK->STATUS&CLK_STATUS_LXTSTB_Msk) == 0);
+        while((CLK->STATUS & CLK_STATUS_LXTSTB_Msk) == 0);
     }
 
     /* Enable RTC clock */
@@ -135,10 +135,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC and LXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_LXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_LXTEN_Msk);
 
     /* Wait for HIRC and LXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_LXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_LXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -170,7 +170,7 @@ void UART0_Init(void)
     UART_Open(UART0, 115200);
 }
 
-int main( void )
+int main(void)
 {
     S_RTC_TIME_DATA_T sReadRTC;
 
@@ -217,10 +217,10 @@ int main( void )
         PowerDownFunction();
 
         /* Wait RTC interrupt */
-        while(g_u32RTCTickINT==0);
+        while(g_u32RTCTickINT == 0);
 
         /* Check wake-up from SPD by RTC flag */
-        if(CLK->PMUSTS&CLK_PMUSTS_RTCWK_Msk)
+        if(CLK->PMUSTS & CLK_PMUSTS_RTCWK_Msk)
         {
             printf("RTC ");
 

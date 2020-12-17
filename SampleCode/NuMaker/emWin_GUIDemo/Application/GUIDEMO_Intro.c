@@ -90,7 +90,7 @@ void GUIDEMO_Intro(void)
     //
     // QR-Code for Nuvoton HMI www.nuvoton.com
     //
-    if (s_u8ShowNuvotonQRCodeFlag)
+    if(s_u8ShowNuvotonQRCodeFlag)
     {
         GUI_SetBkColor(GUI_WHITE);
         GUI_Clear();
@@ -147,7 +147,7 @@ void GUIDEMO_Intro(void)
 #ifdef __DEMO_160x128__
     GUI_DispStringHCenterAt(acVersion,                                               xCenter, ((FACTOR_VERSION * ySize)  >> SCREEN_DIV) - 8);
 #else
-    GUI_DispStringHCenterAt(acVersion,                                               xCenter,  (FACTOR_VERSION * ySize)  >> SCREEN_DIV);
+    GUI_DispStringHCenterAt(acVersion,                                               xCenter, (FACTOR_VERSION * ySize)  >> SCREEN_DIV);
 #endif
     //
     // Logo

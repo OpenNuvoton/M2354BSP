@@ -15,11 +15,13 @@ int FMC_Proc(unsigned int u32Cmd, unsigned int addr_start, unsigned int addr_end
 {
     unsigned int u32Addr, Reg;
 
-    for (u32Addr = addr_start; u32Addr < addr_end; data++) {
+    for(u32Addr = addr_start; u32Addr < addr_end; data++)
+    {
         FMC->ISPCMD = u32Cmd;
         FMC->ISPADDR = u32Addr;
 
-        if (u32Cmd == FMC_ISPCMD_PROGRAM) {
+        if(u32Cmd == FMC_ISPCMD_PROGRAM)
+        {
             FMC->ISPDAT = *data;
         }
 
@@ -27,22 +29,27 @@ int FMC_Proc(unsigned int u32Cmd, unsigned int addr_start, unsigned int addr_end
         __ISB()
 
         /* Wait ISP cmd complete */
-        while (FMC->ISPTRG);
+        while(FMC->ISPTRG);
 
         Reg = FMC->ISPCTL;
 
-        if (Reg & FMC_ISPCTL_ISPFF_Msk) {
+        if(Reg & FMC_ISPCTL_ISPFF_Msk)
+        {
             FMC->ISPCTL = Reg;
             return -1;
         }
 
-        if (u32Cmd == FMC_ISPCMD_READ) {
+        if(u32Cmd == FMC_ISPCMD_READ)
+        {
             *data = FMC->ISPDAT;
         }
 
-        if (u32Cmd == FMC_ISPCMD_PAGE_ERASE) {
+        if(u32Cmd == FMC_ISPCMD_PAGE_ERASE)
+        {
             u32Addr += FMC_FLASH_PAGE_SIZE;
-        } else {
+        }
+        else
+        {
             u32Addr += 4;
         }
     }
@@ -61,7 +68,7 @@ int FMC_Proc(unsigned int u32Cmd, unsigned int addr_start, unsigned int addr_end
  *
  * @note
  *             Please make sure that Register Write-Protection Function has been disabled
- *             before using this function. 
+ *             before using this function.
  */
 int FMC_Write_User(unsigned int u32Addr, unsigned int u32Data)
 {
@@ -96,7 +103,7 @@ int FMC_Read_User(unsigned int u32Addr, unsigned int *data)
  *
  * @note
  *             Please make sure that Register Write-Protection Function has been disabled
- *             before using this function. 
+ *             before using this function.
  */
 int FMC_Erase_User(unsigned int u32Addr)
 {
@@ -119,15 +126,19 @@ int EraseAP(unsigned int addr_start, unsigned int size)
 {
     unsigned int u32Addr, u32Cmd, u32Size;
     int32_t i32Size;
-    
+
     u32Addr = addr_start;
     i32Size = (int32_t)size;
 
-    while (i32Size > 0) {
-        if ((size >= FMC_BANK_SIZE) && !(u32Addr & (FMC_BANK_SIZE - 1))) {
+    while(i32Size > 0)
+    {
+        if((size >= FMC_BANK_SIZE) && !(u32Addr & (FMC_BANK_SIZE - 1)))
+        {
             u32Cmd = FMC_ISPCMD_BANK_ERASE;
             u32Size = FMC_BANK_SIZE;
-        } else {
+        }
+        else
+        {
             u32Cmd = FMC_ISPCMD_PAGE_ERASE;
             u32Size = FMC_FLASH_PAGE_SIZE;
         }
@@ -137,9 +148,10 @@ int EraseAP(unsigned int addr_start, unsigned int size)
         FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
         __ISB()
 
-        while (FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk) ;  /* Wait for ISP command done. */
+        while(FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk) ;   /* Wait for ISP command done. */
 
-        if (FMC->ISPCTL & FMC_ISPCTL_ISPFF_Msk) {
+        if(FMC->ISPCTL & FMC_ISPCTL_ISPFF_Msk)
+        {
             FMC->ISPCTL |= FMC_ISPCTL_ISPFF_Msk;
             return -1;
         }
@@ -158,7 +170,8 @@ void UpdateConfig(unsigned int *data, unsigned int *res)
     FMC_Proc(FMC_ISPCMD_PAGE_ERASE, Config0, Config0 + 16, 0);
     FMC_Proc(FMC_ISPCMD_PROGRAM, Config0, Config0 + 16, data);
 
-    if (res) {
+    if(res)
+    {
         FMC_Proc(FMC_ISPCMD_READ, Config0, Config0 + 16, res);
     }
 

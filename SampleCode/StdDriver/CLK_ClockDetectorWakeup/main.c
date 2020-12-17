@@ -122,10 +122,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC, HXT and LXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk|CLK_PWRCTL_LXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk | CLK_PWRCTL_LXTEN_Msk);
 
     /* Wait for HIRC, HXT and LXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk|CLK_STATUS_LXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk | CLK_STATUS_LXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -177,18 +177,18 @@ int32_t main(void)
 
     /* Init UART0 for printf */
     UART0_Init();
-    
+
     printf("\n\nCPU @ %d Hz\n", SystemCoreClock);
     printf("+-----------------------------------------------------------------+\n");
     printf("|           Clock Detector Wake-up Sample Code                    |\n");
     printf("+-----------------------------------------------------------------+\n");
-    printf("| 1. System can be waken-up by LXT clock stop interrupt.          |\n");  
-    printf("| 2. System can be waken-up by GPIO interrupt (PB.3 rising edge). |\n");        
+    printf("| 1. System can be waken-up by LXT clock stop interrupt.          |\n");
+    printf("| 2. System can be waken-up by GPIO interrupt (PB.3 rising edge). |\n");
     printf("| 3. If HXT clock is stopped, system still can be waken-up by     |\n");
     printf("|    GPIO interrupt and HCLK clock source will be switched from   |\n");
-    printf("|    HXT to HIRC.                                                 |\n");       
-    printf("+-----------------------------------------------------------------+\n");    
-    printf("\nStop HXT, LXT or trigger GPIO to test.\n\n");       
+    printf("|    HXT to HIRC.                                                 |\n");
+    printf("+-----------------------------------------------------------------+\n");
+    printf("\nStop HXT, LXT or trigger GPIO to test.\n\n");
 
     /* Enable clock output, select CLKO clock source as HCLK and set clock output frequency is HCLK/4.
        HCLK clock source will be switched to HIRC if HXT stop and HCLK clock source is from HXT.
@@ -212,7 +212,7 @@ int32_t main(void)
 
     /* Enable clock fail detector interrupt */
     NVIC_EnableIRQ(CKFAIL_IRQn);
-        
+
     /* Configure PB.3 as Input mode and enable interrupt by rising edge trigger */
     GPIO_SetMode(PB, BIT3, GPIO_MODE_INPUT);
     GPIO_EnableInt(PB, 3, GPIO_INT_RISING);

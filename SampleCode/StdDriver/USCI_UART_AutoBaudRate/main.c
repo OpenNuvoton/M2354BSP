@@ -36,10 +36,10 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Enable HIRC and HXT clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk|CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
     /* Wait for HIRC and HXT clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk|CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
@@ -192,7 +192,7 @@ void USCI_AutoBaudRate_TxTest(void)
         printf("| Quit                                              - [ESC] |\n");
         printf("+-----------------------------------------------------------+\n\n");
         u32Item = (uint32_t)getchar();
-        if(u32Item==27) break;
+        if(u32Item == 27) break;
         printf("%c\n", u32Item);
 
         /* Set different baud rate */
@@ -255,9 +255,9 @@ void USCI_AutoBaudRate_RxTest(void)
     UUART0->PROTCTL |= UUART_PROTCTL_ABREN_Msk;
 
     printf("\nreceiving input pattern... ");
-    
+
     /* Forces a write of all user-space buffered data for the given output */
-    fflush(stdout);    
+    fflush(stdout);
 
     /* Wait until auto baud rate detect finished or time-out */
     while(UUART0->PROTCTL & UUART_PROTCTL_ABREN_Msk);

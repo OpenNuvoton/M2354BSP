@@ -19,7 +19,7 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Macro, type and constant definitions                                                                    */
 /*---------------------------------------------------------------------------------------------------------*/
-uint8_t g_au8SendBuf[BUF_SIZE]="CONNECT0\r\n"; //request new NuBL32 and NuBL33 FW
+uint8_t g_au8SendBuf[BUF_SIZE] = "CONNECT0\r\n"; //request new NuBL32 and NuBL33 FW
 volatile uint32_t g_u32SendbytesLen = 8;
 volatile uint8_t g_u8SendbytesFlag = 1;
 volatile uint8_t g_u8ResetFlag = 0;
@@ -70,36 +70,46 @@ void UART3_Init(void);
 static struct pt PT;
 
 static
-PT_THREAD(CLIENT_THREAD(struct pt* pt)) {
+PT_THREAD(CLIENT_THREAD(struct pt* pt))
+{
     PT_BEGIN(pt);
 
     PT_WAIT_UNTIL(pt, ESP_IsReady(&ESP) == espOK);          /* Wait stack to be ready first */
     espRes = ESP_GetLastReturnStatus(&ESP);             /* Get actual response status */
 
     /* Check connected status */
-    if (espRes == espOK) {
+    if(espRes == espOK)
+    {
 //          printf("Connection to OTA server has been successfull!\r\n");
 
         /* Send HTTP request for example in non-blocking mode */
-        if ((espRes = ESP_CONN_Send(&ESP, conn, g_au8SendBuf, g_u32SendbytesLen, &bw, 0)) == espOK) {
+        if((espRes = ESP_CONN_Send(&ESP, conn, g_au8SendBuf, g_u32SendbytesLen, &bw, 0)) == espOK)
+        {
             //DEBUG_MSG("Data sending has started successfully\r\n");
 
             PT_WAIT_UNTIL(pt, ESP_IsReady(&ESP) == espOK);  /* Wait for stack to finish */
             espRes = ESP_GetLastReturnStatus(&ESP);         /* Get actual response status */
 
             /* Check if data sent */
-            if (espRes == espOK) {
+            if(espRes == espOK)
+            {
                 //printf("Data sent! Number of bytes sent: %d. We expect connection will be closed by remote server\r\n", bw);
                 DEBUG_MSG("Data sent! Number of bytes sent: %d.\n", bw);
-            } else {
+            }
+            else
+            {
                 printf("Data were not sent: %d\r\n", espRes);
             }
 
             /* Anything received from server is handled in callback function! */
-        } else {
+        }
+        else
+        {
             printf("Problems trying to start sending data!\r\n");
         }
-    } else {
+    }
+    else
+    {
         printf("Problems to connect to example.com: %d\r\n", espRes);
     }
     g_u8SendbytesFlag = 0;
@@ -116,16 +126,22 @@ uint8_t Transfer_Connect(void)
     ESP_AP_ListConnectedStations(&ESP, (ESP_ConnectedStation_t *)&ConnStation, 1, (uint16_t *)&u16ConnNumbers, 1);
 
     /* Try to connect to wifi network in blocking mode */
-    if ((espRes = ESP_STA_Connect(&ESP, WIFINAME, WIFIPASS, NULL, 0, 1)) == espOK) {
+    if((espRes = ESP_STA_Connect(&ESP, WIFINAME, WIFIPASS, NULL, 0, 1)) == espOK)
+    {
         printf("Connected to network\r\n");
-    } else {
+    }
+    else
+    {
         printf("Problems trying to connect to network: %d\r\n", espRes);
     }
 
-    if ((espRes = ESP_CONN_Start(&ESP, &conn, ESP_CONN_Type_TCP, WIFIIP, WIFIPORT, 0)) == espOK) {//can get IP address of AP by ESP_AP_GetIP()
+    if((espRes = ESP_CONN_Start(&ESP, &conn, ESP_CONN_Type_TCP, WIFIIP, WIFIPORT, 0)) == espOK)   //can get IP address of AP by ESP_AP_GetIP()
+    {
         printf("Connection to OTA server has started!\r\n");
 
-    } else {
+    }
+    else
+    {
         printf("Problems trying to start connection to server as client: %d\r\n", espRes);
     }
 
@@ -149,12 +165,12 @@ uint8_t Transfer_SysTickProcess(uint32_t u32Ticks)
     ESP_UpdateTime(&ESP, 1);                                /* Update ESP library time for 1 ms */
 
 #if (PERIODIC_CHK_NEW_VER)
-    if (u32ChkNewVerTick == 60000)
+    if(u32ChkNewVerTick == 60000)
     {
-        uint8_t au8SendConn[]="CONNECT0\r\n"; //request new NuBL32 and NuBL33 FW
+        uint8_t au8SendConn[] = "CONNECT0\r\n"; //request new NuBL32 and NuBL33 FW
         u8Ret = Transfer_Connect();
         printf("Transfer_Connect: %d\n", u8Ret);
-        if (u8Ret == 0)
+        if(u8Ret == 0)
         {
             printf("check new version\n");
             memcpy(g_au8SendBuf, au8SendConn, sizeof(au8SendConn));
@@ -176,7 +192,7 @@ void SysTick_Handler(void)
 
     u32WDTTicks++;
 
-    if (u32WDTTicks == 10000) /* 10s */
+    if(u32WDTTicks == 10000)  /* 10s */
     {
         /* Reset WDT counter */
         WDT_RESET_COUNTER();
@@ -184,14 +200,17 @@ void SysTick_Handler(void)
     }
 
     /* Process system tick handler for transfer task */
-    if (Transfer_SysTickProcess(u32Ticks))
+    if(Transfer_SysTickProcess(u32Ticks))
         u32Ticks = 0;
     else
         u32Ticks++;
 
 }
 
-__WEAK void UART3_ReceiveHandler(uint8_t c) {(void)c; }
+__WEAK void UART3_ReceiveHandler(uint8_t c)
+{
+    (void)c;
+}
 
 /**
   * @brief        Read received transfer data
@@ -201,7 +220,7 @@ __WEAK void UART3_ReceiveHandler(uint8_t c) {(void)c; }
   */
 void Transfer_WiFiProcess(void)
 {
-    if (UART_GET_INT_FLAG(WIFI_PORT, UART_INTSTS_RDAINT_Msk))
+    if(UART_GET_INT_FLAG(WIFI_PORT, UART_INTSTS_RDAINT_Msk))
     {
         while(UART_IS_RX_READY(WIFI_PORT))
         {
@@ -222,43 +241,48 @@ void UART3_IRQHandler(void)
 /***********************************************/
 /**               Library callback            **/
 /***********************************************/
-int ESP_Callback(ESP_Event_t evt, ESP_EventParams_t* params) {
-    switch ((uint8_t)evt) {                              /* Check events */
-    case espEventIdle:
+int ESP_Callback(ESP_Event_t evt, ESP_EventParams_t* params)
+{
+    switch((uint8_t)evt)                                 /* Check events */
+    {
+        case espEventIdle:
 //            printf("Stack is IDLE!\r\n");
-        break;
-    case espEventConnActive: {
-        ESP_CONN_t* conn = (ESP_CONN_t *)params->CP1;   /* Get connection for event */
-        printf("Connection %d just became active!\r\n", conn->Number);
-
-        break;
-    }
-    case espEventConnClosed: {
-        ESP_CONN_t* conn = (ESP_CONN_t *)params->CP1;   /* Get connection for event */
-        printf("Connection %d was just closed!\r\n", conn->Number);
-        if (g_u8ResetFlag)
+            break;
+        case espEventConnActive:
         {
-            //while(!(UART_IS_TX_EMPTY(DEBUG_PORT)));
-            SYS_ResetChip();
+            ESP_CONN_t* conn = (ESP_CONN_t *)params->CP1;   /* Get connection for event */
+            printf("Connection %d just became active!\r\n", conn->Number);
+
+            break;
         }
-        break;
-    }
-    case espEventDataReceived: {
-        //ESP_CONN_t* conn = (ESP_CONN_t *)params->CP1;   /* Get connection for event */
-        conn = (ESP_CONN_t *)params->CP1;
-        uint8_t* data = (uint8_t *)params->CP2;         /* Get actual received data */
-        uint16_t datalen = params->UI;                  /* Print length of received data in current part packet */
+        case espEventConnClosed:
+        {
+            ESP_CONN_t* conn = (ESP_CONN_t *)params->CP1;   /* Get connection for event */
+            printf("Connection %d was just closed!\r\n", conn->Number);
+            if(g_u8ResetFlag)
+            {
+                //while(!(UART_IS_TX_EMPTY(DEBUG_PORT)));
+                SYS_ResetChip();
+            }
+            break;
+        }
+        case espEventDataReceived:
+        {
+            //ESP_CONN_t* conn = (ESP_CONN_t *)params->CP1;   /* Get connection for event */
+            conn = (ESP_CONN_t *)params->CP1;
+            uint8_t* data = (uint8_t *)params->CP2;         /* Get actual received data */
+            uint16_t datalen = params->UI;                  /* Print length of received data in current part packet */
 
-        DEBUG_MSG("%d bytes of data received\r\n", datalen);
-        (void)(data);                                   /* Prevent compiler warnings */
+            DEBUG_MSG("%d bytes of data received\r\n", datalen);
+            (void)(data);                                   /* Prevent compiler warnings */
 
-        /* Call packet received call back function */
-        OTA_API_RecvCallBack(data, datalen, 0, datalen);
+            /* Call packet received call back function */
+            OTA_API_RecvCallBack(data, datalen, 0, datalen);
 
-        break;
-    }
-    default:
-        break;
+            break;
+        }
+        default:
+            break;
     }
 
     return 0;
@@ -317,9 +341,12 @@ void Transfer_Init(void)
 int8_t Transfer_Process(void)
 {
     /* Init ESP */
-    if ((espRes = ESP_Init(&ESP, 115200, ESP_Callback)) == espOK) {
+    if((espRes = ESP_Init(&ESP, 115200, ESP_Callback)) == espOK)
+    {
         printf("ESP module init successfully!\r\n");
-    } else {
+    }
+    else
+    {
         printf("ESP Init error. Status: %d\r\n", espRes);
     }
 
@@ -330,42 +357,42 @@ int8_t Transfer_Process(void)
         uint8_t u8Idx = 0;
 //        uint16_t u16Port = 0;
 
-        memset(au8InputBuffer, 0, sizeof(au8InputBuffer)/sizeof(uint8_t));
+        memset(au8InputBuffer, 0, sizeof(au8InputBuffer) / sizeof(uint8_t));
 
         printf("WIFI NAME: ");
         u8Idx = 0;
         while(u8InputTmp != 0x0D) /* enter key */
         {
             u8InputTmp = getchar();
-            printf("%c",u8InputTmp);
+            printf("%c", u8InputTmp);
             au8InputBuffer[u8Idx] = u8InputTmp;
             u8Idx++;
         }
-        memcpy(g_au8WifiName, au8InputBuffer, sizeof(au8InputBuffer)/sizeof(uint8_t));
+        memcpy(g_au8WifiName, au8InputBuffer, sizeof(au8InputBuffer) / sizeof(uint8_t));
 
-        memset(au8InputBuffer, 0, sizeof(au8InputBuffer)/sizeof(uint8_t));
+        memset(au8InputBuffer, 0, sizeof(au8InputBuffer) / sizeof(uint8_t));
         printf("\nWIFI PASSWORD: ");
         u8Idx = 0;
         while(u8InputTmp != 0x0D) /* enter key */
         {
             u8InputTmp = getchar();
-            printf("%c",u8InputTmp);
+            printf("%c", u8InputTmp);
             au8InputBuffer[u8Idx] = u8InputTmp;
             u8Idx++;
         }
-        memcpy(g_au8WifiPass, au8InputBuffer, sizeof(au8InputBuffer)/sizeof(uint8_t));
+        memcpy(g_au8WifiPass, au8InputBuffer, sizeof(au8InputBuffer) / sizeof(uint8_t));
 
-        memset(au8InputBuffer, 0, sizeof(au8InputBuffer)/sizeof(uint8_t));
+        memset(au8InputBuffer, 0, sizeof(au8InputBuffer) / sizeof(uint8_t));
         printf("\nWIFI IP: ");
         u8Idx = 0;
         while(u8InputTmp != 0x0D) /* enter key */
         {
             u8InputTmp = getchar();
-            printf("%c",u8InputTmp);
+            printf("%c", u8InputTmp);
             au8InputBuffer[u8Idx] = u8InputTmp;
             u8Idx++;
         }
-        memcpy(g_au8WifiIp, au8InputBuffer, sizeof(au8InputBuffer)/sizeof(uint8_t));
+        memcpy(g_au8WifiIp, au8InputBuffer, sizeof(au8InputBuffer) / sizeof(uint8_t));
 
 //        memset(au8InputBuffer, 0, sizeof(au8InputBuffer)/sizeof(uint8_t));
 //        printf("\nWIFI PORT: ");
@@ -383,47 +410,59 @@ int8_t Transfer_Process(void)
     }
 
     /* Try to connect to wifi network in blocking mode */
-    if ((espRes = ESP_STA_Connect(&ESP, (const char *)g_au8WifiName, (const char *)g_au8WifiPass, NULL, 0, 1)) == espOK) {
+    if((espRes = ESP_STA_Connect(&ESP, (const char *)g_au8WifiName, (const char *)g_au8WifiPass, NULL, 0, 1)) == espOK)
+    {
         printf("Connected to network\r\n");
-    } else {
+    }
+    else
+    {
         printf("Problems trying to connect to network: %d\r\n", espRes);
     }
 
-    if ((espRes = ESP_CONN_Start(&ESP, &conn, ESP_CONN_Type_TCP, (const char *)g_au8WifiIp, 1111, 0)) == espOK) {//can get IP address of AP by ESP_AP_GetIP()
+    if((espRes = ESP_CONN_Start(&ESP, &conn, ESP_CONN_Type_TCP, (const char *)g_au8WifiIp, 1111, 0)) == espOK)   //can get IP address of AP by ESP_AP_GetIP()
+    {
         printf("Connection to OTA server has started!\r\n");
         g_u8InitialWifiFail = 0;
 
-    } else {
+    }
+    else
+    {
         printf("Problems trying to start connection to server as client: %d\r\n", espRes);
         g_u8InitialWifiFail = 1;
     }
 #else
     /* Try to connect to wifi network in blocking mode */
-    if ((espRes = ESP_STA_Connect(&ESP, WIFINAME, WIFIPASS, NULL, 0, 1)) == espOK) {
+    if((espRes = ESP_STA_Connect(&ESP, WIFINAME, WIFIPASS, NULL, 0, 1)) == espOK)
+    {
         printf("Connected to network\r\n");
-    } else {
+    }
+    else
+    {
         printf("Problems trying to connect to network: %d\r\n", espRes);
     }
 
-    if ((espRes = ESP_CONN_Start(&ESP, &conn, ESP_CONN_Type_TCP, WIFIIP, WIFIPORT, 0)) == espOK) {//can get IP address of AP by ESP_AP_GetIP()
+    if((espRes = ESP_CONN_Start(&ESP, &conn, ESP_CONN_Type_TCP, WIFIIP, WIFIPORT, 0)) == espOK)   //can get IP address of AP by ESP_AP_GetIP()
+    {
         printf("Connection to OTA server has started!\r\n");
 
-    } else {
+    }
+    else
+    {
         printf("Problems trying to start connection to server as client: %d\r\n", espRes);
     }
 #endif
 
-    while (1)
+    while(1)
     {
         ESP_Update(&ESP); /* Update ESP stack */
 
-        if (g_u8SendbytesFlag) /* Check if we should process */
+        if(g_u8SendbytesFlag)  /* Check if we should process */
         {
             CLIENT_THREAD(&PT); /* Process thread */
         }
         else
         {
-            if (g_u8DisconnFlag == 1)
+            if(g_u8DisconnFlag == 1)
             {
                 printf("Data sent! Number of bytes sent: %d.\n", bw);
                 g_u8DisconnFlag = 0;
@@ -436,16 +475,16 @@ int8_t Transfer_Process(void)
             }
             /* Do other stuff */
             //if (OTA_API_GetFwUpgradeDone())
-            else if (OTA_API_GetFwUpgradeDone())
+            else if(OTA_API_GetFwUpgradeDone())
             {
                 /* Exit this loop when firmware was upgrade done. */
                 //ESP_CONN_Close(&ESP, conn, 0);
-                printf("g_u8DisconnFlag : %d\n",g_u8DisconnFlag);
+                printf("g_u8DisconnFlag : %d\n", g_u8DisconnFlag);
                 printf("waiting for WiFi disconnected...\n");
                 //            while(!g_u8DisconnFlag){}
                 //            g_u8DisconnFlag = 0;
 
-                if (g_u8ResetFlag)
+                if(g_u8ResetFlag)
                 {
                     //while(!(UART_IS_TX_EMPTY(DEBUG_PORT)));
                     SYS_ResetChip();
@@ -454,7 +493,7 @@ int8_t Transfer_Process(void)
                 break;
             }
         }
-        if (g_u8InitialWifiFail == 1)
+        if(g_u8InitialWifiFail == 1)
         {
             g_u8InitialWifiFail = 0;
             SYS_UnlockReg();
@@ -462,7 +501,7 @@ int8_t Transfer_Process(void)
             //check current firmware
             printf("VECMAP = 0x%x\n", FMC_GetVECMAP());
             //if (FMC_GetVECMAP() == 0x60000)
-            if ((FMC_GetVECMAP() == 0x40000)||(FMC_GetVECMAP() == 0x60000))
+            if((FMC_GetVECMAP() == 0x40000) || (FMC_GetVECMAP() == 0x60000))
             {
                 /* exit NuBL2 loop, return to NuBL32 */
                 break;
@@ -487,7 +526,7 @@ int8_t Transfer_Process(void)
 void Transfer_SendBytes(uint8_t pu8TxBuf[], uint32_t u32Len)
 {
     //printf("Transfer_SendBytes(%d),%d\n", u32Len,g_u8SendbytesFlag);
-    if (g_u8SendbytesFlag == 0)
+    if(g_u8SendbytesFlag == 0)
     {
         memcpy(g_au8SendBuf, pu8TxBuf, u32Len);
         g_u32SendbytesLen = u32Len;

@@ -158,7 +158,7 @@ extern "C"
             while(((timer)->ALTCTL & TIMER_ALTCTL_FUNCSEL_Msk) == 0) {} \
         } \
     }while(0)
-    
+
 /**
   * @brief      Disable PWM Counter Mode
   *

@@ -31,7 +31,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY  1
 
 
 /*-----------------------------------------------------------*/
@@ -40,26 +40,26 @@ or 0 to run the more comprehensive test and demo application. */
  * Perform any application specific hardware configuration.  The clocks,
  * memory, etc. are configured before main() is called.
  */
-static void prvSetupHardware( void );
+static void prvSetupHardware(void);
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
-extern void main_blinky( void );
-extern void main_full( void );
+extern void main_blinky(void);
+extern void main_full(void);
 
 /*
  * CMSIS clock configuration function.
  */
-extern void SystemCoreClockUpdate( void );
-void vApplicationMallocFailedHook( void )__attribute__((noreturn));
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )__attribute__((noreturn));
-void vApplicationIdleHook( void );
-void vApplicationTickHook( void );
+extern void SystemCoreClockUpdate(void);
+void vApplicationMallocFailedHook(void)__attribute__((noreturn));
+void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)__attribute__((noreturn));
+void vApplicationIdleHook(void);
+void vApplicationTickHook(void);
 /*-----------------------------------------------------------*/
 
-int main( void )
+int main(void)
 {
     /* Prepare the hardware to run this demo. */
     prvSetupHardware();
@@ -80,14 +80,14 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvSetupHardware( void )
+static void prvSetupHardware(void)
 {
     vParTestInitialise();
 
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationMallocFailedHook( void )
+void vApplicationMallocFailedHook(void)
 {
     /* vApplicationMallocFailedHook() will only be called if
     configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
@@ -100,11 +100,11 @@ void vApplicationMallocFailedHook( void )
     to query the size of free heap space that remains (although it does not
     provide information on how the remaining heap might be fragmented). */
     taskDISABLE_INTERRUPTS();
-    for( ;; );
+    for(;;);
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationIdleHook( void )
+void vApplicationIdleHook(void)
 {
     /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
     to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
@@ -118,10 +118,10 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
-    ( void ) pcTaskName;
-    ( void ) pxTask;
+    (void) pcTaskName;
+    (void) pxTask;
 
     /* Run time stack overflow checking is performed if
     configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
@@ -133,14 +133,14 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
     printf("Stack overflow task name=%s\n", pcTaskName);
 
 
-    for( ;; );
+    for(;;);
 
 
 
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationTickHook( void )
+void vApplicationTickHook(void)
 {
     /* This function will be called by each tick interrupt if
     configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
@@ -161,16 +161,16 @@ void vApplicationTickHook( void )
         const unsigned long ulRate = 50UL / portTICK_PERIOD_MS;
         extern SemaphoreHandle_t xLEDSemaphore;
 
-        configASSERT( xLEDSemaphore );
+        configASSERT(xLEDSemaphore);
 
-        if( ( xTaskGetTickCountFromISR() - ulLastGiveTime ) > ulRate )
+        if((xTaskGetTickCountFromISR() - ulLastGiveTime) > ulRate)
         {
             /* The second parameter is normally used to determine if a context
             switch should be performed or not.  In this case the function is
             being performed from the tick hook, so the scheduler will make that
             assessment before returning to a task anyway - so the parameter is
             not needed and is just set to NULL. */
-            xSemaphoreGiveFromISR( xLEDSemaphore, NULL );
+            xSemaphoreGiveFromISR(xLEDSemaphore, NULL);
             ulLastGiveTime += ulRate;
         }
 
@@ -195,7 +195,7 @@ void Dummy_IRQHandler(void)
     task with an interrupt.  A semaphore is used for this purpose.  Note
     lHigherPriorityTaskWoken is initialised to zero. Only FreeRTOS API functions
     that end in "FromISR" can be called from an ISR. */
-    xSemaphoreGiveFromISR( xTestSemaphore, &lHigherPriorityTaskWoken );
+    xSemaphoreGiveFromISR(xTestSemaphore, &lHigherPriorityTaskWoken);
 
     /* If there was a task that was blocked on the semaphore, and giving the
     semaphore caused the task to unblock, and the unblocked task has a priority
@@ -205,7 +205,7 @@ void Dummy_IRQHandler(void)
     portEND_SWITCHING_ISR() macro will result in a context switch being pended to
     ensure this interrupt returns directly to the unblocked, higher priority,
     task.  Passing pdFALSE into portEND_SWITCHING_ISR() has no effect. */
-    portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
+    portEND_SWITCHING_ISR(lHigherPriorityTaskWoken);
 }
 
 #endif /* JUST_AN_EXAMPLE_ISR */

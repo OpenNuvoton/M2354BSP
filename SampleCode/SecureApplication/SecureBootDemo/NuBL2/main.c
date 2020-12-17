@@ -26,32 +26,32 @@ static int32_t CheckROTPKStatus(void)
 
     KS_Open();
 
-    if((KS->OTPSTS&0x3) == 0)
+    if((KS->OTPSTS & 0x3) == 0)
     {
         printf("ROTPK absent! NuBL2 execution via direct boot.\n\n");
-        
-        // TODO: User should set ROTPK in KS OTP0 and OTP1, 
+
+        // TODO: User should set ROTPK in KS OTP0 and OTP1,
         //          so that the Secure Bootloader(NuBL1) can perform trusted boot to execute NuBL2.
-        
+
         /*
             The NuBL2 ROTPK is a set of ECC P-256 public key pair.
             If the ECC P-256 private key is 380a67fcfc01ca7073da7c2c54296a61327f77262a7d4674c3d8e29a63e3fa20, refer to FwSign.ini.
             The public key pair should be
                 Public Key 1 = 755B3819F05A3E9F32D4D599062834AAC5220F75955378414A8F63716A152CE2
                 Public Key 2 = 91C413F1915ED7B47473FD797647BA3D83E8224377909AF5B30C530EAAD79FD7
-        
+
             Notes of programming NuBL2 ECC ROTPK:
             * The ROTPK arrary for KS_WriteOTP API
-                const uint32_t g_au32ROTPK[16] = 
+                const uint32_t g_au32ROTPK[16] =
                 {
                     // Public key 1
                     0x6a152ce2, 0x4a8f6371, 0x95537841, 0xc5220f75,
                     0x062834aa, 0x32d4d599, 0xf05a3e9f, 0x755b3819,
                     // Public key 2
-                    0xaad79fd7, 0xb30c530e, 0x77909af5, 0x83e82243, 
+                    0xaad79fd7, 0xb30c530e, 0x77909af5, 0x83e82243,
                     0x7647ba3d, 0x7473fd79, 0x915ed7b4, 0x91c413f1,
                 };
-        
+
             * An example to program KS OPT0 and OPT1
                 // Configure module clock
                 CLK_EnableModuleClock(KS_MODULE);

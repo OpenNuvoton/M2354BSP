@@ -27,7 +27,7 @@ extern "C"
 #define OTA_UPGRADE_FROM_SD 0 /* 1: Enable OTA update from SD card method */
 /* 0: Enable OTA update on the fly method */
 
-#define BUF_SIZE	128
+#define BUF_SIZE    128
 #define ALIGN_BUFF_SIZE 64
 
 extern uint8_t g_au8SendBuf[BUF_SIZE];
