@@ -364,7 +364,7 @@ int32_t CCMPacker(uint8_t *iv, uint32_t ivlen, uint8_t *A, uint32_t alen, uint8_
         for(i = 0; i < alen; i++)
             pbuf[u32Offset + i + 2] = A[i];
 
-        alen_aligned = (alen + 2 + 15) / 16 * 16;
+        alen_aligned = ((alen + 2 + 15) / 16) * 16;
         for(i = u32Offset + 2 + alen; i < alen_aligned; i++)
         {
             pbuf[i] = 0; // padding zero
@@ -376,7 +376,7 @@ int32_t CCMPacker(uint8_t *iv, uint32_t ivlen, uint8_t *A, uint32_t alen, uint8_
     /* Formatting payload */
     if(plen > 0)
     {
-        plen_aligned = (plen + 15) / 16 * 16;
+        plen_aligned = ((plen + 15) / 16) * 16;
         for(i = 0; i < plen; i++)
         {
             pbuf[u32Offset + i] = P[i];
@@ -435,7 +435,7 @@ int32_t AES_CCM(int32_t enc, uint8_t *key, uint32_t klen, uint8_t *iv, uint32_t 
     printf("input blocks (%d):\n", *size);
     DumpBuffHex2(g_au8Buf, *size);
 
-    *plen_aligned = (plen & 0xful) ? (plen + 15) / 16 * 16 : plen;
+    *plen_aligned = (plen & 0xful) ? ((plen + 15) / 16) * 16 : plen;
 
     memcpy(au8TmpBuf, key, klen);
     ToBigEndian(au8TmpBuf, klen);
@@ -449,12 +449,12 @@ int32_t AES_CCM(int32_t enc, uint8_t *key, uint32_t klen, uint8_t *iv, uint32_t 
     }
     else if(klen == 24)
     {
-        AES_Open(CRPT, 0, enc, AES_MODE_CCM, AES_KEY_SIZE_192, AES_NO_SWAP);
+        AES_Open(CRPT, 0, enc, AES_MODE_CCM, AES_KEY_SIZE_192, AES_OUT_SWAP);
         AES_SetKey(CRPT, 0, (uint32_t *)au8TmpBuf, AES_KEY_SIZE_192);
     }
     else
     {
-        AES_Open(CRPT, 0, enc, AES_MODE_CCM, AES_KEY_SIZE_256, AES_NO_SWAP);
+        AES_Open(CRPT, 0, enc, AES_MODE_CCM, AES_KEY_SIZE_256, AES_OUT_SWAP);
         AES_SetKey(CRPT, 0, (uint32_t *)au8TmpBuf, AES_KEY_SIZE_256);
     }
 

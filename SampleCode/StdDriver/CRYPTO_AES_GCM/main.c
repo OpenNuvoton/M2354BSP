@@ -552,7 +552,7 @@ int32_t AES_GCMEnc(uint8_t *key, uint32_t klen, uint8_t *iv, uint32_t ivlen, uin
 
     /* Prepare the blocked buffer for GCM */
     AES_GCMPacker(iv, ivlen, A, alen, P, plen, g_au8Buf, size);
-    *plen_aligned = (plen & 0xful) ? (plen + 16) / 16 * 16 : plen;
+    *plen_aligned = (plen & 0xful) ? ((plen + 16) / 16) * 16 : plen;
 
 
     printf("input blocks (%d):\n", *size);
@@ -622,7 +622,7 @@ int32_t AES_GCMDec(uint8_t *key, uint32_t klen, uint8_t *iv, uint32_t ivlen, uin
 
     /* Prepare the blocked buffer for GCM */
     AES_GCMPacker(iv, ivlen, A, alen, P, plen, g_au8Buf, size);
-    *plen_aligned = (plen & 0xful) ? (plen + 16) / 16 * 16 : plen;
+    *plen_aligned = (plen & 0xful) ? ((plen + 16) / 16) * 16 : plen;
 
     printf("input blocks (%d):\n", *size);
     DumpBuffHex(g_au8Buf, *size);
