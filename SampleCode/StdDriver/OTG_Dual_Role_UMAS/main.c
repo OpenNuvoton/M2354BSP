@@ -5,7 +5,6 @@
  *           If it works as USB Host, it can access a mass storage device.
  *           If it works as USB Device, it acts as a mass storage device.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/

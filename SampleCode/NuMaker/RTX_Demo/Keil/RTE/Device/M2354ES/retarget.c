@@ -3,9 +3,8 @@
  * @version  V3.00
  * @brief    Debug Port and Semihost Setting Source File
  *
- * @note
- * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
- *
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 
@@ -504,7 +503,7 @@ void SendChar(int ch)
         }
         else
         {
-# if (DEBUG_ENABLE_SEMIHOST == 2) // Re-direct to UART Debug Port only when DEBUG_ENABLE_SEMIHOST=2           
+# if (DEBUG_ENABLE_SEMIHOST == 2) // Re-direct to UART Debug Port only when DEBUG_ENABLE_SEMIHOST=2
             int i;
 
             for(i = 0; i < g_buf_len; i++)

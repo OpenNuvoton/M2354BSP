@@ -2,10 +2,8 @@
  * @file     cdc_parser.c
  * @version  V1.00
  * @brief    M2354 MCU USB Host CDC Class driver
- *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 
 #include <stdio.h>

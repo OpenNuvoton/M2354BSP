@@ -4,7 +4,6 @@
  * @brief    The sample receives audio data from UAC device, and immediately send
  *           back to that UAC device.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/

@@ -7,9 +7,8 @@
  * @brief
  *           Show a 10-bit addres Slave how to receive data from Master.
  *           This sample code needs to work with USCI_I2C_Master_10bit.
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
@@ -254,6 +253,6 @@ int main(void)
 
     while(1);
 }
-/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
 
 

@@ -2,7 +2,6 @@
  * @file     isp_user.c
  * @brief    ISP Command source file
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

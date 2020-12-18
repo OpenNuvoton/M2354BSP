@@ -3,9 +3,8 @@
  * @version  V3.00
  * @brief    Debug Port and Semihost Setting Source File
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 
@@ -648,7 +647,6 @@ void _ttywrch(int ch)
  *             The character is written at the current position of the stream as indicated \n
  *             by the internal position indicator, which is then advanced one character.
  *
- * @note       The above descriptions are copied from http://www.cplusplus.com/reference/clibrary/cstdio/fputc/.
  *
  *
  */
@@ -722,7 +720,6 @@ int fgetc(FILE *stream)
  * @details    Checks if the error indicator associated with stream is set, returning a value different
  *             from zero if it is. This indicator is generally set by a previous operation on the stream that failed.
  *
- * @note       The above descriptions are copied from http://www.cplusplus.com/reference/clibrary/cstdio/ferror/.
  *
  */
 
@@ -765,6 +762,6 @@ label:
 
 
 
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
 
 

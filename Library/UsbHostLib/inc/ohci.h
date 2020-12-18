@@ -2,9 +2,8 @@
  * @file     ohci.h
  * @version  V1.00
  * @brief    USB OHCI host controller driver header file.
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 
 #ifndef _USBH_OHCI_H_

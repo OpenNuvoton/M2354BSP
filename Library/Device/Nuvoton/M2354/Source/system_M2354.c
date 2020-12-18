@@ -3,9 +3,8 @@
  * @version  V2.00
  * @brief    System Setting Source File
  *
- * @note
- * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
- *
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)       /* ARM Compiler 6 */
 #include <arm_cmse.h>

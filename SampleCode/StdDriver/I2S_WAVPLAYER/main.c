@@ -4,7 +4,6 @@
  * @brief    This is a WAV file player which plays back WAV file stored in
  *           SD memory card.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

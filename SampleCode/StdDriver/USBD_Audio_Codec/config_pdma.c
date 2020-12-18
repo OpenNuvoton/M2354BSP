@@ -2,7 +2,6 @@
  * @file     config_pdma.c
  * @brief    NuMicro series USBD driver Sample file
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

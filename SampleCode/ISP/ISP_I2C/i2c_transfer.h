@@ -4,8 +4,8 @@
  * @version  0x32
  * @date     24, August, 2020
  *
- * @note
- * Copyright (C) 2017-2018 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __I2C_TRANS_H__
 #define __I2C_TRANS_H__

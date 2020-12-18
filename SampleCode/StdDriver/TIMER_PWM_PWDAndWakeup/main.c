@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Demonstrate Timer4, Timer5 PWM output waveform in power-down and wake-up functions.
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"

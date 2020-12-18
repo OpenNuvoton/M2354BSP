@@ -4,7 +4,7 @@
  * @brief    Demonstrate how ACMP compare DAC output with ACMP1_P1 value.
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
@@ -123,6 +123,6 @@ int32_t main(void)
 
 }
 
-/*** (C) COPYRIGHT 2017 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
 
 

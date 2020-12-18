@@ -3,7 +3,6 @@
  * @version  V3.00
  * @brief    M2354 Wave file audio player
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

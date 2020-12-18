@@ -4,9 +4,8 @@
  * $Revision: 1 $
  * @brief    Transmit command to SecureISP USB command mode.
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -1645,4 +1644,4 @@ int32_t Process_USBHCommand(HID_DEV_T *hdev)
     return 0;
 }
 
-/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

@@ -2,10 +2,8 @@
  * @file     usbh_lib.h
  * @version  V1.10
  * @brief    USB Host library exported header file.
- *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef  _USBH_LIB_H_
 #define  _USBH_LIB_H_

@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Show Crypto IP ECC P-192 ECDSA signature generation function.
  *
- * @note
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>

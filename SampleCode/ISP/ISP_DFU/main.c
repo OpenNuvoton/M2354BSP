@@ -4,7 +4,6 @@
  *           Demonstrate how to upgrade firmware between USB device and PC through USB DFU (Device Firmware Upgrade) class.
  *           A Windows tool is also included in this sample code to connect with USB device.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

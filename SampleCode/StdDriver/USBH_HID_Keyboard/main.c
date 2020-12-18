@@ -4,7 +4,6 @@
  * @brief    Demonstrate reading key inputs from USB keyboards.
  *           This sample includes an USB keyboard driver which is based on the HID driver.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/

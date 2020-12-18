@@ -2,7 +2,6 @@
  * @file     targetdev.h
  * @brief    ISP support function header file
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

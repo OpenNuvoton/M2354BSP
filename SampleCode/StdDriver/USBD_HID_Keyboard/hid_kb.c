@@ -2,7 +2,6 @@
  * @file     hid_kb.c
  * @brief    M2354 series USBD HID keyboard sample file
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

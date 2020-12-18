@@ -2,9 +2,8 @@
  * @file     ccid.c
  * @version  V2.00
  * @brief    M2354 USBD CCID sample file
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 /*!<Includes */
 #include <string.h>
@@ -457,4 +456,4 @@ void CCID_DispatchMessage(void)
     }
 }
 
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

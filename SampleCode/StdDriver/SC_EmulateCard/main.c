@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Emulate a smartcard and send ATR to card reader.
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include <string.h>

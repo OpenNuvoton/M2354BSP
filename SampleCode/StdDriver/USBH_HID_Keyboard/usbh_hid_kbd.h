@@ -3,7 +3,6 @@
  * @brief    M2354 USB Host HID keyboard driver header file
  * @version  V1.00
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

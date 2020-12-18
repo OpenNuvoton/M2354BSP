@@ -5,8 +5,8 @@
  * $Date: 15/11/19 10:11a $
  * @brief    Show Crypto IP ECC CDH secret Z generation.
  *
- * @note
- * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>

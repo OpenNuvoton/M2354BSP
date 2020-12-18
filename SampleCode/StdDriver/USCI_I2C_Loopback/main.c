@@ -5,9 +5,8 @@
  * $Revision: 3 $
  * $Date: 19/12/25 2:06p $
  * @brief    Show a Master how to access 7-bit address Slave (loopback)
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
@@ -549,6 +548,6 @@ int main()
 
     while(1);
 }
-/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
 
 

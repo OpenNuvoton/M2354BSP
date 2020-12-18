@@ -3,9 +3,8 @@
  * @version  V1.00
  * @brief    Executing in NuBL32 then jump to execute in Non-secure NuBL33 F/W.
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <arm_cmse.h>
 #include <stdio.h>

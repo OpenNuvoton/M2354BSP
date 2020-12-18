@@ -2,9 +2,8 @@
  * @file     uac.h
  * @version  V1.00
  * @brief    USB Host Audio Class header file
- *
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __INCLUDED_UAC_H__
 #define __INCLUDED_UAC_H__
@@ -282,46 +281,46 @@ typedef struct __attribute__((__packed__)) ac_otd_t
 /*---------------------------------*/
 /* USB Terminal Types     */
 #define UAC_TT_USB_UNDEFINED        0x0100  /* USB Terminal, undefined Type.              */
-#define UAC_TT_USB_STREAMING        0x0101  /* A Terminal dealing with a signal carried 
-                                               over an endpoint in an AudioStreaming 
+#define UAC_TT_USB_STREAMING        0x0101  /* A Terminal dealing with a signal carried
+                                               over an endpoint in an AudioStreaming
                                                interface. The AudioStreaming interface.   */
-#define UAC_TT_USB_VENDOR           0x01FF  /* A Terminal dealing with a signal carried 
+#define UAC_TT_USB_VENDOR           0x01FF  /* A Terminal dealing with a signal carried
                                                over a vendor-specific interface.          */
 /* Input Terminal Types   */
 #define UAC_TT_INPUT_UNDEFINED      0x0200  /* Input Terminal, undefined Type.            */
-#define UAC_TT_MICROPHONE           0x0201  /* A generic microphone that does not fit 
+#define UAC_TT_MICROPHONE           0x0201  /* A generic microphone that does not fit
                                                under any of the other classifications.    */
-#define UAC_TT_DESKTOP_MICROPHONE   0x0202  /* A microphone normally placed on the desktop 
+#define UAC_TT_DESKTOP_MICROPHONE   0x0202  /* A microphone normally placed on the desktop
                                                or integrated into the monitor.            */
 #define UAC_TT_PERSONAL_MICROPHONE  0x0203  /* A head-mounted or clip-on microphone.      */
-#define UAC_TT_OMNI_MICROPHONE      0x0204  /* A microphone designed to pick up voice from 
-                                               more than one speaker at relatively long 
+#define UAC_TT_OMNI_MICROPHONE      0x0204  /* A microphone designed to pick up voice from
+                                               more than one speaker at relatively long
                                                ranges.                                    */
-#define UAC_TT_MICROPHONE_ARRAY     0x0205  /* An array of microphones designed for 
-                                               directional processing using host-based 
+#define UAC_TT_MICROPHONE_ARRAY     0x0205  /* An array of microphones designed for
+                                               directional processing using host-based
                                                signal processing algorithms.              */
 /* Output Terminal Types  */
 #define UAC_TT_OUTPUT_UNDEFINED     0x0300  /* Output Terminal, undefined Type.           */
-#define UAC_TT_SPEAKER              0x0301  /* A generic speaker or set of speakers that 
-                                               doe not fit under any of the other 
+#define UAC_TT_SPEAKER              0x0301  /* A generic speaker or set of speakers that
+                                               doe not fit under any of the other
                                                classifications.                           */
 #define UAC_TT_HEADPHONES           0x0302  /* A head-mounted audio output device.        */
-#define UAC_TT_HEAD_MOUNTED         0x0303  /* The audio part of a VR head mounted display. 
-                                               The Associated Interfaces descriptor can 
-                                               be used to reference the HID interface used 
-                                               to report the position and orientation of 
+#define UAC_TT_HEAD_MOUNTED         0x0303  /* The audio part of a VR head mounted display.
+                                               The Associated Interfaces descriptor can
+                                               be used to reference the HID interface used
+                                               to report the position and orientation of
                                                the HMD.                                   */
-#define UAC_TT_DESKTOP_SPEAKER      0x0304  /* Relatively small speaker or set of speakers 
-                                               normally placed on the desktop or 
-                                               integrated into the monitor. These speakers 
-                                               are close to the user and have limited 
+#define UAC_TT_DESKTOP_SPEAKER      0x0304  /* Relatively small speaker or set of speakers
+                                               normally placed on the desktop or
+                                               integrated into the monitor. These speakers
+                                               are close to the user and have limited
                                                stereo separation.                         */
-#define UAC_TT_ROOM_SPEAKER         0x0305  /* Larger speaker or set of speakers that are 
+#define UAC_TT_ROOM_SPEAKER         0x0305  /* Larger speaker or set of speakers that are
                                                heard well anywhere in the room.           */
-#define UAC_TT_COMM_SPEAKER         0x0306  /* Speaker or set of speakers designed for 
+#define UAC_TT_COMM_SPEAKER         0x0306  /* Speaker or set of speakers designed for
                                                voice communication.                       */
-#define UAC_TT_LFE_SPEAKER          0x0307  /* Speaker designed for low frequencies 
-                                               (subwoofer). Not capable of reproducing 
+#define UAC_TT_LFE_SPEAKER          0x0307  /* Speaker designed for low frequencies
+                                               (subwoofer). Not capable of reproducing
                                                speech or music.                           */
 
 /*----------------------------------------------------------------------------------------*/
