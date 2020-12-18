@@ -6,7 +6,6 @@
  *           SPI0 will be configured as Master mode and SPI1 will be configured as Slave mode.
  *           Both SPI0 and SPI1 will be configured as half-duplex mode.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

@@ -4,7 +4,6 @@
  * @brief    Use USB Host core driver and CDC driver. This sample demonstrates how
  *           to connect a CDC class VCOM device.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/

@@ -3,7 +3,6 @@
  * @version  V1.00
  * @brief    USB Mass Storage Device CD-ROM Emulation.
  *
- * @note
  *
  *           This sample simulate a USB CDROM with a test.txt file.
  *           User can change file within CDROM, follow steps below:
@@ -25,8 +24,6 @@
  *                  Define MSC_ImageSize value in massstorage.h in this project.
  *                  Modify MSC_ImageSize value to hold the file size.
  *
- *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

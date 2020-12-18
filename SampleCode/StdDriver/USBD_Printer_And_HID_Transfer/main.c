@@ -5,13 +5,11 @@
  *           Transfer data between USB device and PC through USB HID interface.
  *           A windows tool is also included in this sample code to connect with a USB device.
  *
- * @note
  *           Windows tool: User need to input the specific PID for the USB HID device connected to PC.
  *                         PID format with hexadecimal.
  *
  *           -> PID is 0xAACC in this sample.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

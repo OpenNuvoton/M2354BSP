@@ -2,10 +2,8 @@
  * @file     usbh_hid.h
  * @version  V1.10
  * @brief    USB Host HID class driver header file.
- *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef  _USBH_HID_H_
 #define  _USBH_HID_H_

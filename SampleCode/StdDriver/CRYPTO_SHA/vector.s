@@ -1,7 +1,6 @@
 ;/*---------------------------------------------------------------------------------------------------------*/
-;/*                                                                                                         */
-;/* Copyright(c) 2010 Nuvoton Technology Corp. All rights reserved.                                         */
-;/*                                                                                                         */
+;/* @copyright SPDX-License-Identifier: Apache-2.0                                                          */
+;/* @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.                             */
 ;/*---------------------------------------------------------------------------------------------------------*/
 
 
@@ -11,7 +10,7 @@
     EXPORT  g_u32VectorDataLimit
 
     ALIGN   4
-        
+
 g_u32VectorDataBase
     INCBIN .\sha_test_vector
 g_u32VectorDataLimit

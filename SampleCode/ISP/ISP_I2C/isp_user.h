@@ -4,8 +4,8 @@
  * @version  0x32
  * @date     14, June, 2017
  *
- * @note
- * Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef ISP_USER_H
 #define ISP_USER_H
@@ -46,4 +46,4 @@ extern __attribute__((aligned(4))) uint8_t g_au8ResponseBuff[64];
 extern uint8_t volatile bUsbDataReady;
 #endif  /* #ifndef ISP_USER_H */
 
-/*** (C) COPYRIGHT 2017 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

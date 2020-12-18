@@ -4,7 +4,6 @@
  * @brief    Show how to implement a USB mouse device.
  *           The mouse cursor will move automatically when this mouse device connecting to PC by USB.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

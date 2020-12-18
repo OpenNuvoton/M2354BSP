@@ -3,7 +3,6 @@
  * @version  V1.00
  * @brief    Non-secure sample code for Collaborative Secure Software Development
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

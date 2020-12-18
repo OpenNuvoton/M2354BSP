@@ -4,7 +4,6 @@
  * @brief    Show the usage of TAMPER static tamper interrupt to wake up system
  *           or clear keys in SRAM of Key Store.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

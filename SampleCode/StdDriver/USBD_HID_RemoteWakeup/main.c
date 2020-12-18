@@ -5,7 +5,6 @@
  *           It uses PA0 ~ PA5 to control mouse direction and mouse key.
  *           It also supports USB suspend and remote wakeup.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

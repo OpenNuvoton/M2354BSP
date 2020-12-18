@@ -4,7 +4,6 @@
  * @brief    M2354 Series I2S Driver Sample Code
  *           This is an I2S demo with PDMA function connected with codec.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

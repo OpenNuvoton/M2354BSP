@@ -4,7 +4,6 @@
  * @brief    M2354 SPII2S Driver Sample Code
  *           This is an I2S demo for recording data and demonstrate how I2S works with PDMA.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

@@ -3,8 +3,8 @@
  * @version  V1.00
  * @brief    CRYPTO SHA test vector parser
  *
- * @note
- * Copyright (C) 2016 M2355 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>

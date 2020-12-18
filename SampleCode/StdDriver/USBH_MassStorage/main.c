@@ -5,7 +5,6 @@
  *           how to use USBH mass storage driver and make it working as a disk
  *           driver under FATFS file system.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/

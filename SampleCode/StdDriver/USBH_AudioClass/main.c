@@ -4,7 +4,6 @@
  * @brief    Demonstrates how to use USBH Audio Class driver. It shows the
  *           mute, volume, auto-gain, channel, and sampling rate control.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/

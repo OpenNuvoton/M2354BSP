@@ -4,7 +4,6 @@
  * @brief    This is an I2S demo using NAU8822/88L25 audio codec, and used to play
  *           back the input from line-in.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

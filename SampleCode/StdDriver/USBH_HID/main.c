@@ -5,7 +5,6 @@
  *           to submit HID class request and how to read data from interrupt pipe.
  *           This sample supports dynamic device plug/un-plug and multiple HID devices.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/

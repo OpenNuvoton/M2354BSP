@@ -3,7 +3,6 @@
  * @version  V3.00
  * @brief    Show the usage of TAMPER voltage glitch positive and negative detection function.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

@@ -2,8 +2,8 @@
  * @file     #include "vector_parser.h".h
  * @brief
  *
- * @note
- * Copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __VECTOR_PARSER_H__
 #define __VECTOR_PARSER_H__
@@ -15,4 +15,4 @@ extern int32_t g_i32DataLen;
 
 #endif  /* __VECTOR_PARSER_H__ */
 
-/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

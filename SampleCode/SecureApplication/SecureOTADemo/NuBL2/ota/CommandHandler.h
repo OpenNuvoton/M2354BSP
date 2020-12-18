@@ -3,9 +3,8 @@
  * @version  V3.00
  * @brief    Secure ISP - Process commands
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __COMMAND_HANDLER_H__
 #define __COMMAND_HANDLER_H__

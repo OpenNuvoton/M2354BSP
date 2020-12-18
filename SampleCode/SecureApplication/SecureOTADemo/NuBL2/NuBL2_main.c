@@ -3,9 +3,8 @@
  * @version  V1.00
  * @brief    Demonstrate to do secure OTA update for NuBL32 and NuBL33 firmware by NuBL2.
  *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <arm_cmse.h>
 #include <stdio.h>

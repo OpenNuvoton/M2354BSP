@@ -4,7 +4,6 @@
  * @brief    Demonstrate how to implement a USB virtual COM port device using
  *           double buffer mode.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

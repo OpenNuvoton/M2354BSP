@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    This source file is used to authenticate the NuBL32 and NuBL33.
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -208,4 +208,4 @@ int32_t VerifyNuBL3x(uint32_t *pu32FwInfo, uint32_t u32InfoBase)
     return 0;
 }
 
-/*** (C) COPYRIGHT 2019 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

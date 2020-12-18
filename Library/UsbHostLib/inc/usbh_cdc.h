@@ -2,10 +2,8 @@
  * @file     usbh_cdc.h
  * @version  V1.10
  * @brief    USB Host CDC(Communication Device Class) driver header file.
- *
- * @note
- * SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef  _USBH_CDC_H_
 #define  _USBH_CDC_H_
@@ -122,11 +120,11 @@ extern "C"
 /*-----------------------------------------------------------------------------------
  *  CDC Class-specific interface descriptor header
  */
- 
+
 /** @addtogroup USBH_Library USB Host Library
   @{
 */
- 
+
 #ifdef __ICCARM__
 typedef struct cdc_if_header
 {

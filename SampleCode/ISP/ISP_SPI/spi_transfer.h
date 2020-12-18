@@ -2,7 +2,6 @@
  * @file     spi_transfer.h
  * @brief    ISP tool SPI initialization header file
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

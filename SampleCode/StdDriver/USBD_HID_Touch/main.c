@@ -4,7 +4,6 @@
  * @brief    Demonstrate how to implement a USB touch digitizer device.
  *           Two lines demo in Paint
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/

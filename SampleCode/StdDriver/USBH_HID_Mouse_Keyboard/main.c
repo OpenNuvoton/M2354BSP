@@ -4,7 +4,6 @@
  * @brief    Use USB Host core driver and HID driver. This sample demonstrates how
  *           to support mouse and keyboard input.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/

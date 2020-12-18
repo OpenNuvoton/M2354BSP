@@ -5,7 +5,6 @@
  *           a vendor driver. This sample requires a USB device running
  *           sample USBD_VENDOR_LBK to be connected.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/

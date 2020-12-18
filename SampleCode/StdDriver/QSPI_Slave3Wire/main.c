@@ -5,7 +5,6 @@
  *           communicate with an off-chip SPI Master device with FIFO mode.
  *           This sample code needs to work with SPI_MasterFIFOMode sample code.
  *
- * @note
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
