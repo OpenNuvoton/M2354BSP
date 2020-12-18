@@ -12,5 +12,3 @@
 
 extern const uint32_t g_InitialFWInfo[]; // A global variable to store NuBL33 FWINFO address, declared in FwInfo.c
 
- * @copyright SPDX-License-Identifier: Apache-2.0
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
