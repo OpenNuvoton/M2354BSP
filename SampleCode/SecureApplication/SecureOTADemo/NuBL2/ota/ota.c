@@ -328,7 +328,7 @@ int32_t CheckNuBL3xWriteSpace(uint32_t u32FwSize, int32_t i32Mode)
 
     if(!((i32Mode == 0) || (i32Mode == 1)))
     {
-        DEBUG_MSG("\nCheck NuBL3x firmware write space FAIL. Invalid mode: 0x%x.\n\n", u8Mode);
+        DEBUG_MSG("\nCheck NuBL3x firmware write space FAIL. Invalid mode: 0x%x.\n\n", i32Mode);
         return ret;
     }
 
@@ -342,7 +342,7 @@ int32_t CheckNuBL3xWriteSpace(uint32_t u32FwSize, int32_t i32Mode)
     if(u32FwSize > u32ReservedSize)
     {
         /* Reserved flash space is not enough for new firmware */
-        DEBUG_MSG("\nCheck NuBL3%d firmware write space is not enough. %d : %d\n\n", ((u8Mode & BIT0) == 0) ? 2 : 3, u32FwSize, u32ReservedSize);
+        DEBUG_MSG("\nCheck NuBL3%d firmware write space is not enough. %d : %d\n\n", (((uint32_t)i32Mode & BIT0) == 0) ? 2 : 3, u32FwSize, u32ReservedSize);
         ret = -1001;
     }
 
@@ -1710,7 +1710,7 @@ int32_t OTACmdReqProcess(ISP_INFO_T *pISPInfo)
                 /* Get Server public key 0 */
                 memcpy(pISPInfo->ServerPubKey.au32Key0, cmd.au32Data, cmd.u16Len);
                 for(i = 0; i < 8; i++)
-                    DEBUG_MSG("Get pub0[%d]: 0x%08x.\n", i, pISPInfo->ServerPubKey.au32Key0[i]);
+                    NUBL_MSG("Get pub0[%d]: 0x%08x.\n", i, pISPInfo->ServerPubKey.au32Key0[i]);
 
                 /* Response status ok */
                 memset(cmd.au32Data, 0x0, sizeof(cmd.au32Data));
@@ -1722,7 +1722,7 @@ int32_t OTACmdReqProcess(ISP_INFO_T *pISPInfo)
                 /* Get Server public key 1 and generate ist ECDH AES key */
                 memcpy(pISPInfo->ServerPubKey.au32Key1, cmd.au32Data, cmd.u16Len);
                 for(i = 0; i < 8; i++)
-                    DEBUG_MSG("Get pub1[%d]: 0x%08x.\n", i, pISPInfo->ServerPubKey.au32Key1[i]);
+                    NUBL_MSG("Get pub1[%d]: 0x%08x.\n", i, pISPInfo->ServerPubKey.au32Key1[i]);
 
                 /* Identify Host public key */
                 if(((uint32_t)IdentifyPublicKey((uint32_t *)pISPInfo->ServerPubKey.au32Key0, 0)&BIT2) != BIT2)
@@ -1876,7 +1876,7 @@ void OTA_CallBackHandler(uint8_t* pu8Buff, uint32_t u32Len, uint32_t u32StartIdx
             /* Copy session key to ISP Info */
             memcpy((void *)g_pISPInfo->au32AESKey, AESKey, sizeof(AESKey));
             for(i = 0; i < 8; i++)
-                DEBUG_MSG("Gen 1st KEY[%d]: 0x%08x.\n", i, g_pISPInfo->au32AESKey[i]);
+                NUBL_MSG("Gen 1st KEY[%d]: 0x%08x.\n", i, g_pISPInfo->au32AESKey[i]);
         }
         case CMD_ECDH_PUB1:
         case CMD_AUTH_KEY:

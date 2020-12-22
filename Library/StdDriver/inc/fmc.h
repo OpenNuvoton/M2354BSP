@@ -97,7 +97,7 @@ extern "C"
 #define FMC_ISPCMD_BANK_ERASE   0x23UL     /*!< ISP Command: Erase Flash bank 0 or 1  */
 #define FMC_ISPCMD_PROGRAM_MUL  0x27UL     /*!< ISP Command: Flash Multi-Word Program */
 #define FMC_ISPCMD_RUN_ALL1     0x28UL     /*!< ISP Command: Run all-one verification */
-#define FMC_ISPCMD_BANK_SWAP    0x2CUL     /*!< ISP Command: Bank Swap                */
+#define FMC_ISPCMD_BANK_REMAP   0x2CUL     /*!< ISP Command: Bank Remap                */
 #define FMC_ISPCMD_RUN_CKS      0x2DUL     /*!< ISP Command: Run Check Calculation    */
 #define FMC_ISPCMD_VECMAP       0x2EUL     /*!< ISP Command: Set vector mapping       */
 #define FMC_ISPCMD_READ_64      0x40UL     /*!< ISP Command: 64-bit read Flash        */
@@ -572,7 +572,7 @@ extern int32_t FMC_WriteConfig(uint32_t au32Config[], uint32_t u32Count);
 extern int32_t FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len);
 extern int32_t FMC_WriteOTP(uint32_t otp_num, uint32_t low_word, uint32_t high_word);
 extern int32_t FMC_WriteMultipleA(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len);
-extern int32_t FMC_SwapBank(uint32_t u32Bank);
+extern int32_t FMC_RemapBank(uint32_t u32Bank);
 
 /**@}*/ /* end of group FMC_EXPORTED_FUNCTIONS */
 

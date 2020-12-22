@@ -823,20 +823,20 @@ int32_t FMC_WriteOTP(uint32_t u32OtpNum, uint32_t u32LowWord, uint32_t u32HighWo
 }
 
 /**
-  * @brief     Swap Bank0/Bank1
+  * @brief     Remap Bank0/Bank1
   *
-  * @param[in] u32Bank    Bank Num which will swap to.
+  * @param[in] u32Bank    Bank Num which will remap to.
   *
   * @retval    0   Success
   * @retval    -1  Program failed.
   *
-  * @details  Swap Bank0/Bank1
+  * @details  Remap Bank0/Bank1
   */
-int32_t FMC_SwapBank(uint32_t u32Bank)
+int32_t FMC_RemapBank(uint32_t u32Bank)
 {
     int32_t  ret = 0;
 
-    FMC->ISPCMD = FMC_ISPCMD_BANK_SWAP;
+    FMC->ISPCMD = FMC_ISPCMD_BANK_REMAP;
     FMC->ISPADDR = u32Bank;
     FMC->ISPDAT = 0x5AA55AA5UL;
     FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
