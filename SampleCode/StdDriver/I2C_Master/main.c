@@ -17,11 +17,15 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-static volatile uint8_t g_u8DeviceAddr;
-static volatile uint8_t g_au8MstTxData[3];
-static volatile uint8_t g_u8MstRxData;
-static volatile uint8_t g_u8MstDataLen;
-static volatile uint8_t g_u8MstEndFlag = 0;
+static volatile uint8_t s_u8DeviceAddr;
+static volatile uint8_t s_au8MstTxData[3];
+static volatile uint8_t s_u8MstRxData;
+static volatile uint8_t s_u8MstDataLen;
+static volatile uint8_t s_u8MstEndFlag = 0;
+static volatile uint8_t s_u8MstTxAbortFlag = 0;
+static volatile uint8_t s_u8MstRxAbortFlag = 0;
+static volatile uint8_t s_u8MstReStartFlag = 0;
+static volatile uint8_t s_u8TimeoutFlag = 0;
 
 typedef void (*I2C_FUNC)(uint32_t u32Status);
 volatile static I2C_FUNC s_I2C0HandlerFn = NULL;
@@ -33,6 +37,7 @@ void SYS_Init(void);
 void I2C0_Init(void);
 void I2C0_Close(void);
 int32_t I2C0_Read_Write_SLAVE(uint8_t u8SlvAddr);
+
 /*---------------------------------------------------------------------------------------------------------*/
 /*  I2C0 IRQ Handler                                                                                       */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -46,6 +51,7 @@ void I2C0_IRQHandler(void)
     {
         /* Clear I2C0 Timeout Flag */
         I2C_ClearTimeoutFlag(I2C0);
+        s_u8TimeoutFlag = 1;
     }
     else
     {
@@ -59,14 +65,15 @@ void I2C0_IRQHandler(void)
 /*---------------------------------------------------------------------------------------------------------*/
 void I2C_MasterRx(uint32_t u32Status)
 {
+
     if(u32Status == 0x08)                       /* START has been transmitted and prepare SLA+W */
     {
-        I2C_SET_DATA(I2C0, (uint16_t)(g_u8DeviceAddr << 1));    /* Write SLA+W to Register I2CDAT */
+        I2C_SET_DATA(I2C0, (uint32_t)(s_u8DeviceAddr << 1));    /* Write SLA+W to Register I2CDAT */
         I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
     }
     else if(u32Status == 0x18)                  /* SLA+W has been transmitted and ACK has been received */
     {
-        I2C_SET_DATA(I2C0, g_au8MstTxData[g_u8MstDataLen++]);
+        I2C_SET_DATA(I2C0, s_au8MstTxData[s_u8MstDataLen++]);
         I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
     }
     else if(u32Status == 0x20)                  /* SLA+W has been transmitted and NACK has been received */
@@ -76,9 +83,9 @@ void I2C_MasterRx(uint32_t u32Status)
     }
     else if(u32Status == 0x28)                  /* DATA has been transmitted and ACK has been received */
     {
-        if(g_u8MstDataLen != 2)
+        if(s_u8MstDataLen != 2)
         {
-            I2C_SET_DATA(I2C0, g_au8MstTxData[g_u8MstDataLen++]);
+            I2C_SET_DATA(I2C0, s_au8MstTxData[s_u8MstDataLen++]);
             I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
         }
         else
@@ -88,7 +95,7 @@ void I2C_MasterRx(uint32_t u32Status)
     }
     else if(u32Status == 0x10)                  /* Repeat START has been transmitted and prepare SLA+R */
     {
-        I2C_SET_DATA(I2C0, (uint16_t)((g_u8DeviceAddr << 1) | 0x01));   /* Write SLA+R to Register I2CDAT */
+        I2C_SET_DATA(I2C0, (uint32_t)((s_u8DeviceAddr << 1) | 0x01));   /* Write SLA+R to Register I2CDAT */
         I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
     }
     else if(u32Status == 0x40)                  /* SLA+R has been transmitted and ACK has been received */
@@ -97,14 +104,44 @@ void I2C_MasterRx(uint32_t u32Status)
     }
     else if(u32Status == 0x58)                  /* DATA has been received and NACK has been returned */
     {
-        g_u8MstRxData = (unsigned char) I2C_GET_DATA(I2C0);
+        s_u8MstRxData = (unsigned char) I2C_GET_DATA(I2C0);
         I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
-        g_u8MstEndFlag = 1;
+        I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        s_u8MstEndFlag = 1;
     }
     else
     {
-        /* TO DO */
-        printf("Status 0x%x is NOT processed\n", u32Status);
+        /* Error condition process */
+        printf("[MasterRx] Status [0x%x] Unexpected abort!! Anykey to re-start\n", u32Status);
+        if(u32Status == 0x38)                 /* Master arbitration lost, stop I2C and clear SI */
+        {
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        else if(u32Status == 0x30)            /* Master transmit data NACK, stop I2C and clear SI */
+        {
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        else if(u32Status == 0x48)            /* Master receive address NACK, stop I2C and clear SI */
+        {
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        else if(u32Status == 0x00)            /* Master bus error, stop I2C and clear SI */
+        {
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        else
+        {
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        /*Setting MasterRx abort flag for re-start mechanism*/
+        s_u8MstRxAbortFlag = 1;
+        getchar();
+        I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        while(I2C0->CTL0 & I2C_CTL0_SI_Msk);
     }
 }
 /*---------------------------------------------------------------------------------------------------------*/
@@ -114,12 +151,12 @@ void I2C_MasterTx(uint32_t u32Status)
 {
     if(u32Status == 0x08)                       /* START has been transmitted */
     {
-        I2C_SET_DATA(I2C0, (uint16_t)(g_u8DeviceAddr << 1));    /* Write SLA+W to Register I2CDAT */
+        I2C_SET_DATA(I2C0, (uint32_t)(s_u8DeviceAddr << 1));    /* Write SLA+W to Register I2CDAT */
         I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
     }
     else if(u32Status == 0x18)                  /* SLA+W has been transmitted and ACK has been received */
     {
-        I2C_SET_DATA(I2C0, g_au8MstTxData[g_u8MstDataLen++]);
+        I2C_SET_DATA(I2C0, s_au8MstTxData[s_u8MstDataLen++]);
         I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
     }
     else if(u32Status == 0x20)                  /* SLA+W has been transmitted and NACK has been received */
@@ -129,23 +166,61 @@ void I2C_MasterTx(uint32_t u32Status)
     }
     else if(u32Status == 0x28)                  /* DATA has been transmitted and ACK has been received */
     {
-        if(g_u8MstDataLen != 3)
+        if(s_u8MstDataLen != 3)
         {
-            I2C_SET_DATA(I2C0, g_au8MstTxData[g_u8MstDataLen++]);
+            I2C_SET_DATA(I2C0, s_au8MstTxData[s_u8MstDataLen++]);
             I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
         }
         else
         {
             I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
-            g_u8MstEndFlag = 1;
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+            s_u8MstEndFlag = 1;
         }
     }
     else
     {
-        /* TO DO */
-        printf("Status 0x%x is NOT processed\n", u32Status);
+        /* Error condition process */
+        printf("[MasterTx] Status [0x%x] Unexpected abort!! Anykey to re-start\n", u32Status);
+
+        if(u32Status == 0x38)                   /* Master arbitration lost, stop I2C and clear SI */
+        {
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        else if(u32Status == 0x00)              /* Master bus error, stop I2C and clear SI */
+        {
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        else if(u32Status == 0x30)              /* Master transmit data NACK, stop I2C and clear SI */
+        {
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        else if(u32Status == 0x48)              /* Master receive address NACK, stop I2C and clear SI */
+        {
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        else if(u32Status == 0x10)              /* Master repeat start, clear SI */
+        {
+            I2C_SET_DATA(I2C0, (uint32_t)((s_u8DeviceAddr << 1) | 0x01));   /* Write SLA+R to Register I2CDAT */
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        else
+        {
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STO_SI);
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        }
+        /*Setting MasterTRx abort flag for re-start mechanism*/
+        s_u8MstTxAbortFlag = 1;
+        getchar();
+        I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
+        while(I2C0->CTL0 & I2C_CTL0_SI_Msk);
     }
 }
+
 
 void SYS_Init(void)
 {
@@ -182,6 +257,9 @@ void SYS_Init(void)
     /* Set PA multi-function pins for I2C0 SDA and SCL */
     SYS->GPA_MFPL &= ~(SYS_GPA_MFPL_PA4MFP_Msk | SYS_GPA_MFPL_PA5MFP_Msk);
     SYS->GPA_MFPL |= (SYS_GPA_MFPL_PA4MFP_I2C0_SDA | SYS_GPA_MFPL_PA5MFP_I2C0_SCL);
+
+    /* I2C pins enable schmitt trigger */
+    PA->SMTEN |= (GPIO_SMTEN_SMTEN4_Msk | GPIO_SMTEN_SMTEN5_Msk);
 }
 
 void I2C0_Init(void)
@@ -219,44 +297,95 @@ int32_t I2C0_Read_Write_SLAVE(uint8_t u8SlvAddr)
 {
     uint32_t u32i;
 
-    g_u8DeviceAddr = u8SlvAddr;
-
-    for(u32i = 0; u32i < 0x100; u32i++)
+    do
     {
-        g_au8MstTxData[0] = (uint8_t)((u32i & 0xFF00) >> 8);
-        g_au8MstTxData[1] = (uint8_t)(u32i & 0x00FF);
-        g_au8MstTxData[2] = (uint8_t)(g_au8MstTxData[1] + 3);
-
-        g_u8MstDataLen = 0;
-        g_u8MstEndFlag = 0;
-
-        /* I2C function to write data to slave */
-        s_I2C0HandlerFn = (I2C_FUNC)I2C_MasterTx;
-
-        /* I2C as master sends START signal */
-        I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STA);
-
-        /* Wait I2C Tx Finish */
-        while(g_u8MstEndFlag == 0);
-        g_u8MstEndFlag = 0;
-
-        /* I2C function to read data from slave */
-        s_I2C0HandlerFn = (I2C_FUNC)I2C_MasterRx;
-
-        g_u8MstDataLen = 0;
-        g_u8DeviceAddr = u8SlvAddr;
-
-        I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STA);
-
-        /* Wait I2C Rx Finish */
-        while(g_u8MstEndFlag == 0);
-
-        /* Compare data */
-        if(g_u8MstRxData != g_au8MstTxData[2])
+        /* Enable I2C timeout */
+        I2C_EnableTimeout(I2C0, 0);
+        s_u8MstReStartFlag = 0;
+        s_u8DeviceAddr = u8SlvAddr;
+        s_u8TimeoutFlag = 0;
+        for(u32i = 0; u32i < 0x100; u32i++)
         {
-            printf("I2C Byte Write/Read Failed, Data 0x%x\n", g_u8MstRxData);
-            return -1;
+            s_au8MstTxData[0] = (uint8_t)((u32i & 0xFF00) >> 8);
+            s_au8MstTxData[1] = (uint8_t)(u32i & 0x00FF);
+            s_au8MstTxData[2] = (uint8_t)(s_au8MstTxData[1] + 3);
+
+            s_u8MstDataLen = 0;
+            s_u8MstEndFlag = 0;
+
+            /* I2C function to write data to slave */
+            s_I2C0HandlerFn = (I2C_FUNC)I2C_MasterTx;
+
+            /* I2C as master sends START signal */
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STA);
+
+            /* Wait I2C Tx Finish or Unexpected Abort*/
+            do
+            {
+                if(s_u8TimeoutFlag)
+                {
+                    printf(" MasterTx time out, any to reset IP\n");
+                    getchar();
+                    SYS->IPRST1 |= SYS_IPRST1_I2C0RST_Msk;
+                    SYS->IPRST1 = 0;
+                    I2C0_Init();
+                    /* Set MasterTx abort flag*/
+                    s_u8MstTxAbortFlag = 1;
+                }
+            } while(s_u8MstEndFlag == 0 && s_u8MstTxAbortFlag == 0);
+
+            s_u8MstEndFlag = 0;
+            if(s_u8MstTxAbortFlag)
+            {
+                /* Clear MasterTx abort flag*/
+                s_u8MstTxAbortFlag = 0;
+                /* Set Master re-start flag*/
+                s_u8MstReStartFlag = 1;
+                break;
+            }
+            /* DATA has been received and NACK has been returned */
+
+            s_I2C0HandlerFn = (I2C_FUNC)I2C_MasterRx;
+            s_u8MstDataLen = 0;
+            s_u8DeviceAddr = u8SlvAddr;
+
+            I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STA);
+
+            /* Wait I2C Rx Finish or Unexpected Abort*/
+            do {
+                if(s_u8TimeoutFlag)
+                {
+                    /* When I2C timeout, reset IP*/
+                    printf(" MasterRx time out, any to reset IP\n");
+                    getchar();
+                    SYS->IPRST1 |= SYS_IPRST1_I2C0RST_Msk;
+                    SYS->IPRST1 = 0;
+                    I2C0_Init();
+                    /* Set MasterRx abort flag*/
+                    s_u8MstRxAbortFlag = 1;
+                }
+            } while(s_u8MstEndFlag == 0 && s_u8MstRxAbortFlag == 0);
+
+            s_u8MstEndFlag = 0;
+
+            if(s_u8MstRxAbortFlag )
+            {
+                /* Clear MasterRx abort flag*/
+                s_u8MstRxAbortFlag = 0;
+                /* Set Master re-start flag*/
+                s_u8MstReStartFlag = 1;
+                break;
+            }
+            /* DATA has been received and NACK has been returned */
+
+
         }
+    } while(s_u8MstReStartFlag); /*If unexpected abort happens, re-start the transmition*/
+    /* Compare data */
+    if(s_u8MstRxData != s_au8MstTxData[2])
+    {
+        printf("I2C Byte Write/Read Failed, Data 0x%x\n", s_u8MstRxData);
+        return -1;
     }
     printf("Master Access Slave (0x%X) Test OK\n", u8SlvAddr);
     return 0;
