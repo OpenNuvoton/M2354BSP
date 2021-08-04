@@ -367,7 +367,7 @@ int32_t main(void)
 
                 /* Re-enable crystal-less */
                 SYS->TCTL48M = 0x01;
-                SYS->TCTL48M |= SYS_TCTL48M_REFCKSEL_Msk;
+                SYS->TCTL48M |= SYS_TCTL48M_REFCKSEL_Msk | SYS_TCTL48M_BOUNDEN_Msk | (8 << SYS_TCTL48M_BOUNDARY_Pos);
             }
         }
 
