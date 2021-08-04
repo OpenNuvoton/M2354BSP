@@ -131,6 +131,9 @@ void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[])
   *         - \ref AES_MODE_CBC_CS1
   *         - \ref AES_MODE_CBC_CS2
   *         - \ref AES_MODE_CBC_CS3
+  *         - \ref AES_MODE_GCM
+  *         - \ref AES_MODE_GHASH
+  *         - \ref AES_MODE_CCM
   * @param[in]  u32KeySize is AES key size, including:
   *         - \ref AES_KEY_SIZE_128
   *         - \ref AES_KEY_SIZE_192
