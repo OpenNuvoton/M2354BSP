@@ -1051,9 +1051,9 @@ extern "C"
  *
  * @details     Set the interrupt de-bounce sampling cycle time based on the debounce counter clock source. \n
  *              Example: _GPIO_SET_DEBOUNCE_TIME(PA, GPIO_DBCTL_DBCLKSRC_LIRC, GPIO_DBCTL_DBCLKSEL_4). \n
- *              It's meaning the De-debounce counter clock source is internal 10 KHz and sampling cycle selection is 4. \n
- *              Then the target de-bounce sampling cycle time is (4)*(1/(10*1000)) s = 4*0.0001 s = 400 us,
- *              and system will sampling interrupt input once per 400 us.
+ *              It's meaning the De-debounce counter clock source is internal 32 KHz and sampling cycle selection is 4. \n
+ *              Then the target de-bounce sampling cycle time is (4)*(1/(32*1000)) s = 125 us,
+ *              and system will sampling interrupt input once per 125 us.
  */
 #define GPIO_SET_DEBOUNCE_TIME(port, u32ClkSrc, u32ClkSel)    ((port)->DBCTL = (GPIO_DBCTL_ICLKON_Msk | (u32ClkSrc) | (u32ClkSel)))
 

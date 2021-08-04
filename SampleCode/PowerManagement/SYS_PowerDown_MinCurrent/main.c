@@ -223,7 +223,7 @@ int32_t main(void)
     /* Set main voltage regulator to DCDC mode */
     SYS_SetPowerRegulator(SYS_PLCTL_MVRS_DCDC);
 
-    /* Disable unused SRAM power expect SRAM bank0. SRAM bank0 is used to download code. */
+    /* Disable unused SRAM power except SRAM bank0. SRAM bank0 is used to download code. */
     SYS->SRAMPC0 = 0x2AAAA800;
     SYS->SRAMPC1 = 0x2AAA00AA;
 
