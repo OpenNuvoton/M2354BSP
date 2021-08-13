@@ -96,16 +96,28 @@ void FMC_Close(void)
   * @retval   1   XOM is has already actived.
   * @retval   -1  Program failed.
   * @retval   -2  Invalid XOM number.
+  * @retval   -3  Invalid XOM region.
   *
   * @details  Program XOM base address and XOM size(page)
   */
+
+
 int32_t FMC_ConfigXOM(uint32_t u32XomNum, uint32_t u32XomBase, uint8_t u8XomPage)
 {
     int32_t  ret = 0;
+    uint32_t u32ApromSize;
+
+    /* Get APROM size */
+    u32ApromSize = FULL_ROMSIZE_SEL ? FMC_APROM_END : FMC_APROM_END/2;
 
     if(u32XomNum >= 4UL)
     {
         ret = -2;
+    }
+
+    if((u32XomBase == FMC_APROM_BASE) || ((u32XomBase + FMC_FLASH_PAGE_SIZE * u8XomPage) > u32ApromSize))
+    {
+        ret = -3;
     }
 
     if(ret == 0)
