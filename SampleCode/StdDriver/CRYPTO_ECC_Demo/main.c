@@ -155,6 +155,10 @@ int32_t main(void)
     /* Initial TRNG */
     RNG_Open();
 
+    /* Init Timer */
+    SysTick->LOAD  = 0xfffffful;                                              /* set reload register */
+    SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;    /* Enable SysTick IRQ and SysTick Timer */
+    
     au8r = (uint8_t *)&au32r[0];
     do
     {
