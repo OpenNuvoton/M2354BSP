@@ -565,13 +565,15 @@ void LCDLIB_Printf(uint32_t u32Zone, char *InputStr)
                     + (index * g_LCDZoneInfo[u32Zone].u32MaxSegNum * 2)
                     + (i * 2) + 1);
 
-            /* Turn off display */
-            LCD_SetPixel(com, seg, 0);
-
             if(DispData & (1 << i))
             {
                 /* Turn on display */
                 LCD_SetPixel(com, seg, 1);
+            }
+            else
+            {
+                /* Turn off display */
+                LCD_SetPixel(com, seg, 0);
             }
         }
 
@@ -617,13 +619,15 @@ void LCDLIB_PrintNumber(uint32_t u32Zone, uint32_t InputNum)
                     + (index * g_LCDZoneInfo[u32Zone].u32MaxSegNum * 2)
                     + (i * 2) + 1);
 
-            /* Turn off display */
-            LCD_SetPixel(com, seg, 0);
-
             if(DispData & (1 << i))
             {
                 /* Turn on display */
                 LCD_SetPixel(com, seg, 1);
+            }
+            else
+            {
+                /* Turn off display */
+                LCD_SetPixel(com, seg, 0);
             }
         }
 
@@ -662,13 +666,15 @@ void LCDLIB_PutChar(uint32_t u32Zone, uint32_t u32Index, uint8_t u8Ch)
                     + (u32Index * g_LCDZoneInfo[u32Zone].u32MaxSegNum * 2)
                     + (i * 2) + 1);
 
-            /* Turn off display */
-            LCD_SetPixel(com, seg, 0);
-
             if(DispData & (1 << i))
             {
                 /* Turn on display */
                 LCD_SetPixel(com, seg, 1);
+            }
+            else
+            {
+                /* Turn off display */
+                LCD_SetPixel(com, seg, 0);
             }
         }
     }
