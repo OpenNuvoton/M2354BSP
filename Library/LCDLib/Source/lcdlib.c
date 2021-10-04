@@ -582,10 +582,10 @@ void LCDLIB_Printf(uint32_t u32Zone, char *InputStr)
 }
 
 /**
- *  @brief Display number on LCD
+ *  @brief Display unsigned number on LCD
  *
  *  @param[in]  u32Zone     the assigned number of display area
- *  @param[in]  InputNum    number to show on display
+ *  @param[in]  InputNum    unsigned number to show on display
  *
  *  @return None
  */
@@ -633,6 +633,80 @@ void LCDLIB_PrintNumber(uint32_t u32Zone, uint32_t InputNum)
 
         div = div * 10;
     }
+}
+
+/**
+ *  @brief Display signed number on LCD
+ *
+ *  @param[in]  u32Zone     the assigned number of display area
+ *  @param[in]  iInputNum   signed number to show on display
+ *  @param[in]  u8DigiCnt   valid digital number count
+ *
+ *  @return None
+ */
+void LCDLIB_PrintNumberEx(uint32_t u32Zone, int32_t iInputNum, uint8_t u8DigiCnt)
+{
+    uint32_t    i, index, val, div;
+    uint16_t    DispData;
+    uint32_t    com, seg;
+    uint8_t     is_negative = 0;
+
+    /* Extract useful digits */
+    div = 1;
+
+    /* Fill out all characters on display */
+    index = g_LCDZoneInfo[u32Zone].u32DigitCnt;
+    
+    if(iInputNum < 0)
+    {
+        is_negative = 1;
+        iInputNum = 0 - iInputNum;
+    }
+        
+    while(index != 0)
+    {
+        index--;
+        
+        if(u8DigiCnt == 0)
+            continue;
+        u8DigiCnt --;
+
+        val = ((uint32_t)iInputNum / div) % 10;
+        if(u32Zone == ZONE_MAIN_DIGIT)
+            val += 16; /* The Main Digit Table is an ASCII table beginning with "SPACE" */
+
+        DispData = *(g_LCDDispTable[u32Zone] + val);
+
+        for(i = 0; i < g_LCDZoneInfo[u32Zone].u32MaxSegNum; i++)
+        {
+            com = *(g_GetLCDComSeg[u32Zone]
+                    + (index * g_LCDZoneInfo[u32Zone].u32MaxSegNum * 2)
+                    + (i * 2) + 0);
+            seg = *(g_GetLCDComSeg[u32Zone]
+                    + (index * g_LCDZoneInfo[u32Zone].u32MaxSegNum * 2)
+                    + (i * 2) + 1);
+
+            if(DispData & (1 << i))
+            {
+                /* Turn on display */
+                LCD_SetPixel(com, seg, 1);
+            }
+            else
+            {
+                /* Turn off display */
+                LCD_SetPixel(com, seg, 0);
+            }
+        }
+
+        div = div * 10;
+    }
+
+    if(u32Zone == ZONE_MAIN_DIGIT)
+        LCDLIB_SetSymbol(SYMBOL_MINUS, is_negative);
+    if(u32Zone == ZONE_PPM_DIGIT)
+        LCDLIB_SetSymbol(SYMBOL_PPM_MINUS, is_negative);
+    if(u32Zone == ZONE_TEMP_DIGIT)
+        LCDLIB_SetSymbol(SYMBOL_TEMP_MINUS, is_negative);
 }
 
 /**

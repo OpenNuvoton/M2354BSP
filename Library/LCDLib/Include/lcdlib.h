@@ -77,8 +77,10 @@ extern "C"
 #define SYMBOL_CIRCLE_RIGHT     ((0)<<4  | (5)<<0)  /*!< T35 display on COM 5, SEG 0 */
 #define SYMBOL_PERCENTAGE       ((23)<<4 | (4)<<0)  /*!< Y2 display on COM 4, SEG 23 */
 #define SYMBOL_PPM              ((21)<<4 | (4)<<0)  /*!< Y1 display on COM 4, SEG 21 */
+#define SYMBOL_PPM_MINUS        ((17)<<4 | (6)<<0)  /*!< 12G display on COM 6, SEG 17 */
 #define SYMBOL_TEMP_C           ((25)<<4 | (4)<<0)  /*!< T37 display on COM 4, SEG 25 */
 #define SYMBOL_TEMP_F           ((27)<<4 | (4)<<0)  /*!< T38 display on COM 4, SEG 27 */
+#define SYMBOL_TEMP_MINUS       ((23)<<4 | (6)<<0)  /*!< 15G display on COM 6, SEG 23 */
 #define SYMBOL_VERSION          ((31)<<4 | (4)<<0)  /*!< T41 display on COM 4, SEG 31 */
 #define SYMBOL_S(x)             (((((x)-1)%5)+11)<<4 | (((x)-1)/5)<<0)  /*!< S[x] display on COM x, SEG x. [x] range is 1 ~ 40. */
 #define SYMBOL_MAIN_DIG_COL1    ((16)<<4 | (1)<<0)  /*!< T14 display on COM 1, SEG 16 */
@@ -122,6 +124,7 @@ typedef struct
 void LCDLIB_Printf(uint32_t u32Zone, char *InputStr);
 void LCDLIB_PutChar(uint32_t u32Zone, uint32_t u32Index, uint8_t u8Ch);
 void LCDLIB_PrintNumber(uint32_t u32Zone, uint32_t InputNum);
+void LCDLIB_PrintNumberEx(uint32_t u32Zone, int32_t iInputNum, uint8_t u8DigiCnt);
 void LCDLIB_SetSymbol(uint32_t u32Symbol, uint32_t u32OnOff);
 
 /**@}*/ /* end of group M2354_LCDLIB_EXPORTED_FUNCTIONS */
