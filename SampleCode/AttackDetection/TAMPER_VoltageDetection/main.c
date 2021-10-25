@@ -30,8 +30,8 @@ void SYS_Init(void)
     /* Enable TAMPER module clock */
     CLK_EnableModuleClock(TAMPER_MODULE);
 
-    /* Enable CRPT module clock */
-    CLK_EnableModuleClock(CRPT_MODULE);
+    /* Enable RTC peripheral clock */
+    CLK_EnableModuleClock(RTC_MODULE);
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
@@ -106,16 +106,27 @@ int main(void)
     TAMPER_CORE_RESET();
     TAMPER_CORE_RELEASE();
 
-    TAMPER_CLR_INT_STATUS(TAMPER_INTSTS_OVPOUTIF_Msk | TAMPER_INTSTS_BODIF_Msk);
-
     /* Enable over voltage detector and wait until stable */
     SYS_UnlockReg();
     SYS->OVDCTL = SYS_OVDCTL_OVDEN_Msk;
     while(!(SYS->OVDCTL & SYS_OVDCTL_OVDSTB_Msk));
     SYS_LockReg();
 
+    /* Enable battery loss detector */
+    RTC->TEST = RTC_TEST_BATDETEN_Msk;
+    SYS_UnlockReg();
+    SYS->BATLDCTL = SYS_BATLDCTL_BATLDEN_Msk;
+    SYS_LockReg();
+
+    /* Initialize the trim value of under-shoot and over-shoot detection level */
+    TAMPER_TLVD_TRIM_INIT(TAMPER_LBSTRIM_TLVDSEL_0_90V);
+    TAMPER_TOVD_TRIM_INIT(TAMPER_LBSTRIM_TOVDSEL_1_40V);
+
+    /* Clear different voltage interrupt flag */
+    TAMPER_CLR_INT_STATUS(TAMPER_INTSTS_OVPOUTIF_Msk | TAMPER_INTSTS_VBATLOSSIF_Msk | TAMPER_INTSTS_BODIF_Msk);
+
     /* Enable different voltage detection interrupt */
-    TAMPER_EnableInt(TAMPER_INTEN_OVPIEN_Msk | TAMPER_INTEN_RTCLVRIEN_Msk | TAMPER_INTEN_BODIEN_Msk);
+    TAMPER_EnableInt(TAMPER_INTEN_OVPIEN_Msk | TAMPER_INTEN_RTCLVRIEN_Msk | TAMPER_INTEN_VLOSSIEN_Msk | TAMPER_INTEN_BODIEN_Msk);
 
     /* Enable to trigger chip reset */
     TAMPER_ENABLE_CHIPRST();

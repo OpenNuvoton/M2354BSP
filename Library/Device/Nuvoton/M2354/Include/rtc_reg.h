@@ -761,6 +761,8 @@ typedef struct
     __I  uint32_t RESERVE6[2];           /* 0x138 ~ 0x13c */
     __IO uint32_t CLKDCTL;               /*!< [0x0140] RTC Clock Fail Detector Control Register                         */
     __IO uint32_t CDBR;                  /*!< [0x0144] RTC Clock Frequency Detector Boundary Register                   */
+    __I  uint32_t RESERVE7[42];          /* 0x148 ~ 0x1ec */
+    __IO uint32_t TEST;                  /*!< [0x01f0] RTC Test Control Register                                        */
 
 } RTC_T;
 
@@ -1294,6 +1296,9 @@ typedef struct
 
 #define RTC_CDBR_FAILBD_Pos              (16)                                              /*!< RTC_T::CDBR: FAILBD Position           */
 #define RTC_CDBR_FAILBD_Msk              (0xfful << RTC_CDBR_FAILBD_Pos)                   /*!< RTC_T::CDBR: FAILBD Mask               */
+
+#define RTC_TEST_BATDETEN_Pos            (4)                                               /*!< RTC_T::TEST: BATDETEN Position         */
+#define RTC_TEST_BATDETEN_Msk            (0x1ul << RTC_TEST_BATDETEN_Pos)                  /*!< RTC_T::TEST: BATDETEN Mask             */
 
 /**@}*/ /* RTC_CONST */
 /**@}*/ /* end of RTC register group */

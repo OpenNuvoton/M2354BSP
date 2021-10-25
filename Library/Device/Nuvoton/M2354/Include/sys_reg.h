@@ -2311,6 +2311,9 @@ typedef struct
 #define SYS_CPUCFG_INTRTEN_Pos           (0)                                               /*!< SYS_T::CPUCFG: INTRTEN Position        */
 #define SYS_CPUCFG_INTRTEN_Msk           (0x1ul << SYS_CPUCFG_INTRTEN_Pos)                 /*!< SYS_T::CPUCFG: INTRTEN Mask            */
 
+#define SYS_BATLDCTL_BATLDEN_Pos         (0)                                               /*!< SYS_T::BATLDCTL: BATLDEN Position      */
+#define SYS_BATLDCTL_BATLDEN_Msk         (0x1ul << SYS_BATLDCTL_BATLDEN_Pos)               /*!< SYS_T::BATLDCTL: BATLDEN Mask          */
+
 #define SYS_OVDCTL_OVDEN_Pos             (0)                                               /*!< SYS_T::OVDCTL: OVDEN Position          */
 #define SYS_OVDCTL_OVDEN_Msk             (0x1ul << SYS_OVDCTL_OVDEN_Pos)                   /*!< SYS_T::OVDCTL: OVDEN Mask              */
 

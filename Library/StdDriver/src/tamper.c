@@ -39,6 +39,8 @@
   *                                 - \ref TAMPER_INTEN_RTCLVRIEN_Msk
   *                                 - \ref TAMPER_INTEN_RTCIOIEN_Msk
   *                                 - \ref TAMPER_INTEN_RTCLKIEN_Msk
+  *                                 - \ref TAMPER_INTEN_VLOSSIEN_Msk
+  *                                 - \ref TAMPER_INTEN_WDTIEN_Msk
   *                                 - \ref TAMPER_INTEN_BODIEN_Msk
   *
   * @return     None
@@ -69,6 +71,8 @@ void TAMPER_EnableInt(uint32_t u32IntFlagMask)
   *                                 - \ref TAMPER_INTEN_RTCLVRIEN_Msk
   *                                 - \ref TAMPER_INTEN_RTCIOIEN_Msk
   *                                 - \ref TAMPER_INTEN_RTCLKIEN_Msk
+  *                                 - \ref TAMPER_INTEN_VLOSSIEN_Msk
+  *                                 - \ref TAMPER_INTEN_WDTIEN_Msk
   *                                 - \ref TAMPER_INTEN_BODIEN_Msk
   *
   * @return     None

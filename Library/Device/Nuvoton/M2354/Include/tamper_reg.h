@@ -717,6 +717,12 @@ typedef struct
 #define TAMPER_INTEN_RTCLKIEN_Pos        (18)                                              /*!< TAMPER_T::INTEN: RTCLKIEN Position     */
 #define TAMPER_INTEN_RTCLKIEN_Msk        (0x1ul << TAMPER_INTEN_RTCLKIEN_Pos)              /*!< TAMPER_T::INTEN: RTCLKIEN Mask         */
 
+#define TAMPER_INTEN_VLOSSIEN_Pos        (20)                                              /*!< TAMPER_T::INTEN: VLOSSIEN Position     */
+#define TAMPER_INTEN_VLOSSIEN_Msk        (0x1ul << TAMPER_INTEN_VLOSSIEN_Pos)              /*!< TAMPER_T::INTEN: VLOSSIEN Mask         */
+
+#define TAMPER_INTEN_WDTIEN_Pos          (21)                                              /*!< TAMPER_T::INTEN: WDTIEN Position       */
+#define TAMPER_INTEN_WDTIEN_Msk          (0x1ul << TAMPER_INTEN_WDTIEN_Pos)                /*!< TAMPER_T::INTEN: WDTIEN Mask           */
+
 #define TAMPER_INTEN_BODIEN_Pos          (22)                                              /*!< TAMPER_T::INTEN: BODIEN Position       */
 #define TAMPER_INTEN_BODIEN_Msk          (0x1ul << TAMPER_INTEN_BODIEN_Pos)                /*!< TAMPER_T::INTEN: BODIEN Mask           */
 
@@ -770,6 +776,12 @@ typedef struct
 
 #define TAMPER_INTSTS_RCLKTRIGIF_Pos     (18)                                              /*!< TAMPER_T::INTSTS: RCLKTRIGIF Position  */
 #define TAMPER_INTSTS_RCLKTRIGIF_Msk     (0x1ul << TAMPER_INTSTS_RCLKTRIGIF_Pos)           /*!< TAMPER_T::INTSTS: RCLKTRIGIF Mask      */
+
+#define TAMPER_INTSTS_VBATLOSSIF_Pos     (20)                                              /*!< TAMPER_T::INTSTS: VBATLOSSIF Position  */
+#define TAMPER_INTSTS_VBATLOSSIF_Msk     (0x1ul << TAMPER_INTSTS_VBATLOSSIF_Pos)           /*!< TAMPER_T::INTSTS: VBATLOSSIF Mask      */
+
+#define TAMPER_INTSTS_SECWDTIF_Pos       (21)                                              /*!< TAMPER_T::INTSTS: SECWDTIF Position    */
+#define TAMPER_INTSTS_SECWDTIF_Msk       (0x1ul << TAMPER_INTSTS_SECWDTIF_Pos)             /*!< TAMPER_T::INTSTS: SECWDTIF Mask        */
 
 #define TAMPER_INTSTS_BODIF_Pos          (22)                                              /*!< TAMPER_T::INTSTS: BODIF Position       */
 #define TAMPER_INTSTS_BODIF_Msk          (0x1ul << TAMPER_INTSTS_BODIF_Pos)                /*!< TAMPER_T::INTSTS: BODIF Mask           */

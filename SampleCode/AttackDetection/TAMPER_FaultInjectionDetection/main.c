@@ -206,11 +206,15 @@ int main(void)
     TAMPER_ENABLE_HIRC48M();
     TAMPER_VG_SAMPLE_SEL(TAMPER_VG_192M_SAMPLE);
 
-    /* Clear tamper interrupt status */
-    TAMPER_CLR_INT_STATUS(TAMPER_INTSTS_VGPEVIF_Msk | TAMPER_INTSTS_VGNEVIF_Msk);
+    /* Initialize a reference trim value according to the power level of the system */
+    TAMPER_VG_TRIM_INIT();
 
     /* Enable voltage glitch positive/negative detection interrupt */
     TAMPER_EnableInt(TAMPER_INTEN_VGPIEN_Msk | TAMPER_INTEN_VGNIEN_Msk);
+
+    /* Clear voltage glitch positive/negative interrupt flag */
+    TAMPER_CLR_INT_STATUS(TAMPER_INTSTS_VGPEVIF_Msk | TAMPER_INTSTS_VGNEVIF_Msk);
+
     NVIC_EnableIRQ(TAMPER_IRQn);
 
     /* Enable to clear crypto function */
