@@ -22,7 +22,7 @@
   </DaveTm>
 
   <Target>
-    <TargetName>LoRa_Master</TargetName>
+    <TargetName>LoRa_Slave</TargetName>
     <ToolsetNumber>0x4</ToolsetNumber>
     <ToolsetName>ARM-ADS</ToolsetName>
     <TargetOption>
@@ -142,7 +142,7 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>298</LineNumber>
+          <LineNumber>316</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>0</Address>
           <ByteObject>0</ByteObject>
@@ -158,41 +158,25 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>291</LineNumber>
+          <LineNumber>217</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>32076</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
+          <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\LoRa_Master\../main.c\217</Expression>
         </Bp>
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>217</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
           <LineNumber>255</LineNumber>
-          <EnabledFlag>0</EnabledFlag>
-          <Address>28422</Address>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>28510</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -204,11 +188,11 @@
           <Expression>\\LoRa_Master\../LoRaNode/board/spi-board.c\255</Expression>
         </Bp>
         <Bp>
-          <Number>4</Number>
+          <Number>3</Number>
           <Type>0</Type>
           <LineNumber>300</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>28778</Address>
+          <Address>28866</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -220,11 +204,11 @@
           <Expression>\\LoRa_Master\../LoRaNode/board/spi-board.c\300</Expression>
         </Bp>
         <Bp>
-          <Number>5</Number>
+          <Number>4</Number>
           <Type>0</Type>
-          <LineNumber>406</LineNumber>
+          <LineNumber>326</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>32218</Address>
+          <Address>32550</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -233,7 +217,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\LoRa_Master\../main.c\406</Expression>
+          <Expression>\\LoRa_Master\../main.c\326</Expression>
         </Bp>
       </Breakpoint>
       <MemoryWindow1>
