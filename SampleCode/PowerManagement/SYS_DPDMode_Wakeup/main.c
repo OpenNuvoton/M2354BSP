@@ -309,14 +309,26 @@ void GpioPinSetting(void)
     PH->MODE = 0x55555555;
 
     /* Set all GPIOs are output high */
-    PA->DOUT = 0xFFFFFFFF;
-    PB->DOUT = 0xFFFFFFFF;
-    PC->DOUT = 0xFFFFFFFF;
-    PD->DOUT = 0xFFFFFFFF;
-    PE->DOUT = 0xFFFFFFFF;
-    PF->DOUT = 0xFFFFFFFF;
-    PG->DOUT = 0xFFFFFFFF;
-    PH->DOUT = 0xFFFFFFFF;
+    PA->DOUT = 0x0000FFFF;
+    PB->DOUT = 0x0000FFFF;
+    PC->DOUT = 0x0000FFFF;
+    PD->DOUT = 0x0000FFFF;
+    PE->DOUT = 0x0000FFFF;
+    PF->DOUT = 0x0000FFFF;
+    PG->DOUT = 0x0000FFFF;
+    PH->DOUT = 0x0000FFFF;
+    
+    /* Set PF.4~PF.11 as Quasi mode output high */
+    CLK->APBCLK0 |= CLK_APBCLK0_RTCCKEN_Msk;
+    RTC->GPIOCTL1 = RTC_GPIOCTL1_DOUT7_Msk | (RTC_IO_MODE_QUASI<<RTC_GPIOCTL1_OPMODE7_Pos) |
+                    RTC_GPIOCTL1_DOUT6_Msk | (RTC_IO_MODE_QUASI<<RTC_GPIOCTL1_OPMODE6_Pos) |
+                    RTC_GPIOCTL1_DOUT5_Msk | (RTC_IO_MODE_QUASI<<RTC_GPIOCTL1_OPMODE5_Pos) |
+                    RTC_GPIOCTL1_DOUT4_Msk | (RTC_IO_MODE_QUASI<<RTC_GPIOCTL1_OPMODE4_Pos);
+    RTC->GPIOCTL0 = RTC_GPIOCTL0_DOUT3_Msk | (RTC_IO_MODE_QUASI<<RTC_GPIOCTL0_OPMODE3_Pos) |
+                    RTC_GPIOCTL0_DOUT2_Msk | (RTC_IO_MODE_QUASI<<RTC_GPIOCTL0_OPMODE2_Pos) |
+                    RTC_GPIOCTL0_DOUT1_Msk | (RTC_IO_MODE_QUASI<<RTC_GPIOCTL0_OPMODE1_Pos) |
+                    RTC_GPIOCTL0_DOUT0_Msk | (RTC_IO_MODE_QUASI<<RTC_GPIOCTL0_OPMODE0_Pos);
+    CLK->APBCLK0 &= ~CLK_APBCLK0_RTCCKEN_Msk;
 }
 
 void SYS_Init(void)
@@ -415,7 +427,7 @@ int32_t main(void)
     printf("|    DPD Power-down Mode and Wake-up Sample Code.                |\n");
     printf("|    Please Select Wake up source.                               |\n");
     printf("+----------------------------------------------------------------+\n");
-    printf("|[1] DPD Wake-up Pin(PC.0) trigger type is rising edge.          |\n");
+    printf("|[1] DPD Wake-up Pin(PC.0) trigger type is falling edge.         |\n");
     printf("|[2] DPD Wake-up TIMER time-out interval is 3277 LIRC clocks.    |\n");
     printf("|[3] DPD Wake-up by RTC Tick(1 second).                          |\n");
     printf("|[4] DPD Wake-up by RTC Alarm.                                   |\n");
@@ -427,7 +439,7 @@ int32_t main(void)
     switch(u8Item)
     {
         case '1':
-            WakeUpPinFunction(CLK_PMUCTL_PDMSEL_DPD, CLK_DPDWKPIN_RISING);
+            WakeUpPinFunction(CLK_PMUCTL_PDMSEL_DPD, CLK_DPDWKPIN_FALLING);
         /* break; */
         case '2':
             WakeUpTimerFunction(CLK_PMUCTL_PDMSEL_DPD, CLK_PMUCTL_WKTMRIS_3277);

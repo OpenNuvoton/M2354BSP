@@ -422,7 +422,6 @@ void SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
   *             - \ref SYS_VREFCTL_VREF_2_0V
   *             - \ref SYS_VREFCTL_VREF_2_5V
   *             - \ref SYS_VREFCTL_VREF_3_0V
-  *             - \ref SYS_VREFCTL_VREF_AVDD
   * @return     None
   * @details    This function select reference voltage.
   *             The register write-protection function should be disabled before using this function.

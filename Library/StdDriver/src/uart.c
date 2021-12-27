@@ -128,7 +128,7 @@ void UART_DisableFlowCtrl(UART_T* uart)
  *
  *    @return       None
  *
- *    @details      The function is used to disable UART specified interrupt and disable NVIC UART IRQ.
+ *    @details      The function is used to disable UART specified interrupt.
  */
 void UART_DisableInt(UART_T*  uart, uint32_t u32InterruptFlag)
 {
@@ -186,7 +186,7 @@ void UART_EnableFlowCtrl(UART_T* uart)
  *
  *    @return       None
  *
- *    @details      The function is used to enable UART specified interrupt and enable NVIC UART IRQ.
+ *    @details      The function is used to enable UART specified interrupt.
  */
 void UART_EnableInt(UART_T*  uart, uint32_t u32InterruptFlag)
 {
