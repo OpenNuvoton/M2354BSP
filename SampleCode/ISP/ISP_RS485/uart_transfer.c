@@ -19,10 +19,10 @@ uint8_t volatile g_u8bufhead = 0;
 
 void UART1_IRQHandler(void);
 
-/* please check "targetdev.h" for chip specifc define option */
+/* please check "targetdev.h" for chip specific define option */
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* INTSTS to handle UART Channel 1 interrupt event                                                            */
+/* INTSTS to handle UART Channel 1 interrupt event                                                         */
 /*---------------------------------------------------------------------------------------------------------*/
 void UART1_IRQHandler(void)
 {

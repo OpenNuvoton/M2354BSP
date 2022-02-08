@@ -27,6 +27,7 @@
 /* Global file scope (static) variables                                                                    */
 /*---------------------------------------------------------------------------------------------------------*/
 static uint32_t g_LCDFrameRate;
+int32_t g_LCD_i32ErrCode = 0; /*!< LCD global error code */
 
 /**@}*/ /* end of group LCD_EXPORTED_VARIABLES */
 

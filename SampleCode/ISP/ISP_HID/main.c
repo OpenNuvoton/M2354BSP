@@ -12,6 +12,8 @@
 
 #define TRIM_INIT           (SYS_BASE+0x10C)
 
+int32_t g_FMC_i32ErrCode;
+
 void ProcessHardFault(void);
 void SH_Return(void);
 void SendChar_ToUART(void);
@@ -33,6 +35,8 @@ uint32_t CLK_GetCPUFreq(void)
 
 void SYS_Init(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -41,7 +45,9 @@ void SYS_Init(void)
     CLK->PWRCTL |= CLK_PWRCTL_HIRC48EN_Msk;
 
     /* Wait for HIRC48 clock ready */
-    while(!(CLK->STATUS & CLK_STATUS_HIRC48STB_Msk));
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(!(CLK->STATUS & CLK_STATUS_HIRC48STB_Msk))
+        if(--u32TimeOutCnt == 0) break;
 
     /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL2;

@@ -1,10 +1,8 @@
-
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief    Show how to transfer data through UART by Xmodem.
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
@@ -48,6 +46,7 @@ void SYS_Init(void)
 int32_t main(void)
 {
     int32_t i32Err;
+    uint32_t u32TimeOutCnt;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -70,7 +69,9 @@ int32_t main(void)
     printf("Waiting for Xmodem data transfer ...\n");
 
     /* Waiting for debug message print out */
-    while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXEMPTY_Msk) == 0);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXEMPTY_Msk) == 0)
+        if(--u32TimeOutCnt == 0) break;
 
     i32Err = Xmodem(0x80000);
 

@@ -224,7 +224,7 @@ void RTC_Init(void)
 int main(void)
 {
     uint32_t u32LCDFPS;
-    char text[LCD_ALPHABET_NUM] = "";
+    char text[LCD_ALPHABET_NUM+1] = "";
     struct bme680_dev bme680;
     struct bme680_field_data data;
     int8_t rslt = BME680_OK;

@@ -37,7 +37,7 @@ extern "C"
 */
 
 int32_t FVC_Open(void);
-void FVC_EnableMonotone(void);
+int32_t FVC_EnableMonotone(void);
 int32_t FVC_SetNVC(uint32_t u32NvcIdx, uint32_t u32Cnt);
 int32_t FVC_GetNVC(uint32_t u32NvcIdx);
 

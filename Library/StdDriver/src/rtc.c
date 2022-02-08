@@ -27,6 +27,8 @@ static volatile uint32_t g_u32hiHour, g_u32loHour, g_u32hiMin, g_u32loMin, g_u32
   @{
 */
 
+int32_t g_RTC_i32ErrCode = 0;       /*!< RTC global error code */
+
 /** @addtogroup RTC_EXPORTED_FUNCTIONS RTC Exported Functions
   @{
 */
@@ -47,7 +49,8 @@ static volatile uint32_t g_u32hiHour, g_u32loHour, g_u32hiMin, g_u32loMin, g_u32
   *                     u32TimeScale: [RTC_CLOCK_12 / RTC_CLOCK_24]                                 \n
   *                     u8AmPm: [RTC_AM / RTC_PM]                                                   \n
   *
-  * @return     None
+  * @retval  0: SUCCESS
+  * @retval -1: Initialize RTC module fail
   *
   * @details    This function is used to: \n
   *                 1. Write initial key to let RTC start count.  \n
@@ -56,14 +59,19 @@ static volatile uint32_t g_u32hiHour, g_u32loHour, g_u32hiMin, g_u32loMin, g_u32
   *                 4. Enable frequency dynamic compensation function. \n
   * @note       Null pointer for using default starting date/time.
   */
-void RTC_Open(S_RTC_TIME_DATA_T *sPt)
+int32_t RTC_Open(S_RTC_TIME_DATA_T *sPt)
 {
+    uint32_t u32TimeOutCount = RTC_TIMEOUT;
+
     RTC->INIT = RTC_INIT_KEY;
 
     if(RTC->INIT != RTC_INIT_ACTIVE_Msk)
     {
         RTC->INIT = RTC_INIT_KEY;
-        while(RTC->INIT != RTC_INIT_ACTIVE_Msk) {}
+        while(RTC->INIT != RTC_INIT_ACTIVE_Msk)
+        {
+            if(--u32TimeOutCount == 0) return -1;
+        }
     }
 
     if(sPt != 0)
@@ -74,6 +82,8 @@ void RTC_Open(S_RTC_TIME_DATA_T *sPt)
         /* Set RTC date and time */
         RTC_SetDateAndTime(sPt);
     }
+
+    return 0;
 }
 
 /**
@@ -102,10 +112,15 @@ void RTC_Close(void)
   * @return     None
   *
   * @details    This API is used to compensate the 32 kHz frequency by current LXT frequency for RTC application.
+  *
+  * @note       This function sets g_RTC_i32ErrCode to RTC_TIMEOUT_ERR if waiting RTC time-out.
   */
 void RTC_32KCalibration(int32_t i32FrequencyX10000)
 {
     int32_t i32RegInt, i32RegFra;
+    uint32_t u32TimeOutCount;
+
+    g_RTC_i32ErrCode = 0;
 
     /* Compute integer and fraction for RTC FCR register */
     i32RegInt = (i32FrequencyX10000 / 10000) - RTC_FCR_REFERENCE;
@@ -120,9 +135,21 @@ void RTC_32KCalibration(int32_t i32FrequencyX10000)
     /* Judge Integer part is reasonable */
     if((i32RegInt >= 0) && (i32RegInt <= 31))
     {
-        while((RTC->FREQADJ & RTC_FREQADJ_FCRBUSY_Msk) == RTC_FREQADJ_FCRBUSY_Msk) {}
+        u32TimeOutCount = RTC_TIMEOUT<<1;
+        while((RTC->FREQADJ & RTC_FREQADJ_FCRBUSY_Msk) == RTC_FREQADJ_FCRBUSY_Msk)
+        if(--u32TimeOutCount == 0)
+        {
+            g_RTC_i32ErrCode = RTC_TIMEOUT_ERR;
+            break;
+        }
         RTC->FREQADJ = (uint32_t)((i32RegInt << 8) | i32RegFra);
-        while((RTC->FREQADJ & RTC_FREQADJ_FCRBUSY_Msk) == RTC_FREQADJ_FCRBUSY_Msk) {}
+        u32TimeOutCount = RTC_TIMEOUT<<1;
+        while((RTC->FREQADJ & RTC_FREQADJ_FCRBUSY_Msk) == RTC_FREQADJ_FCRBUSY_Msk)
+        if(--u32TimeOutCount == 0)
+        {
+            g_RTC_i32ErrCode = RTC_TIMEOUT_ERR;
+            break;
+        }
     }
 }
 

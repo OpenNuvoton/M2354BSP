@@ -1,8 +1,6 @@
 /******************************************************************************
  * @file     main.c
  * @version  V1.00
- * $Revision: 1 $
- * $Date: 19/12/10
  * @brief    Bank Remap sample code(Bank0 Loader).
  *
  * @copyright SPDX-License-Identifier: Apache-2.0

@@ -17,7 +17,7 @@ void TIMER0_Init(void);
 void GetActiveLXTandLIRC32Freq(uint32_t *u32LXTFreq, uint32_t *LIRC32Freq);
 
 /*---------------------------------------------------------------------------------------------------------*/
-/*  RTC TAMPER IRQ Handler                                                                                     */
+/*  RTC TAMPER IRQ Handler                                                                                 */
 /*---------------------------------------------------------------------------------------------------------*/
 void RTC_TAMPER_IRQHandler(void)
 {

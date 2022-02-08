@@ -1,11 +1,10 @@
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief
  *           Implement a multi-boot system to boot from different applications in APROM.
  *           A LDROM code and 4 APROM code are implemented in this sample code.
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
@@ -128,6 +127,12 @@ int32_t main(void)
         default:
             FMC_SetVectorPageAddr(0x0);
             break;
+    }
+
+    if (g_FMC_i32ErrCode != 0)
+    {
+        printf("FMC_SetVectorPageAddr failed!\n");
+        while (1);
     }
 
     /* Reset CPU only to reset to new vector page */

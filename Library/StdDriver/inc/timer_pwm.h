@@ -1,5 +1,5 @@
 /**************************************************************************//**
- * @file     timer.h
+ * @file     timer_pwm.h
  * @version  V3.00
  * @brief    Timer PWM Controller(Timer PWM) driver header file
  *
@@ -130,8 +130,15 @@ extern "C"
 #define TPWM_CNTR_SYNC_START_BY_TIMER2          ((1<<TIMER_PWMSCTL_SYNCSRC_Pos) | (1<<TIMER_PWMSCTL_SYNCMODE_Pos))  /*!< PWM counter synchronous start by TIMER2 PWM \hideinitializer */
 #define TPWM_CNTR_SYNC_CLEAR_BY_TIMER2          ((1<<TIMER_PWMSCTL_SYNCSRC_Pos) | (3<<TIMER_PWMSCTL_SYNCMODE_Pos))  /*!< PWM counter synchronous clear by TIMER2 PWM \hideinitializer */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* TIMER PWM Time-out Handler Constant Definitions                                                         */
+/*---------------------------------------------------------------------------------------------------------*/
+#define TPWM_TIMEOUT         (SystemCoreClock)   /*!< 1 second time-out */
+#define TPWM_TIMEOUT_ERR     (-1L)               /*!< TIMER PWM time-out error value */
+
 /**@}*/ /* end of group TIMER_PWM_EXPORTED_CONSTANTS */
 
+extern int32_t g_TPWM_i32ErrCode;
 
 /** @addtogroup TIMER_PWM_EXPORTED_FUNCTIONS TIMER PWM Exported Functions
   @{
@@ -146,16 +153,33 @@ extern "C"
   *
   * @details    This macro is used to enable specified Timer channel as PWM counter mode, then timer counter mode is invalid.
   * @note       All registers about time counter function will be cleared to 0 and timer clock source will be changed to PCLKx automatically after executing this macro.
+  * @note       This macro sets g_TPWM_i32ErrCode to TPWM_TIMEOUT_ERR if waiting TIMER PWM time-out.
   * \hideinitializer
   */
 #define TPWM_ENABLE_PWM_MODE(timer) \
     do{ \
+        uint32_t u32TimeOutCnt = TPWM_TIMEOUT; \
+        g_TPWM_i32ErrCode = 0; \
         if(((uint32_t)&((timer)->PWMCTL) & TMR45_BASE) == TMR45_BASE) { \
             (timer)->CTL |= TIMER_CTL_FUNCSEL_Msk; \
-            while(((timer)->CTL & TIMER_CTL_FUNCSEL_Msk) == 0) {} \
+            while(((timer)->CTL & TIMER_CTL_FUNCSEL_Msk) == 0) \
+            { \
+                if(--u32TimeOutCnt == 0) \
+                { \
+                    g_TPWM_i32ErrCode = TPWM_TIMEOUT_ERR; \
+                    break; \
+                } \
+            } \
         } else { \
             (timer)->ALTCTL = TIMER_ALTCTL_FUNCSEL_Msk; \
-            while(((timer)->ALTCTL & TIMER_ALTCTL_FUNCSEL_Msk) == 0) {} \
+            while(((timer)->ALTCTL & TIMER_ALTCTL_FUNCSEL_Msk) == 0) \
+            { \
+                if(--u32TimeOutCnt == 0) \
+                { \
+                    g_TPWM_i32ErrCode = TPWM_TIMEOUT_ERR; \
+                    break; \
+                } \
+            } \
         } \
     }while(0)
 
@@ -168,16 +192,33 @@ extern "C"
   *
   * @details    This macro is used to disable specified Timer channel as PWM counter mode, then timer counter mode is available.
   * @note       All registers about PWM counter function will be cleared to 0 after executing this macro.
+  * @note       This macro sets g_TPWM_i32ErrCode to TPWM_TIMEOUT_ERR if waiting TIMER PWM time-out.
   * \hideinitializer
   */
 #define TPWM_DISABLE_PWM_MODE(timer) \
     do{ \
+        uint32_t u32TimeOutCnt = TPWM_TIMEOUT; \
+        g_TPWM_i32ErrCode = 0; \
         if(((uint32_t)&((timer)->PWMCTL) & TMR45_BASE) == TMR45_BASE) { \
             (timer)->CTL &= ~TIMER_CTL_FUNCSEL_Msk; \
-            while(((timer)->CTL & TIMER_CTL_FUNCSEL_Msk) == TIMER_CTL_FUNCSEL_Msk) {} \
+            while(((timer)->CTL & TIMER_CTL_FUNCSEL_Msk) == TIMER_CTL_FUNCSEL_Msk) \
+            { \
+                if(--u32TimeOutCnt == 0) \
+                { \
+                    g_TPWM_i32ErrCode = TPWM_TIMEOUT_ERR; \
+                    break; \
+                } \
+            } \
         } else { \
             (timer)->ALTCTL &= ~TIMER_ALTCTL_FUNCSEL_Msk; \
-            while(((timer)->ALTCTL & TIMER_ALTCTL_FUNCSEL_Msk) == TIMER_ALTCTL_FUNCSEL_Msk) {} \
+            while(((timer)->ALTCTL & TIMER_ALTCTL_FUNCSEL_Msk) == TIMER_ALTCTL_FUNCSEL_Msk) \
+            { \
+                if(--u32TimeOutCnt == 0) \
+                { \
+                    g_TPWM_i32ErrCode = TPWM_TIMEOUT_ERR; \
+                    break; \
+                } \
+            } \
         } \
     }while(0)
 

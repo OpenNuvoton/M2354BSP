@@ -28,7 +28,7 @@ void CAN_ShowMsg(STR_CANMSG_T* Msg);
 void CAN0_IRQHandler(void);
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* ISR to handle CAN interrupt event                                                            */
+/* ISR to handle CAN interrupt event                                                                       */
 /*---------------------------------------------------------------------------------------------------------*/
 void CAN_MsgInterrupt(CAN_T *tCAN, uint32_t u32IIDR)
 {
@@ -134,7 +134,7 @@ void SYS_Init(void)
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* ENable CAN module clock */
+    /* Enable CAN module clock */
     CLK_EnableModuleClock(CAN0_MODULE);
 
     /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
@@ -302,7 +302,6 @@ void CAN_ResetIF(CAN_T *tCAN, uint8_t u8IF_Num)
 
 void Test_BasicMode_Rx(CAN_T *tCAN)
 {
-
     STR_CANMSG_T rMsg[5];
     int32_t i;
 

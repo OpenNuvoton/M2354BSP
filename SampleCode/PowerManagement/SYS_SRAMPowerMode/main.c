@@ -13,7 +13,7 @@
 
 
 extern int IsDebugFifoEmpty(void);
-static volatile uint8_t g_u8IsINTEvent;
+static volatile uint8_t s_u8IsINTEvent;
 
 void WDT_IRQHandler(void);
 void PowerDownFunction(void);
@@ -37,7 +37,7 @@ void WDT_IRQHandler(void)
         WDT_CLEAR_TIMEOUT_WAKEUP_FLAG();
     }
 
-    g_u8IsINTEvent = 1;
+    s_u8IsINTEvent = 1;
 
 }
 
@@ -46,8 +46,12 @@ void WDT_IRQHandler(void)
 /*---------------------------------------------------------------------------------------------------------*/
 void PowerDownFunction(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* To check if all the debug messages are finished */
-    while(IsDebugFifoEmpty() == 0);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(IsDebugFifoEmpty() == 0)
+        if(--u32TimeOutCnt == 0) break;
 
     /* Enter to Power-down mode */
     CLK_PowerDown();
@@ -70,9 +74,10 @@ void SYS_Init(void)
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
 
-    /* Enable UART0 and WDT module clock */
+    /* Enable UART0, WDT and CRC module clock */
     CLK_EnableModuleClock(UART0_MODULE);
     CLK_EnableModuleClock(WDT_MODULE);
+    CLK_EnableModuleClock(CRC_MODULE);
 
     /* Select UART0 and WDT module clock source */
     CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL2_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
@@ -107,6 +112,7 @@ int32_t main(void)
     uint32_t au32SRAMCheckSum[18] = {0};
     uint32_t u32SRAMSize = 16384;
     uint32_t u32Idx, u32Addr, u32SRAMStartAddr = 0;
+    uint32_t u32TimeOutCnt;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -225,7 +231,15 @@ int32_t main(void)
     PowerDownFunction();
 
     /* Check if WDT time-out interrupt and wake-up occurred or not */
-    while(g_u8IsINTEvent == 0);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(s_u8IsINTEvent == 0)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for WDT interrupt time-out!");
+            while(1);
+        }
+    }
     printf("wake-up!\n\n");
 
     /* Select SRAM power mode:
@@ -281,5 +295,3 @@ int32_t main(void)
     while(1);
 
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

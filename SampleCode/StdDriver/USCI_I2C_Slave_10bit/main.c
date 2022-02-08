@@ -1,12 +1,10 @@
-
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief
  *           Show a 10-bit addres Slave how to receive data from Master.
  *           This sample code needs to work with USCI_I2C_Master_10bit.
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/

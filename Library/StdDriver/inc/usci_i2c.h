@@ -1,9 +1,7 @@
 /**************************************************************************//**
  * @file     usci_i2c.h
  * @version  V3.0
- * $Revision: 1 $
- * $Date: 16/07/07 7:50p $
- * @brief    M2355 series USCI I2C(UI2C) driver header file
+ * @brief    M2354 series USCI I2C(UI2C) driver header file
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
@@ -89,6 +87,12 @@ enum UI2C_SLAVE_EVENT
 #define UI2C_ARBLO_INT_MASK        (0x010U)    /*!< Arbitration lost interrupt mask */
 #define UI2C_ERR_INT_MASK          (0x020U)    /*!< Error interrupt mask */
 #define UI2C_ACK_INT_MASK          (0x040U)    /*!< Acknowledge interrupt mask */
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* USCI_I2C Time-out Handler Constant Definitions                                                          */
+/*---------------------------------------------------------------------------------------------------------*/
+#define UI2C_TIMEOUT               (SystemCoreClock)    /*!< 1 second time-out */
+#define UI2C_TIMEOUT_ERR           (-1L)                /*!< USCI_I2C time-out error value */
 
 /**@}*/ /* end of group USCI_I2C_EXPORTED_CONSTANTS */
 

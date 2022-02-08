@@ -82,12 +82,13 @@ void UART0_Init(void)
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* EADC function test                                                                                       */
+/* EADC function test                                                                                      */
 /*---------------------------------------------------------------------------------------------------------*/
 void EADC_FunctionTest(void)
 {
     uint8_t  u8Option;
     int32_t  i32ConversionData;
+    uint32_t u32TimeOutCnt;
 
     printf("\n");
     printf("+----------------------------------------------------------------------+\n");
@@ -123,7 +124,15 @@ void EADC_FunctionTest(void)
             EADC_START_CONV(EADC, BIT0);
 
             /* Wait ADC interrupt (g_u32AdcIntFlag will be set at IRQ_Handler function) */
-            while(g_u32AdcIntFlag == 0);
+            u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+            while(g_u32AdcIntFlag == 0)
+            {
+                if(--u32TimeOutCnt == 0)
+                {
+                    printf("Wait for EADC interrupt time-out!\n");
+                    while(1);
+                }
+            }
 
             /* Disable the ADINT0 interrupt */
             EADC_DISABLE_INT(EADC, BIT0);
@@ -154,7 +163,15 @@ void EADC_FunctionTest(void)
             EADC_START_CONV(EADC, BIT0);
 
             /* Wait ADC interrupt (g_u32AdcIntFlag will be set at IRQ_Handler function) */
-            while(g_u32AdcIntFlag == 0);
+            u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+            while(g_u32AdcIntFlag == 0)
+            {
+                if(--u32TimeOutCnt == 0)
+                {
+                    printf("Wait for EADC interrupt time-out!\n");
+                    while(1);
+                }
+            }
 
             /* Disable the ADINT0 interrupt */
             EADC_DISABLE_INT(EADC, BIT0);

@@ -43,7 +43,7 @@ static void ResetCrypto(void)
 int32_t NuBL_CalculateSHA256(uint32_t start, uint32_t end, uint32_t digest[], E_SHA_OP_MODE mode, E_SHA_SRC src)
 {
     volatile int32_t    i, bytes;
-    uint32_t            *ptr, addr, data = 0;
+    uint32_t            *ptr, addr, data = 0, u32TimeOutCnt;
 
     bytes   = (int32_t)(end - start);
     ptr     = (uint32_t *)start;
@@ -101,7 +101,12 @@ int32_t NuBL_CalculateSHA256(uint32_t start, uint32_t end, uint32_t digest[], E_
                     /* It's last word ... *-* */
                     CRPT->HMAC_CTL |= CRPT_HMAC_CTL_START_Msk | CRPT_HMAC_CTL_DMALAST_Msk;
                     CRPT->HMAC_DATIN = data;
-                    while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk);
+                    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+                    while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk)
+                    {
+                        if( --u32TimeOutCnt == 0 )
+                            return -1;
+                    }
 
                     for(i = 0; i < 8; i++)
                         digest[i] = *(uint32_t *)((uint32_t) & (CRPT->HMAC_DGST[0]) + ((uint32_t)i * 4));
@@ -137,14 +142,12 @@ int32_t NuBL_CalculateSHA256(uint32_t start, uint32_t end, uint32_t digest[], E_
   */
 int32_t NuBL_AES256Decrypt(uint32_t *in, uint32_t *out, uint32_t len, uint32_t *KEY)
 {
-    uint32_t au32AESIV[4] = {0};
+    uint32_t au32AESIV[4] = {0}, u32TimeOutCnt;
 
     /* reset crypto */
     SYS->IPRST0 |= SYS_IPRST0_CRPTRST_Msk;
     SYS->IPRST0 &= ~SYS_IPRST0_CRPTRST_Msk;
     NVIC_DisableIRQ(CRPT_IRQn);
-
-    CLK->AHBCLK |= CLK_AHBCLK_CRPTCKEN_Msk;
 
     CLK->AHBCLK |= CLK_AHBCLK_CRPTCKEN_Msk;
 
@@ -158,7 +161,12 @@ int32_t NuBL_AES256Decrypt(uint32_t *in, uint32_t *out, uint32_t len, uint32_t *
     CRPT->AES_CTL = ((AES_KEY_SIZE_256 << CRPT_AES_CTL_KEYSZ_Pos) | (AES_IN_OUT_SWAP << CRPT_AES_CTL_OUTSWAP_Pos));
     CRPT->AES_CTL |= ((AES_MODE_CFB << CRPT_AES_CTL_OPMODE_Pos) | CRPT_AES_CTL_START_Msk | CRPT_AES_CTL_DMAEN_Msk);
 //    CRPT->AES_CTL |= ((AES_MODE_ECB << CRPT_AES_CTL_OPMODE_Pos) | CRPT_AES_CTL_START_Msk | CRPT_AES_CTL_DMAEN_Msk);
-    while(CRPT->AES_STS & CRPT_AES_STS_BUSY_Msk) {}
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(CRPT->AES_STS & CRPT_AES_STS_BUSY_Msk)
+    {
+        if( --u32TimeOutCnt == 0 )
+            return -1;
+    }
 
     return 0;
 }

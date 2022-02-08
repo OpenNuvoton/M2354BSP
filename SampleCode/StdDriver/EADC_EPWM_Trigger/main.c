@@ -95,7 +95,7 @@ void UART0_Init(void)
 void EPWM0_Init(void)
 {
     /*---------------------------------------------------------------------------------------------------------*/
-    /* Init EPWM0                                                                                               */
+    /* Init EPWM0                                                                                              */
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set EPWM0 timer clock prescaler */
@@ -130,10 +130,11 @@ void EADC_FunctionTest(void)
     int32_t  ai32ConversionData[6] = {0};
     uint32_t u32COVNUMFlag = 0;
     uint8_t u8Index = 0;
+    uint32_t u32TimeOutCnt = 0;
 
     printf("\n");
     printf("+----------------------------------------------------------------------+\n");
-    printf("|                       EPWM trigger mode test                          |\n");
+    printf("|                       EPWM trigger mode test                         |\n");
     printf("+----------------------------------------------------------------------+\n");
 
     printf("\nIn this test, software will get 6 conversion result from the specified channel.\n");
@@ -171,7 +172,15 @@ void EADC_FunctionTest(void)
             while(1)
             {
                 /* Wait ADC interrupt (g_u32AdcIntFlag will be set at IRQ_Handler function) */
-                while(g_u32AdcIntFlag == 0);
+                u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+                while(g_u32AdcIntFlag == 0)
+                {
+                    if(--u32TimeOutCnt == 0)
+                    {
+                        printf("Wait for EADC interrupt time-out!\n");
+                        while(1);
+                    }
+                }
 
                 /* Reset the ADC interrupt indicator */
                 g_u32AdcIntFlag = 0;
@@ -222,7 +231,15 @@ void EADC_FunctionTest(void)
             while(1)
             {
                 /* Wait ADC interrupt (g_u32AdcIntFlag will be set at IRQ_Handler function) */
-                while(g_u32AdcIntFlag == 0);
+                u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+                while(g_u32AdcIntFlag == 0)
+                {
+                    if(--u32TimeOutCnt == 0)
+                    {
+                        printf("Wait for EADC interrupt time-out!\n");
+                        while(1);
+                    }
+                }
 
                 /* Reset the ADC interrupt indicator */
                 g_u32AdcIntFlag = 0;

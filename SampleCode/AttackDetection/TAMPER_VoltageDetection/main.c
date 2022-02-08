@@ -64,6 +64,8 @@ void UART_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int main(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -109,7 +111,15 @@ int main(void)
     /* Enable over voltage detector and wait until stable */
     SYS_UnlockReg();
     SYS->OVDCTL = SYS_OVDCTL_OVDEN_Msk;
-    while(!(SYS->OVDCTL & SYS_OVDCTL_OVDSTB_Msk));
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(!(SYS->OVDCTL & SYS_OVDCTL_OVDSTB_Msk))
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for over voltage detector stable time-out!\n");
+            while(1);
+        }
+    }
     SYS_LockReg();
 
     /* Enable battery loss detector */

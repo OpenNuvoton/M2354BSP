@@ -300,7 +300,6 @@ extern void SystemInit(void);
 #include "ecap_reg.h"
 #include "fmc_reg.h"
 #include "gpio_reg.h"
-#include "hdiv_reg.h"
 #include "i2c_reg.h"
 #include "i2s_reg.h"
 #include "pdma_reg.h"

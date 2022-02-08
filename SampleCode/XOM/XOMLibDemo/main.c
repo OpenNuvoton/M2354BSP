@@ -1,10 +1,8 @@
-
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 16/10/17 2:06p $
  * @brief    Demo how to use XOM library
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/

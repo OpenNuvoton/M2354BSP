@@ -503,11 +503,11 @@ typedef struct
 */
 
 /*---------------------------------------------------------------------------------------------------------*/
-/*  Functions                                                                                      */
+/*  Functions                                                                                              */
 /*---------------------------------------------------------------------------------------------------------*/
 
 void PRNG_Open(CRPT_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32_t u32Seed);
-void PRNG_Start(CRPT_T *crpt);
+int32_t PRNG_Start(CRPT_T *crpt);
 void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[]);
 void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec, uint32_t u32OpMode, uint32_t u32KeySize, uint32_t u32SwapType);
 void AES_Start(CRPT_T *crpt, int32_t u32Channel, uint32_t u32DMAMode);

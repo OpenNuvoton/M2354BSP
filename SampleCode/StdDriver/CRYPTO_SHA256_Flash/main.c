@@ -36,7 +36,7 @@ void SYS_Init(void)
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* ENable CRYPTO module clock */
+    /* Enable CRYPTO module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
     /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
@@ -68,6 +68,7 @@ void DEBUG_PORT_Init(void)
 int32_t SHA256(uint32_t *pu32Addr, int32_t size, uint32_t digest[])
 {
     int32_t i;
+    uint32_t u32TimeOutCnt;
 
     /* Enable CRYPTO */
     CLK->AHBCLK |= CLK_AHBCLK_CRPTCKEN_Msk;
@@ -88,7 +89,15 @@ int32_t SHA256(uint32_t *pu32Addr, int32_t size, uint32_t digest[])
         CRPT->HMAC_CTL |= CRPT_HMAC_CTL_START_Msk;
 
         /* Waiting for SHA data input ready */
-        while((CRPT->HMAC_STS & CRPT_HMAC_STS_DATINREQ_Msk) == 0);
+        u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+        while((CRPT->HMAC_STS & CRPT_HMAC_STS_DATINREQ_Msk) == 0)
+        {
+            if(--u32TimeOutCnt == 0)
+            {
+                printf("Wait for SHA data input ready time-out!\n");
+                while(1);
+            }
+        }
 
         /* Input new SHA date */
         CRPT->HMAC_DATIN = *pu32Addr;
@@ -97,7 +106,15 @@ int32_t SHA256(uint32_t *pu32Addr, int32_t size, uint32_t digest[])
     }
 
     /* Waiting for calculation done */
-    while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for SHA calculation done time-out!\n");
+            while(1);
+        }
+    }
 
     /* return SHA results */
     for(i = 0; i < 8; i++)

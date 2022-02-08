@@ -84,15 +84,24 @@ void PRNG_Open(CRPT_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32
 /**
   * @brief  Start to generate one PRNG key.
   * @param[in]  crpt         The pointer of CRYPTO module
-  * @return None
+  * @retval  0 Generate PRNG key success.
+  * @retval -1 Generate PRNG key time-out.
   */
-void PRNG_Start(CRPT_T *crpt)
+int32_t PRNG_Start(CRPT_T *crpt)
 {
+    int32_t i32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     crpt->PRNG_CTL |= CRPT_PRNG_CTL_START_Msk;
 
     /* Waiting for PRNG Busy */
-    while(crpt->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk) {}
+    while(crpt->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
+    {
+        if( i32TimeOutCnt-- <= 0)
+        {
+            return -1;
+        }
+    }
 
+    return 0;
 }
 
 /**
@@ -155,7 +164,7 @@ void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec,
   * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  AES channel. Must be 0~3.
   * @param[in]  u32DMAMode  AES DMA control, including:
-  *         - \ref CRYPTO_DMA_ONE_SHOT   One shop AES encrypt/decrypt.
+  *         - \ref CRYPTO_DMA_ONE_SHOT   One shot AES encrypt/decrypt.
   *         - \ref CRYPTO_DMA_CONTINUE   Continuous AES encrypt/decrypt.
   *         - \ref CRYPTO_DMA_LAST       Last AES encrypt/decrypt of a series of AES_Start.
   * @return None

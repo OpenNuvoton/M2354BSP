@@ -1,10 +1,8 @@
-
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief    Show how to use FMC ISP APIs config/erase XOM region.
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
@@ -77,7 +75,7 @@ int32_t main(void)
     /* Unlock protected registers */
     SYS_UnlockReg();
 
-    /* Enable FMC ISP function and enable APROM active*/
+    /* Enable FMC ISP function and enable APROM active */
     FMC_Open();
     FMC_ENABLE_AP_UPDATE();
 

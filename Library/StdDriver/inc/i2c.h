@@ -1,9 +1,7 @@
 /**************************************************************************//**
  * @file     i2c.h
  * @version  V3.0
- * $Revision: 1 $
- * $Date: 16/07/07 7:50p $
- * @brief    M2355 series I2C Serial Interface Controller(I2C) driver header file
+ * @brief    M2354 series I2C Serial Interface Controller(I2C) driver header file
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
@@ -55,6 +53,12 @@ extern "C"
 #define I2C_SMBD_ENABLE             (0U)    /*!< Enable  SMBus Device Mode enable                                            */
 #define I2C_PECTX_ENABLE            (1U)    /*!< Enable  SMBus Packet Error Check Transmit function                          */
 #define I2C_PECTX_DISABLE           (0U)    /*!< Disable SMBus Packet Error Check Transmit function                          */
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* I2C Time-out Handler Constant Definitions                                                               */
+/*---------------------------------------------------------------------------------------------------------*/
+#define I2C_TIMEOUT                 (SystemCoreClock)   /*!< 1 second time-out */
+#define I2C_TIMEOUT_ERR             (-1L)               /*!< I2C time-out error value */
 
 /**@}*/ /* end of group I2C_EXPORTED_CONSTANTS */
 
@@ -463,9 +467,13 @@ static __INLINE void I2C_STOP(I2C_T *i2c);
  */
 static __INLINE void I2C_STOP(I2C_T *i2c)
 {
+    uint32_t u32TimeOutCount = I2C_TIMEOUT;
 
     (i2c)->CTL0 |= (I2C_CTL0_SI_Msk | I2C_CTL0_STO_Msk);
-    while(i2c->CTL0 & I2C_CTL0_STO_Msk) {}
+    while(i2c->CTL0 & I2C_CTL0_STO_Msk)
+    {
+        if(--u32TimeOutCount == 0) break;
+    }
 }
 
 

@@ -101,7 +101,7 @@ void UART0_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int main(void)
 {
-    uint32_t u32Src, u32Dst0, u32Dst1;
+    uint32_t u32Src, u32Dst0, u32Dst1, u32TimeOutCnt;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -249,7 +249,15 @@ int main(void)
     PDMA_Trigger(PDMA0, 4);
 
     /* Waiting for transfer done */
-    while(PDMA_IS_CH_BUSY(PDMA0, 4));
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(PDMA_IS_CH_BUSY(PDMA0, 4))
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for PDMA time-out!\n");
+            while(1);
+        }
+    }
 
     printf("test done...\n");
 

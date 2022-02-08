@@ -83,10 +83,12 @@ void UART0_Init(void)
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* EADC function test                                                                                       */
+/* EADC function test                                                                                      */
 /*---------------------------------------------------------------------------------------------------------*/
 void EADC_FunctionTest(void)
 {
+    uint32_t u32TimeOutCnt;
+
     printf("\n");
     printf("+----------------------------------------------------------------------+\n");
     printf("|           EADC compare function (result monitor) sample code         |\n");
@@ -136,7 +138,15 @@ void EADC_FunctionTest(void)
     EADC_START_CONV(EADC, BIT0);
 
     /* Wait EADC compare interrupt */
-    while((g_u32AdcCmp0IntFlag == 0) && (g_u32AdcCmp1IntFlag == 0));
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while((g_u32AdcCmp0IntFlag == 0) && (g_u32AdcCmp1IntFlag == 0))
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for EADC compare interrupt time-out!\n");
+            while(1);
+        }
+    }
 
     /* Disable the sample module 0 interrupt */
     EADC_DISABLE_SAMPLE_MODULE_INT(EADC, 0, BIT0);

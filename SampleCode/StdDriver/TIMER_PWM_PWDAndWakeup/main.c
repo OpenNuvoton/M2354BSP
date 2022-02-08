@@ -124,6 +124,8 @@ void UART_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int main(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -190,7 +192,9 @@ int main(void)
 
     printf("*** System in power-down mode and check the Timer4 and Timer5 PWM output waveform ***\n");
     printf("    - Timer5 PWM wake-up event interval is about 10 ms\n\n");
-    while(IsDebugFifoEmpty() == 0) {}
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(IsDebugFifoEmpty() == 0)
+        if(--u32TimeOutCnt == 0) break;
 
     while(1)
     {

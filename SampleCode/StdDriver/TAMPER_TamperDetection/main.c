@@ -25,6 +25,8 @@ void KeyStoreSRAM(void);
 
 void KS_TRIG(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Check BUSY(KS_STS[2]) is 0 and EIF(KS_STS[1]) is 0 */
     if(KS->STS & (KS_STS_BUSY_Msk | KS_STS_EIF_Msk))
     {
@@ -38,10 +40,26 @@ void KS_TRIG(void)
     KS->CTL |= (1 << KS_CTL_START_Pos);
 
     /* Wait BUSY(KS_STS[2]) to 0 */
-    while(KS->STS & KS_STS_BUSY_Msk) {}
+    u32TimeOutCnt = KS_TIMEOUT;
+    while(KS->STS & KS_STS_BUSY_Msk)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for Key Store busy flag time-out!\n");
+            while(1);
+        }
+    }
 
     /* Read key from KS_KEY[0]~[7] registers if EIF(KS_STS[1]) is 1 */
-    while(!(KS->STS & KS_STS_EIF_Msk)) {}
+    u32TimeOutCnt = KS_TIMEOUT;
+    while(!(KS->STS & KS_STS_EIF_Msk))
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for Key Store time-out!\n");
+            while(1);
+        }
+    }
 
     if(KS->REMAIN != 0x8001000)
     {
@@ -53,6 +71,7 @@ void TAMPER_IRQHandler(void)
 {
     uint32_t i;
     uint32_t u32FlagStatus;
+    uint32_t u32TimeOutCnt;
 
     /* Tamper interrupt occurred */
     if(TAMPER_GET_INT_FLAG())
@@ -84,7 +103,9 @@ void TAMPER_IRQHandler(void)
         }
 
         /* To check if all the debug messages are finished */
-        while(IsDebugFifoEmpty() == 0) {}
+        u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+        while(IsDebugFifoEmpty() == 0)
+            if(--u32TimeOutCnt == 0) break;
         SYS_ResetChip();
     }
 }
@@ -142,6 +163,8 @@ void UART_Init(void)
 
 void KS_Init(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Enable key store clock */
     CLK->AHBCLK |= 0x2000;
 
@@ -149,11 +172,21 @@ void KS_Init(void)
     KS->CTL = KS_CTL_INIT_Msk | KS_CTL_START_Msk;
 
     /* Waiting for initialization was done */
-    while(!(KS->STS & KS_STS_INITDONE_Msk)) {}
+    u32TimeOutCnt = KS_TIMEOUT;
+    while(!(KS->STS & KS_STS_INITDONE_Msk))
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for Key Store initialization done time-out!\n");
+            while(1);
+        }
+    }
 }
 
 void KeyStoreSRAM(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Check BUSY(KS_STS[2]), EIF(KS_STS[1]) and SRAMFULL(KS_STS[3]) is 0 */
     if(KS->STS & (KS_STS_BUSY_Msk | KS_STS_EIF_Msk | KS_STS_SRAMFULL_Msk))
     {
@@ -180,7 +213,14 @@ void KeyStoreSRAM(void)
     KS->CTL |= (1 << KS_CTL_START_Pos);
 
     /* Wait BUSY(KS_STS[2]) to 0 */
-    while(KS->STS & KS_STS_BUSY_Msk) {}
+    while(KS->STS & KS_STS_BUSY_Msk)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for Key Store busy flag time-out!\n");
+            while(1);
+        }
+    }
 
     /* Check EIF(KS_STS[1]) is 0 */
     if(KS->STS & KS_STS_EIF_Msk)
@@ -194,6 +234,8 @@ void KeyStoreSRAM(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int main(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -269,7 +311,9 @@ int main(void)
         SYS_UnlockReg();
         printf("# System enter to power-down mode ...\n");
         /* To check if all the debug messages are finished */
-        while(IsDebugFifoEmpty() == 0) {}
+        u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+        while(IsDebugFifoEmpty() == 0)
+            if(--u32TimeOutCnt == 0) break;
         CLK_PowerDown();
     }
     else if(s_u8Option == '1')

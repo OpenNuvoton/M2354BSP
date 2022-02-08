@@ -65,6 +65,7 @@ int32_t main(void)
 {
     uint32_t au32Pwd_5[4] = {0x55555555, 0x55555555, 0x55555555, 0x55555555};
     uint32_t au32Pwd_A[4] = {0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA};
+    int32_t i32RetVal;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -92,9 +93,15 @@ int32_t main(void)
     /* Update password */
     printf("Update Secure DPM password ... ");
 
-    if(DPM_SetPasswordUpdate(SECURE_DPM, au32Pwd_5) == 0)
+    i32RetVal = DPM_SetPasswordUpdate(SECURE_DPM, au32Pwd_5);
+    if(i32RetVal == 0)
     {
         printf("Password update has reached maximum time. Please erase chip.\n");
+        while(1);
+    }
+    else if(i32RetVal == DPM_TIMEOUT_ERR)
+    {
+        printf("Wait for DPM time-out!\n");
         while(1);
     }
     else
@@ -105,17 +112,28 @@ int32_t main(void)
     /* Compare password fail */
     printf("Compare with wrong password ... ");
 
-    if(DPM_SetPasswordCompare(SECURE_DPM, au32Pwd_A) == 0)
+    i32RetVal = DPM_SetPasswordCompare(SECURE_DPM, au32Pwd_A);
+    if(i32RetVal == 0)
     {
         if(DPM_GetPasswordErrorFlag(SECURE_DPM) == 1)
         {
             printf("password is wrong.\n");
             DPM_ClearPasswordErrorFlag(SECURE_DPM);
         }
+        else if(i32RetVal == DPM_TIMEOUT_ERR)
+        {
+            printf("Wait for DPM time-out!\n");
+            while(1);
+        }
         else
         {
             printf("OK.\n");
         }
+    }
+    else if(i32RetVal == DPM_TIMEOUT_ERR)
+    {
+        printf("Wait for DPM time-out!\n");
+        while(1);
     }
     else
     {
@@ -126,17 +144,28 @@ int32_t main(void)
     /* Compare password pass */
     printf("Compare with correct password ... ");
 
-    if(DPM_SetPasswordCompare(SECURE_DPM, au32Pwd_5) == 0)
+    i32RetVal = DPM_SetPasswordCompare(SECURE_DPM, au32Pwd_5);
+    if( i32RetVal == 0)
     {
         if(DPM_GetPasswordErrorFlag(SECURE_DPM) == 1)
         {
             printf("password is wrong.\n");
             DPM_ClearPasswordErrorFlag(SECURE_DPM);
         }
+        else if(i32RetVal == DPM_TIMEOUT_ERR)
+        {
+            printf("Wait for DPM time-out!\n");
+            while(1);
+        }
         else
         {
             printf("OK.\n");
         }
+    }
+    else if(i32RetVal == DPM_TIMEOUT_ERR)
+    {
+        printf("Wait for DPM time-out!\n");
+        while(1);
     }
     else
     {

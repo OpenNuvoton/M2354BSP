@@ -19,7 +19,7 @@ void PowerDownFunction(void);
 void RTC_IRQHandler(void);
 
 extern uint32_t __Enter_SPD(void);
-static volatile uint32_t g_u32RTCTickINT = 0;
+static volatile uint32_t s_u32RTCTickINT = 0;
 
 
 
@@ -55,7 +55,6 @@ void PowerDownFunction(void)
 
 }
 
-static volatile uint32_t g_u32RTCTickINT;
 
 /**
  * @brief       IRQ Handler for RTC Interrupt
@@ -65,16 +64,19 @@ static volatile uint32_t g_u32RTCTickINT;
  */
 void RTC_IRQHandler(void)
 {
+    uint32_t u32TimeOutCnt;
 
     /* To check if RTC tick interrupt occurred */
     if(RTC_GET_TICK_INT_FLAG(RTC) == 1)
     {
         /* Clear RTC tick interrupt flag */
         RTC_CLEAR_TICK_INT_FLAG(RTC);
-        while((RTC_GET_TICK_INT_FLAG(RTC) == 1));
+        u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+        while((RTC_GET_TICK_INT_FLAG(RTC) == 1))
+            if(--u32TimeOutCnt == 0) break;
     }
 
-    g_u32RTCTickINT = 1;
+    s_u32RTCTickINT = 1;
     GPIO_TOGGLE(PA10);
 
 }
@@ -87,7 +89,7 @@ void RTC_Init(void)
     if((CLK->PWRCTL & CLK_PWRCTL_LXTEN_Msk) == 0)
     {
         CLK->PWRCTL |= CLK_PWRCTL_LXTEN_Msk;
-        while((CLK->STATUS & CLK_STATUS_LXTSTB_Msk) == 0);
+        CLK_WaitClockReady(CLK_STATUS_LXTSTB_Msk);
     }
 
     /* Enable RTC clock */
@@ -103,12 +105,16 @@ void RTC_Init(void)
         sWriteRTC.u32Year       = 2017;
         sWriteRTC.u32Month      = 3;
         sWriteRTC.u32Day        = 16;
-        sWriteRTC.u32DayOfWeek  = RTC_MONDAY;
+        sWriteRTC.u32DayOfWeek  = RTC_THURSDAY;
         sWriteRTC.u32Hour       = 0;
         sWriteRTC.u32Minute     = 0;
         sWriteRTC.u32Second     = 0;
         sWriteRTC.u32TimeScale  = RTC_CLOCK_24;
-        RTC_Open(&sWriteRTC);
+        if( RTC_Open(&sWriteRTC) < 0 )
+        {
+            printf("Initialize RTC module and start counting failed!\n");
+            while(1);
+        }
         printf("# Set RTC current date/time: 2017/03/16 00:00:00.\n\n");
 
         /* Enable RTC tick interrupt and wake-up function will be enabled also */
@@ -173,6 +179,7 @@ void UART0_Init(void)
 int main(void)
 {
     S_RTC_TIME_DATA_T sReadRTC;
+    uint32_t u32TimeOutCnt;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -209,15 +216,25 @@ int main(void)
         printf("# Get RTC current date/time: %d/%02d/%02d %02d:%02d:%02d.\n",
                sReadRTC.u32Year, sReadRTC.u32Month, sReadRTC.u32Day, sReadRTC.u32Hour, sReadRTC.u32Minute, sReadRTC.u32Second);
 
-        g_u32RTCTickINT = 0;
+        s_u32RTCTickINT = 0;
 
         /* Enter to SPD Power-down mode */
         printf("Enter to SPD ... ");
-        UART_WAIT_TX_EMPTY(DEBUG_PORT);
+        u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+        UART_WAIT_TX_EMPTY(DEBUG_PORT)
+            if(--u32TimeOutCnt == 0) break;
         PowerDownFunction();
 
         /* Wait RTC interrupt */
-        while(g_u32RTCTickINT == 0);
+        u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+        while(s_u32RTCTickINT == 0)
+        {
+            if(--u32TimeOutCnt == 0)
+            {
+                printf("Wait for RTC interrupt time-out!");
+                while(1);
+            }
+        }
 
         /* Check wake-up from SPD by RTC flag */
         if(CLK->PMUSTS & CLK_PMUSTS_RTCWK_Msk)

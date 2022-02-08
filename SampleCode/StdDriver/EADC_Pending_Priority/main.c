@@ -89,12 +89,13 @@ void UART0_Init(void)
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* EADC function test                                                                                       */
+/* EADC function test                                                                                      */
 /*---------------------------------------------------------------------------------------------------------*/
 void EADC_FunctionTest(void)
 {
     uint8_t  u8Option;
     int32_t  i32ConversionData, i;
+    uint32_t u32TimeOutCnt;
 
     printf("\n");
     printf("+----------------------------------------------------------------------+\n");
@@ -162,8 +163,16 @@ void EADC_FunctionTest(void)
         EADC_START_CONV(EADC, BIT0 | BIT1 | BIT2 | BIT3);
 
         /* Wait all EADC interrupt (g_u32EadcIntxFlag will be set at EADC_INTx_IRQHandler() function) */
+        u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
         while((g_u32EadcInt0Flag == 0) || (g_u32EadcInt1Flag == 0) ||
-                (g_u32EadcInt2Flag == 0) || (g_u32EadcInt3Flag == 0));
+                (g_u32EadcInt2Flag == 0) || (g_u32EadcInt3Flag == 0))
+        {
+            if(--u32TimeOutCnt == 0)
+            {
+                printf("Wait for EADC interrupt time-out!\n");
+                while(1);
+            }
+        }
 
         /* Get the conversion result of the sample module */
         printf("The ADINTx interrupt sequence is:\n");

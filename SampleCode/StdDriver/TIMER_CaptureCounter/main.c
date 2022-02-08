@@ -111,6 +111,7 @@ int main(void)
 {
     uint32_t u32InitCount;
     uint32_t au32CAPValue[10], u32CAPDiff;
+    uint32_t u32TimeOutCnt;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -222,7 +223,9 @@ int main(void)
     /* case 2. */
     TIMER_StopCapture(TIMER2);
     TIMER_Stop(TIMER2);
-    while(TIMER_IS_ACTIVE(TIMER2)) {}
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(TIMER_IS_ACTIVE(TIMER2))
+        if(--u32TimeOutCnt == 0) break;
     TIMER_ClearIntFlag(TIMER2);
     TIMER_ClearCaptureIntFlag(TIMER2);
     /* Enable Timer2 event counter input and external capture function */
@@ -235,7 +238,7 @@ int main(void)
     TIMER_EnableCaptureInt(TIMER2);
     TIMER_Start(TIMER2);
 
-    printf("# Get first low duration shoulb be 250 counts.\n");
+    printf("# Get first low duration should be 250 counts.\n");
     printf("# And follows duration between two rising edge captured event should be 500 counts.\n");
 
     /* Clear Timer2 interrupt counts to 0 */

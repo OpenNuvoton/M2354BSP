@@ -94,6 +94,12 @@ extern "C"
 #define LCD_PWR_SAVING_NORMAL_MODE              (0ul << LCD_DCTL_PSVREV_Pos) /*!< The timing of LCD power saving is normal \hideinitializer */
 #define LCD_PWR_SAVING_REVERSE_MODE             (1ul << LCD_DCTL_PSVREV_Pos) /*!< The timing of LCD power saving is reverse \hideinitializer */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* LCD Time-out Handler Constant Definitions                                                              */
+/*---------------------------------------------------------------------------------------------------------*/
+#define LCD_TIMEOUT                             (SystemCoreClock)   /*!< 1 second time-out \hideinitializer */
+#define LCD_TIMEOUT_ERR                         (-1L)               /*!< LCD time-out error value \hideinitializer */
+
 /**@}*/ /* end of group LCD_EXPORTED_CONSTANTS */
 
 
@@ -117,6 +123,7 @@ typedef struct
 
 /**@}*/ /* end of group LCD_EXPORTED_STRUCTS */
 
+extern int32_t g_LCD_i32ErrCode;
 
 /** @addtogroup LCD_EXPORTED_FUNCTIONS LCD Exported Functions
   @{
@@ -130,8 +137,23 @@ typedef struct
   * @return     None
   *
   * @details    This macro is used to enable LCD display.
+  *
+  * @note       This macro sets g_LCD_i32ErrCode to LCD_TIMEOUT_ERR if waiting LCD time-out.
   */
-#define LCD_ENABLE_DISPLAY()        do{ LCD->CTL |= LCD_CTL_EN_Msk; while(LCD->CTL & LCD_CTL_SYNC_Msk) {} }while(0)
+#define LCD_ENABLE_DISPLAY() \
+    do{ \
+        uint32_t u32TimeOutCnt = LCD_TIMEOUT; \
+        g_LCD_i32ErrCode = 0; \
+        LCD->CTL |= LCD_CTL_EN_Msk; \
+        while(LCD->CTL & LCD_CTL_SYNC_Msk) \
+        { \
+            if(--u32TimeOutCnt == 0) \
+            { \
+                g_LCD_i32ErrCode = LCD_TIMEOUT_ERR; \
+                break; \
+            } \
+        } \
+    }while(0)
 
 /**
   * @brief      Disable LCD Display
@@ -141,8 +163,23 @@ typedef struct
   * @return     None
   *
   * @details    This macro is used to disable LCD display.
+  *
+  * @note       This macro sets g_LCD_i32ErrCode to LCD_TIMEOUT_ERR if waiting LCD time-out.
   */
-#define LCD_DISABLE_DISPLAY()       do{ LCD->CTL &= ~LCD_CTL_EN_Msk; while(LCD->CTL & LCD_CTL_SYNC_Msk) {} }while(0)
+#define LCD_DISABLE_DISPLAY() \
+    do{ \
+        uint32_t u32TimeOutCnt = LCD_TIMEOUT; \
+        g_LCD_i32ErrCode = 0; \
+        LCD->CTL &= ~LCD_CTL_EN_Msk; \
+        while(LCD->CTL & LCD_CTL_SYNC_Msk) \
+        { \
+            if(--u32TimeOutCnt == 0) \
+            { \
+                g_LCD_i32ErrCode = LCD_TIMEOUT_ERR; \
+                break; \
+            } \
+        } \
+    }while(0)
 
 /**
   * @brief      Set LCD Waveform Type

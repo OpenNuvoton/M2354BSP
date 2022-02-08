@@ -1,11 +1,9 @@
-
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief    Show how to wake-up USCI_I2C from deep sleep mode.
  *           This sample code needs to work with USCI_I2C_Master.
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
@@ -316,8 +314,12 @@ void UI2C0_Init(uint32_t u32ClkSpeed)
 /*---------------------------------------------------------------------------------------------------------*/
 void PowerDownFunction(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Check if all the debug messages are finished */
-    UART_WAIT_TX_EMPTY(DEBUG_PORT);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    UART_WAIT_TX_EMPTY(DEBUG_PORT)
+        if(--u32TimeOutCnt == 0) break;
 
     /* Enter to Power-down mode */
     CLK_PowerDown();
@@ -325,7 +327,7 @@ void PowerDownFunction(void)
 
 int main(void)
 {
-    uint32_t u32i;
+    uint32_t u32i, u32TimeOutCnt;
     uint8_t  u8Ch;
 
     /* Unlock protected registers */
@@ -350,7 +352,7 @@ int main(void)
     printf("| USCI_I2C Driver Sample Code (Slave) for wake-up & access Slave test |\n");
     printf("| Needs to work with USCI_I2C_Master sample code.                     |\n");
     printf("|      UI2C Master (I2C0) <---> UI2C Slave (I2C0)                     |\n");
-    printf("| !! This sample code requires two borads for testing !!              |\n");
+    printf("| !! This sample code requires two boards for testing !!              |\n");
     printf("+---------------------------------------------------------------------+\n");
 
     printf("\n");
@@ -417,8 +419,15 @@ int main(void)
     /* Enter to Power-down mode */
     PowerDownFunction();
 
-    while(g_u8SlvPWRDNWK == 0);
-    while(g_u8SlvI2CWK == 0);
+    u32TimeOutCnt = UI2C_TIMEOUT;
+    while( (g_u8SlvPWRDNWK==0) || (g_u8SlvI2CWK==0) )
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for system or USCI_I2C interrupt time-out!\n");
+            while(1);
+        }
+    }
 
     if(g_u32WKfromAddr)
         printf("UI2C0 [A]ddress match Wake-up from Deep Sleep\n");

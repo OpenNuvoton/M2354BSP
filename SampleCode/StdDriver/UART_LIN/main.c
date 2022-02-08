@@ -257,6 +257,8 @@ void UART_FunctionTest(void)
 
 void LIN_Tx_FunctionTest(void)
 {
+    uint32_t u32TimeOutCnt;
+
     //The sample code will send a LIN header with ID is 0x30 and response field.
     //The response field with 8 data bytes and checksum without including ID.
 
@@ -272,7 +274,7 @@ void LIN_Tx_FunctionTest(void)
     /* Send break+sync+ID */
     g_i32pointer = 0 ;
 
-    /* Set UART Configuration, LIN Max Speed is 9600 bps */
+    /* Set UART Configuration, LIN Max Speed is 20K */
     UART_SetLineConfig(UART1, 9600, UART_WORD_LEN_8, UART_PARITY_NONE, UART_STOP_BIT_1);
 
     /* Switch back to LIN Function */
@@ -284,7 +286,15 @@ void LIN_Tx_FunctionTest(void)
     /* LIN TX Send Header Enable */
     UART1->LINCTL |= UART_LINCTL_SENDH_Msk;
     /* Wait until break field, sync field and ID field transfer completed */
-    while((UART1->LINCTL & UART_LINCTL_SENDH_Msk) == UART_LINCTL_SENDH_Msk);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while((UART1->LINCTL & UART_LINCTL_SENDH_Msk) == UART_LINCTL_SENDH_Msk)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for UART LIN header transfer completed time-out!\n");
+            while(1);
+        }
+    }
 
     /* Compute checksum without ID and fill checksum value to au8TestPattern[8] */
     au8TestPattern[8] = ComputeChksumValue(&au8TestPattern[0], 8);
@@ -307,7 +317,7 @@ void LIN_Rx_FunctionTest(void)
 
     g_i32RxCounter = 0;
 
-    /* Set UART Configuration, LIN Max Speed is 9600 bps */
+    /* Set UART Configuration, LIN Max Speed is 20K */
     UART_SetLineConfig(UART1, 9600, UART_WORD_LEN_8, UART_PARITY_NONE, UART_STOP_BIT_1);
 
     /* Switch back to LIN Function */

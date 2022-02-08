@@ -1,5 +1,5 @@
 /**************************************************************************//**
- * @file     timer.c
+ * @file     timer_pwm.c
  * @version  V3.00
  * @brief    Timer PWM Controller(Timer PWM) driver source file
  *
@@ -16,6 +16,8 @@
 /** @addtogroup TIMER_PWM_Driver TIMER PWM Driver
   @{
 */
+
+int32_t g_TPWM_i32ErrCode = 0; /*!< TPWM global error code */
 
 /** @addtogroup TIMER_PWM_EXPORTED_FUNCTIONS TIMER PWM Exported Functions
   @{

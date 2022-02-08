@@ -1,5 +1,5 @@
 /**************************************************************************//**
- * @file     clk.c
+ * @file     my_clk.c
  * @version  V3.00
  * @brief    M2354 series Clock Controller (CLK) driver source file
  *
@@ -15,6 +15,7 @@
   @{
 */
 
+int32_t g_CLK_i32ErrCode = 0;    /*!< CLK global error code */
 
 /** @addtogroup CLK_EXPORTED_FUNCTIONS CLK Exported Functions
   @{
@@ -74,14 +75,26 @@ void CLK_EnableCKO(uint32_t u32ClkSrc, uint32_t u32ClkDiv, uint32_t u32ClkDivBy1
   */
 void CLK_PowerDown(void)
 {
+    /* Backup systick interrupt enable bit */
+    volatile uint32_t u32SysTickTICKINT = 0;
+
     /* Set the processor uses deep sleep as its low power mode */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-    /* Set system Power-down enabled*/
+    /* Set system Power-down enabled */
     CLK->PWRCTL |= CLK_PWRCTL_PDEN_Msk;
+
+    /* Backup systick interrupt setting */
+    u32SysTickTICKINT = SysTick->CTRL & SysTick_CTRL_TICKINT_Msk;
+
+    /* Disable systick interrupt */
+    SysTick->CTRL &= ~SysTick_CTRL_TICKINT_Msk;
 
     /* Chip enter Power-down mode after CPU run WFI instruction */
     __WFI();
+
+    /* Restore systick interrupt setting */
+    if(u32SysTickTICKINT) SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;
 }
 
 
@@ -378,7 +391,7 @@ uint32_t CLK_SetCoreClock(uint32_t u32Hclk)
   */
 void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
 {
-    uint32_t u32HIRCSTB;
+    uint32_t u32HIRCSTB, u32TimeOutCnt;
 
     /* Read HIRC clock source stable flag */
     u32HIRCSTB = CLK->STATUS & CLK_STATUS_HIRCSTB_Msk;
@@ -389,9 +402,13 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
     CLK->CLKSEL0 |= CLK_CLKSEL0_HCLKSEL_Msk;
 
     /* Switch to power level 0 for safe */
-    while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk);
+    u32TimeOutCnt = CLK_TIMEOUT;
+    while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk)
+        if(--u32TimeOutCnt == 0) break;
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
-    while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk);
+    u32TimeOutCnt = CLK_TIMEOUT;
+    while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk)
+        if(--u32TimeOutCnt == 0) break;
 
     /* Set Flash Access Cycle to 4 for safe */
     FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (4);
@@ -406,7 +423,9 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
     SystemCoreClockUpdate();
 
     /* Set power level according to new HCLK source */
-    while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk);
+    u32TimeOutCnt = SYS_TIMEOUT;
+    while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk)
+        if(--u32TimeOutCnt == 0) break;
     if((SystemCoreClock > FREQ_48MHZ) && SystemCoreClock <= FREQ_84MHZ)
     {
         SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL1;
@@ -419,7 +438,9 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
     {
         SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL3;
     }
-    while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk);
+    u32TimeOutCnt = SYS_TIMEOUT;
+    while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk)
+        if(--u32TimeOutCnt == 0) break;
 
     /* Set Flash Access Cycle */
     if((SystemCoreClock >= FREQ_50MHZ) && SystemCoreClock < FREQ_75MHZ)
@@ -1017,17 +1038,20 @@ void CLK_DisablePLL(void)
   *             - \ref CLK_STATUS_MIRCSTB_Msk
   * @retval     0  clock is not stable
   * @retval     1  clock is stable
-  * @details    To wait for clock ready by specified clock source stable flag or timeout (~500ms)
+  * @details    To wait for clock ready by specified clock source stable flag or timeout (>500ms)
+  * @note       This function sets g_CLK_i32ErrCode to CLK_TIMEOUT_ERR if clock source status is not stable.
   */
 uint32_t CLK_WaitClockReady(uint32_t u32ClkMask)
 {
-    int32_t i32TimeOutCnt = 2400000;
+    uint32_t u32TimeOutCnt = SystemCoreClock>>1; /* 500ms time-out */
     uint32_t u32Ret = 1U;
 
+    g_CLK_i32ErrCode = 0;
     while((CLK->STATUS & u32ClkMask) != u32ClkMask)
     {
-        if(i32TimeOutCnt-- <= 0)
+        if(--u32TimeOutCnt == 0)
         {
+            g_CLK_i32ErrCode = CLK_TIMEOUT_ERR;
             u32Ret = 0U;
             break;
         }
@@ -1055,14 +1079,24 @@ void CLK_EnableSysTick(uint32_t u32ClkSrc, uint32_t u32Count)
     SysTick->CTRL = 0UL;
 
     /* Set System Tick clock source */
-    if(u32ClkSrc == CLK_CLKSEL0_STCLKSEL_HCLK)
+    if( u32ClkSrc == CLK_CLKSEL0_STCLKSEL_HCLK )
     {
+        /* Disable System Tick clock source from external reference clock */
+        CLK->AHBCLK &= ~CLK_AHBCLK_EXSTCKEN_Msk;
+
+        /* Select System Tick clock source from core clock */
         SysTick->CTRL |= SysTick_CTRL_CLKSOURCE_Msk;
     }
     else
     {
+        /* Enable System Tick clock source from external reference clock */
         CLK->AHBCLK |= CLK_AHBCLK_EXSTCKEN_Msk;
+
+        /* Select System Tick external reference clock source */
         CLK->CLKSEL0 = (CLK->CLKSEL0 & ~CLK_CLKSEL0_STCLKSEL_Msk) | u32ClkSrc;
+
+        /* Select System Tick clock source from external reference clock */
+        SysTick->CTRL &= ~SysTick_CTRL_CLKSOURCE_Msk;
     }
 
     /* Set System Tick reload value */
@@ -1101,7 +1135,7 @@ void CLK_DisableSysTick(void)
   */
 void CLK_SetPowerDownMode(uint32_t u32PDMode)
 {
-    while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk);
+    CLK_WAIT_PMUCTL_WRBUSY();
     CLK->PMUCTL = (CLK->PMUCTL & (~CLK_PMUCTL_PDMSEL_Msk)) | (u32PDMode);
 }
 
@@ -1131,12 +1165,12 @@ void CLK_EnableDPDWKPin(uint32_t u32TriggerType)
 {
     uint32_t u32Pin1, u32Pin2, u32Pin3, u32Pin4;
 
-    u32Pin1 = (((u32TriggerType) & 0x03UL) >> CLK_PMUCTL_WKPINEN1_Pos);
-    u32Pin2 = (((u32TriggerType) & 0x03UL) >> CLK_PMUCTL_WKPINEN2_Pos);
-    u32Pin3 = (((u32TriggerType) & 0x03UL) >> CLK_PMUCTL_WKPINEN3_Pos);
-    u32Pin4 = (((u32TriggerType) & 0x03UL) >> CLK_PMUCTL_WKPINEN4_Pos);
+    u32Pin1 = ((u32TriggerType) & CLK_PMUCTL_WKPINEN1_Msk);
+    u32Pin2 = ((u32TriggerType) & CLK_PMUCTL_WKPINEN2_Msk);
+    u32Pin3 = ((u32TriggerType) & CLK_PMUCTL_WKPINEN3_Msk);
+    u32Pin4 = ((u32TriggerType) & CLK_PMUCTL_WKPINEN4_Msk);
 
-    while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk);
+    CLK_WAIT_PMUCTL_WRBUSY();
 
     if(u32Pin1)
     {

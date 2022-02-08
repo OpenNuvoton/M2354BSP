@@ -17,6 +17,8 @@
   @{
 */
 
+int32_t g_EWDT_i32ErrCode = 0;  /*!< EWDT global error code */
+
 /** @addtogroup EWDT_EXPORTED_FUNCTIONS EWDT Exported Functions
   @{
 */
@@ -47,19 +49,29 @@
   * @details    This function makes EWDT module start counting with different time-out interval, reset delay period and choose to \n
   *             enable or disable EWDT time-out reset system or wake-up system.
   * @note       Please make sure that Register Write-Protection Function has been disabled before using this function.
+    * @note     This function sets g_WDT_i32ErrCode to WDT_TIMEOUT_ERR if waiting WDT time-out.
   */
 void EWDT_Open(uint32_t u32TimeoutInterval,
                uint32_t u32ResetDelay,
                uint32_t u32EnableReset,
                uint32_t u32EnableWakeup)
 {
+    uint32_t u32TimeOutCnt = EWDT_TIMEOUT;
+
     EWDT->ALTCTL = u32ResetDelay;
 
     EWDT->CTL = u32TimeoutInterval | EWDT_CTL_WDTEN_Msk |
                 (u32EnableReset << EWDT_CTL_RSTEN_Pos) |
                 (u32EnableWakeup << EWDT_CTL_WKEN_Pos);
 
-    while((EWDT->CTL & EWDT_CTL_SYNC_Msk) == EWDT_CTL_SYNC_Msk) {} /* Wait enable WDTEN bit completed, it needs 2 * EWDT_CLK. */
+    while((EWDT->CTL & EWDT_CTL_SYNC_Msk) == EWDT_CTL_SYNC_Msk) /* Wait enable WDTEN bit completed, it needs 2 * EWDT_CLK. */
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            g_EWDT_i32ErrCode = EWDT_TIMEOUT_ERR;
+            break;
+        }
+    }
 }
 
 /**@}*/ /* end of group EWDT_EXPORTED_FUNCTIONS */

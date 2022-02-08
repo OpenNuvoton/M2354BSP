@@ -1,9 +1,6 @@
-
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief
  *           Show how to wake up MCU from Power-down mode through I2C interface.
  *           This sample code needs to work with I2C_Master.
@@ -83,8 +80,12 @@ void PWRWU_IRQHandler(void)
 /*---------------------------------------------------------------------------------------------------------*/
 void PowerDownFunction(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Check if all the debug messages are finished */
-    UART_WAIT_TX_EMPTY(DEBUG_PORT);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    UART_WAIT_TX_EMPTY(DEBUG_PORT)
+        if(--u32TimeOutCnt == 0) break;
 
     /* Enter to Power-down mode */
     CLK_PowerDown();
@@ -229,7 +230,7 @@ void I2C0_Close(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int32_t main(void)
 {
-    uint32_t u32i;
+    uint32_t u32i, u32TimeOutCnt;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -293,11 +294,27 @@ int32_t main(void)
     /* Enter to Power-down mode */
     PowerDownFunction();
 
-    /* Waiting for syteem wake-up and I2C wake-up finish*/
-    while((g_u8SlvPWRDNWK & g_u8SlvI2CWK) == 0);
+    /* Waiting for system wake-up and I2C wake-up finish */
+    u32TimeOutCnt = I2C_TIMEOUT;
+    while((g_u8SlvPWRDNWK & g_u8SlvI2CWK) == 0)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for system or I2C interrupt time-out!\n");
+            while(1);
+        }
+    }
 
-    /* Waitinn for I2C response ACK finish */
-    while(!I2C_GET_WAKEUP_DONE(I2C0));
+    /* Waiting for I2C response ACK finish */
+    u32TimeOutCnt = I2C_TIMEOUT;
+    while(!I2C_GET_WAKEUP_DONE(I2C0))
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for I2C response ACK finish time-out!\n");
+            while(1);
+        }
+    }
 
     /* Clear Wakeup done flag, I2C will release bus */
     I2C_CLEAR_WAKEUP_DONE(I2C0);

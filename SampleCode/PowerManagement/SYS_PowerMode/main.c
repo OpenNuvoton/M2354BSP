@@ -13,7 +13,7 @@
 
 
 extern int IsDebugFifoEmpty(void);
-static volatile uint8_t g_u8IsINTEvent;
+static volatile uint8_t s_u8IsINTEvent;
 
 void WDT_IRQHandler(void);
 void PowerDownFunction(void);
@@ -40,7 +40,7 @@ void WDT_IRQHandler(void)
         WDT_CLEAR_TIMEOUT_WAKEUP_FLAG();
     }
 
-    g_u8IsINTEvent = 1;
+    s_u8IsINTEvent = 1;
 
 }
 
@@ -49,8 +49,12 @@ void WDT_IRQHandler(void)
 /*---------------------------------------------------------------------------------------------------------*/
 void PowerDownFunction(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* To check if all the debug messages are finished */
-    while(IsDebugFifoEmpty() == 0);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(IsDebugFifoEmpty() == 0)
+        if(--u32TimeOutCnt == 0) break;
 
     /* Enter to Power-down mode */
     CLK_PowerDown();
@@ -60,8 +64,8 @@ void PowerDownFunction(void)
 /*  Simple calculation test function                                                                       */
 /*---------------------------------------------------------------------------------------------------------*/
 #define PI_NUM  256
-static int32_t g_ai32f[PI_NUM + 1];
-static uint32_t g_au32piTbl[19] =
+static int32_t s_ai32f[PI_NUM + 1];
+static uint32_t s_au32piTbl[19] =
 {
     3141,
     5926,
@@ -84,7 +88,7 @@ static uint32_t g_au32piTbl[19] =
     6284
 };
 
-static int32_t g_qi32piResult[19];
+static int32_t s_ai32piResult[19];
 
 int32_t pi(void)
 {
@@ -92,20 +96,20 @@ int32_t pi(void)
     int32_t a = 10000, b = 0, c = PI_NUM, d = 0, e = 0, g = 0;
 
     for(; b - c;)
-        g_ai32f[b++] = a / 5;
+        s_ai32f[b++] = a / 5;
 
     i = 0;
-    for(; (void)(d = 0), g = c * 2; c -= 14, g_qi32piResult[i++] = e + d / a, e = d % a)
+    for(; (void)(d = 0), g = c * 2; c -= 14, s_ai32piResult[i++] = e + d / a, e = d % a)
     {
         if(i == 19)
             break;
 
-        for(b = c; (void)(d += g_ai32f[b] * a), (void)(g_ai32f[b] = d % --g), (void)(d /= g--), --b; d *= b);
+        for(b = c; (void)(d += s_ai32f[b] * a), (void)(s_ai32f[b] = d % --g), (void)(d /= g--), --b; d *= b);
     }
     i32Err = 0;
     for(i = 0; i < 19; i++)
     {
-        if(g_au32piTbl[i] != (uint32_t)g_qi32piResult[i])
+        if(s_au32piTbl[i] != (uint32_t)s_ai32piResult[i])
             i32Err = -1;
     }
 
@@ -179,6 +183,8 @@ void UART0_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int32_t main(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -273,7 +279,15 @@ int32_t main(void)
     PowerDownFunction();
 
     /* Check if WDT time-out interrupt and wake-up occurred or not */
-    while(g_u8IsINTEvent == 0);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(s_u8IsINTEvent == 0)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for WDT interrupt time-out!\n");
+            while(1);
+        }
+    }
 
     /* Check system work */
     CheckSystemWork();

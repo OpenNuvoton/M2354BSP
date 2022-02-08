@@ -52,8 +52,15 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 #define EWDT_RESET_COUNTER_KEYWORD   (0x00005AA5UL)    /*!< Fill this value to EWDT_RSTCNT register to free reset EWDT counter \hideinitializer */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* EWDT Time-out Handler Constant Definitions                                                              */
+/*---------------------------------------------------------------------------------------------------------*/
+#define EWDT_TIMEOUT                 SystemCoreClock   /*!< 1 second time-out \hideinitializer */
+#define EWDT_TIMEOUT_ERR             (-1L)             /*!< EWDT operation abort due to timeout error \hideinitializer */
+
 /**@}*/ /* end of group EWDT_EXPORTED_CONSTANTS */
 
+extern int32_t g_EWDT_i32ErrCode;
 
 /** @addtogroup EWDT_EXPORTED_FUNCTIONS EWDT Exported Functions
   @{
@@ -166,11 +173,22 @@ __STATIC_INLINE void EWDT_DisableInt(void);
   * @return     None
   *
   * @details    This function will stop EWDT counting and disable EWDT module.
+  *
+  * @note       This function sets g_WDT_i32ErrCode to WDT_TIMEOUT_ERR if waiting WDT time-out.
   */
 __STATIC_INLINE void EWDT_Close(void)
 {
+    uint32_t u32TimeOutCnt = EWDT_TIMEOUT;
+
     EWDT->CTL = 0UL;
-    while((EWDT->CTL & EWDT_CTL_SYNC_Msk) == EWDT_CTL_SYNC_Msk) {} /* Wait disable WDTEN bit completed, it needs 2 * EWDT_CLK. */
+    while((EWDT->CTL & EWDT_CTL_SYNC_Msk) == EWDT_CTL_SYNC_Msk) /* Wait disable WDTEN bit completed, it needs 2 * EWDT_CLK. */
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            g_EWDT_i32ErrCode = EWDT_TIMEOUT_ERR;
+            break;
+        }
+    }
 }
 
 /**

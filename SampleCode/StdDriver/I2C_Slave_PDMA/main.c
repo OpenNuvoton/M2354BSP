@@ -1,11 +1,9 @@
-
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief
  *           Demonstrate how a Slave use PDMA Rx mode receive data from a Master(Loopback).
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
@@ -355,7 +353,7 @@ void I2C1_Close(void)
 
 void I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr)
 {
-    uint32_t i;
+    uint32_t i, u32TimeOutCnt;
 
 
     g_au8MstTxData[0] = (uint8_t)((u8SlvAddr << 1) | 0x00);
@@ -377,11 +375,27 @@ void I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr)
     I2C_START(I2C0);
 
     /* Wait I2C0 Tx Finish */
-    while(g_u8MstEndFlag == 0);
+    u32TimeOutCnt = I2C_TIMEOUT;
+    while(g_u8MstEndFlag == 0)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for I2C Tx time-out!\n");
+            while(1);
+        }
+    }
     g_u8MstEndFlag = 0;
 
     /* Waiting for I2C0 bus become free */
-    while((I2C0->STATUS1 & I2C_STATUS1_ONBUSY_Msk) ==  I2C_STATUS1_ONBUSY_Msk);
+    u32TimeOutCnt = I2C_TIMEOUT;
+    while((I2C0->STATUS1 & I2C_STATUS1_ONBUSY_Msk) ==  I2C_STATUS1_ONBUSY_Msk)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for I2C bus become free time-out!\n");
+            while(1);
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -389,7 +403,7 @@ void I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr)
 /*---------------------------------------------------------------------------------------------------------*/
 int32_t main(void)
 {
-    uint32_t u32i;
+    uint32_t u32i, u32TimeOutCnt;
     uint8_t u8Err;
 
     /* Unlock protected registers */
@@ -447,8 +461,16 @@ int32_t main(void)
     /* I2C0 access I2C1*/
     I2C_Write_to_Slave_PDMA_RX(0x16);
 
-    /* Waiting for PDMA channel 1 transfer done*/
-    while(g_u32IsTestOver == 0);
+    /* Waiting for PDMA channel 1 transfer done */
+    u32TimeOutCnt = I2C_TIMEOUT;
+    while(g_u32IsTestOver == 0)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for PDMA transfer done time-out!\n");
+            while(1);
+        }
+    }
     g_u32IsTestOver = 0;
 
     u8Err = 0;

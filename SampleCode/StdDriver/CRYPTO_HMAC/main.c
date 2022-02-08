@@ -128,7 +128,7 @@ void SYS_Init(void)
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* ENable CAN module clock */
+    /* Enable CRYPTO module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
     /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
@@ -179,7 +179,7 @@ int  main(void)
     char *hmac   = "bd3d2df6f9d284b421a43e5f9cb94bc4ff88a88243f1f0133bad0fb1791f6569"; // The golden pattern
     uint32_t u32OpMode = HMAC_MODE_SHA512;
 #endif
-
+    uint32_t u32TimeOutCnt;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -215,8 +215,15 @@ int  main(void)
 
     g_HMAC_done = 0;
     CRPT->HMAC_CTL |= CRPT_HMAC_CTL_START_Msk | CRPT_HMAC_CTL_DMAEN_Msk | CRPT_HMAC_CTL_DMALAST_Msk;
-    while(!g_HMAC_done) {}
-
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(!g_HMAC_done)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for HMAC time-out!\n");
+            while(1);
+        }
+    }
 
     printf("\nHMAC Output:\n");
 

@@ -1,9 +1,8 @@
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief    Demonstrate how to program, read, and lock OTP.
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
@@ -71,7 +70,7 @@ int32_t main(void)
     UART_Open(UART0, 115200);
 
     printf("+------------------------------------+\n");
-    printf("|   M2351 FMC OTP Sample Demo        |\n");
+    printf("|   M2354 FMC OTP Sample Demo        |\n");
     printf("+------------------------------------+\n");
 
     SYS_UnlockReg();                   /* Unlock protected registers */

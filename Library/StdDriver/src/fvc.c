@@ -59,15 +59,28 @@ int32_t FVC_Open(void)
 
 /**
   * @brief      Enable anti version rollback
+  * @param      None
+  * @retval     0       Successful
+  * @retval     -1      Failed
   * @details    FVC can limit the version number to be increased only to avoid version rollback.
   *             This function is used to enable it.
   *
   */
-void FVC_EnableMonotone(void)
+int32_t FVC_EnableMonotone(void)
 {
+    int32_t timeout;
+
     FVC->CTL = FVC_VCODE | FVC_CTL_MONOEN_Msk;
+
     /* Waiting if FVC is in busy */
-    while(FVC->STS & FVC->STS & FVC_STS_BUSY_Msk) {}
+    timeout = 0x100000;
+    while(FVC->STS & FVC->STS & FVC_STS_BUSY_Msk)
+    {
+        if(timeout-- < 0)
+            return -1;
+    }
+
+    return 0;
 }
 
 /**
@@ -81,6 +94,8 @@ void FVC_EnableMonotone(void)
   */
 int32_t FVC_SetNVC(uint32_t u32NvcIdx, uint32_t u32Cnt)
 {
+    int32_t timeout;
+
     if(u32NvcIdx < 2)
     {
         if(u32Cnt >= 64)
@@ -100,7 +115,12 @@ int32_t FVC_SetNVC(uint32_t u32NvcIdx, uint32_t u32Cnt)
         return -1;
 
     FVC->NVC[u32NvcIdx] = (FVC->NVC[u32NvcIdx] << 16) | (u32Cnt & 0x3ful);
-    while(FVC->STS & FVC_STS_BUSY_Msk) {}
+    timeout = 0x100000;
+    while(FVC->STS & FVC_STS_BUSY_Msk)
+    {
+        if(timeout-- < 0)
+            return -1;
+    }
     if(FVC->NVC[u32NvcIdx] != u32Cnt)
         return -1;
 

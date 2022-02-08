@@ -15,6 +15,7 @@
   @{
 */
 
+int32_t g_CLK_i32ErrCode = 0;    /*!< CLK global error code */
 
 /** @addtogroup CLK_EXPORTED_FUNCTIONS CLK Exported Functions
   @{
@@ -22,10 +23,10 @@
 
 
 /**
-  * @brief      Disable frequency output function
+  * @brief      Disable clock divider output function
   * @param      None
   * @return     None
-  * @details    This function disable frequency output function.
+  * @details    This function disable clock divider output function.
   */
 void CLK_DisableCKO(void)
 {
@@ -35,22 +36,22 @@ void CLK_DisableCKO(void)
 
 
 /**
-  * @brief      This function enable frequency divider module clock.
-  *             enable frequency divider clock function and configure frequency divider.
+  * @brief      This function enable clock divider output module clock,
+  *             enable clock divider output function and set frequency selection.
   * @param[in]  u32ClkSrc is frequency divider function clock source. Including :
   *             - \ref CLK_CLKSEL1_CLKOSEL_HXT
   *             - \ref CLK_CLKSEL1_CLKOSEL_LXT
   *             - \ref CLK_CLKSEL1_CLKOSEL_HCLK
   *             - \ref CLK_CLKSEL1_CLKOSEL_HIRC
-  * @param[in]  u32ClkDiv is divider output frequency selection.
-  * @param[in]  u32ClkDivBy1En is frequency divided by one enable.
+  * @param[in]  u32ClkDiv is divider output frequency selection. It could be 0~15.
+  * @param[in]  u32ClkDivBy1En is clock divided by one enabled.
   * @return     None
   *
-  * @details    Output selected clock to CKO. The output clock frequency is divided by u32ClkDiv.
-  *             The formula is:
-  *                 CKO frequency = (Clock source frequency) / 2^(u32ClkDiv + 1)
+  * @details    Output selected clock to CKO. The output clock frequency is divided by u32ClkDiv. \n
+  *             The formula is: \n
+  *                 CKO frequency = (Clock source frequency) / 2^(u32ClkDiv + 1) \n
   *             This function is just used to set CKO clock.
-  *             User must enable I/O for CKO clock output pin by themselves.
+  *             User must enable I/O for CKO clock output pin by themselves. \n
   */
 void CLK_EnableCKO(uint32_t u32ClkSrc, uint32_t u32ClkDiv, uint32_t u32ClkDivBy1En)
 {
@@ -74,7 +75,8 @@ void CLK_EnableCKO(uint32_t u32ClkSrc, uint32_t u32ClkDiv, uint32_t u32ClkDivBy1
   */
 void CLK_PowerDown(void)
 {
-    volatile uint32_t u32SysTickTICKINT = 0;    /* Backup Systick interrupt enable bit */
+    /* Store SysTick interrupt enable bit */
+    volatile uint32_t u32SysTickTICKINT = 0;
 
     /* Set the processor uses deep sleep as its low power mode */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
@@ -82,16 +84,16 @@ void CLK_PowerDown(void)
     /* Set system Power-down enabled */
     CLK->PWRCTL |= CLK_PWRCTL_PDEN_Msk;
 
-    /* Backup systick interrupt setting */
+    /* Store SysTick interrupt setting */
     u32SysTickTICKINT = SysTick->CTRL & SysTick_CTRL_TICKINT_Msk;
 
-    /* Disable systick interrupt */
+    /* Disable SysTick interrupt */
     SysTick->CTRL &= ~SysTick_CTRL_TICKINT_Msk;
 
     /* Chip enter Power-down mode after CPU run WFI instruction */
     __WFI();
 
-    /* Restore systick interrupt setting */
+    /* Restore SysTick interrupt setting */
     if(u32SysTickTICKINT) SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;
 }
 
@@ -313,7 +315,7 @@ uint32_t CLK_GetCPUFreq(void)
   *             The range of u32Hclk is 24 MHz ~ 96 MHz.
   * @return     HCLK frequency
   * @details    This function is used to set HCLK frequency by using PLL. \n
-  *             Power level is also set according to HCLK frequency. The frequency unit is Hz. \n
+  *             Power level and flash access cycle are also set according to HCLK frequency. The frequency unit is Hz. \n
   *             The register write-protection function should be disabled before using this function.
   */
 uint32_t CLK_SetCoreClock(uint32_t u32Hclk)
@@ -323,7 +325,7 @@ uint32_t CLK_SetCoreClock(uint32_t u32Hclk)
     /* Read HIRC clock source stable flag */
     u32HIRCSTB = CLK->STATUS & CLK_STATUS_HIRCSTB_Msk;
 
-    /* Check HCLK frequency range */
+    /* Check HCLK frequency range is 24MHz ~ 96MHz */
     if(u32Hclk > FREQ_96MHZ)
     {
         u32Hclk = FREQ_96MHZ;
@@ -355,7 +357,7 @@ uint32_t CLK_SetCoreClock(uint32_t u32Hclk)
 
     /* Select HCLK clock source to PLL,
        select HCLK clock source divider as 1,
-       adjust power level and update system core clock
+       adjust power level, flash access cycle and update system core clock
     */
     CLK_SetHCLK(CLK_CLKSEL0_HCLKSEL_PLL, CLK_CLKDIV0_HCLK(1UL));
 
@@ -389,7 +391,7 @@ uint32_t CLK_SetCoreClock(uint32_t u32Hclk)
   */
 void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
 {
-    uint32_t u32HIRCSTB;
+    uint32_t u32HIRCSTB, u32TimeOutCnt;
 
     /* Read HIRC clock source stable flag */
     u32HIRCSTB = CLK->STATUS & CLK_STATUS_HIRCSTB_Msk;
@@ -400,9 +402,13 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
     CLK->CLKSEL0 |= CLK_CLKSEL0_HCLKSEL_Msk;
 
     /* Switch to power level 0 for safe */
-    while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk);
+    u32TimeOutCnt = CLK_TIMEOUT;
+    while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk)
+        if(--u32TimeOutCnt == 0) break;
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
-    while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk);
+    u32TimeOutCnt = CLK_TIMEOUT;
+    while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk)
+        if(--u32TimeOutCnt == 0) break;
 
     /* Set Flash Access Cycle to 4 for safe */
     FMC->CYCCTL = (FMC->CYCCTL & (~FMC_CYCCTL_CYCLE_Msk)) | (4);
@@ -417,7 +423,9 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
     SystemCoreClockUpdate();
 
     /* Set power level according to new HCLK source */
-    while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk);
+    u32TimeOutCnt = SYS_TIMEOUT;
+    while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk)
+        if(--u32TimeOutCnt == 0) break;
     if((SystemCoreClock > FREQ_48MHZ) && SystemCoreClock <= FREQ_84MHZ)
     {
         SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL1;
@@ -430,7 +438,9 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
     {
         SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL3;
     }
-    while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk);
+    u32TimeOutCnt = SYS_TIMEOUT;
+    while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk)
+        if(--u32TimeOutCnt == 0) break;
 
     /* Set Flash Access Cycle */
     if((SystemCoreClock >= FREQ_50MHZ) && SystemCoreClock < FREQ_75MHZ)
@@ -1028,17 +1038,20 @@ void CLK_DisablePLL(void)
   *             - \ref CLK_STATUS_MIRCSTB_Msk
   * @retval     0  clock is not stable
   * @retval     1  clock is stable
-  * @details    To wait for clock ready by specified clock source stable flag or timeout (~500ms)
+  * @details    To wait for clock ready by specified clock source stable flag or timeout (>500ms)
+  * @note       This function sets g_CLK_i32ErrCode to CLK_TIMEOUT_ERR if clock source status is not stable.
   */
 uint32_t CLK_WaitClockReady(uint32_t u32ClkMask)
 {
-    int32_t i32TimeOutCnt = 2400000;
+    uint32_t u32TimeOutCnt = SystemCoreClock>>1; /* 500ms time-out */
     uint32_t u32Ret = 1U;
 
+    g_CLK_i32ErrCode = 0;
     while((CLK->STATUS & u32ClkMask) != u32ClkMask)
     {
-        if(i32TimeOutCnt-- <= 0)
+        if(--u32TimeOutCnt == 0)
         {
+            g_CLK_i32ErrCode = CLK_TIMEOUT_ERR;
             u32Ret = 0U;
             break;
         }
@@ -1119,10 +1132,11 @@ void CLK_DisableSysTick(void)
   *             - \ref CLK_PMUCTL_PDMSEL_DPD
   * @return     None
   * @details    This function is used to set power-down mode.
+  *             The register write-protection function should be disabled before using this function.
   */
 void CLK_SetPowerDownMode(uint32_t u32PDMode)
 {
-    while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk);
+    CLK_WAIT_PMUCTL_WRBUSY();
     CLK->PMUCTL = (CLK->PMUCTL & (~CLK_PMUCTL_PDMSEL_Msk)) | (u32PDMode);
 }
 
@@ -1146,19 +1160,21 @@ void CLK_SetPowerDownMode(uint32_t u32PDMode)
  *              - \ref CLK_DPDWKPIN4_BOTHEDGE
  * @return      None
  * @details     This function is used to enable Wake-up pin trigger type.
+ *              The register write-protection function should be disabled before using this function.
  */
 
 void CLK_EnableDPDWKPin(uint32_t u32TriggerType)
 {
     uint32_t u32Pin1, u32Pin2, u32Pin3, u32Pin4;
 
+    /* Get DPD wake-up pin configuration */
     u32Pin1 = ((u32TriggerType) & CLK_PMUCTL_WKPINEN1_Msk);
     u32Pin2 = ((u32TriggerType) & CLK_PMUCTL_WKPINEN2_Msk);
     u32Pin3 = ((u32TriggerType) & CLK_PMUCTL_WKPINEN3_Msk);
     u32Pin4 = ((u32TriggerType) & CLK_PMUCTL_WKPINEN4_Msk);
 
-    while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk);
-
+    /* Set DPD wake-up pin configuration */
+    CLK_WAIT_PMUCTL_WRBUSY();
     if(u32Pin1)
     {
         CLK->PMUCTL = (CLK->PMUCTL & ~(CLK_PMUCTL_WKPINEN1_Msk)) | u32TriggerType;
@@ -1240,7 +1256,7 @@ uint32_t CLK_GetPLLClockFreq(void)
 
     if(u32PllReg & CLK_PLLCTL_PD_Msk)
     {
-        u32PllFreq = 0UL;       /* PLL is in power down mode or fix low */
+        u32PllFreq = 0UL;       /* PLL is in power down mode */
     }
     else                        /* PLL is in normal mode */
     {

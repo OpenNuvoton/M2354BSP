@@ -15,8 +15,8 @@
 #define DBG_EN      0
 
 void CRPT_IRQHandler(void);
-void Cal_SHA256_Flash(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest);
-void Cal_SHA256_SRAM(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest);
+int32_t Cal_SHA256_Flash(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest);
+int32_t Cal_SHA256_SRAM(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest);
 int32_t VerifyNuBL3x(uint32_t *pu32FwInfo, uint32_t u32InfoBase);
 
 void CRPT_IRQHandler(void)
@@ -37,9 +37,10 @@ static void BytesSwap(char *buf, int32_t len)
     }
 }
 
-void Cal_SHA256_Flash(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest)
+int32_t Cal_SHA256_Flash(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest)
 {
     volatile int32_t    i, addr, bytes, data;
+    uint32_t u32TimeOutCnt;
 
     addr = (int32_t)u32Addr;
     bytes = (int32_t)u32Bytes;
@@ -76,7 +77,12 @@ void Cal_SHA256_Flash(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest)
                 /* It's last word ... *-* */
                 CRPT->HMAC_CTL |= CRPT_HMAC_CTL_START_Msk | CRPT_HMAC_CTL_DMALAST_Msk;
                 CRPT->HMAC_DATIN = (uint32_t)data;
-                while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk);
+                u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+                while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk)
+                {
+                    if(--u32TimeOutCnt == 0)
+                        return -1;
+                }
 
                 for(i = 0; i < 8; i++)
                     pu32Digest[i] = *(uint32_t *)((uint32_t) & (CRPT->HMAC_DGST[0]) + ((uint32_t)i * 4));
@@ -95,10 +101,14 @@ void Cal_SHA256_Flash(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest)
     printf("    0x%08x\n", pu32Digest[6]);
     printf("    0x%08x\n", pu32Digest[7]);
 #endif
+
+    return 0;
 }
 
-void Cal_SHA256_SRAM(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest)
+int32_t Cal_SHA256_SRAM(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Reset CRYPTO module */
     SYS_ResetModule(CRPT_MODULE);
 
@@ -110,7 +120,12 @@ void Cal_SHA256_SRAM(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest)
     SHA_SetDMATransfer(CRPT, u32Addr, u32Bytes);
 
     SHA_Start(CRPT, CRYPTO_DMA_ONE_SHOT);
-    while(SHA_GET_INT_FLAG(CRPT) == 0) {}
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(SHA_GET_INT_FLAG(CRPT) == 0)
+    {
+        if(--u32TimeOutCnt == 0)
+            return -1;
+    }
     SHA_CLR_INT_FLAG(CRPT);
 
     SHA_Read(CRPT, pu32Digest);
@@ -126,6 +141,8 @@ void Cal_SHA256_SRAM(uint32_t u32Addr, uint32_t u32Bytes, uint32_t *pu32Digest)
     printf("    0x%08x\n", pu32Digest[6]);
     printf("    0x%08x\n", pu32Digest[7]);
 #endif
+
+    return 0;
 }
 
 int32_t VerifyNuBL3x(uint32_t *pu32FwInfo, uint32_t u32InfoBase)
@@ -153,7 +170,10 @@ int32_t VerifyNuBL3x(uint32_t *pu32FwInfo, uint32_t u32InfoBase)
     /* Calculate message (NuBL3x FW info hash) */
     u32Start = (uint32_t)pFwInfo;
     u32Size  = sizeof(FW_INFO_T) - sizeof(ECDSA_SIGN_T);
-    Cal_SHA256_SRAM(u32Start, u32Size, (uint32_t *)au32Hash);
+    if (Cal_SHA256_SRAM(u32Start, u32Size, (uint32_t *)au32Hash) != 0 )
+    {
+        return -1;
+    }
     memcpy((void*)tmp, (uint32_t *)au32Hash, sizeof(tmp));
     BytesSwap((char*)tmp,  sizeof(tmp));
     CRPT_Reg2Hex(64, tmp, m);
@@ -199,7 +219,10 @@ int32_t VerifyNuBL3x(uint32_t *pu32FwInfo, uint32_t u32InfoBase)
     /* Calculate FW hash */
     u32Start = (uint32_t)pFwInfo->mData.au32FwRegion[0].u32Start;
     u32Size  = (uint32_t)pFwInfo->mData.au32FwRegion[0].u32Size;
-    Cal_SHA256_Flash(u32Start, u32Size, (uint32_t *)au32Hash);
+    if(Cal_SHA256_Flash(u32Start, u32Size, (uint32_t *)au32Hash) != 0)
+    {
+        return -1;
+    }
     if(memcmp((void*)&pFwInfo->au32FwHash[0], au32Hash, sizeof(au32Hash)) != 0)
     {
         return -1;

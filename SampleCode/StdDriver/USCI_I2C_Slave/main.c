@@ -1,13 +1,11 @@
-
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief
  *           Demonstrate how to set I2C in slave mode to receive the data from a Master.
  *           This sample code is EEPROM like, only support 256 bytes.
  *           Needs to work with I2C_Master sample code.
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/

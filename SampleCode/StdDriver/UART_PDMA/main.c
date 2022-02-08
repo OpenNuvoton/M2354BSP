@@ -277,6 +277,8 @@ void UART1_IRQHandler(void)
 /*---------------------------------------------------------------------------------------------------------*/
 void PDMA_UART(int32_t i32option)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Source data initiation */
     BuildSrcPattern((uint32_t)g_au8SrcArray, (uint32_t)g_i32UartTestLength);
     ClearBuf((uint32_t)g_au8DestArray, (uint32_t)g_i32UartTestLength, 0xFF);
@@ -355,7 +357,15 @@ void PDMA_UART(int32_t i32option)
     UART_PDMA_ENABLE(UART1, UART_INTEN_RXPDMAEN_Msk);
 
     /* Wait for PDMA operation finish */
-    while(g_i32IsTestOver == FALSE);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(g_i32IsTestOver == FALSE)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for PDMA operation finish time-out!\n");
+            while(1);
+        }
+    }
 
     /* Check PDMA status */
     if(g_i32IsTestOver == 2)

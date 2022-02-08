@@ -133,6 +133,8 @@ int32_t main(void)
 
 void TrimHIRC(void)
 {
+    uint32_t u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+
     /* Enable IRC Trim, set HIRC clock and enable interrupt */
     SYS->TIEN12M |= (SYS_TIEN12M_CLKEIEN_Msk | SYS_TIEN12M_TFAILIEN_Msk);
     SYS->TCTL12M = (SYS->TCTL12M & (~SYS_TCTL12M_FREQSEL_Msk)) | 0x1;
@@ -147,6 +149,17 @@ void TrimHIRC(void)
             printf("HIRC Frequency Lock\n");
             SYS->TISTS12M = SYS_TISTS12M_FREQLOCK_Msk;     /* Clear Trim Lock */
             break;
+        }
+        else
+        {
+            if(--u32TimeOutCnt == 0)
+            {
+                printf("HIRC Trim failed\n");
+                /* Disable IRC Trim */
+                SYS->TCTL12M = 0;
+                printf("Disable IRC Trim\n");
+                while(1);
+            }
         }
     }
 

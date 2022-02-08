@@ -14,6 +14,7 @@
 #include "targetdev.h"
 #include "uart_transfer.h"
 
+int32_t g_FMC_i32ErrCode;
 
 void ProcessHardFault(void);
 void SH_Return(void);
@@ -27,6 +28,8 @@ void SendChar_ToUART(void) {}
 
 void SYS_Init(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/
@@ -35,7 +38,9 @@ void SYS_Init(void)
     CLK->PWRCTL |= CLK_PWRCTL_HIRCEN_Msk;
 
     /* Wait for HIRC clock ready */
-    while(!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk));
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk))
+        if(--u32TimeOutCnt == 0) break;
 
     /* Set HCLK clock source as HIRC first */
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC;
@@ -47,7 +52,9 @@ void SYS_Init(void)
     CLK->PLLCTL = CLK_PLLCTL_96MHz_HIRC;
 
     /* Wait for PLL clock ready */
-    while(!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk));
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk))
+        if(--u32TimeOutCnt == 0) break;
 
     /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;

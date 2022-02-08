@@ -109,7 +109,7 @@ void SYS_Init(void)
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* ENable CAN module clock */
+    /* Enable CRPT module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
     /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
@@ -144,6 +144,7 @@ void DEBUG_PORT_Init()
 int32_t main(void)
 {
     int32_t i, i32Err;
+    uint32_t u32TimeOutCnt;
 
     SYS_UnlockReg();
 
@@ -174,10 +175,18 @@ int32_t main(void)
     AES_SetDMATransfer(CRPT, 0, (uint32_t)au8InputData, (uint32_t)au8OutputData, sizeof(au8InputData));
 
     g_AES_done = 0;
-    /* Start AES Eecrypt */
+    /* Start AES Encrypt */
     AES_Start(CRPT, 0, CRYPTO_DMA_ONE_SHOT);
     /* Waiting for AES calculation */
-    while(!g_AES_done);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(!g_AES_done)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for AES encrypt done time-out!\n");
+            while(1);
+        }
+    }
 
     printf("AES encrypt done.\nResult:\n");
     DumpBuffHex(au8OutputData, sizeof(au8InputData));
@@ -207,7 +216,15 @@ int32_t main(void)
     /* Start AES decrypt */
     AES_Start(CRPT, 0, CRYPTO_DMA_ONE_SHOT);
     /* Waiting for AES calculation */
-    while(!g_AES_done);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(!g_AES_done)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for AES decrypt done time-out!\n");
+            while(1);
+        }
+    }
 
     printf("AES decrypt done.\nResult:\n");
     DumpBuffHex(g_au8Out, sizeof(g_au8Out));
@@ -239,10 +256,18 @@ int32_t main(void)
         AES_SetDMATransfer(CRPT, 0, (uint32_t)au8InputData, (uint32_t)au8InputData, sizeof(au8InputData));
 
         g_AES_done = 0;
-        /* Start AES Eecrypt */
+        /* Start AES Encrypt */
         AES_Start(CRPT, 0, CRYPTO_DMA_ONE_SHOT);
         /* Waiting for AES calculation */
-        while(!g_AES_done);
+        u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+            while(!g_AES_done)
+        {
+            if(--u32TimeOutCnt == 0)
+            {
+                printf("Wait for AES time-out!\n");
+                while(1);
+            }
+        }
     }
     printf(" Done!\n");
 

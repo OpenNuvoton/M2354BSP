@@ -95,7 +95,7 @@ void SYS_Init(void)
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* ENable CAN module clock */
+    /* Enable CRPT module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
     /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */

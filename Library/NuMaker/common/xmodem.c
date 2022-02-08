@@ -24,19 +24,30 @@ static uint8_t s_au8XmdBuf[1030];
 */
 static int32_t XMD_Write(uint32_t u32Addr, uint32_t u32Data)
 {
+    uint32_t u32TimeOutCnt;
 
     FMC->ISPADDR = u32Addr;
     if((u32Addr & (FMC_FLASH_PAGE_SIZE - 1)) == 0)
     {
         FMC->ISPCMD = FMC_ISPCMD_PAGE_ERASE;
         FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
-        while(FMC->ISPTRG);
+        u32TimeOutCnt = FMC_TIMEOUT_ERASE;
+        while(FMC->ISPTRG)
+        {
+            if(--u32TimeOutCnt == 0)
+                return -1;
+        }
     }
 
     FMC->ISPDAT = u32Data;
     FMC->ISPCMD = FMC_ISPCMD_PROGRAM;
     FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
-    while(FMC->ISPTRG);
+    u32TimeOutCnt = FMC_TIMEOUT_WRITE;
+    while(FMC->ISPTRG)
+    {
+        if(--u32TimeOutCnt == 0)
+            return -1;
+    }
 
     return 0;
 }

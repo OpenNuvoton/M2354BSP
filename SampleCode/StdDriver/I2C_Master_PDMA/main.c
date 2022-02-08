@@ -1,11 +1,9 @@
-
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief
  *           Show a Master how to access Slave using PDMA Tx and PDMA Rx mode (Loopback)
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
@@ -472,7 +470,7 @@ void I2C0_Close(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int32_t main(void)
 {
-    uint32_t u32i, u32Err = 0;
+    uint32_t u32i, u32Err = 0, u32TimeOutCnt;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -553,11 +551,27 @@ int32_t main(void)
     I2C_START(I2C1);
 
     /* Waiting for PDMA transfer done */
-    while(g_u32IsTestOver == 0);
+    u32TimeOutCnt = I2C_TIMEOUT;
+    while(g_u32IsTestOver == 0)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for PDMA transfer done time-out!\n");
+            while(1);
+        }
+    }
     g_u32IsTestOver = 0;
 
     /* Waiting for I2C bus become free */
-    while((I2C1->STATUS1 & I2C_STATUS1_ONBUSY_Msk) == I2C_STATUS1_ONBUSY_Msk);
+    u32TimeOutCnt = I2C_TIMEOUT;
+    while((I2C1->STATUS1 & I2C_STATUS1_ONBUSY_Msk) == I2C_STATUS1_ONBUSY_Msk)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for I2C bus become free time-out!\n");
+            while(1);
+        }
+    }
 
     /* Disable I2C1 PDMA TX mode */
     I2C1->CTL1 &= ~I2C_CTL1_TXPDMAEN_Msk;
@@ -583,13 +597,29 @@ int32_t main(void)
 
     /* Send START condition, start the PDMA data receive */
     I2C_START(I2C1);
-    while(g_u8MstTxSLA == 0);
+    u32TimeOutCnt = I2C_TIMEOUT;
+    while(g_u8MstTxSLA == 0)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for I2C time-out!\n");
+            while(1);
+        }
+    }
 
     /* Enable I2C1 PDMA RX after Slave address read ACK */
     I2C1->CTL1 |= I2C_CTL1_RXPDMAEN_Msk;      //Enalbe PDMA RX, Start receive data from Slave
 
     /* Waiting for PDMA receive done */
-    while(g_u32IsTestOver == 0);
+    u32TimeOutCnt = I2C_TIMEOUT;
+    while(g_u32IsTestOver == 0)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for PDMA receive done time-out!\n");
+            while(1);
+        }
+    }
 
     /* Disable I2C1 PDMA RX */
     I2C1->CTL1 &= ~I2C_CTL1_RXPDMAEN_Msk;
@@ -598,7 +628,15 @@ int32_t main(void)
     g_u32IsTestOver = 0;
 
     /* Check Receive data ending */
-    while(g_u8MstEndFlag == 0);
+    u32TimeOutCnt = I2C_TIMEOUT;
+    while(g_u8MstEndFlag == 0)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for I2C Rx time-out!\n");
+            while(1);
+        }
+    }
 
     /* Compare I2C1 transmit data and I2C1 receive data */
     for(u32i = 0; u32i < I2C_PDMA_RX_LENGTH; u32i++)

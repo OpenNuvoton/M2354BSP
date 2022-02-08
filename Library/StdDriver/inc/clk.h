@@ -716,12 +716,32 @@ extern "C"
 #define CLK_SPDWKPIN_DEBOUNCEEN     (0x1UL << 8)     /*!< Enable Standby power-down pin De-bounce function */
 #define CLK_SPDWKPIN_DEBOUNCEDIS    (0x0UL << 8)     /*!< Disable Standby power-down pin De-bounce function */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* CLK Time-out Handler Constant Definitions                                                               */
+/*---------------------------------------------------------------------------------------------------------*/
+#define CLK_TIMEOUT                 (SystemCoreClock)   /*!< 1 second time-out */
+#define CLK_TIMEOUT_ERR             (-1L)               /*!< CLK time-out error value */
 
 /**@}*/ /* end of group CLK_EXPORTED_CONSTANTS */
+
+extern int32_t g_CLK_i32ErrCode;
 
 /** @addtogroup CLK_EXPORTED_FUNCTIONS CLK Exported Functions
   @{
 */
+
+/**
+  * @brief      Wait CLK_PMUCTL Write Busy Flag
+  * @param      None
+  * @return     None
+  * @details    This macro waits CLK_PMUCTL write busy flag is cleared and skips when time-out.
+  */
+#define CLK_WAIT_PMUCTL_WRBUSY() \
+    do{ \
+        uint32_t u32TimeOutCnt = CLK_TIMEOUT; \
+        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk) \
+            if(--u32TimeOutCnt == 0) break; \
+    }while(0)
 
 /**
   * @brief      Disable Wake-up Timer
@@ -731,7 +751,7 @@ extern "C"
   */
 #define CLK_DISABLE_WKTMR() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKTMREN_Msk; \
     }while(0)
 
@@ -743,7 +763,7 @@ extern "C"
   */
 #define CLK_ENABLE_WKTMR() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL |= CLK_PMUCTL_WKTMREN_Msk; \
     }while(0)
 
@@ -755,7 +775,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPINEN_Msk; \
     }while(0)
 
@@ -767,7 +787,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN0() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN0EN_Msk; \
     }while(0)
 
@@ -779,7 +799,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN1() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN1EN_Msk; \
     }while(0)
 
@@ -791,7 +811,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN2() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN2EN_Msk; \
     }while(0)
 
@@ -803,7 +823,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN3() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN3EN_Msk; \
     }while(0)
 
@@ -815,7 +835,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN4() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN4EN_Msk; \
     }while(0)
 
@@ -827,7 +847,7 @@ extern "C"
   */
 #define CLK_DISABLE_SPDACMP() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_ACMPSPWK_Msk; \
     }while(0)
 
@@ -839,7 +859,7 @@ extern "C"
   */
 #define CLK_ENABLE_SPDACMP() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL |= CLK_PMUCTL_ACMPSPWK_Msk; \
     }while(0)
 
@@ -851,7 +871,7 @@ extern "C"
   */
 #define CLK_DISABLE_RTCWK() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_RTCWKEN_Msk; \
     }while(0)
 
@@ -863,7 +883,7 @@ extern "C"
   */
 #define CLK_ENABLE_RTCWK() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL |= CLK_PMUCTL_RTCWKEN_Msk; \
     }while(0)
 
@@ -888,7 +908,7 @@ extern "C"
  */
 #define CLK_SET_WKTMR_INTERVAL(u32Interval) \
    do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL = (CLK->PMUCTL & (~CLK_PMUCTL_WKTMRIS_Msk)) | (u32Interval); \
     }while(0)
 
@@ -929,7 +949,7 @@ extern "C"
   */
 #define CLK_DISABLE_SPDTAMPER() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_TAMPERWK_Msk; \
     }while(0)
 
@@ -941,7 +961,7 @@ extern "C"
   */
 #define CLK_ENABLE_SPDTAMPER() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL |= CLK_PMUCTL_TAMPERWK_Msk; \
     }while(0)
 
@@ -950,8 +970,8 @@ extern "C"
 /* static inline functions                                                                                 */
 /*---------------------------------------------------------------------------------------------------------*/
 /* Declare these inline functions here to avoid MISRA C 2004 rule 8.1 error */
-__STATIC_INLINE void CLK_SysTickDelay(uint32_t us);
-__STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us);
+__STATIC_INLINE int32_t CLK_SysTickDelay(uint32_t us);
+__STATIC_INLINE int32_t CLK_SysTickLongDelay(uint32_t us);
 
 
 /**
@@ -959,37 +979,47 @@ __STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us);
   * @param[in]  us  Delay time. The Max value is (2^24-1) / CPU Clock(MHz). Ex:
   *                             96MHz => 174762us, 84MHz => 199728us,
   *                             64MHz => 262143us, 48MHz => 349525us ...
-  * @return     None
+  * @retval     0 Delay success. Target delay time reached.
+  * @retval     CLK_TIMEOUT_ERR Delay function execute failed due to SysTick stop working.
   * @details    Use the SysTick to generate the delay time and the UNIT is in us.
   *             The SysTick clock source is from HCLK, i.e the same as system core clock.
   *             User can use SystemCoreClockUpdate() to calculate CyclesPerUs automatically before using this function.
   */
-__STATIC_INLINE void CLK_SysTickDelay(uint32_t us)
+__STATIC_INLINE int32_t CLK_SysTickDelay(uint32_t us)
 {
+    /* The u32TimeOutCnt value must be greater than the max delay time of 1398ms if HCLK=12MHz */
+    uint32_t u32TimeOutCnt = SystemCoreClock<<1; /* 2 second time-out */
+
     SysTick->LOAD = us * CyclesPerUs;
     SysTick->VAL  = (0x0UL);
     SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
 
     /* Waiting for down-count to zero */
     while((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) == 0UL)
-    {
-    }
+        if(--u32TimeOutCnt == 0) break;
 
     /* Disable SysTick counter */
     SysTick->CTRL = 0UL;
+
+    if(u32TimeOutCnt == 0)
+        return CLK_TIMEOUT_ERR;
+    else
+        return 0;
 }
 
 /**
   * @brief      This function execute long delay function.
   * @param[in]  us  Delay time.
-  * @return     None
+  * @retval     0 Delay success. Target delay time reached.
+  * @retval     CLK_TIMEOUT_ERR Delay function execute failed due to SysTick stop working.
   * @details    Use the SysTick to generate the long delay time and the UNIT is in us.
   *             The SysTick clock source is from HCLK, i.e the same as system core clock.
   *             User can use SystemCoreClockUpdate() to calculate CyclesPerUs automatically before using this function.
   */
-__STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us)
+__STATIC_INLINE int32_t CLK_SysTickLongDelay(uint32_t us)
 {
-    uint32_t u32Delay;
+    /* The u32TimeOutCnt value must be greater than the max delay time of 1398ms if HCLK=12MHz */
+    uint32_t u32Delay, u32TimeOutCnt;
 
     /* It should <= 65536us for each delay loop */
     u32Delay = 65536UL;
@@ -1011,14 +1041,20 @@ __STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us)
         SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
 
         /* Waiting for down-count to zero */
-        while((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) == 0UL);
+        u32TimeOutCnt = SystemCoreClock<<1; /* 2 second time-out */
+        while((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) == 0UL)
+            if(--u32TimeOutCnt == 0) break;
 
         /* Disable SysTick counter */
         SysTick->CTRL = 0UL;
 
     }
-    while(us > 0UL);
+    while( (us > 0UL) && (u32TimeOutCnt != 0) );
 
+    if(u32TimeOutCnt == 0)
+        return CLK_TIMEOUT_ERR;
+    else
+        return 0;
 }
 
 

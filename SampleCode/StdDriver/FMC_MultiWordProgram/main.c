@@ -1,10 +1,8 @@
-
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief    Show how to read/program embedded flash by ISP function.
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
@@ -118,6 +116,11 @@ int32_t main(void)
             if(FMC_Read(u32Addr + i) != g_auPageBuff[i / 4])
             {
                 printf("\n[FAILED] Data mismatch at address 0x%x, expect: 0x%x, read: 0x%x!\n", u32Addr + i, g_auPageBuff[i / 4], FMC_Read(u32Addr + i));
+                goto err_out;
+            }
+            if (g_FMC_i32ErrCode != 0)
+            {
+                printf("FMC_Read address 0x%x failed!\n", u32Addr+i);
                 goto err_out;
             }
         }

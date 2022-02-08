@@ -45,6 +45,20 @@ void D2D3_SwitchToQuadMode(void)
     SYS->GPC_MFPL = (SYS->GPC_MFPL & ~(SYS_GPC_MFPL_PC4MFP_Msk | SYS_GPC_MFPL_PC5MFP_Msk)) | SYS_GPC_MFPL_PC4MFP_QSPI0_MOSI1 | SYS_GPC_MFPL_PC5MFP_QSPI0_MISO1;
 }
 
+__STATIC_INLINE void wait_QSPI_IS_BUSY(QSPI_T *qspi)
+{
+    uint32_t u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+
+    while(QSPI_IS_BUSY(qspi))
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for QSPI time-out!\n");
+            while(1);
+        }
+    }
+}
+
 uint16_t SpiFlash_ReadMidDid(void)
 {
     uint8_t u8RxData[6], u8IDCnt = 0;
@@ -65,7 +79,7 @@ uint16_t SpiFlash_ReadMidDid(void)
     QSPI_WRITE_TX(SPI_FLASH_PORT, 0x00);
 
     // wait tx finish
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
     // /CS: de-active
     QSPI_SET_SS_HIGH(SPI_FLASH_PORT);
@@ -85,7 +99,7 @@ void SpiFlash_ChipErase(void)
     QSPI_WRITE_TX(SPI_FLASH_PORT, 0x06);
 
     // wait tx finish
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
     // /CS: de-active
     QSPI_SET_SS_HIGH(SPI_FLASH_PORT);
@@ -99,7 +113,7 @@ void SpiFlash_ChipErase(void)
     QSPI_WRITE_TX(SPI_FLASH_PORT, 0xC7);
 
     // wait tx finish
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
     // /CS: de-active
     QSPI_SET_SS_HIGH(SPI_FLASH_PORT);
@@ -123,7 +137,7 @@ uint8_t SpiFlash_ReadStatusReg(void)
     QSPI_WRITE_TX(SPI_FLASH_PORT, 0x00);
 
     // wait tx finish
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
     // /CS: de-active
     QSPI_SET_SS_HIGH(SPI_FLASH_PORT);
@@ -151,7 +165,7 @@ uint8_t SpiFlash_ReadStatusReg2(void)
     QSPI_WRITE_TX(SPI_FLASH_PORT, 0x00);
 
     // wait tx finish
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
     // /CS: de-active
     QSPI_SET_SS_HIGH(SPI_FLASH_PORT);
@@ -172,7 +186,7 @@ void SpiFlash_WriteStatusReg(uint8_t u8Value1, uint8_t u8Value2)
     QSPI_WRITE_TX(SPI_FLASH_PORT, 0x06);
 
     // wait tx finish
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
     // /CS: de-active
     QSPI_SET_SS_HIGH(SPI_FLASH_PORT);
@@ -190,7 +204,7 @@ void SpiFlash_WriteStatusReg(uint8_t u8Value1, uint8_t u8Value2)
     QSPI_WRITE_TX(SPI_FLASH_PORT, u8Value2);
 
     // wait tx finish
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
     // /CS: de-active
     QSPI_SET_SS_HIGH(SPI_FLASH_PORT);
@@ -199,9 +213,16 @@ void SpiFlash_WriteStatusReg(uint8_t u8Value1, uint8_t u8Value2)
 void SpiFlash_WaitReady(void)
 {
     volatile uint8_t u8ReturnValue;
+    uint32_t u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
 
     do
     {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for QSPI time-out!\n");
+            while(1);
+        }
+
         u8ReturnValue = SpiFlash_ReadStatusReg();
         u8ReturnValue = u8ReturnValue & 1;
     }
@@ -219,7 +240,7 @@ void SpiFlash_NormalPageProgram(uint32_t u32StartAddress, uint8_t *u8DataBuffer)
     QSPI_WRITE_TX(SPI_FLASH_PORT, 0x06);
 
     // wait tx finish
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
     // /CS: de-active
     QSPI_SET_SS_HIGH(SPI_FLASH_PORT);
@@ -247,7 +268,7 @@ void SpiFlash_NormalPageProgram(uint32_t u32StartAddress, uint8_t *u8DataBuffer)
     }
 
     // wait tx finish
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
     // /CS: de-active
     QSPI_SET_SS_HIGH(SPI_FLASH_PORT);
@@ -287,9 +308,9 @@ void SpiFlash_QuadFastRead(uint32_t u32StartAddress, uint8_t *u8DataBuffer)
 
     // Command: 0xEB, Fast Read quad data
     QSPI_WRITE_TX(SPI_FLASH_PORT, 0xEB);
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
-    // enable SPI dual IO mode and set direction to input
+    // enable SPI quad IO mode and set direction to input
     D2D3_SwitchToQuadMode();
     QSPI_ENABLE_QUAD_OUTPUT_MODE(SPI_FLASH_PORT);
 
@@ -303,7 +324,7 @@ void SpiFlash_QuadFastRead(uint32_t u32StartAddress, uint8_t *u8DataBuffer)
     QSPI_WRITE_TX(SPI_FLASH_PORT, 0x00);
     QSPI_WRITE_TX(SPI_FLASH_PORT, 0x00);
 
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
     QSPI_ENABLE_QUAD_INPUT_MODE(SPI_FLASH_PORT);
 
     // clear RX buffer
@@ -313,12 +334,12 @@ void SpiFlash_QuadFastRead(uint32_t u32StartAddress, uint8_t *u8DataBuffer)
     for(u32Cnt = 0; u32Cnt < 256; u32Cnt++)
     {
         QSPI_WRITE_TX(SPI_FLASH_PORT, 0x00);
-        while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+        wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
         u8DataBuffer[u32Cnt] = (uint8_t)QSPI_READ_RX(SPI_FLASH_PORT);
     }
 
     // wait tx finish
-    while(QSPI_IS_BUSY(SPI_FLASH_PORT));
+    wait_QSPI_IS_BUSY(SPI_FLASH_PORT);
 
     // /CS: de-active
     QSPI_SET_SS_HIGH(SPI_FLASH_PORT);

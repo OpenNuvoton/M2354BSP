@@ -15,8 +15,8 @@
 
 
 extern int IsDebugFifoEmpty(void);
-static uint32_t g_u32PowerDownMode;
-static volatile uint32_t g_u32RTCTickINT;
+static uint32_t s_u32PowerDownMode;
+static volatile uint32_t s_u32RTCTickINT;
 
 
 void RTC_IRQHandler(void);
@@ -44,7 +44,7 @@ void RTC_IRQHandler(void)
         RTC_CLEAR_TICK_INT_FLAG(RTC);
     }
 
-    g_u32RTCTickINT++;
+    s_u32RTCTickINT++;
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -71,7 +71,11 @@ void RTC_Init(void)
         sWriteRTC.u32Minute     = 0;
         sWriteRTC.u32Second     = 0;
         sWriteRTC.u32TimeScale  = RTC_CLOCK_24;
-        RTC_Open(&sWriteRTC);
+        if( RTC_Open(&sWriteRTC) < 0 )
+        {
+            printf("Initialize RTC module and start counting failed\n");
+            while(1);
+        }
         printf("# Set RTC current date/time: 2020/03/16 00:00:00.\n");
 
         /* It is the start of sample code */
@@ -104,14 +108,18 @@ void RTC_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 void PowerDownFunction(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Select Power-down mode */
-    CLK_SetPowerDownMode(g_u32PowerDownMode);
+    CLK_SetPowerDownMode(s_u32PowerDownMode);
 
     /* Forces a write of all user-space buffered data for the given output */
     fflush(stdout);
 
     /* To check if all the debug messages are finished */
-    while(IsDebugFifoEmpty() == 0);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(IsDebugFifoEmpty() == 0)
+        if(--u32TimeOutCnt == 0) break;
 
     /* Enter to Power-down mode */
     CLK_PowerDown();
@@ -133,8 +141,8 @@ void CheckPowerSource(void)
     /* Check Power Manager Status is wake-up by RTC */
     if(u32Status & CLK_PMUSTS_RTCWK_Msk)
     {
-        g_u32PowerDownMode = M32(PDMD_FLAG_ADDR);
-        switch(g_u32PowerDownMode)
+        s_u32PowerDownMode = M32(PDMD_FLAG_ADDR);
+        switch(s_u32PowerDownMode)
         {
 
             case CLK_PMUCTL_PDMSEL_PD:
@@ -241,6 +249,7 @@ void UART0_Init(void)
 int32_t main(void)
 {
     S_RTC_TIME_DATA_T sReadRTC;
+    uint32_t u32TimeOutCnt;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -279,8 +288,8 @@ int32_t main(void)
     {
 
         /* Select Power-down mode */
-        g_u32PowerDownMode = M32(PDMD_FLAG_ADDR);
-        switch(g_u32PowerDownMode)
+        s_u32PowerDownMode = M32(PDMD_FLAG_ADDR);
+        switch(s_u32PowerDownMode)
         {
             case CLK_PMUCTL_PDMSEL_PD:
                 printf("\nSystem enters to PD power-down mode ... ");
@@ -312,7 +321,15 @@ int32_t main(void)
 
         /* Enter to Power-down mode */
         PowerDownFunction();
-        while(g_u32RTCTickINT == 0);
+        u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+        while(s_u32RTCTickINT == 0)
+        {
+            if(--u32TimeOutCnt == 0)
+            {
+                printf("Wait for RTC interrupt time-out!");
+                while(1);
+            }
+        }
         printf("Wake-up!\n");
 
         /* Read current RTC date/time after wake-up */
@@ -321,7 +338,7 @@ int32_t main(void)
                sReadRTC.u32Year, sReadRTC.u32Month, sReadRTC.u32Day, sReadRTC.u32Hour, sReadRTC.u32Minute, sReadRTC.u32Second);
 
         /* Select next Power-down mode */
-        switch(g_u32PowerDownMode)
+        switch(s_u32PowerDownMode)
         {
             case CLK_PMUCTL_PDMSEL_PD:
                 M32(PDMD_FLAG_ADDR) = CLK_PMUCTL_PDMSEL_LLPD;
@@ -343,6 +360,5 @@ int32_t main(void)
         }
 
     }
-
 
 }

@@ -2,11 +2,10 @@
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
- * $Revision: 3 $
- * $Date: 19/12/25 2:06p $
  * @brief
  *           Show how to use I2C Signle byte API Read and Write data to Slave
  *           Needs to work with I2C_Slave sample code.
+ *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
@@ -95,7 +94,7 @@ void I2C0_Close(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int32_t main(void)
 {
-    uint32_t u32i;
+    uint32_t u32i, u32TimeOutCnt;
     uint8_t u8Data, u8Tmp, u8Err;
 
     /* Unlock protected registers */
@@ -138,7 +137,17 @@ int32_t main(void)
         u8Tmp = (uint8_t)u32i + 3;
 
         /* Single Byte Write (Two Registers) */
-        while(I2C_WriteByteTwoRegs(I2C0, g_u8DeviceAddr, (uint16_t)u32i, u8Tmp));
+        u32TimeOutCnt = I2C_TIMEOUT;
+        while(I2C_WriteByteTwoRegs(I2C0, g_u8DeviceAddr, (uint16_t)u32i, u8Tmp))
+        {
+            if(--u32TimeOutCnt == 0)
+            {
+                u8Err = 1;
+                printf("Wait for I2C Tx time-out!\n");
+                break;
+            }
+        }
+        if(u32TimeOutCnt == 0) break;
 
         /* Single Byte Read (Two Registers) */
         u8Data = I2C_ReadByteTwoRegs(I2C0, g_u8DeviceAddr, (uint16_t)u32i);

@@ -163,6 +163,8 @@ void UART_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int main(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -232,10 +234,18 @@ int main(void)
     AES_SetDMATransfer(CRPT, 0, (uint32_t)au8InputData, (uint32_t)au8OutputData, sizeof(au8InputData));
 
     g_AES_done = 0;
-    /* Start AES Eecrypt */
+    /* Start AES Encrypt */
     AES_Start(CRPT, 0, CRYPTO_DMA_ONE_SHOT);
     /* Waiting for AES calculation */
-    while(!g_AES_done);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    while(!g_AES_done)
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for AES encrypt done time-out!\n");
+            while(1);
+        }
+    }
 
     printf("AES encrypt done.\n\n");
     DumpBuffHex(au8OutputData, sizeof(au8InputData));

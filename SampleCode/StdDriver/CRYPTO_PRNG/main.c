@@ -48,7 +48,7 @@ void SYS_Init(void)
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
-    /* ENable CRYPTO module clock */
+    /* Enable CRYPTO module clock */
     CLK_EnableModuleClock(CRPT_MODULE);
 
     /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
@@ -84,6 +84,7 @@ int32_t main(void)
 {
     uint32_t    i, u32KeySize;
     uint32_t    au32PrngData[8];
+    uint32_t u32TimeOutCnt;
 
     SYS_UnlockReg();
 
@@ -117,7 +118,15 @@ int32_t main(void)
             PRNG_Start(CRPT);
 
             /* Waiting for number ready */
-            while(!g_PRNG_done);
+            u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+            while(!g_PRNG_done)
+            {
+                if(--u32TimeOutCnt == 0)
+                {
+                    printf("Wait for PRNG time-out!\n");
+                    while(1);
+                }
+            }
 
             /* Read random number */
             memset(au32PrngData, 0, sizeof(au32PrngData));

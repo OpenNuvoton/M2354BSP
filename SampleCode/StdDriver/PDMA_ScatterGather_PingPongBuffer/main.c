@@ -121,6 +121,8 @@ void UART0_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int main(void)
 {
+    uint32_t u32TimeOutCnt;
+
     /* Unlock protected registers */
     SYS_UnlockReg();
 
@@ -265,6 +267,7 @@ int main(void)
     /* Start PDMA operatin */
     PDMA_Trigger(PDMA0, 4);
 
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(1)
     {
         if(g_u32IsTestOver == 1)
@@ -274,6 +277,11 @@ int main(void)
 
             /* Close PDMA channel */
             PDMA_Close(PDMA0);
+        }
+        if(--u32TimeOutCnt == 0)
+        {
+            printf("Wait for PDMA time-out!\n");
+            while(1);
         }
     }
 }
