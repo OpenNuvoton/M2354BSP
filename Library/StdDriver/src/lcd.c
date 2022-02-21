@@ -336,4 +336,3 @@ void LCD_DisableInt(uint32_t u32IntSrc)
 /**@}*/ /* end of group LCD_Driver */
 
 /**@}*/ /* end of group Standard_Driver */
-
