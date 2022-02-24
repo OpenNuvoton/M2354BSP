@@ -45,7 +45,7 @@ static volatile uint8_t s_u8CANPackageFlag = 0, s_u8CANAckFlag = 0;
 
 void CAN_MsgInterrupt(CAN_T *tCAN, uint32_t u32IIDR);
 void CAN0_IRQHandler(void);
-void SYS_Init(void);
+int32_t SYS_Init(void);
 void CAN_Package_ACK(CAN_T *tCAN);
 void CAN_Init(void);
 void ProcessHardFault(void);
@@ -97,7 +97,7 @@ void CAN0_IRQHandler(void)
 
 
 
-void SYS_Init(void)
+int32_t SYS_Init(void)
 {
     uint32_t u32TimeOutCnt;
 
@@ -111,7 +111,7 @@ void SYS_Init(void)
     /* Wait for HIRC clock ready */
     u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk))
-        if(--u32TimeOutCnt == 0) break;
+        if(--u32TimeOutCnt == 0) return -1;
 
     /* Select HCLK clock source as HIRC first */
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC;
@@ -125,7 +125,7 @@ void SYS_Init(void)
     /* Wait for PLL clock ready */
     u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk))
-        if(--u32TimeOutCnt == 0) break;
+        if(--u32TimeOutCnt == 0) return -1;
 
     /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
@@ -142,6 +142,7 @@ void SYS_Init(void)
     SystemCoreClock = 96000000;
     CyclesPerUs     = SystemCoreClock / 1000000;  /* For CLK_SysTickDelay() */
 
+    return 0;
 }
 
 
@@ -194,7 +195,7 @@ int main(void)
     /* Unlock protected registers */
     SYS_UnlockReg();
     /* Init System, IP clock and multi-function I/O */
-    SYS_Init();
+    if( SYS_Init() < 0 ) goto lexit;
     /* Enable FMC ISP function */
     FMC_Open();
     FMC_ENABLE_AP_UPDATE();

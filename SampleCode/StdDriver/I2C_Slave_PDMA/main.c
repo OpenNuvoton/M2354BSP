@@ -41,7 +41,7 @@ void I2C0_Init(void);
 void I2C1_Init(void);
 void I2C0_Close(void);
 void I2C1_Close(void);
-void I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr);
+int32_t I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr);
 /*---------------------------------------------------------------------------------------------------------*/
 /* PDMA IRQ Handler                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -188,7 +188,6 @@ void I2C_PDMA_SlaveRx(uint32_t u32Status)
     {
         /* TO DO */
         printf("Status 0x%x is NOT processed\n", u32Status);
-        while(1);
     }
 }
 
@@ -351,7 +350,7 @@ void I2C1_Close(void)
     CLK_DisableModuleClock(I2C1_MODULE);
 }
 
-void I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr)
+int32_t I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr)
 {
     uint32_t i, u32TimeOutCnt;
 
@@ -381,7 +380,7 @@ void I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for I2C Tx time-out!\n");
-            while(1);
+            return -1;
         }
     }
     g_u8MstEndFlag = 0;
@@ -393,9 +392,11 @@ void I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for I2C bus become free time-out!\n");
-            while(1);
+            return -1;
         }
     }
+
+    return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -458,8 +459,8 @@ int32_t main(void)
     s_I2C1HandlerFn = I2C_PDMA_SlaveRx;
     printf("\nI2C1 Slave Mode is Running.\n\n");
 
-    /* I2C0 access I2C1*/
-    I2C_Write_to_Slave_PDMA_RX(0x16);
+    /* I2C0 access I2C1 */
+    if( I2C_Write_to_Slave_PDMA_RX(0x16) < 0 ) return -1;
 
     /* Waiting for PDMA channel 1 transfer done */
     u32TimeOutCnt = I2C_TIMEOUT;
@@ -468,7 +469,7 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for PDMA transfer done time-out!\n");
-            while(1);
+            return -1;
         }
     }
     g_u32IsTestOver = 0;

@@ -100,7 +100,7 @@ int32_t main(void)
     if(ECC_VerifySignature(CRPT, CURVE_P_192, sha_msg, Qx, Qy, R, S) < 0)
     {
         printf("ECC signature verification failed!!\n");
-        while(1);
+        return -1;
     }
 
     printf("ECC digital signature verification OK.\n");

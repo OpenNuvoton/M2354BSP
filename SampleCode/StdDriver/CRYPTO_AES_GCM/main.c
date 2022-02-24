@@ -957,8 +957,8 @@ void AES_Run(uint32_t u32Option)
     {
         if(--u32TimeOutCnt == 0)
         {
-            printf("Wait for AES time-out!\n");
-            while(1);
+            printf("Wait for AES calculation done time-out!\n");
+            break;
         }
     }
 }
@@ -1526,26 +1526,26 @@ int main(void)
         {
             printf("klen = %d\n", klen);
             printf("Key size should 128, 192 or 256 bits\n");
-            while(1) {}
+            return -1;
         }
 
         if(alen > GCM_PBLOCK_SIZE)
         {
             printf("alen = %d\n", alen);
             printf("length of A should not larger than defined block size.\n");
-            while(1) {}
+            return -1;
         }
         if(GCM_PBLOCK_SIZE & 0xf)
         {
             printf("block size = %d\n", GCM_PBLOCK_SIZE);
             printf("Defined block size should be 16 bytes alignment.\n");
-            while(1) {}
+            return -1;
         }
         if(ivlen == 0)
         {
             printf("ivlen = %d\n", ivlen);
             printf("IV length should not be 0\n");
-            while(1) {}
+            return -1;
         }
 
 
@@ -1565,7 +1565,7 @@ int main(void)
         if(memcmp(g_C, g_au8Out, plen))
         {
             printf("ERR: Encrypted data fail!\n");
-            while(1) {}
+            return -1;
         }
 
         if(memcmp(g_T, &g_au8Out[plen_aligned], tlen))
@@ -1575,7 +1575,7 @@ int main(void)
             printf("tlen = %d\n", tlen);
             DumpBuffHex(&g_au8Out[plen_aligned], tlen);
 
-            while(1) {}
+            return -1;
         }
 
         AES_GCMDec(g_key, klen, g_iv, ivlen, g_A, alen, g_au8Out, plen, g_au8Out2, &size, &plen_aligned);
@@ -1583,20 +1583,18 @@ int main(void)
         if(memcmp(g_P, g_au8Out2, plen))
         {
             printf("ERR: Encrypted data fail!\n");
-            while(1) {}
+            return -1;
         }
 
         if(memcmp(g_T, &g_au8Out2[plen_aligned], tlen))
         {
             printf("ERR: Tag fail!");
-            while(1) {}
+            return -1;
         }
 
         printf("Test PASS!\n");
 
     }
-
-lexit:
 
     while(1) {}
 

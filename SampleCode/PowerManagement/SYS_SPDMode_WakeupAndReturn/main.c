@@ -13,7 +13,7 @@
 
 
 void SYS_Init(void);
-void RTC_Init(void);
+int32_t RTC_Init(void);
 void UART0_Init(void);
 extern uint32_t __Enter_SPD(void);
 
@@ -90,7 +90,7 @@ void RTC_IRQHandler(void)
 
 }
 
-void RTC_Init(void)
+int32_t RTC_Init(void)
 {
     S_RTC_TIME_DATA_T sWriteRTC;
 
@@ -122,7 +122,7 @@ void RTC_Init(void)
         if( RTC_Open(&sWriteRTC) < 0 )
         {
             printf("Initialize RTC module and start counting failed!\n");
-            while(1);
+            return -1;
         }
         printf("# Set RTC current date/time: 2020/03/16 00:00:00.\n\n");
 
@@ -136,6 +136,8 @@ void RTC_Init(void)
 
     /* Enable RTC NVIC */
     NVIC_EnableIRQ(RTC_IRQn);
+
+    return 0;
 }
 
 void SYS_Init(void)
@@ -214,7 +216,7 @@ int main(void)
     printf("+--------------------------------------------------------+\n");
 
     /* Init RTC */
-    RTC_Init();
+    if( RTC_Init() < 0 ) return -1;
 
     while(1)
     {
@@ -240,7 +242,7 @@ int main(void)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for RTC interrupt time-out!");
-                while(1);
+                break;
             }
         }
 

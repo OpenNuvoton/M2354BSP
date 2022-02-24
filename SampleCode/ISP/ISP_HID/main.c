@@ -17,7 +17,7 @@ int32_t g_FMC_i32ErrCode;
 void ProcessHardFault(void);
 void SH_Return(void);
 void SendChar_ToUART(void);
-void SYS_Init(void);
+int32_t SYS_Init(void);
 
 void ProcessHardFault(void) {}
 void SH_Return(void) {}
@@ -33,7 +33,7 @@ uint32_t CLK_GetCPUFreq(void)
     return 48000000;
 }
 
-void SYS_Init(void)
+int32_t SYS_Init(void)
 {
     uint32_t u32TimeOutCnt;
 
@@ -47,7 +47,7 @@ void SYS_Init(void)
     /* Wait for HIRC48 clock ready */
     u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(!(CLK->STATUS & CLK_STATUS_HIRC48STB_Msk))
-        if(--u32TimeOutCnt == 0) break;
+        if(--u32TimeOutCnt == 0) return -1;
 
     /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL2;
@@ -73,6 +73,8 @@ void SYS_Init(void)
     /* USBD multi-function pins for VBUS, D+, D-, and ID pins */
     SYS->GPA_MFPH &= ~(SYS_GPA_MFPH_PA12MFP_Msk | SYS_GPA_MFPH_PA13MFP_Msk | SYS_GPA_MFPH_PA14MFP_Msk | SYS_GPA_MFPH_PA15MFP_Msk);
     SYS->GPA_MFPH |= (SYS_GPA_MFPH_PA12MFP_USB_VBUS | SYS_GPA_MFPH_PA13MFP_USB_D_N | SYS_GPA_MFPH_PA14MFP_USB_D_P | SYS_GPA_MFPH_PA15MFP_USB_OTG_ID);
+
+    return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -85,7 +87,7 @@ int32_t main(void)
     /* Unlock protected registers */
     SYS_UnlockReg();
     /* Init System, peripheral clock and multi-function I/O */
-    SYS_Init();
+    if( SYS_Init() < 0 ) goto _APROM;
     CLK->AHBCLK |= CLK_AHBCLK_ISPCKEN_Msk;
     FMC->ISPCTL |= FMC_ISPCTL_ISPEN_Msk | FMC_ISPCTL_APUEN_Msk | FMC_ISPCTL_ISPFF_Msk;
     g_apromSize = GetApromSize();

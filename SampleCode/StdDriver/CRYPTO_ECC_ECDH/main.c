@@ -1,8 +1,6 @@
 /**************************************************************************//**
  * @file     main.c
  * @version  V1.10
- * $Revision: 10 $
- * $Date: 15/11/19 10:11a $
  * @brief    Show Crypto IP ECC CDH secret Z generation.
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
@@ -240,7 +238,7 @@ int32_t main(void)
     if(ECC_GeneratePublicKey(CRPT, ECC_CURVE_TYPE, d, Qx, Qy) < 0)
     {
         printf("ECC key generation failed!!\n");
-        while(1);
+        return -1;
     }
     u32Time = 0xffffff - SysTick->VAL;
 
@@ -260,7 +258,7 @@ int32_t main(void)
     if(ECC_GeneratePublicKey(CRPT, ECC_CURVE_TYPE, d2, Qx2, Qy2) < 0)
     {
         printf("ECC key generation failed!!\n");
-        while(1);
+        return -1;
     }
     u32Time = 0xffffff - SysTick->VAL;
 
@@ -272,7 +270,7 @@ int32_t main(void)
     if(ECC_GenerateSecretZ(CRPT, ECC_CURVE_TYPE, d, Qx2, Qy2, k) < 0)
     {
         printf("ECC ECDH share key calculation fail\n");
-        while(1);
+        return -1;
     }
 
     printf("Share key calculated by A = %s\n", k);
@@ -281,7 +279,7 @@ int32_t main(void)
     if(ECC_GenerateSecretZ(CRPT, ECC_CURVE_TYPE, d2, Qx, Qy, k2) < 0)
     {
         printf("ECC ECDH share key calculation fail\n");
-        while(1);
+        return -1;
     }
 
     printf("Share key calculated by B = %s\n", k2);

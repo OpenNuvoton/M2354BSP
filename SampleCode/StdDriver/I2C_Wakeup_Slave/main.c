@@ -301,7 +301,7 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for system or I2C interrupt time-out!\n");
-            while(1);
+            break;
         }
     }
 
@@ -312,7 +312,7 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for I2C response ACK finish time-out!\n");
-            while(1);
+            break;
         }
     }
 

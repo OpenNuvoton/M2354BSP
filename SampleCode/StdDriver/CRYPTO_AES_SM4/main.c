@@ -184,7 +184,7 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for AES encrypt done time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -200,7 +200,7 @@ int32_t main(void)
             printf("Golden pattern:\n");
             DumpBuffHex(g_au8Golden1, sizeof(au8InputData));
             i32Err = -1;
-            while(1);
+            return -1;
         }
     }
 
@@ -222,7 +222,7 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for AES decrypt done time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -260,12 +260,12 @@ int32_t main(void)
         AES_Start(CRPT, 0, CRYPTO_DMA_ONE_SHOT);
         /* Waiting for AES calculation */
         u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
-            while(!g_AES_done)
+        while(!g_AES_done)
         {
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for AES time-out!\n");
-                while(1);
+                return -1;
             }
         }
     }

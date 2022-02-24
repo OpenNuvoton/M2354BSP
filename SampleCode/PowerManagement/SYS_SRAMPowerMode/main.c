@@ -237,7 +237,7 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for WDT interrupt time-out!");
-            while(1);
+            break;
         }
     }
     printf("wake-up!\n\n");
@@ -290,7 +290,7 @@ int32_t main(void)
     printf("SRAM Bank2 Region 2 Checksum [0x%08X]\n",   au32SRAMCheckSum[10]);
     printf("SRAM Bank2 Region 3 Checksum [0x%08X]\n",   au32SRAMCheckSum[11]);
     printf("SRAM Bank2 Region 4 Checksum [0x%08X]\n",   au32SRAMCheckSum[12]);
-    printf("SRAM Bank2 Region 5 Checksum [0x%08X]\n\n",   au32SRAMCheckSum[13]);
+    printf("SRAM Bank2 Region 5 Checksum [0x%08X]\n\n", au32SRAMCheckSum[13]);
 
     while(1);
 

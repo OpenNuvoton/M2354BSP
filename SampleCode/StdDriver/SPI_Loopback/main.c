@@ -131,7 +131,7 @@ int main(void)
                 if(--u32TimeOutCnt == 0)
                 {
                     printf("Wait for SPI time-out!\n");
-                    while(1);
+                    return -1;
                 }
             }
             /* Read received data */

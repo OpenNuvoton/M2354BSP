@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include "NuMicro.h"
 
-#define PLL_CLOCK          64000000
 
 #define APROM_BANK1_BASE   0x80000                   /* APROM bank1 base address for 512KB size. */
 /* APROM bank1 address is 1/2 APROM size.   */
@@ -167,7 +166,7 @@ void SysTick_Handler(void)
 
         default:
             printf("Unknown db_state state!\n");
-            while(1);
+            break;
     }
 }
 
@@ -175,14 +174,11 @@ void EnableSysTick(int ticks_per_second)
 {
     g_u32TickCnt = 0;
 
-    /* HCLK is 64 MHz */
-    SystemCoreClock = PLL_CLOCK;
-
     if(SysTick_Config(SystemCoreClock / (uint32_t)ticks_per_second))
     {
         /* Setup SysTick Timer for 1 second interrupts */
         printf("Set system tick error!!\n");
-        while(1);
+        //while(1);
     }
 }
 
@@ -350,7 +346,7 @@ int32_t main(void)
         if(inpw(u32Addr) != u32Addr)
         {
             printf("Flash address 0x%x verify failed! expect: 0x%x, read: 0x%x.\n", u32Addr, u32Addr, inpw(u32Addr));
-            while(1);
+            return -1;
         }
     }
     printf("Verify OK.\n");

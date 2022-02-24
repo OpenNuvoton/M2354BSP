@@ -133,7 +133,7 @@ uint32_t GetTemperatureCodeFromADC(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for EADC conversion done time-out!\n");
-            while(1);
+            break;
         }
     }
 

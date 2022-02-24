@@ -16,14 +16,14 @@
 extern int IsDebugFifoEmpty(void);
 static volatile uint8_t s_u8Option;
 
-void KS_TRIG(void);
+int32_t KS_TRIG(void);
 void TAMPER_IRQHandler(void);
 void SYS_Init(void);
 void UART_Init(void);
-void KS_Init(void);
-void KeyStoreSRAM(void);
+int32_t KS_Init(void);
+int32_t KeyStoreSRAM(void);
 
-void KS_TRIG(void)
+int32_t KS_TRIG(void)
 {
     uint32_t u32TimeOutCnt;
 
@@ -46,7 +46,7 @@ void KS_TRIG(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for Key Store busy flag time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -57,7 +57,7 @@ void KS_TRIG(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for Key Store time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -65,6 +65,8 @@ void KS_TRIG(void)
     {
         printf(" Fail! Remaining 0x%X space not clear for SRAM.\n", KS->REMAIN & 0x1FFF);
     }
+
+    return 0;
 }
 
 void TAMPER_IRQHandler(void)
@@ -98,8 +100,8 @@ void TAMPER_IRQHandler(void)
             TAMPER_CLR_INT_STATUS(u32FlagStatus);
 
             printf(" Check keys are all zero ...");
-            KS_TRIG();
-            printf(" Pass!\n");
+            if( KS_TRIG() == 0 )
+                printf(" Pass!\n");
         }
 
         /* To check if all the debug messages are finished */
@@ -161,7 +163,7 @@ void UART_Init(void)
     UART_Open(UART0, 115200);
 }
 
-void KS_Init(void)
+int32_t KS_Init(void)
 {
     uint32_t u32TimeOutCnt;
 
@@ -178,12 +180,14 @@ void KS_Init(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for Key Store initialization done time-out!\n");
-            while(1);
+            return -1;
         }
     }
+
+    return 0;
 }
 
-void KeyStoreSRAM(void)
+int32_t KeyStoreSRAM(void)
 {
     uint32_t u32TimeOutCnt;
 
@@ -218,7 +222,7 @@ void KeyStoreSRAM(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for Key Store busy flag time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -227,6 +231,8 @@ void KeyStoreSRAM(void)
     {
         printf("EIF(KS_STS[1]) is not 0.\n");
     }
+
+    return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -325,10 +331,10 @@ int main(void)
         SYS_UnlockReg();
 
         /* Init Key Store */
-        KS_Init();
+        if( KS_Init() <0 ) return -1;
 
         printf("# Write keys ...");
-        KeyStoreSRAM();
+        if( KeyStoreSRAM() < 0 ) return -1;
         printf(" Done!\n\n");
 
         printf("# Please connect TAMPER2/3(PF.8/9) pins to Low to generate TAMPER event.\n");

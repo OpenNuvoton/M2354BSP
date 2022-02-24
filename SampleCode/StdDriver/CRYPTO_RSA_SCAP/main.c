@@ -137,7 +137,7 @@ int32_t main(void)
     if(RSA_Open(CRPT, RSA_MODE_SCAP, RSA_KEY_SIZE_2048, &s_sRSABuf, sizeof(s_sRSABuf), 0) != 0)
     {
         printf("\nRSA buffer size is incorrect!!\n");
-        while(1);
+        return -1;
     }
     /* Set RSA private key */
     RSA_SetKey(CRPT, d);
@@ -150,8 +150,8 @@ int32_t main(void)
     {
         if(--u32TimeOutCnt == 0)
         {
-            printf("Wait for RSA time-out!\n");
-            while(1);
+            printf("Wait for RSA RSA operation done time-out!\n");
+            return -1;
         }
     }
 
@@ -159,7 +159,7 @@ int32_t main(void)
     if(g_RSA_error)
     {
         printf("\nRSA has error!!\n");
-        while(1);
+        return -1;
     }
 
     /* Get RSA output result */
@@ -176,7 +176,7 @@ int32_t main(void)
     if(RSA_Open(CRPT, RSA_MODE_SCAP, RSA_KEY_SIZE_2048, &s_sRSABuf, sizeof(s_sRSABuf), 0) != 0)
     {
         printf("\nRSA buffer size is incorrect!!\n");
-        while(1);
+        return -1;
     }
     /* Set RSA public key */
     RSA_SetKey(CRPT, E);
@@ -189,8 +189,8 @@ int32_t main(void)
     {
         if(--u32TimeOutCnt == 0)
         {
-            printf("Wait for RSA time-out!\n");
-            while(1);
+            printf("Wait for RSA RSA operation done time-out!\n");
+            return -1;
         }
     }
 
@@ -211,7 +211,7 @@ int32_t main(void)
     else
     {
         printf("\nRSA signature verify failed!!\n");
-        while(1);
+        return -1;
     }
     printf("\nDone.\n");
     while(1);

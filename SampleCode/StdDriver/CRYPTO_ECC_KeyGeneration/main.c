@@ -102,7 +102,7 @@ int32_t main(void)
     if(ECC_GeneratePublicKey(CRPT, CURVE_P_192, d, gKey1, gKey2) < 0)
     {
         printf("ECC key generation failed!!\n");
-        while(1);
+        return -1;
     }
 
     /* Verify public key 1 */
@@ -122,14 +122,14 @@ int32_t main(void)
             if(Qx[i] != gKey1[i])
                 printf("\n%d - 0x%x 0x%x\n", i, Qx[i], gKey1[i]);
         }
-        while(1);
+        return -1;
     }
 
     /* Verify public key 2 */
     if(memcmp(Qy, gKey2, KEY_LENGTH / 8))
     {
         printf("Public key 2 [%s] is not matched with expected [%s]!\n", gKey2, Qy);
-        while(1);
+        return -1;
     }
 
     printf("ECC key compared OK.\n");

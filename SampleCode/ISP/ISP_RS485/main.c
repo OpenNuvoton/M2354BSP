@@ -24,14 +24,14 @@ int32_t g_FMC_i32ErrCode;
 void ProcessHardFault(void);
 void SH_Return(void);
 void SendChar_ToUART(void);
-void SYS_Init(void);
+int32_t SYS_Init(void);
 
 void ProcessHardFault(void) {}
 void SH_Return(void) {}
 void SendChar_ToUART(void) {}
 
 
-void SYS_Init(void)
+int32_t SYS_Init(void)
 {
     uint32_t u32TimeOutCnt;
 
@@ -45,7 +45,7 @@ void SYS_Init(void)
     /* Wait for HIRC clock ready */
     u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(!(CLK->STATUS & CLK_STATUS_HIRCSTB_Msk))
-        if(--u32TimeOutCnt == 0) break;
+        if(--u32TimeOutCnt == 0) return -1;
 
     /* Set HCLK clock source as HIRC first */
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_HIRC;
@@ -59,7 +59,7 @@ void SYS_Init(void)
     /* Wait for PLL clock ready */
     u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(!(CLK->STATUS & CLK_STATUS_PLLSTB_Msk))
-        if(--u32TimeOutCnt == 0) break;
+        if(--u32TimeOutCnt == 0) return -1;
 
     /* Set power level by HCLK working frequency */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | SYS_PLCTL_PLSEL_PL0;
@@ -94,6 +94,8 @@ void SYS_Init(void)
     nRTSPin = REVEIVE_MODE;
     SYS->GPC_MFPH = (SYS->GPC_MFPH & ~(SYS_GPC_MFPH_PC8MFP_Msk)) | SYS_GPC_MFPH_PC8MFP_UART1_RXD;
     SYS->GPE_MFPH = (SYS->GPE_MFPH & ~(SYS_GPE_MFPH_PE13MFP_Msk)) | SYS_GPE_MFPH_PE13MFP_UART1_TXD;
+
+    return 0;
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
@@ -105,7 +107,7 @@ int32_t main(void)
     SYS_UnlockReg();
 
     /* Init System, peripheral clock and multi-function I/O */
-    SYS_Init();
+    if( SYS_Init() < 0 ) goto _APROM;
 
     /* Init UART */
     UART_Init();

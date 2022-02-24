@@ -191,11 +191,7 @@ int32_t main(void)
     if(PrepareKeys() == -1)
     {
         printf("\nCreate keys is failed!!\n");
-
-        /* Erase all keys in FLASH of key store */
-        EraseAllFlashKey();
-
-        while(1);
+        goto lexit;
     }
 
     NVIC_EnableIRQ(CRPT_IRQn);
@@ -228,8 +224,8 @@ int32_t main(void)
     {
         if(--u32TimeOutCnt == 0)
         {
-            printf("Wait for RSA time-out!\n");
-            while(1);
+            printf("Wait for RSA operation done time-out!\n");
+            goto lexit;
         }
     }
 
@@ -237,7 +233,7 @@ int32_t main(void)
     if(g_RSA_error)
     {
         printf("\nRSA has error!!\n");
-        while(1);
+        goto lexit;
     }
 
     /* Get RSA output result */
@@ -263,8 +259,8 @@ int32_t main(void)
     {
         if(--u32TimeOutCnt == 0)
         {
-            printf("Wait for RSA time-out!\n");
-            while(1);
+            printf("Wait for RSA operation done time-out!\n");
+            goto lexit;
         }
     }
 
@@ -272,7 +268,7 @@ int32_t main(void)
     if(g_RSA_error)
     {
         printf("\nRSA has error!!\n");
-        while(1);
+        goto lexit;
     }
 
     /* Get RSA output result */
@@ -285,9 +281,11 @@ int32_t main(void)
     else
     {
         printf("\nRSA signature verify failed!!\n");
-        while(1);
+        goto lexit;
     }
     printf("\nDone.\n");
+
+lexit:
 
     /* Erase all keys in FLASH of key store */
     EraseAllFlashKey();

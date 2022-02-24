@@ -95,7 +95,7 @@ int32_t SM3(uint32_t *pu32Addr, uint32_t u32Size, uint32_t digest[])
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for SHA data input ready time-out!\n");
-                while(1);
+                return -1;
             }
         }
 
@@ -112,7 +112,7 @@ int32_t SM3(uint32_t *pu32Addr, uint32_t u32Size, uint32_t digest[])
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for SHA calculation done time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -166,7 +166,8 @@ int main(void)
     }
     printf("\n");
 
-    SM3((uint32_t *)g_au8Test, 3, hash);
+    if( SM3((uint32_t *)g_au8Test, 3, hash) < 0 )
+        return -1;
 
     pu8 = (uint8_t *)hash;
     printf("\nOutput Hash:\n");
@@ -188,7 +189,8 @@ int main(void)
     }
     printf("\n");
 
-    SM3((uint32_t *)g_au8Test2, 64, hash);
+    if( SM3((uint32_t *)g_au8Test2, 64, hash) < 0 )
+        return -1;
 
     printf("\nOutput Hash:\n");
     pu8 = (uint8_t *)hash;

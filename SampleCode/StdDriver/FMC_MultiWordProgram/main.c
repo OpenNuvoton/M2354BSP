@@ -47,7 +47,7 @@ void SYS_Init(void)
 
 int32_t main(void)
 {
-    uint32_t i, u32Addr, u32Maddr;
+    uint32_t i, u32Addr, u32Maddr, u32Err = 0;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -83,6 +83,7 @@ int32_t main(void)
         if(FMC_Erase(u32Addr) < 0)
         {
             printf("    Erase failed!!\n");
+            u32Err = 1;
             goto err_out;
         }
 
@@ -99,6 +100,7 @@ int32_t main(void)
             if(i <= 0)
             {
                 printf("FMC_WriteMultiple failed: %d\n", i);
+                u32Err = 1;
                 goto err_out;
             }
             printf("programmed length = %d\n", i);
@@ -116,11 +118,13 @@ int32_t main(void)
             if(FMC_Read(u32Addr + i) != g_auPageBuff[i / 4])
             {
                 printf("\n[FAILED] Data mismatch at address 0x%x, expect: 0x%x, read: 0x%x!\n", u32Addr + i, g_auPageBuff[i / 4], FMC_Read(u32Addr + i));
+                u32Err = 1;
                 goto err_out;
             }
             if (g_FMC_i32ErrCode != 0)
             {
                 printf("FMC_Read address 0x%x failed!\n", u32Addr+i);
+                u32Err = 1;
                 goto err_out;
             }
         }
@@ -128,10 +132,10 @@ int32_t main(void)
     }
 
     printf("\n\nMulti-word program demo done.\n");
-    while(1);
 
 err_out:
-    printf("\n\nERROR!\n");
+
+    if(u32Err) printf("\n\nERROR!\n");
     while(1);
 
 }

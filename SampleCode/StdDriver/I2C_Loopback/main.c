@@ -384,7 +384,7 @@ int32_t I2C0_Read_Write_Slave(uint8_t u8SlvAddr)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for I2C Tx finish time-out!\n");
-                while(1);
+                return -1;
             }
         }
         g_u8MstEndFlag = 0;
@@ -404,7 +404,7 @@ int32_t I2C0_Read_Write_Slave(uint8_t u8SlvAddr)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for I2C Rx finish time-out!\n");
-                while(1);
+                return -1;
             }
         }
 

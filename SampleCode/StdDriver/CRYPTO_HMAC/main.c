@@ -221,7 +221,7 @@ int  main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for HMAC time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -238,7 +238,7 @@ int  main(void)
     if(memcmp((const void *)CRPT->HMAC_DGST, (const void *)gau8HMAC, u32MacLen) != 0)
     {
         printf("\n  !!Output is wrong!!\n");
-        while(1) {}
+        return -1;
     }
 
 

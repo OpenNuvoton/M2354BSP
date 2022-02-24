@@ -11,7 +11,6 @@
 #include "xomapi.h"
 
 
-#define PLL_CLOCK       64000000
 
 void SYS_Init(void);
 
@@ -136,7 +135,7 @@ int32_t main(void)
         if(r != 1200)
         {
             printf("XOM ADD fail. It should be 1200 but %d\n", r);
-            while(1);
+            return -1;
         }
     }
 

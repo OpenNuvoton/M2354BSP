@@ -41,7 +41,7 @@ void WDT_IRQHandler(void);
 void StartTimer0(void);
 uint32_t  GetTimer0Counter(void);
 void SYS_Init(void);
-void Download(void);
+int32_t Download(void);
 uint32_t  FuncCrc32(uint32_t u32Start, uint32_t u32Len);
 
 
@@ -81,13 +81,13 @@ void EnableSysTick(int i8TicksPerSecond)
 {
     s_u32TickCnt = 0;
 
-    /* HCLK is 64 MHz */
+    /* HCLK is 96 MHz */
     SystemCoreClock = PLL_CLOCK;
     if(SysTick_Config(SystemCoreClock / (uint32_t)i8TicksPerSecond))
     {
         /* Setup SysTick Timer for 1 second interrupts  */
         printf(" Set system tick error!!\n");
-        while(1);
+        //while(1);
     }
 }
 
@@ -185,7 +185,7 @@ void SYS_Init(void)
 }
 
 
-void Download(void)
+int32_t Download(void)
 {
     int32_t  i32Err;
 
@@ -210,7 +210,7 @@ void Download(void)
     if(i32Err < 0)
     {
         printf("\nXmodem transfer fail!\n");
-        while(1);
+        return -1;
     }
     else
     {
@@ -219,6 +219,8 @@ void Download(void)
     }
 
     printf("\n Firmware download completed!!\n");
+
+    return 0;
 }
 
 
@@ -360,12 +362,22 @@ int main()
             if(u8GetCh == 'y')
             {
                 /* Download new firmware */
-                Download();
-                printf("\n Any key to execute new firmware \n");
-                getchar();
-                /* Remap to App */
-                FMC_SetVectorPageAddr(APP_BASE);
-                ResetCPU();
+                if( Download() == 0 )
+                {
+                    printf("\n Any key to execute new firmware \n");
+                    getchar();
+                    /* Remap to App */
+                    FMC_SetVectorPageAddr(APP_BASE);
+                    ResetCPU();
+                }
+                else
+                {
+                    printf("\n Any key to remap to loader \n");
+                    getchar();
+                    /* Remap to Loader */
+                    FMC_SetVectorPageAddr(LOADER_BASE);
+                    ResetCPU();
+                }
             }
             else
             {

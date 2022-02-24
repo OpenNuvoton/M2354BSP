@@ -180,7 +180,7 @@ int main(void)
     {
         printf("Fail to write key to Key Store!\n");
         KS_EraseAll(KS_SRAM);
-        while(1) {}
+        return -1;
     }
     printf("i32KeyIdx_d = %d, remain size = %d\n", i32KeyIdx_d, KS_GetRemainSize(KS_SRAM));
 
@@ -188,7 +188,7 @@ int main(void)
     {
         /* Invalid key */
         printf("Current private key is not valid. You should set a new one.\n");
-        while(1) {}
+        return -1;
     }
 
     /*------------------------------------------------------------------------------*/
@@ -199,7 +199,7 @@ int main(void)
     if(ECC_GeneratePublicKey(CRPT, CURVE_P_256, d, Qx, Qy) < 0)
     {
         printf("ECC key generation failed!!\n");
-        while(1) {}
+        return -1;
     }
 
 #else
@@ -207,7 +207,7 @@ int main(void)
     if(ECC_GeneratePublicKey_KS(CRPT, CURVE_P_256, KS_SRAM, i32KeyIdx_d, Qx, Qy, 0) < 0)
     {
         printf("ECC key generation failed!!\n");
-        while(1) {}
+        return -1;
     }
 #endif
     time = 0xffffff - SysTick->VAL;
@@ -241,7 +241,7 @@ int main(void)
     {
         /* Invalid key */
         printf("Current private key is not valid. You should set a new one.\n");
-        while(1) {};
+        return -1;
     }
 
 #else
@@ -261,7 +261,7 @@ int main(void)
     if(err)
     {
         printf("PRNG ECDSA Inital failed\n");
-        while(1) {}
+        return -1;
     }
 
     /* Generate a key to key store */
@@ -270,7 +270,7 @@ int main(void)
     if(i32KeyIdx_k < 0)
     {
         printf("Fail to write k to KS SRAM\n");
-        while(1) {}
+        return -1;
     }
     printf("i32KeyIdx_k = %d, remain size = %d\n", i32KeyIdx_k, KS_GetRemainSize(KS_SRAM));
 #endif
@@ -290,7 +290,7 @@ int main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for SHA calcuation done time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -312,14 +312,14 @@ int main(void)
     if(ECC_GenerateSignature(CRPT, CURVE_P_256, hash, d, k, R, S) < 0)
     {
         printf("ECC signature generation failed!!\n");
-        while(1);
+        return -1;
     }
 #else
     /* Use the private key in Key Store to sign the msg */
     if(ECC_GenerateSignature_KS(CRPT, CURVE_P_256, hash, KS_SRAM, i32KeyIdx_d, KS_SRAM, i32KeyIdx_k, R, S) < 0)
     {
         printf("ECC signature generation failed!!\n");
-        while(1);
+        return -1;
     }
 
     /* Delete the random k */
@@ -345,7 +345,7 @@ int main(void)
     if(i32KeyIdx_Qx < 0)
     {
         printf("Fail to write key to Key Store!\n");
-        while(1) {}
+        return -1;
     }
     printf("i32KeyIdx_Qx = %d, remain size = %d\n", i32KeyIdx_Qx, KS_GetRemainSize(KS_SRAM));
 
@@ -354,7 +354,7 @@ int main(void)
     if(i32KeyIdx_Qy < 0)
     {
         printf("Fail to write key to Key Store!\n");
-        while(1) {}
+        return -1;
     }
     printf("i32KeyIdx_Qy = %d, remain size = %d\n", i32KeyIdx_Qy, KS_GetRemainSize(KS_SRAM));
 
@@ -366,7 +366,7 @@ int main(void)
     if(err < 0)
     {
         printf("ECC signature verification failed!!\n");
-        while(1);
+        return -1;
     }
     else
     {

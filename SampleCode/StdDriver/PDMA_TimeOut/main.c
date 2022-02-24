@@ -28,7 +28,7 @@ static volatile uint32_t u32IsRxTestOver = 0;
 /* Define functions prototype                                                                              */
 /*---------------------------------------------------------------------------------------------------------*/
 void PDMA0_IRQHandler(void);
-void UART_PDMATest(void)__attribute__((noreturn));
+void UART_PDMATest(void);
 void SYS_Init(void);
 void UART0_Init(void);
 void UART1_Init(void);
@@ -231,7 +231,7 @@ void UART_PDMATest(void)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for PDMA Tx Test time-out!\n");
-                while(1);
+                return;
             }
         }
 
@@ -248,7 +248,7 @@ void UART_PDMATest(void)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for PDMA Rx Test time-out!\n");
-                while(1);
+                return;
             }
         }
 

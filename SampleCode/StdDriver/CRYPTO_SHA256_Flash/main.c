@@ -95,7 +95,7 @@ int32_t SHA256(uint32_t *pu32Addr, int32_t size, uint32_t digest[])
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for SHA data input ready time-out!\n");
-                while(1);
+                return -1;
             }
         }
 
@@ -112,7 +112,7 @@ int32_t SHA256(uint32_t *pu32Addr, int32_t size, uint32_t digest[])
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for SHA calculation done time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -157,7 +157,8 @@ int main(void)
     }
     printf("\n");
 
-    SHA256((uint32_t *)((uint32_t)&g_au8Test), 32, hash);
+    if( SHA256((uint32_t *)((uint32_t)&g_au8Test), 32, hash) < 0 )
+        return -1;
 
     printf("\nOutput Hash:\n");
     printf("%08x%08x%08x%08x%08x%08x%08x%08x\n", hash[0], hash[1], hash[2], hash[3], hash[4], hash[5], hash[6], hash[7]);

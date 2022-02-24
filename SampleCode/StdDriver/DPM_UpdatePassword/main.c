@@ -97,12 +97,12 @@ int32_t main(void)
     if(i32RetVal == 0)
     {
         printf("Password update has reached maximum time. Please erase chip.\n");
-        while(1);
+        return -1;
     }
     else if(i32RetVal == DPM_TIMEOUT_ERR)
     {
-        printf("Wait for DPM time-out!\n");
-        while(1);
+        printf("Wait for DPM busy flag cleared time-out!\n");
+        return -1;
     }
     else
     {
@@ -122,8 +122,8 @@ int32_t main(void)
         }
         else if(i32RetVal == DPM_TIMEOUT_ERR)
         {
-            printf("Wait for DPM time-out!\n");
-            while(1);
+            printf("Wait for DPM busy flag cleared time-out!\n");
+            return -1;
         }
         else
         {
@@ -132,13 +132,13 @@ int32_t main(void)
     }
     else if(i32RetVal == DPM_TIMEOUT_ERR)
     {
-        printf("Wait for DPM time-out!\n");
-        while(1);
+        printf("Wait for DPM busy flag cleared time-out!\n");
+        return -1;
     }
     else
     {
         printf("Password compare has reached maximum time. Please erase chip.\n");
-        while(1);
+        return -1;
     }
 
     /* Compare password pass */
@@ -154,8 +154,8 @@ int32_t main(void)
         }
         else if(i32RetVal == DPM_TIMEOUT_ERR)
         {
-            printf("Wait for DPM time-out!\n");
-            while(1);
+            printf("Wait for DPM busy flag cleared time-out!\n");
+            return -1;
         }
         else
         {
@@ -164,13 +164,13 @@ int32_t main(void)
     }
     else if(i32RetVal == DPM_TIMEOUT_ERR)
     {
-        printf("Wait for DPM time-out!\n");
-        while(1);
+        printf("Wait for DPM busy flag cleared time-out!\n");
+        return -1;
     }
     else
     {
         printf("\n\n\tPassword compare has reached maximum time. Please erase chip.");
-        while(1);
+        return -1;
     }
 
     while(1);

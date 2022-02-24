@@ -226,7 +226,7 @@ int32_t main(void)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for I2C Tx finish time-out!\n");
-                while(1);
+                return -1;
             }
         }
     }

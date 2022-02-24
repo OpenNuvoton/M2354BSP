@@ -67,13 +67,13 @@ void EnableSysTick(int i8TicksPerSecond)
 {
     s_u32TickCnt = 0;
 
-    /* HCLK is 64 MHz */
+    /* HCLK is 96 MHz */
     SystemCoreClock = PLL_CLOCK;
     if(SysTick_Config(SystemCoreClock / (uint32_t)i8TicksPerSecond))
     {
         /* Setup SysTick Timer for 1 second interrupts  */
         printf("Set system tick error!!\n");
-        while(1);
+        //while(1);
     }
 }
 
@@ -248,7 +248,10 @@ int main()
             if(i32Err < 0)
             {
                 printf("Xmodem transfer fail!\n");
-                while(1);
+                /* Remap to Loader */
+                printf("Reset to Loader\n");
+                FMC_SetVectorPageAddr(0x0);
+                ResetCPU();
             }
             else
             {

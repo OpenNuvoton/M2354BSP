@@ -189,7 +189,7 @@ int main(void)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for EWDT interrupt time-out!\n");
-                while(1);
+                break;
             }
         }
 

@@ -469,7 +469,7 @@ int32_t Read_Write_SLAVE(uint16_t u16SlvAddr)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for USCI_I2C Tx finish time-out!\n");
-                while(1);
+                return -1;
             }
         }
         g_u8MstEndFlag = 0;
@@ -491,7 +491,7 @@ int32_t Read_Write_SLAVE(uint16_t u16SlvAddr)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for USCI_I2C Rx finish time-out!\n");
-                while(1);
+                return -1;
             }
         }
         g_u8MstEndFlag = 0;

@@ -173,7 +173,7 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for AES encrypt done time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -198,7 +198,7 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for AES decrypt done time-out!\n");
-            while(1);
+            return -1;
         }
     }
 

@@ -363,7 +363,7 @@ void PDMA_UART(int32_t i32option)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for PDMA operation finish time-out!\n");
-            while(1);
+            break;
         }
     }
 

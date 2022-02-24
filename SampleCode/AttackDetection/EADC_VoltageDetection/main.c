@@ -153,7 +153,7 @@ uint32_t GetAVDDCodeByADC(void)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for EADC conversion done time-out!\n");
-                while(1);
+                break;
             }
         }
         s_u8ADF = 0;

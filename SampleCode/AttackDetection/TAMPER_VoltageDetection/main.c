@@ -117,7 +117,7 @@ int main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for over voltage detector stable time-out!\n");
-            while(1);
+            return -1;
         }
     }
     SYS_LockReg();

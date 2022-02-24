@@ -243,7 +243,7 @@ int main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for AES encrypt done time-out!\n");
-            while(1);
+            return -1;
         }
     }
 

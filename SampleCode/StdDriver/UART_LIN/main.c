@@ -27,7 +27,7 @@ static uint8_t g_u8ReceiveData[9];
 /* Define functions prototype                                                                              */
 /*---------------------------------------------------------------------------------------------------------*/
 void UART_FunctionTest(void);
-void LIN_Tx_FunctionTest(void);
+int32_t LIN_Tx_FunctionTest(void);
 void LIN_Rx_FunctionTest(void);
 void UART1_IRQHandler(void);
 void SYS_Init(void);
@@ -238,7 +238,8 @@ void UART_FunctionTest(void)
         switch(u32Item)
         {
             case '1':
-                LIN_Tx_FunctionTest();
+                if( LIN_Tx_FunctionTest() < 0 )
+                    u32Item = 27;
                 break;
 
             case '2':
@@ -255,7 +256,7 @@ void UART_FunctionTest(void)
 
 }
 
-void LIN_Tx_FunctionTest(void)
+int32_t LIN_Tx_FunctionTest(void)
 {
     uint32_t u32TimeOutCnt;
 
@@ -292,7 +293,7 @@ void LIN_Tx_FunctionTest(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for UART LIN header transfer completed time-out!\n");
-            while(1);
+            return -1;
         }
     }
 
@@ -301,6 +302,8 @@ void LIN_Tx_FunctionTest(void)
     UART_Write(UART1, &au8TestPattern[0], 9);
 
     printf("\n UART LIN Tx Function Demo End !!\n\n");
+
+    return 0;
 }
 
 void LIN_Rx_FunctionTest(void)

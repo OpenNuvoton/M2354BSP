@@ -161,7 +161,7 @@ int main(void)
     {
         printf("\n RTC initial fail!!");
         printf("\n Please check h/w setting!!");
-        while(1);
+        return -1;
     }
 
     RTC_GetDateAndTime(&sGetTime);

@@ -372,7 +372,7 @@ void UART_FunctionTest()
                     if(--u32TimeOutCnt == 0)
                     {
                         printf("Wait for UART Rx idle time-out!\n");
-                        while(1);
+                        return;
                     }
                 }
                 UART_Write(UART1, g_u8TxData, BUFSIZE);
@@ -382,7 +382,7 @@ void UART_FunctionTest()
                     if(--u32TimeOutCnt == 0)
                     {
                         printf("Wait for UART Rx data time-out!\n");
-                        while(1);
+                        return;
                     }
                 }
 
@@ -406,7 +406,7 @@ void UART_FunctionTest()
                     if(--u32TimeOutCnt == 0)
                     {
                         printf("Wait for UART Rx idle time-out!\n");
-                        while(1);
+                        return;
                     }
                 }
                 UART_Write(UART2, g_u8TxData, BUFSIZE);
@@ -416,7 +416,7 @@ void UART_FunctionTest()
                     if(--u32TimeOutCnt == 0)
                     {
                         printf("Wait for UART Rx data time-out!\n");
-                        while(1);
+                        return;
                     }
                 }
 

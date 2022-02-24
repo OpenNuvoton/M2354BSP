@@ -13,11 +13,11 @@
 
 
 void PowerDownFunction(void);
-void WakeUpPinFunction(uint32_t u32PDMode, uint32_t u32EdgeType)__attribute__((noreturn));
-void WakeUpTimerFunction(uint32_t u32PDMode, uint32_t u32Interval)__attribute__((noreturn));
-void WakeUpRTCTickFunction(uint32_t u32PDMode)__attribute__((noreturn));
-void WakeUpRTCAlarmFunction(uint32_t u32PDMode)__attribute__((noreturn));
-void WakeUpRTCTamperFunction(uint32_t u32PDMode)__attribute__((noreturn));
+void WakeUpPinFunction(uint32_t u32PDMode, uint32_t u32EdgeType);
+void WakeUpTimerFunction(uint32_t u32PDMode, uint32_t u32Interval);
+void WakeUpRTCTickFunction(uint32_t u32PDMode);
+void WakeUpRTCAlarmFunction(uint32_t u32PDMode);
+void WakeUpRTCTamperFunction(uint32_t u32PDMode);
 void CheckPowerSource(void);
 void GpioPinSetting(void);
 void SYS_Init(void);
@@ -48,17 +48,14 @@ void WakeUpPinFunction(uint32_t u32PDMode, uint32_t u32EdgeType)
     /* Select Power-down mode */
     CLK_SetPowerDownMode(u32PDMode);
 
-    /* Configure GPIO as Input mode */
+    /* Configure GPIO as input mode */
     GPIO_SetMode(PC, BIT0, GPIO_MODE_INPUT);
 
     /* Set Wake-up pin trigger type at Deep Power down mode */
     CLK_EnableDPDWKPin(u32EdgeType);
 
-    /* Enter to Power-down mode */
+    /* Enter to Power-down mode and wait for wake-up reset happen */
     PowerDownFunction();
-
-    /* Wait for Power-down mode wake-up reset happen */
-    while(1);
 }
 
 /*-----------------------------------------------------------------------------------------------------------*/
@@ -78,11 +75,8 @@ void WakeUpTimerFunction(uint32_t u32PDMode, uint32_t u32Interval)
     /* Enable Wake-up Timer */
     CLK_ENABLE_WKTMR();
 
-    /* Enter to Power-down mode */
+    /* Enter to Power-down mode and wait for wake-up reset happen */
     PowerDownFunction();
-
-    /* Wait for Power-down mode wake-up reset happen */
-    while(1);
 }
 
 /*-----------------------------------------------------------------------------------------------------------*/
@@ -98,8 +92,6 @@ void RTC_IRQHandler(void)
 
 void WakeUpRTCTickFunction(uint32_t u32PDMode)
 {
-    printf("Enter to DPD Power-down mode......\n");
-
     /* Enable RTC peripheral clock */
     CLK->APBCLK0 |= CLK_APBCLK0_RTCCKEN_Msk;
 
@@ -110,7 +102,7 @@ void WakeUpRTCTickFunction(uint32_t u32PDMode)
     if( RTC_Open(NULL) < 0 )
     {
         printf("Initialize RTC module and start counting failed\n");
-        while(1);
+        return;
     }
 
     /* Clear tick status */
@@ -129,11 +121,9 @@ void WakeUpRTCTickFunction(uint32_t u32PDMode)
     /* Enable RTC wake-up */
     CLK_ENABLE_RTCWK();
 
-    /* Enter to Power-down mode */
+    /* Enter to Power-down mode and wait for wake-up reset happen */
+    printf("Enter to DPD Power-down mode......\n");
     PowerDownFunction();
-
-    /* Wait for Power-down mode wake-up reset happen */
-    while(1);
 }
 
 
@@ -162,7 +152,7 @@ void  WakeUpRTCAlarmFunction(uint32_t u32PDMode)
     if( RTC_Open(&sWriteRTC) < 0 )
     {
         printf("Initialize RTC module and start counting failed\n");
-        while(1);
+        return;
     }
 
     /* Set RTC alarm date/time */
@@ -192,11 +182,8 @@ void  WakeUpRTCAlarmFunction(uint32_t u32PDMode)
     /* Enable RTC wake-up */
     CLK_ENABLE_RTCWK();
 
-    /* Enter to Power-down mode */
+    /* Enter to Power-down mode and wait for wake-up reset happen */
     PowerDownFunction();
-
-    /* Wait for Power-down mode wake-up reset happen */
-    while(1);
 }
 
 /*-----------------------------------------------------------------------------------------------------------*/
@@ -212,8 +199,6 @@ void RTC_TAMPER_IRQHandler(void)
 
 void  WakeUpRTCTamperFunction(uint32_t u32PDMode)
 {
-    printf("Enter to DPD Power-down mode......\n");
-
     /* Enable RTC peripheral clock */
     CLK->APBCLK0 |= CLK_APBCLK0_RTCCKEN_Msk;
 
@@ -224,7 +209,7 @@ void  WakeUpRTCTamperFunction(uint32_t u32PDMode)
     if( RTC_Open(NULL) < 0 )
     {
         printf("Initialize RTC module and start counting failed\n");
-        while(1);
+        return;
     }
 
     /* Set RTC Tamper 0 as low level detect */
@@ -246,11 +231,9 @@ void  WakeUpRTCTamperFunction(uint32_t u32PDMode)
     /* Enable RTC wake-up */
     CLK_ENABLE_RTCWK();
 
-    /* Enter to Power-down mode */
+    /* Enter to Power-down mode and wait for wake-up reset happen */
+    printf("Enter to DPD Power-down mode......\n");
     PowerDownFunction();
-
-    /* Wait for Power-down mode wake-up reset happen */
-    while(1);
 }
 
 /*-----------------------------------------------------------------------------------------------------------*/
@@ -439,23 +422,22 @@ int32_t main(void)
     {
         case '1':
             WakeUpPinFunction(CLK_PMUCTL_PDMSEL_DPD, CLK_DPDWKPIN_FALLING);
-        /* break; */
+            break;
         case '2':
             WakeUpTimerFunction(CLK_PMUCTL_PDMSEL_DPD, CLK_PMUCTL_WKTMRIS_3277);
-        /* break; */
+            break;
         case '3':
             WakeUpRTCTickFunction(CLK_PMUCTL_PDMSEL_DPD);
-        /* break; */
+            break;
         case '4':
             WakeUpRTCAlarmFunction(CLK_PMUCTL_PDMSEL_DPD);
-        /* break; */
+            break;
         case '5':
             WakeUpRTCTamperFunction(CLK_PMUCTL_PDMSEL_DPD);
-        /* break; */
+            break;
         default:
             break;
     }
 
     while(1);
-
 }

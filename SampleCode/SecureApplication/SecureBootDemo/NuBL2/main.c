@@ -112,7 +112,7 @@ void UART_Init(void)
 /*---------------------------------------------------------------------------------------------------------*/
 int main(void)
 {
-    uint32_t u32NuBL32Base;
+    uint32_t u32NuBL32Base, u32TimeOutCnt;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -135,7 +135,7 @@ int main(void)
     if(VerifyNuBL3x((uint32_t *)((uint32_t)&g_NuBL3xFwInfo), NUBL32_FW_INFO_BASE) == -1)
     {
         printf("\n\nNuBL2 verifies NuBL32 FAIL.\n");
-        while(1) {}
+        return -1;
     }
     else
     {
@@ -149,7 +149,7 @@ int main(void)
     if(VerifyNuBL3x((uint32_t *)((uint32_t)&g_NuBL3xFwInfo), NUBL33_FW_INFO_BASE) == -1)
     {
         printf("\n\nNuBL2 verifies NuBL33 FAIL.\n");
-        while(1) {}
+        return -1;
     }
     else
     {
@@ -158,7 +158,9 @@ int main(void)
 
     /* Jump to execute NuBL32 FW */
     printf("\nJump to execute NuBL32...\n");
-    UART_WAIT_TX_EMPTY((UART_T *)DEBUG_PORT);
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
+    UART_WAIT_TX_EMPTY((UART_T *)DEBUG_PORT)
+        if(--u32TimeOutCnt == 0) break;
 
     /* Disable all interrupt */
     __set_PRIMASK(1);
