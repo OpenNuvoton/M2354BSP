@@ -224,7 +224,7 @@ void RTC_Init(void)
 int main(void)
 {
     uint32_t u32LCDFPS;
-    char text[LCD_ALPHABET_NUM+1] = "";
+    char text[LCD_ALPHABET_NUM + 1] = "";
     struct bme680_dev bme680;
     struct bme680_field_data data;
     int8_t rslt = BME680_OK;
@@ -274,14 +274,14 @@ int main(void)
     /* Show default RTC time */
     u32TimeData = (sReadRTC.u32Hour * 100) + sReadRTC.u32Minute;
     LCDLIB_PrintNumber(ZONE_TIME_DIGIT, u32TimeData);
-    LCDLIB_SetSymbol(SYMBOL_TIME_DIG_COL1, 1);
+    LCDLIB_SetSymbol(SYMBOL_COL_47, 1);
     
     /* Show logo and version */
-    LCDLIB_SetSymbol(SYMBOL_NVT, 1);
+    LCDLIB_SetSymbol(SYMBOL_NVT_14, 1);
     LCDLIB_PrintNumber(ZONE_VER_DIGIT, 101000);
-    LCDLIB_SetSymbol(SYMBOL_VERSION, 1);
-    LCDLIB_SetSymbol(SYMBOL_VER_DIG_P1, 1);
-    LCDLIB_SetSymbol(SYMBOL_VER_DIG_P2, 1);    
+    LCDLIB_SetSymbol(SYMBOL_VERSION_37, 1);
+    LCDLIB_SetSymbol(SYMBOL_P_67, 1);
+    LCDLIB_SetSymbol(SYMBOL_P_68, 1);    
         
     /* Show default pressure, hPa */
     sprintf(text, "%4dhPa", 0000);
@@ -289,12 +289,11 @@ int main(void)
 
     /* Show default humidity, %rH */
     LCDLIB_PrintNumberEx(ZONE_PPM_DIGIT, 00, 2);
-    LCDLIB_SetSymbol(SYMBOL_PERCENTAGE, 1);
+    LCDLIB_SetSymbol(SYMBOL_PERCENTAGE_30, 1);
 
     /* Show default temperature, degC */
     LCDLIB_PrintNumberEx(ZONE_TEMP_DIGIT, 00, 2);
-    LCDLIB_SetSymbol(SYMBOL_TEMP_C, 1);
-
+    LCDLIB_SetSymbol(SYMBOL_TEMP_C_35, 1);    
 
     /* Init BME680 */
 	if(m2354_bme680_init(&bme680) != BME680_OK) {
@@ -356,9 +355,9 @@ int main(void)
         
         /* Show current RTC time and BME680 data on LCD */
         if(g_u32RTCINT == 1)
-            LCDLIB_SetSymbol(SYMBOL_TIME_DIG_COL1, 1);
+            LCDLIB_SetSymbol(SYMBOL_COL_47, 1);
         else
-            LCDLIB_SetSymbol(SYMBOL_TIME_DIG_COL1, 0);
+            LCDLIB_SetSymbol(SYMBOL_COL_47, 0);
         
         while(g_u32RTCINT >= 2)
         {
