@@ -83,7 +83,6 @@ void UI2C_LB_SlaveTRx(uint32_t u32Status)
             else
             {
                 printf("No Address Match!!!\n");
-                //while(1);
             }
 
             /* USCI I2C receives Slave command type */

@@ -836,13 +836,13 @@ void SDH_Get_SD_info(SDH_T *sdh)
             SDH_SDCommand(sdh, 7UL, 0UL);
             sdh->CTL |= SDH_CTL_CLK8OEN_Msk;
             while(sdh->CTL & SDH_CTL_CLK8OEN_Msk)
+            {
+                if(--u32TimeOutCount == 0)
                 {
-                    if(--u32TimeOutCount == 0)
-                    {
-                        g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
-                        break;
-                    }
+                    g_SDH_i32ErrCode = SDH_TIMEOUT_ERR;
+                    break;
                 }
+            }
 
             pSD->totalSectorN = (uint32_t)_SDH_ucSDHCBuffer[215] << 24;
             pSD->totalSectorN |= (uint32_t)_SDH_ucSDHCBuffer[214] << 16;

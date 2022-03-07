@@ -73,7 +73,6 @@ void EnableSysTick(int i8TicksPerSecond)
     {
         /* Setup SysTick Timer for 1 second interrupts  */
         printf("Set system tick error!!\n");
-        //while(1);
     }
 }
 

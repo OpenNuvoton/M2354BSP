@@ -350,7 +350,7 @@ int32_t main(void)
         /* Disable Timer for EPWM1 channel 2 */
         EPWM_ForceStop(EPWM1, EPWM_CH_2_MASK);
 
-        /* Disable Capture Function and Capture Input path for  EPWM1 channel 2 */
+        /* Disable Capture Function and Capture Input path for EPWM1 channel 2 */
         EPWM_DisableCapture(EPWM1, EPWM_CH_2_MASK);
 
         /* Clear Capture Interrupt flag for EPWM1 channel 2 */

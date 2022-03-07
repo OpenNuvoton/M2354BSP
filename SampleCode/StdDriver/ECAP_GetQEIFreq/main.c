@@ -77,7 +77,7 @@ void ECAP0_IRQHandler(void)
     }
 
     /* Check input capture overflow flag */
-    if((u32Status & ECAP_STATUS_CAPTF2_Msk) == ECAP_STATUS_CAPTF2_Msk)
+    if((u32Status & ECAP_STATUS_CAPOVF_Msk) == ECAP_STATUS_CAPOVF_Msk)
     {
         /* Clear input capture overflow flag */
         ECAP_CLR_CAPTURE_FLAG(ECAP0, ECAP_STATUS_CAPOVF_Msk);
@@ -153,7 +153,7 @@ void ECAP0_Init(void)
     ECAP_Open(ECAP0, ECAP_DISABLE_COMPARE);
 
     /* Select Reload function */
-    ECAP_SET_CNT_CLEAR_EVENT(ECAP0, (ECAP_CTL1_CAP0RLDEN_Msk | ECAP_CTL1_CAP1RLDEN_Msk))
+    ECAP_SET_CNT_CLEAR_EVENT(ECAP0, (ECAP_CTL1_CAP0RLDEN_Msk | ECAP_CTL1_CAP1RLDEN_Msk));
 
     /* Enable ECAP0 Input Channel 0*/
     ECAP_ENABLE_INPUT_CHANNEL(ECAP0, ECAP_CTL0_IC0EN_Msk);

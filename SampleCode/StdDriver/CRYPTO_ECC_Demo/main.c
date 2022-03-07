@@ -195,7 +195,7 @@ int32_t main(void)
     if(ECC_GeneratePublicKey(CRPT, CURVE_P_SIZE, d, Qx, Qy) < 0)
     {
         printf("ECC key generation failed!!\n");
-        while(1);
+        return -1;
     }
     time = 0xffffff - SysTick->VAL;
 
