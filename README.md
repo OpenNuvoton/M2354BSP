@@ -64,6 +64,9 @@ To experience the powerful features of M2354 in few minutes, please refer to NuM
 - NuMaker<br>
 	Sample codes for NuMaker-PFM-M2354 board.
 
+- NuMakerIoT<br>
+	Sample codes for NuMaker-IoT-M2354 board.
+
 - PowerManagement<br>
 	Power management sample code.
 
@@ -85,8 +88,8 @@ To experience the powerful features of M2354 in few minutes, please refer to NuM
 
 ## .\ThirdParty\
 
-- emWin<br>
-	Segger embedded graphic library – emWin.
+- BME680<br>
+	Sensor driver for BME680 gas sensor.
 
 - FatFs<br>
 	An open source FAT/exFAT filesystem library.
@@ -97,6 +100,8 @@ To experience the powerful features of M2354 in few minutes, please refer to NuM
 - mbedtls-2.6.0<br>
 	An open source crypto library.
 
+- SX1276<br>
+	The Semtech SX1276 LoRa transceiver library.
 
 # Licesne
 
