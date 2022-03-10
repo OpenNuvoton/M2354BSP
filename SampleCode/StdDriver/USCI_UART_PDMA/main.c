@@ -43,7 +43,7 @@ void SYS_Init(void);
 void UART0_Init(void);
 void USCI0_Init(void);
 /*---------------------------------------------------------------------------------------------------------*/
-/* Clear buffer function                                                                                    */
+/* Clear buffer function                                                                                   */
 /*---------------------------------------------------------------------------------------------------------*/
 void ClearBuf(uint32_t u32Addr, uint32_t u32Length, uint8_t u8Pattern)
 {

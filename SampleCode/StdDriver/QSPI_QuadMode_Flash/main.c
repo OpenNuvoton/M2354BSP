@@ -54,7 +54,7 @@ __STATIC_INLINE void wait_QSPI_IS_BUSY(QSPI_T *qspi)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for QSPI time-out!\n");
-            while(1);
+            break;
         }
     }
 }
