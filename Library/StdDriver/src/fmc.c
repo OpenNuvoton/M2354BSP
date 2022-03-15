@@ -1017,6 +1017,7 @@ int32_t FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len)
                 }
                 if( i32TimeOutCnt-- <= 0)
                 {
+                    __set_PRIMASK(0u);
                     g_FMC_i32ErrCode = -1;
                     err = -1;
                 }
@@ -1042,6 +1043,7 @@ int32_t FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len)
                     }
                     if( i32TimeOutCnt-- <= 0)
                     {
+                        __set_PRIMASK(0u);
                         g_FMC_i32ErrCode = -1;
                         err = -1;
                     }

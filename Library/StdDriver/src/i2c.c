@@ -1254,6 +1254,8 @@ uint8_t I2C_ReadByteOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr)
     uint8_t u8Xfering = 1u, u8Err = 0u, u8Rdata = 0u, u8Ctrl = 0u;
     uint32_t u32TimeOutCount = 0u;
 
+    g_I2C_i32ErrCode = 0;
+
     /* Send START */
     I2C_START(i2c);
     while(u8Xfering && (u8Err == 0u))

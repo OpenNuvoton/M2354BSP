@@ -62,6 +62,8 @@ extern "C"
 
 /**@}*/ /* end of group I2C_EXPORTED_CONSTANTS */
 
+extern int32_t g_I2C_i32ErrCode;
+
 /** @addtogroup I2C_EXPORTED_FUNCTIONS I2C Exported Functions
   @{
 */
