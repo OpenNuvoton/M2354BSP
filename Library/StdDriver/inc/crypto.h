@@ -162,8 +162,8 @@ typedef enum
     CURVE_KO_224,                       /*!< ECC 224-bits "Koblitz" curve   \hideinitializer */
     CURVE_KO_256,                       /*!< ECC 256-bits "Koblitz" curve   \hideinitializer */
     CURVE_BP_256,                       /*!< ECC Brainpool 256-bits curve   \hideinitializer */
-    CURVE_BP_384,                       /*!< ECC Brainpool 256-bits curve   \hideinitializer */
-    CURVE_BP_512,                       /*!< ECC Brainpool 256-bits curve   \hideinitializer */
+    CURVE_BP_384,                       /*!< ECC Brainpool 384-bits curve   \hideinitializer */
+    CURVE_BP_512,                       /*!< ECC Brainpool 512-bits curve   \hideinitializer */
     CURVE_25519,                        /*!< ECC curve-25519          \hideinitializer */
     CURVE_SM2_256,                      /*!< SM2                      \hideinitializer */
     CURVE_UNDEF = -0x7fffffff,                        /*!< Invalid curve            \hideinitializer */
