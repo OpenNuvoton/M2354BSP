@@ -463,7 +463,7 @@ int32_t main(void)
     if( I2C_Write_to_Slave_PDMA_RX(0x16) < 0 ) return -1;
 
     /* Waiting for PDMA channel 1 transfer done */
-    u32TimeOutCnt = I2C_TIMEOUT;
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(g_u32IsTestOver == 0)
     {
         if(--u32TimeOutCnt == 0)

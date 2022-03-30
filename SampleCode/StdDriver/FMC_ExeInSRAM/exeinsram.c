@@ -43,7 +43,7 @@ int32_t FlashAccess_OnSRAM(void)
         {
             printf("[Read/Write FAIL]\n");
 
-            while(1);
+            return -1;
         }
     }
     printf("\nISP function demo done.\n");
