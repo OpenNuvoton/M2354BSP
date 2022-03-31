@@ -551,7 +551,7 @@ int32_t main(void)
     I2C_START(I2C1);
 
     /* Waiting for PDMA transfer done */
-    u32TimeOutCnt = I2C_TIMEOUT;
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(g_u32IsTestOver == 0)
     {
         if(--u32TimeOutCnt == 0)
@@ -611,7 +611,7 @@ int32_t main(void)
     I2C1->CTL1 |= I2C_CTL1_RXPDMAEN_Msk;      //Enalbe PDMA RX, Start receive data from Slave
 
     /* Waiting for PDMA receive done */
-    u32TimeOutCnt = I2C_TIMEOUT;
+    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
     while(g_u32IsTestOver == 0)
     {
         if(--u32TimeOutCnt == 0)
@@ -633,7 +633,7 @@ int32_t main(void)
     {
         if(--u32TimeOutCnt == 0)
         {
-            printf("Wait for I2C Rx time-out!\n");
+            printf("Wait for I2C receive data ending ime-out!\n");
             return -1;
         }
     }

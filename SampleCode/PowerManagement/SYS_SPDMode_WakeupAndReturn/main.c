@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     main.c
  * @version  V3.00
- * @brief    Show how to continue executing code after wake-up form SPD Power-down mode by SRAM data retention function.
+ * @brief    Show how to continue executing code after wake-up from SPD Power-down mode by SRAM data retention function.
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.

@@ -13,14 +13,14 @@
 /* Functions and variables declaration                                                                     */
 /*---------------------------------------------------------------------------------------------------------*/
 static uint32_t g_au32DataArrary[4] = {0x00000000, 0xFFFFFFFF, 0x5A5A5A5A, 0xA5A5A5A5};
-void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Param2, uint32_t u32Param3);
-void SRAM_BS616LV4017(uint32_t u32MaxSize);
+int32_t SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Param2, uint32_t u32Param3);
+int32_t SRAM_BS616LV4017(uint32_t u32MaxSize);
 
 
 /**
   * @brief      This function is used to check SRAM data matched or not.
   */
-void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Param2, uint32_t u32Param3)
+int32_t SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Param2, uint32_t u32Param3)
 {
     uint32_t    u32ReadData, u32CmpData;
     uint32_t    u32Idx;
@@ -33,7 +33,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
     if(u32Param0 == 4)      // 0x0, 0x1, 0x2, 0x3, 0x4 ... access with offset ......
     {
         /*---------------------------------------------------------------------------------------------------------*/
-        /* To check unfixed data pattern                                                                             */
+        /* To check unfixed data pattern                                                                           */
         /*---------------------------------------------------------------------------------------------------------*/
         /* [One Byte Read] compare */
         u32Idx = 0;
@@ -49,7 +49,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                     printf("SRAM want data= 0x%x\n", (uint8_t)(u32CmpData));
                     printf("SRAM read data= 0x%x\n", EBI0_READ_DATA8(EBI, u32Idx));
                     printf("One Byte Read compare failed ! \n\n");
-                    while(1) {}
+                    return -1;
                 }
                 u32Idx++;
                 u32ReadData++;
@@ -65,7 +65,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                     printf("SRAM want data= 0x%x\n", (uint16_t)((u32ReadData + u32Offset)));
                     printf("SRAM read data= 0x%x\n", (uint16_t)u32CmpData);
                     printf("One Byte Read compare failed ! \n\n");
-                    while(1) {}
+                    return -1;
                 }
                 u32Idx += 2;
                 u32ReadData++;
@@ -83,7 +83,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                     printf("SRAM want data= 0x%x\n", (uint32_t)((u32ReadData + u32Offset)));
                     printf("SRAM read data= 0x%x\n", (uint32_t)u32CmpData);
                     printf("One Byte Read compare failed ! \n\n");
-                    while(1) {}
+                    return -1;
                 }
                 u32Idx += 4;
                 u32ReadData++;
@@ -92,7 +92,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
         if(u32Idx < u32EBIsize)
         {
             printf("\nOne Byte compare address error 0x%X !\n", (uint32_t)EBI_BANK0_BASE_ADDR + u32Idx);
-            while(1) {}
+            return -1;
         }
 
         /* [Half Word Read] compare */
@@ -111,7 +111,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                     printf("SRAM want data= 0x%X\n", (uint16_t)(u32CmpData));
                     printf("SRAM read data= 0x%X\n", EBI0_READ_DATA16(EBI, u32Idx));
                     printf("Half Word Read compare failed ! \n\n");
-                    while(1) {}
+                    return -1;
                 }
                 u32Idx += 2;
                 u32ReadData += 2;
@@ -125,7 +125,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                     printf("SRAM want data= 0x%X\n", (uint16_t)(u32CmpData));
                     printf("SRAM read data= 0x%X\n", EBI0_READ_DATA16(EBI, u32Idx));
                     printf("Half Word Read compare failed ! \n\n");
-                    while(1) {}
+                    return -1;
                 }
                 u32Idx += 2;
                 u32ReadData++;
@@ -141,7 +141,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                     printf("SRAM want data= 0x%x\n", (uint32_t)((u32ReadData + u32Offset)));
                     printf("SRAM read data= 0x%x\n", (uint32_t)u32CmpData);
                     printf("Half Word Read compare failed ! \n\n");
-                    while(1) {}
+                    return -1;
                 }
                 u32Idx += 4;
                 u32ReadData++;
@@ -150,7 +150,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
         if(u32Idx < u32EBIsize)
         {
             printf("\nHalf Word compare address error 0x%X !\n", (uint32_t)EBI_BANK0_BASE_ADDR + u32Idx);
-            while(1) {}
+            return -1;
         }
 
         /* [One Word Read] compare */
@@ -171,7 +171,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                     printf("SRAM want data= 0x%X\n", (uint32_t)(u32CmpData));
                     printf("SRAM read data= 0x%X\n", EBI0_READ_DATA32(EBI, u32Idx));
                     printf("One Word Read compare failed ! \n\n");
-                    while(1) {}
+                    return -1;
                 }
                 u32Idx += 4;
                 u32ReadData += 4;
@@ -187,7 +187,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                     printf("SRAM want data= 0x%X\n", (uint32_t)(u32CmpData));
                     printf("SRAM read data= 0x%X\n", EBI0_READ_DATA32(EBI, u32Idx));
                     printf("One Word Read compare failed ! \n\n");
-                    while(1) {}
+                    return -1;
                 }
                 u32Idx += 4;
                 u32ReadData += 2;
@@ -201,7 +201,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                     printf("SRAM want data= 0x%x\n", (uint32_t)(u32CmpData));
                     printf("SRAM read data= 0x%x\n", EBI0_READ_DATA32(EBI, u32Idx));
                     printf("One Word Read compare failed ! \n\n");
-                    while(1) {}
+                    return -1;
                 }
                 u32Idx += 4;
                 u32ReadData++;
@@ -210,7 +210,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
         if(u32Idx < u32EBIsize)
         {
             printf("\nOne Word compare address error 0x%X !\n", (uint32_t)EBI_BANK0_BASE_ADDR + u32Idx);
-            while(1) {}
+            return -1;
         }
     }
     else
@@ -229,7 +229,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                 printf("SRAM want data= 0x%X\n", (uint8_t)(u32ReadData));
                 printf("SRAM read data= 0x%X\n", EBI0_READ_DATA8(EBI, u32Idx));
                 printf("One Byte Read compare failed ! \n\n");
-                while(1) {}
+                return -1;
             }
             u32Idx++;
         }
@@ -245,7 +245,7 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                 printf("SRAM want data= 0x%X\n", (uint16_t)(u32ReadData));
                 printf("SRAM read data= 0x%X\n", EBI0_READ_DATA16(EBI, u32Idx));
                 printf("Half Word Read compare failed ! \n\n");
-                while(1) {}
+                return -1;
             }
             u32Idx += 2;
         }
@@ -261,21 +261,24 @@ void SRAM_CompareFunction(uint32_t u32Param0, uint32_t u32Param1, uint32_t u32Pa
                 printf("SRAM want data= 0x%X\n", (uint32_t)(u32ReadData));
                 printf("SRAM read data= 0x%X\n", EBI0_READ_DATA32(EBI, u32Idx));
                 printf("One Word Read compare failed ! \n\n");
-                while(1) {}
+                return -1;
             }
             u32Idx += 4;
         }
     }
+
+    return 0;
 }
 
 /**
   * @brief      This function is used to perform writing data to SRAM and check result.
   */
-void SRAM_BS616LV4017(uint32_t u32MaxSize)
+int32_t SRAM_BS616LV4017(uint32_t u32MaxSize)
 {
     uint32_t u32WriteData;
     uint32_t u32Idx, u32DataIdx;
     uint32_t u32EBIsize;
+    int32_t i32Result;
 
     u32EBIsize = u32MaxSize;
     printf(">> Data width is 16-bit and max. data size is %d KB << \n\n", (u32EBIsize / 1024));
@@ -302,8 +305,9 @@ void SRAM_BS616LV4017(uint32_t u32MaxSize)
             /*---------------------------------------------------------------------------------------------------------*/
             /* Read SRAM data and compare with write in data                                                           */
             /*---------------------------------------------------------------------------------------------------------*/
-            SRAM_CompareFunction(u32DataIdx, u32EBIsize, 0, 0); // param3:0, Byte Write
-            printf("PASS\n");
+            i32Result = SRAM_CompareFunction(u32DataIdx, u32EBIsize, 0, 0); // param3:0, Byte Write
+            if(i32Result) return -1;
+            else printf("PASS\n");
         }
         else
         {
@@ -323,8 +327,9 @@ void SRAM_BS616LV4017(uint32_t u32MaxSize)
             /*---------------------------------------------------------------------------------------------------------*/
             /* Read SRAM data and compare with write in data                                                           */
             /*---------------------------------------------------------------------------------------------------------*/
-            SRAM_CompareFunction(u32DataIdx, u32EBIsize, (uint32_t)&u32Idx, 0); // param3:0, Byte Write
-            printf("PASS\n\n");
+            i32Result = SRAM_CompareFunction(u32DataIdx, u32EBIsize, (uint32_t)&u32Idx, 0); // param3:0, Byte Write
+            if(i32Result) return -1;
+            else printf("PASS\n");
         }
         u32DataIdx++;
     }
@@ -351,8 +356,9 @@ void SRAM_BS616LV4017(uint32_t u32MaxSize)
             /*---------------------------------------------------------------------------------------------------------*/
             /* Read SRAM data and compare with write in data                                                           */
             /*---------------------------------------------------------------------------------------------------------*/
-            SRAM_CompareFunction(u32DataIdx, u32EBIsize, 0, 1); // param3:1, Half Word Write
-            printf("PASS\n");
+            i32Result = SRAM_CompareFunction(u32DataIdx, u32EBIsize, 0, 1); // param3:1, Half Word Write
+            if(i32Result) return -1;
+            else printf("PASS\n");
         }
         else
         {
@@ -372,8 +378,9 @@ void SRAM_BS616LV4017(uint32_t u32MaxSize)
             /*---------------------------------------------------------------------------------------------------------*/
             /* Read SRAM data and compare with write in data                                                           */
             /*---------------------------------------------------------------------------------------------------------*/
-            SRAM_CompareFunction(u32DataIdx, u32EBIsize, (uint32_t)&u32Idx, 1); // param3:1, Half Word Write
-            printf("PASS\n\n");
+            i32Result = SRAM_CompareFunction(u32DataIdx, u32EBIsize, (uint32_t)&u32Idx, 1); // param3:1, Half Word Write
+            if(i32Result) return -1;
+            else printf("PASS\n");
         }
         u32DataIdx++;
     }
@@ -400,8 +407,9 @@ void SRAM_BS616LV4017(uint32_t u32MaxSize)
             /*---------------------------------------------------------------------------------------------------------*/
             /* Read SRAM data and compare with write in data                                                           */
             /*---------------------------------------------------------------------------------------------------------*/
-            SRAM_CompareFunction(u32DataIdx, u32EBIsize, 0, 2); // param3:2, Word Write
-            printf("PASS\n");
+            i32Result = SRAM_CompareFunction(u32DataIdx, u32EBIsize, 0, 2); // param3:2, Word Write
+            if(i32Result) return -1;
+            else printf("PASS\n");
         }
         else
         {
@@ -421,9 +429,12 @@ void SRAM_BS616LV4017(uint32_t u32MaxSize)
             /*---------------------------------------------------------------------------------------------------------*/
             /* Read SRAM data and compare with write in data                                                           */
             /*---------------------------------------------------------------------------------------------------------*/
-            SRAM_CompareFunction(u32DataIdx, u32EBIsize, (uint32_t)&u32Idx, 2); // param3:2, Word Write
-            printf("PASS\n\n");
+            i32Result = SRAM_CompareFunction(u32DataIdx, u32EBIsize, (uint32_t)&u32Idx, 2); // param3:2, Word Write
+            if(i32Result) return -1;
+            else printf("PASS\n");
         }
         u32DataIdx++;
     }
+
+    return 0;
 }
