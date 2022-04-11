@@ -1,0 +1,47 @@
+set(DRV_SRC  
+        acmp.c
+        bpwm.c
+        can.c
+        clk.c
+        crc.c
+        crypto.c
+        dac.c
+        dpm.c
+        eadc.c
+        ebi.c
+        ecap.c
+        epwm.c
+        ewdt.c
+        ewwdt.c
+        fmc.c
+        fvc.c
+        gpio.c
+        i2c.c
+        i2s.c
+        keystore.c
+        lcd.c
+        pdma.c
+        qei.c
+        qspi.c
+        retarget.c
+        rng.c
+        rtc.c
+        sc.c
+        scuart.c
+        sdh.c
+        spi.c
+        sys.c
+        tamper.c
+        timer.c
+        timer_pwm.c
+        uart.c
+        usbd.c
+        usci_i2c.c
+        usci_spi.c
+        usci_uart.c
+        wdt.c
+        wwdt.c
+)
+
+
+add_library(m2354_driver ${DRV_SRC})

@@ -545,6 +545,10 @@ void CRPT_Reg2Hex(int32_t count, uint32_t volatile reg[], char output[]);
 void CRPT_Hex2Reg(char input[], uint32_t volatile reg[]);
 int32_t ECC_GetCurve(CRPT_T *crpt, E_ECC_CURVE ecc_curve, ECC_CURVE *curve);
 
+int32_t SM2_Sign(CRPT_T* crpt, E_ECC_CURVE ecc_curve, char* e, char* d, char* k, char* R, char* S);
+int32_t SM2_Verify(CRPT_T* crpt, E_ECC_CURVE ecc_curve, char* e, char* public_k1, char* public_k2, char* R, char* S);
+int32_t SM3(uint32_t* pu32Addr, uint32_t u32Size, uint32_t digest[]);
+
 /**@}*/ /* end of group CRYPTO_EXPORTED_FUNCTIONS */
 
 /**@}*/ /* end of group CRYPTO_Driver */

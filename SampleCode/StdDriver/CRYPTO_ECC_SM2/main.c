@@ -23,13 +23,12 @@ void dump_buff_hex(uint8_t *pucBuff, int nBytes);
 void SYS_Init(void);
 void DEBUG_PORT_Init(void);
 
+static char e[168];
 static char d[168];                         /* private key */
 static char Qx[168], Qy[168];               /* temporary buffer used to keep output public keys */
 static char k[168];                         /* random integer k form [1, n-1]                */
-static char msg[] = "ED6EDE9E420BEA42D949292116B2348FEBC908F0EF4CC1F01FEB6C2586C4CD72"; /* Hash value of a message */
+static char msg[] = "abc";
 static char R[168], S[168];                 /* temporary buffer used to keep digital signature (R,S) pair */
-
-
 
 
 #define ENDIAN(x)   ((((x)>>24)&0xff) | (((x)>>8)&0xff00) | (((x)<<8)&0xff0000) | ((x)<<24))
@@ -125,6 +124,50 @@ void DEBUG_PORT_Init()
 
 }
 
+
+int32_t SM3(uint32_t* pu32Addr, int32_t size, uint32_t digest[])
+{
+
+    int32_t i;
+
+    /* Enable CRYPTO */
+    CLK->AHBCLK |= CLK_AHBCLK_CRPTCKEN_Msk;
+
+    /* Init SHA */
+    CRPT->HMAC_CTL = (SHA_MODE_SHA256 << CRPT_HMAC_CTL_OPMODE_Pos) | CRPT_HMAC_CTL_INSWAP_Msk | CRPT_HMAC_CTL_SM3EN_Msk;
+    CRPT->HMAC_DMACNT = size;
+
+    /* Calculate SHA */
+    while(size > 0)
+    {
+        if(size <= 4)
+        {
+            CRPT->HMAC_CTL |= CRPT_HMAC_CTL_DMALAST_Msk;
+        }
+
+        /* Trigger to start SHA processing */
+        CRPT->HMAC_CTL |= CRPT_HMAC_CTL_START_Msk;
+
+        /* Waiting for SHA data input ready */
+        while((CRPT->HMAC_STS & CRPT_HMAC_STS_DATINREQ_Msk) == 0);
+
+        /* Input new SHA date */
+        CRPT->HMAC_DATIN = *pu32Addr;
+        pu32Addr++;
+        size -= 4;
+    }
+
+    /* Waiting for calculation done */
+    while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk);
+
+    /* return SHA results */
+    for(i = 0; i < 8; i++)
+        digest[i] = CRPT->HMAC_DGST[i];
+
+    return 0;
+}
+
+
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Main Function                                                                                          */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -134,6 +177,8 @@ int32_t main(void)
     uint32_t time;
     uint32_t au32r[(KEY_LENGTH + 31) / 32];
     uint8_t *au8r;
+    uint32_t hash[8];
+
 
     SYS_UnlockReg();
 
@@ -152,15 +197,18 @@ int32_t main(void)
 
     nbits = KEY_LENGTH;
 
-    /* Initial TRNG */
-    printf("RNG Open ......... ");
     err = RNG_Open();
     if(err)
-        printf("FAIL\n");
-    else
-        printf("OK\n");
+        printf("RNG Init FAIL\n");
 
     au8r = (uint8_t *)&au32r[0];
+
+    /* hash the message */
+    SM3((uint32_t*)msg, 3, hash);
+    sprintf(e, "%08x%08x%08x%08x%08x%08x%08x%08x", hash[0], hash[1], hash[2], hash[3], hash[4], hash[5], hash[6], hash[7]);
+    printf("msg         = %s\n", msg);
+    printf("e           = %s\n", e);
+
     do
     {
 
@@ -191,6 +239,9 @@ int32_t main(void)
     }
     while(1);
 
+    /* Enable SysTick */
+    SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
+
     /* Reset SysTick to measure time */
     SysTick->VAL = 0;
     if(ECC_GeneratePublicKey(CRPT, CURVE_P_SIZE, d, Qx, Qy) < 0)
@@ -200,8 +251,8 @@ int32_t main(void)
     }
     time = 0xffffff - SysTick->VAL;
 
-    printf("Public Qx is %s\n", Qx);
-    printf("Public Qy is %s\n", Qy);
+    printf("Public Qx = %s\n", Qx);
+    printf("Public Qy = %s\n", Qy);
     printf("Elapsed time: %d.%d ms\n", time / CyclesPerUs / 1000, time / CyclesPerUs % 1000);
 
     /*
@@ -224,7 +275,7 @@ int32_t main(void)
         }
         k[j] = 0; // NULL End
 
-        printf("  k = %s\n", k);
+        printf("  k  = %s\n", k);
 
         if(ECC_IsPrivateKeyValid(CRPT, CURVE_P_SIZE, k))
         {
@@ -239,7 +290,7 @@ int32_t main(void)
         }
 
         SysTick->VAL = 0;
-        if(ECC_GenerateSignature(CRPT, CURVE_P_SIZE, msg, d, k, R, S) < 0)
+        if(SM2_Sign(CRPT, CURVE_P_SIZE, e, d, k, R, S) < 0)
         {
             printf("ECC signature generation failed!!\n");
             return -1;
@@ -248,11 +299,10 @@ int32_t main(void)
 
         printf("  R  = %s\n", R);
         printf("  S  = %s\n", S);
-        printf("  msg= %s\n", msg);
         printf("Elapsed time: %d.%d ms\n", time / CyclesPerUs / 1000, time / CyclesPerUs % 1000);
 
         SysTick->VAL = 0;
-        err = ECC_VerifySignature(CRPT, CURVE_P_SIZE, msg, Qx, Qy, R, S);
+        err = SM2_Verify(CRPT, CURVE_P_SIZE, e, Qx, Qy, R, S);
         time = 0xffffff - SysTick->VAL;
         if(err < 0)
         {

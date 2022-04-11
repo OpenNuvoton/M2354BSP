@@ -65,64 +65,6 @@ void DEBUG_PORT_Init()
     DEBUG_PORT->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
 }
 
-
-int32_t SM3(uint32_t *pu32Addr, uint32_t u32Size, uint32_t digest[])
-{
-    int32_t i;
-    int32_t size;
-    uint32_t u32TimeOutCnt;
-
-    /* Init SHA with SM3 enabled */
-    CRPT->HMAC_CTL = (SHA_MODE_SHA256 << CRPT_HMAC_CTL_OPMODE_Pos) | CRPT_HMAC_CTL_INSWAP_Msk | CRPT_HMAC_CTL_OUTSWAP_Msk | CRPT_HMAC_CTL_SM3EN_Msk;
-    CRPT->HMAC_DMACNT = u32Size;
-
-    size = (int32_t)u32Size;
-    /* Calculate SHA */
-    while(size > 0)
-    {
-        if(size <= 4)
-        {
-            CRPT->HMAC_CTL |= CRPT_HMAC_CTL_DMALAST_Msk;
-        }
-
-        /* Trigger to start SHA processing */
-        CRPT->HMAC_CTL |= CRPT_HMAC_CTL_START_Msk;
-
-        /* Waiting for SHA data input ready */
-        u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
-        while((CRPT->HMAC_STS & CRPT_HMAC_STS_DATINREQ_Msk) == 0)
-        {
-            if(--u32TimeOutCnt == 0)
-            {
-                printf("Wait for SHA data input ready time-out!\n");
-                return -1;
-            }
-        }
-
-        /* Input new SHA date */
-        CRPT->HMAC_DATIN = *pu32Addr;
-        pu32Addr++;
-        size -= 4;
-    }
-
-    /* Waiting for calculation done */
-    u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
-    while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk)
-    {
-        if(--u32TimeOutCnt == 0)
-        {
-            printf("Wait for SHA calculation done time-out!\n");
-            return -1;
-        }
-    }
-
-    /* return SHA results */
-    for(i = 0; i < 8; i++)
-        digest[i] = CRPT->HMAC_DGST[i];
-
-    return 0;
-}
-
 static __attribute__((aligned(4))) uint8_t g_au8Test[3] =
 {
     0x61, 0x62, 0x63
@@ -179,7 +121,6 @@ int main(void)
 
 
     printf("The result should be:\n");
-    // The result should be:
     printf("66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0\n\n");
 
     printf("Input data2:\n");
@@ -200,12 +141,8 @@ int main(void)
     }
     printf("\n");
 
-
-
     printf("The result should be:\n");
-    // The result should be:
     printf("debe9ff92275b8a138604889c18e5a4d6fdb70e5387e5765293dcba39c0c5732\n\n");
-
 
     printf("Demo Finished.\n");
     while(1) {}
