@@ -76,7 +76,9 @@ extern "C"
 #define TIMER_TRG_TO_DAC                        (TIMER_TRGCTL_TRGDAC_Msk)         /*!< Each timer event to start DAC conversion. NOT supported on TIMER4 and TIMER5 \hideinitializer */
 #define TIMER_TRG_TO_PDMA                       (TIMER_TRGCTL_TRGPDMA_Msk)        /*!< Each timer event to trigger PDMA transfer \hideinitializer */
 
-#define TIMER_TIMEOUT_ERR                       (-1L)                             /*!< TIMER operation abort due to timeout error \hideinitializer */
+#define TIMER_OK                                ( 0L)    /*!< TIMER operation OK \hideinitializer */
+#define TIMER_ERR_FAIL                          (-1L)    /*!< TIMER operation failed \hideinitializer */
+#define TIMER_ERR_TIMEOUT                       (-2L)    /*!< TIMER operation abort due to timeout error \hideinitializer */
 
 /**@}*/ /* end of group TIMER_EXPORTED_CONSTANTS */
 

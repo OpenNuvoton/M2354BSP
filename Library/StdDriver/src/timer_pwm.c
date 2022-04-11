@@ -17,8 +17,6 @@
   @{
 */
 
-int32_t g_TPWM_i32ErrCode = 0; /*!< TPWM global error code */
-
 /** @addtogroup TIMER_PWM_EXPORTED_FUNCTIONS TIMER PWM Exported Functions
   @{
 */
