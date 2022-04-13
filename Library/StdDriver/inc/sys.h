@@ -156,11 +156,14 @@ extern "C"
 #define SYS_SRAMPC1_SRAM_RETENTION       0x80000001UL   /*!< Select SRAM power mode to retention mode */
 #define SYS_SRAMPC1_SRAM_POWER_SHUT_DOWN 0x80000002UL   /*!< Select SRAM power mode to power shut down mode */
 
+
 /*---------------------------------------------------------------------------------------------------------*/
-/* SYS Time-out Handler Constant Definitions                                                               */
+/* SYS Define Error Code                                                                                   */
 /*---------------------------------------------------------------------------------------------------------*/
-#define SYS_TIMEOUT         (SystemCoreClock)   /*!< 1 second time-out */
-#define SYS_TIMEOUT_ERR     (-1L)               /*!< SYS time-out error value */
+#define SYS_TIMEOUT         SystemCoreClock     /*!< SYS time-out counter (1 second time-out) */
+#define SYS_OK              ( 0L)               /*!< SYS operation OK */
+#define SYS_ERR_FAIL        (-1L)               /*!< SYS operation failed */
+#define SYS_ERR_TIMEOUT     (-2L)               /*!< SYS operation abort due to timeout error */
 
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Multi-Function constant definitions.                                                                   */
@@ -3133,8 +3136,6 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
 
 /**@}*/ /* end of group SYS_EXPORTED_CONSTANTS */
 
-extern int32_t g_SYS_i32ErrCode;
-
 /** @addtogroup SYS_EXPORTED_FUNCTIONS SYS Exported Functions
   @{
 */
@@ -4026,19 +4027,13 @@ extern int32_t g_SYS_i32ErrCode;
   * @param      None
   * @return     None
   * @details    This macro waits SYS_BODCTL write busy flag is cleared and skips when time-out.
-  * @note       This macro sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS_BODCTL write busy flag time-out.
   */
 #define SYS_WAIT_BODCTL_WRBUSY() \
     do{ \
         uint32_t u32TimeOutCnt = SYS_TIMEOUT; \
-        g_SYS_i32ErrCode = 0; \
         while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk) \
         { \
-            if(--u32TimeOutCnt == 0) \
-            { \
-                g_SYS_i32ErrCode = SYS_TIMEOUT_ERR; \
-                break; \
-            } \
+            if(--u32TimeOutCnt == 0) break; \
         } \
     }while(0)
 
@@ -4329,12 +4324,12 @@ uint32_t SYS_ReadPDID(void);
 void SYS_ResetChip(void);
 void SYS_ResetCPU(void);
 void SYS_ResetModule(uint32_t u32ModuleIndex);
-void SYS_EnableBOD(int32_t i32Mode, uint32_t u32BODLevel);
-void SYS_DisableBOD(void);
-void SYS_SetPowerLevel(uint32_t u32PowerLevel);
+int32_t SYS_EnableBOD(int32_t i32Mode, uint32_t u32BODLevel);
+int32_t SYS_DisableBOD(void);
+int32_t SYS_SetPowerLevel(uint32_t u32PowerLevel);
 uint32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator);
-void SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode);
-void SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode);
+int32_t SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode);
+int32_t SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode);
 void SYS_SetVRef(uint32_t u32VRefCTL);
 
 

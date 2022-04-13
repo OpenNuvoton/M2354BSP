@@ -15,8 +15,6 @@
   @{
 */
 
-int32_t g_SYS_i32ErrCode = 0; /*!< SYS global error code */
-
 /** @addtogroup SYS_EXPORTED_FUNCTIONS SYS Exported Functions
   @{
 */
@@ -196,33 +194,43 @@ void SYS_ResetModule(uint32_t u32ModuleIndex)
   *             - \ref SYS_BODCTL_BODVL_2_6V
   *             - \ref SYS_BODCTL_BODVL_2_8V
   *             - \ref SYS_BODCTL_BODVL_3_0V
-  * @return     None
+  * @retval     SYS_OK          SYS operation OK.
+  * @retval     SYS_ERR_TIMEOUT SYS operation abort due to timeout error.
   * @details    This function configure Brown-out detector reset or interrupt mode, enable Brown-out function and set Brown-out voltage level.
   *             The register write-protection function should be disabled before using this function.
-  * @note       This function sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
-void SYS_EnableBOD(int32_t i32Mode, uint32_t u32BODLevel)
+int32_t SYS_EnableBOD(int32_t i32Mode, uint32_t u32BODLevel)
 {
     /* Enable Brown-out Detector function */
     /* Enable Brown-out interrupt or reset function */
     /* Select Brown-out Detector threshold voltage */
     SYS_WAIT_BODCTL_WRBUSY();
-    SYS->BODCTL = (SYS->BODCTL & ~(SYS_BODCTL_BODRSTEN_Msk | SYS_BODCTL_BODVL_Msk)) |
+
+    if( (SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk) == 0 )
+        SYS->BODCTL = (SYS->BODCTL & ~(SYS_BODCTL_BODRSTEN_Msk | SYS_BODCTL_BODVL_Msk)) | \
                   ((uint32_t)i32Mode) | (u32BODLevel) | (SYS_BODCTL_BODEN_Msk);
+    else return SYS_ERR_TIMEOUT;
+
+    return SYS_OK;
 }
 
 /**
   * @brief      Disable Brown-out detector function
   * @param      None
-  * @return     None
+  * @retval     SYS_OK          SYS operation OK.
+  * @retval     SYS_ERR_TIMEOUT SYS operation abort due to timeout error.
   * @details    This function disable Brown-out detector function.
   *             The register write-protection function should be disabled before using this function.
-  * @note       This function sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
-void SYS_DisableBOD(void)
+int32_t SYS_DisableBOD(void)
 {
     SYS_WAIT_BODCTL_WRBUSY();
-    SYS->BODCTL &= ~SYS_BODCTL_BODEN_Msk;
+
+    if( (SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk) == 0 )
+        SYS->BODCTL &= ~SYS_BODCTL_BODEN_Msk;
+    else return SYS_ERR_TIMEOUT;
+
+    return SYS_OK;
 }
 
 
@@ -233,41 +241,33 @@ void SYS_DisableBOD(void)
   *             - \ref SYS_PLCTL_PLSEL_PL1  : Supports system clock up to 84MHz.
   *             - \ref SYS_PLCTL_PLSEL_PL2  : Supports system clock up to 48MHz.
   *             - \ref SYS_PLCTL_PLSEL_PL3  : Supports system clock up to 4MHz.
-  * @return     None
+  * @retval      0  Power level setting success.
+  * @retval     -1  Power level setting failed.
   * @details    This function select power level.
   *             The register write-protection function should be disabled before using this function.
-  * @note       This function sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
-void SYS_SetPowerLevel(uint32_t u32PowerLevel)
+int32_t SYS_SetPowerLevel(uint32_t u32PowerLevel)
 {
-    uint32_t u32TimeOutCount;
-
-    g_SYS_i32ErrCode = 0;
+    uint32_t u32TimeOutCnt = 0;
 
     /* Wait for power level change busy flag is cleared */
-    u32TimeOutCount = SYS_TIMEOUT;
+    u32TimeOutCnt = SYS_TIMEOUT;
     while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk)
     {
-        if(--u32TimeOutCount == 0)
-        {
-            g_SYS_i32ErrCode = SYS_TIMEOUT_ERR;
-            break;
-        }
+        if(--u32TimeOutCnt == 0) return -1;
     }
 
     /* Set power voltage level */
     SYS->PLCTL = (SYS->PLCTL & (~SYS_PLCTL_PLSEL_Msk)) | (u32PowerLevel);
 
     /* Wait for power level change busy flag is cleared */
-    u32TimeOutCount = SYS_TIMEOUT;
+    u32TimeOutCnt = SYS_TIMEOUT;
     while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk)
     {
-        if(--u32TimeOutCount == 0)
-        {
-            g_SYS_i32ErrCode = SYS_TIMEOUT_ERR;
-            break;
-        }
+        if(--u32TimeOutCnt == 0) return -1;
     }
+
+    return 0;
 }
 
 
@@ -276,20 +276,18 @@ void SYS_SetPowerLevel(uint32_t u32PowerLevel)
   * @param[in]  u32PowerRegulator is main voltage regulator type. Including :
   *             - \ref SYS_PLCTL_MVRS_LDO
   *             - \ref SYS_PLCTL_MVRS_DCDC
-  * @retval     0  main voltage regulator type setting is not finished
-  * @retval     1  main voltage regulator type setting is finished
+  * @retval     0               Main voltage regulator type setting is not finished.
+  * @retval     1               Main voltage regulator type setting is finished.
+  * @retval     SYS_ERR_TIMEOUT SYS operation abort due to timeout error.
   * @details    This function set main voltage regulator type.
   *             The main voltage regulator type setting to DCDC cannot finished if the inductor is not detected.
   *             The register write-protection function should be disabled before using this function.
-  * @note       This function sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
 uint32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
 {
     int32_t i32TimeOutCnt;
     uint32_t u32Ret = 1U;
     uint32_t u32PowerRegStatus;
-
-    g_SYS_i32ErrCode = 0;
 
     /* Get main voltage regulator type status */
     u32PowerRegStatus = SYS->PLSTS & SYS_PLSTS_CURMVR_Msk;
@@ -301,11 +299,7 @@ uint32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
         i32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk)
         {
-            if(i32TimeOutCnt-- <= 0)
-            {
-                g_SYS_i32ErrCode = SYS_TIMEOUT_ERR;
-                break;
-            }
+            if(i32TimeOutCnt-- <= 0) return SYS_ERR_TIMEOUT;
         }
         SYS->PLCTL |= SYS_PLCTL_MVRS_Msk;
 
@@ -313,11 +307,7 @@ uint32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
         i32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->PLSTS & SYS_PLSTS_MVRCBUSY_Msk)
         {
-            if(i32TimeOutCnt-- <= 0)
-            {
-                g_SYS_i32ErrCode = SYS_TIMEOUT_ERR;
-                break;
-            }
+            if(i32TimeOutCnt-- <= 0) return SYS_ERR_TIMEOUT;
         }
         if((SYS->PLSTS & SYS_PLSTS_CURMVR_Msk) != SYS_PLSTS_CURMVR_DCDC)
         {
@@ -330,11 +320,7 @@ uint32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
         i32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk)
         {
-            if(i32TimeOutCnt-- <= 0)
-            {
-                g_SYS_i32ErrCode = SYS_TIMEOUT_ERR;
-                break;
-            }
+            if(i32TimeOutCnt-- <= 0) return SYS_ERR_TIMEOUT;
         }
         SYS->PLCTL &= (~SYS_PLCTL_MVRS_Msk);
 
@@ -342,11 +328,7 @@ uint32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
         i32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->PLSTS & SYS_PLSTS_MVRCBUSY_Msk)
         {
-            if(i32TimeOutCnt-- <= 0)
-            {
-                g_SYS_i32ErrCode = SYS_TIMEOUT_ERR;
-                break;
-            }
+            if(i32TimeOutCnt-- <= 0) return SYS_ERR_TIMEOUT;
         }
         if((SYS->PLSTS & SYS_PLSTS_CURMVR_Msk) != SYS_PLSTS_CURMVR_LDO)
         {
@@ -393,12 +375,12 @@ uint32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
   *             - \ref SYS_SRAMPC1_SRAM_NORMAL
   *             - \ref SYS_SRAMPC1_SRAM_RETENTION
   *             - \ref SYS_SRAMPC1_SRAM_POWER_SHUT_DOWN
-  * @return     None
+  * @retval      0  SRAM power mode setting success.
+  * @retval     -1  SRAM power mode setting failed.
   * @details    This function set system SRAM power mode.
   *             The register write-protection function should be disabled before using this function.
-  * @note       This function sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SRAM power change busy time-out.
   */
-void SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
+int32_t SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
 {
     uint32_t u32SRAMSelPos = 0UL;
     uint32_t u32TimeOutCnt;
@@ -422,11 +404,7 @@ void SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
         u32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->SRAMPC1 & SYS_SRAMPC1_PCBUSY_Msk)
         {
-            if(--u32TimeOutCnt == 0)
-            {
-                g_SYS_i32ErrCode = SYS_TIMEOUT_ERR;
-                break;
-            }
+            if(--u32TimeOutCnt == 0) return -1;
         }
         SYS->SRAMPC1 = (SYS->SRAMPC1 & (~u32SRAMSel)) | (u32PowerMode << u32SRAMSelPos);
     }
@@ -435,14 +413,12 @@ void SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
         u32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->SRAMPC0 & SYS_SRAMPC0_PCBUSY_Msk)
         {
-            if(--u32TimeOutCnt == 0)
-            {
-                g_SYS_i32ErrCode = SYS_TIMEOUT_ERR;
-                break;
-            }
+            if(--u32TimeOutCnt == 0) return -1;
         }
         SYS->SRAMPC0 = (SYS->SRAMPC0 & (~u32SRAMSel)) | (u32PowerMode << u32SRAMSelPos);
     }
+
+    return 0;
 }
 
 /**
@@ -459,12 +435,12 @@ void SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
   *             - \ref SYS_SRAMPC1_SRAM_NORMAL
   *             - \ref SYS_SRAMPC1_SRAM_RETENTION
   *             - \ref SYS_SRAMPC1_SRAM_POWER_SHUT_DOWN
-  * @return     None
+  * @retval      0  SRAM power mode setting success.
+  * @retval     -1  SRAM power mode setting failed.
   * @details    This function set peripheral SRAM power mode.
   *             The register write-protection function should be disabled before using this function.
-  * @note       This function sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SRAM power change busy time-out.
   */
-void SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
+int32_t SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
 {
     uint32_t u32SRAMSelPos = 16UL;
     uint32_t u32TimeOutCnt;
@@ -486,13 +462,11 @@ void SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
     u32TimeOutCnt = SYS_TIMEOUT;
     while(SYS->SRAMPC1 & SYS_SRAMPC1_PCBUSY_Msk)
     {
-        if(--u32TimeOutCnt == 0)
-        {
-            g_SYS_i32ErrCode = SYS_TIMEOUT_ERR;
-            break;
-        }
+        if(--u32TimeOutCnt == 0)  return -1;
     }
     SYS->SRAMPC1 = (SYS->SRAMPC1 & (~u32SRAMSel)) | (u32PowerMode << u32SRAMSelPos);
+
+    return 0;
 }
 
 /**

@@ -15,24 +15,20 @@
   @{
 */
 
-int32_t g_KS_i32ErrCode = 0;       /*!< KS global error code */
-
 /** @addtogroup KS_EXPORTED_FUNCTIONS Key Store Exported Functions
   @{
 */
 
 /**
   * @brief      Initial key store
-  * @return     None
+  * @retval     0           Successful
+  * @retval     others      Fail
   * @details    This function is used to initial the key store.
   *             It is necessary to be called before using other APIs of Key Store.
-  * @note       This function sets g_KS_i32ErrCode to KS_TIMEOUT_ERR if waiting Key Store time-out.
   */
-void KS_Open(void)
+int32_t KS_Open(void)
 {
     uint32_t u32TimeOutCount;
-
-    g_KS_i32ErrCode = 0;
 
     if((KS->STS & KS_STS_INITDONE_Msk) == 0)
     {
@@ -42,8 +38,7 @@ void KS_Open(void)
         {
             if(--u32TimeOutCount == 0)
             {
-                g_KS_i32ErrCode = KS_TIMEOUT_ERR;
-                break;
+                return KS_ERR_TIMEOUT;
             }
         }
 
@@ -56,8 +51,7 @@ void KS_Open(void)
         {
             if(--u32TimeOutCount == 0)
             {
-                g_KS_i32ErrCode = KS_TIMEOUT_ERR;
-                break;
+                return KS_ERR_TIMEOUT;
             }
         }
     }
@@ -68,10 +62,11 @@ void KS_Open(void)
     {
         if(--u32TimeOutCount == 0)
         {
-            g_KS_i32ErrCode = KS_TIMEOUT_ERR;
-            break;
+            return KS_ERR_TIMEOUT;
         }
     }
+
+    return KS_OK;
 }
 
 
