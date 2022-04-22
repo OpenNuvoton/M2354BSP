@@ -124,50 +124,6 @@ void DEBUG_PORT_Init()
 
 }
 
-
-int32_t SM3(uint32_t* pu32Addr, int32_t size, uint32_t digest[])
-{
-
-    int32_t i;
-
-    /* Enable CRYPTO */
-    CLK->AHBCLK |= CLK_AHBCLK_CRPTCKEN_Msk;
-
-    /* Init SHA */
-    CRPT->HMAC_CTL = (SHA_MODE_SHA256 << CRPT_HMAC_CTL_OPMODE_Pos) | CRPT_HMAC_CTL_INSWAP_Msk | CRPT_HMAC_CTL_SM3EN_Msk;
-    CRPT->HMAC_DMACNT = size;
-
-    /* Calculate SHA */
-    while(size > 0)
-    {
-        if(size <= 4)
-        {
-            CRPT->HMAC_CTL |= CRPT_HMAC_CTL_DMALAST_Msk;
-        }
-
-        /* Trigger to start SHA processing */
-        CRPT->HMAC_CTL |= CRPT_HMAC_CTL_START_Msk;
-
-        /* Waiting for SHA data input ready */
-        while((CRPT->HMAC_STS & CRPT_HMAC_STS_DATINREQ_Msk) == 0);
-
-        /* Input new SHA date */
-        CRPT->HMAC_DATIN = *pu32Addr;
-        pu32Addr++;
-        size -= 4;
-    }
-
-    /* Waiting for calculation done */
-    while(CRPT->HMAC_STS & CRPT_HMAC_STS_BUSY_Msk);
-
-    /* return SHA results */
-    for(i = 0; i < 8; i++)
-        digest[i] = CRPT->HMAC_DGST[i];
-
-    return 0;
-}
-
-
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Main Function                                                                                          */
 /*---------------------------------------------------------------------------------------------------------*/
