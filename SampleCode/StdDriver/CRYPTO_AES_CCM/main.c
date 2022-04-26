@@ -362,14 +362,15 @@ int32_t CCMPacker(uint8_t *iv, uint32_t ivlen, uint8_t *A, uint32_t alen, uint8_
         pbuf[u32Offset + 1] = alen & 0xfful;
 
         for(i = 0; i < alen; i++)
-            pbuf[u32Offset + i + 2] = A[i];
-
-        alen_aligned = ((alen + 2 + 15) / 16) * 16;
-        for(i = u32Offset + 2 + alen; i < alen_aligned; i++)
         {
-            pbuf[i] = 0; // padding zero
+            pbuf[u32Offset + i + 2] = A[i];
         }
 
+        alen_aligned = ((alen + 2 + 15) / 16) * 16;
+        for(i = u32Offset + 2 + alen; i < u32Offset + alen_aligned; i++)
+        {
+            pbuf[i] = 0x00; // padding zero
+        }
         u32Offset += alen_aligned;
     }
 
@@ -468,7 +469,7 @@ int32_t AES_CCM(int32_t enc, uint8_t *key, uint32_t klen, uint8_t *iv, uint32_t 
     /* Set bytes count of A */
     CRPT->AES_GCM_ACNT[0] = *size - *plen_aligned;
     CRPT->AES_GCM_ACNT[1] = 0;
-    CRPT->AES_GCM_PCNT[0] = *plen_aligned;
+    CRPT->AES_GCM_PCNT[0] = plen;
     CRPT->AES_GCM_PCNT[1] = 0;
 
 
@@ -556,7 +557,7 @@ int main(void)
 
     if(memcmp(&g_C[plen], &g_au8Out[plen_aligned], tlen))
     {
-        printf("ERR: Encrypted data fail!\n");
+        printf("ERR: Encrypted tag fail!\n");
         return -1;
     }
 
@@ -565,7 +566,13 @@ int main(void)
 
     if(memcmp(g_P, g_au8Out2, plen))
     {
-        printf("ERR: Encrypted data fail!\n");
+        printf("ERR: Decrypted data fail!\n");
+        return -1;
+    }
+
+    if(memcmp(&g_C[plen], &g_au8Out2[plen_aligned], tlen))
+    {
+        printf("ERR: Decrypted tag fail!\n");
         return -1;
     }
 
