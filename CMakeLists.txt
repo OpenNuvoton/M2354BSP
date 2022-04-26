@@ -47,11 +47,11 @@ include_directories(${BSP_DIR}/Library/StdDriver/inc)
 add_subdirectory(${BSP_DIR}/Library/StdDriver/src)
 add_subdirectory(${BSP_DIR}/Library/Device/Nuvoton/M2354/Source)
 
-# Download to board
-set(DOWNLOAD_BOARD TRUE)
-
 # Build sample code
 add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/CRYPTO_ECC_SM2)
+add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/CRYPTO_SHA_SM3)
+add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/CRYPTO_AES_GCM)
+add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/CRYPTO_AES_CCM)
 
 
 
