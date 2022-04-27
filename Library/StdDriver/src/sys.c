@@ -283,7 +283,7 @@ int32_t SYS_SetPowerLevel(uint32_t u32PowerLevel)
   *             The main voltage regulator type setting to DCDC cannot finished if the inductor is not detected.
   *             The register write-protection function should be disabled before using this function.
   */
-uint32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
+int32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
 {
     int32_t i32TimeOutCnt;
     uint32_t u32Ret = 1U;

@@ -4327,7 +4327,7 @@ void SYS_ResetModule(uint32_t u32ModuleIndex);
 int32_t SYS_EnableBOD(int32_t i32Mode, uint32_t u32BODLevel);
 int32_t SYS_DisableBOD(void);
 int32_t SYS_SetPowerLevel(uint32_t u32PowerLevel);
-uint32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator);
+int32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator);
 int32_t SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode);
 int32_t SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode);
 void SYS_SetVRef(uint32_t u32VRefCTL);
