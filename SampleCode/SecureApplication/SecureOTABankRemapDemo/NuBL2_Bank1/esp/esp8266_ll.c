@@ -37,13 +37,22 @@ osMutexId id;
 /*****************************************/
 /* Set up GPIO and USART pins for boards */
 /*****************************************/
-#define ESP_USART               UART3
-#define ESP_USART_TX_PORT       PD
-#define ESP_USART_TX_PIN        1
-#define ESP_USART_RX_PORT       PD
-#define ESP_USART_RX_PIN        0
-#define ESP_RESET_PORT          PD
-#define ESP_RESET_PIN           7
+#define ESP_USART               UART4
+#define ESP_USART_TX_PORT       PC
+#define ESP_USART_TX_PIN        7
+#define ESP_USART_RX_PORT       PC
+#define ESP_USART_RX_PIN        6
+
+#if defined( NUMAKER_BOARD )
+#define ESP_RESET_PORT          PC
+#define ESP_RESET_PIN           13
+#elif defined( NUMAKER_IOT_BOARD )
+#define ESP_RESET_PORT          PE
+#define ESP_RESET_PIN           12
+#else
+#define ESP_RESET_PORT          PC
+#define ESP_RESET_PIN           13
+#endif
 
 
 uint8_t ESP_LL_Callback(ESP_LL_Control_t ctrl, void* param, void* result)
@@ -58,8 +67,8 @@ uint8_t ESP_LL_Callback(ESP_LL_Control_t ctrl, void* param, void* result)
             /*  Device specific initialization  */
             /************************************/
             //UART_Open(ESP_USART, LL->Baudrate);
-            UART_ENABLE_INT(UART3, (UART_INTEN_RDAIEN_Msk | UART_INTEN_BUFERRIEN_Msk));
-            NVIC_EnableIRQ(UART3_IRQn);
+            UART_ENABLE_INT(UART4, (UART_INTEN_RDAIEN_Msk | UART_INTEN_BUFERRIEN_Msk));
+            NVIC_EnableIRQ(UART4_IRQn);
 #if defined(ESP_RESET_PORT) && defined(ESP_RESET_PIN)
 //            GPIO_SetMode(ESP_RESET_PORT, 1 << ESP_RESET_PIN, GPIO_MODE_OUTPUT);
             //GPIO_Init(ESP_RESET_PORT, ESP_RESET_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Low);
@@ -95,17 +104,33 @@ uint8_t ESP_LL_Callback(ESP_LL_Control_t ctrl, void* param, void* result)
             uint8_t state = *(uint8_t *)param;      /* Get state packed in uint8_t variable */
             if(state == ESP_RESET_SET)              /* Check state value */
             {
-                if(ESP_RESET_PORT == PE)
+                if(ESP_RESET_PORT == PC)
+                {
+                    GPIO_PIN_DATA_S(2, ESP_RESET_PIN) = 0;
+                }
+                else if(ESP_RESET_PORT == PE)
                 {
                     GPIO_PIN_DATA_S(4, ESP_RESET_PIN) = 0;
+                }
+                else
+                {
+                    GPIO_PIN_DATA_S(2, ESP_RESET_PIN) = 0;
                 }
                 //TM_GPIO_SetPinLow(ESP_RESET_PORT, ESP_RESET_PIN);
             }
             else
             {
-                if(ESP_RESET_PORT == PE)
+                if(ESP_RESET_PORT == PC)
+                {
+                    GPIO_PIN_DATA_S(2, ESP_RESET_PIN) = 1;
+                }
+                else if(ESP_RESET_PORT == PE)
                 {
                     GPIO_PIN_DATA_S(4, ESP_RESET_PIN) = 1;
+                }
+                else
+                {
+                    GPIO_PIN_DATA_S(2, ESP_RESET_PIN) = 1;
                 }
                 //TM_GPIO_SetPinHigh(ESP_RESET_PORT, ESP_RESET_PIN);
             }
@@ -159,7 +184,7 @@ uint8_t ESP_LL_Callback(ESP_LL_Control_t ctrl, void* param, void* result)
 }
 
 /* USART receive interrupt handler */
-void UART3_ReceiveHandler(uint8_t ch)
+void UART4_ReceiveHandler(uint8_t ch)
 {
 #if ENABLE_DBG_RX_MSG
     printf("%c", ch);

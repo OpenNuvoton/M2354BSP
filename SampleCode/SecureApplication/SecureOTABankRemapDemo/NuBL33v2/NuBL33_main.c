@@ -33,8 +33,6 @@ extern int32_t Secure_LED_Off(uint32_t num);
 
 int32_t NonSecure_LED_On(uint32_t u32Num);
 int32_t NonSecure_LED_Off(uint32_t u32Num);
-void LED_On(uint32_t u32Us);
-void LED_Off(uint32_t u32Us);
 void SysTick_Handler(void);
 /*----------------------------------------------------------------------------
   NonSecure functions used for callbacks
@@ -43,7 +41,9 @@ int32_t NonSecure_LED_On(uint32_t u32Num)
 {
     (void)u32Num;
     printf("Nonsecure LED On call by Secure\n");
-    PC0_NS = 0;
+	#if defined( NUMAKER_BOARD )
+    PD3_NS = 0;
+	#endif
     return 0;
 }
 
@@ -51,26 +51,12 @@ int32_t NonSecure_LED_Off(uint32_t u32Num)
 {
     (void)u32Num;
     printf("Nonsecure LED Off call by Secure\n");
-    PC0_NS = 1;
+	#if defined( NUMAKER_BOARD )
+    PD3_NS = 1;
+	#endif
     return 0;
 }
 
-/*----------------------------------------------------------------------------
-  NonSecure LED control
- *----------------------------------------------------------------------------*/
-void LED_On(uint32_t us)
-{
-    (void)us;
-    printf("Nonsecure LED On\n");
-    PC1_NS = 0;
-}
-
-void LED_Off(uint32_t us)
-{
-    (void)us;
-    printf("Nonsecure LED Off\n");
-    PC1_NS = 1;
-}
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* SysTick IRQ Handler                                                                                     */
@@ -90,19 +76,13 @@ void SysTick_Handler(void)
     switch(ticks++)
     {
         case   0:
-            LED_On(7u);
-            break;
-        case 400:
             Secure_LED_On(6u);
             break;
-        case 600:
-            LED_Off(7u);
-            break;
-        case 1000:
+        case 400:
             Secure_LED_Off(6u);
             break;
         default:
-            if(ticks > 1200)
+            if(ticks > 500)
             {
                 ticks = 0;
             }
@@ -131,10 +111,10 @@ int main(void)
         printf("NuBL33 Firmware Ver: 0x%08x\n\n", u32FwVer);
     else
         printf("NuBL33 Firmware Ver: N/A\n\n");
-
+#if defined( NUMAKER_BOARD )
     /* Init PC for Nonsecure LED control */
     GPIO_SetMode(PC_NS, BIT1 | BIT0, GPIO_MODE_OUTPUT);
-
+#endif
     /* register NonSecure callbacks in Secure application */
     Secure_LED_On_callback(&NonSecure_LED_On);
     Secure_LED_Off_callback(&NonSecure_LED_Off);

@@ -118,8 +118,13 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
+    #if defined( NUMAKER_BOARD )
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-
+    #elif defined( NUMAKER_IOT_BOARD )
+    SYS->GPB_MFPH = (SYS->GPB_MFPH & (~(UART0_RXD_PB8_Msk | UART0_TXD_PB9_Msk))) | UART0_RXD_PB8 | UART0_TXD_PB9;
+    #else
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+    #endif
 }
 
 void UART_Init(void)
@@ -450,11 +455,23 @@ int8_t FlashBankRemapCheck(void)
     printf("[Bank0]\n\tNuBL32 Version: 0x%08x, NuBL33 Version: 0x%08x\n", u32NuBL32Bank0Ver, u32NuBL33Bank0Ver);
     printf("[Bank1]\n\tNuBL32 Version: 0x%08x, NuBL33 Version: 0x%08x\n\n", u32NuBL32Bank1Ver, u32NuBL33Bank1Ver);
 
-    if((u32NuBL32Bank1Ver > u32NuBL32Bank0Ver) && u32NuBL32Bank1Ver != 0xFFFFFFFF)
+    /* The BL32 firmware version in bank1 is newer and the newer firmware is verified pass. */
+    if((u32NuBL32Bank1Ver > u32NuBL32Bank0Ver) && (u32NuBL32Bank1Ver != 0xFFFFFFFF) && \
+        (u32NuBL32Bank1Pass != 0) && (u32NuBL33Bank1Pass != 0))
         return 1; /* Do bank remap */
 
-    if((u32NuBL33Bank1Ver > u32NuBL33Bank0Ver) && (u32NuBL33Bank1Ver != 0xFFFFFFFF))
+    /* The BL33 firmware version in bank1 is newer and the newer firmware is verified pass. */
+    if((u32NuBL33Bank1Ver > u32NuBL33Bank0Ver) && (u32NuBL33Bank1Ver != 0xFFFFFFFF) && \
+        (u32NuBL33Bank1Pass != 0) && (u32NuBL32Bank1Pass != 0))
         return 1; /* Do bank remap */
+
+    /* The BL32 or BL33 firmware in bank0 is verified failed. */
+    if ((u32NuBL32Bank0Pass == 0) || (u32NuBL33Bank0Pass == 0))
+    {
+        /* Check if the BL32 and BL33 firmware in bank1 are verified pass. */
+        if ((u32NuBL32Bank1Pass != 0) && (u32NuBL33Bank1Pass != 0))
+            return 1; /* Do bank remap */
+    }
 
     return 0; /* Don't bank remap */
 _FAIL:
@@ -483,6 +500,17 @@ int main(void)
     printf("+------------------------------------+\n");
     printf("|    M2354 Secure OTA Sample Code    |\n");
     printf("+------------------------------------+\n\n");
+    printf("* Compile define for WiFi module pin selection:\n");
+    printf(" \tNUMAKER_BOARD     : for NuMaker board.\n");
+    printf(" \tNUMAKER_IOT_BOARD : for NuMaker-IOT board.\n\n");
+    #if defined( NUMAKER_BOARD )
+    printf("* Current WiFi module pin selection is for NuMaker board.\n\n");
+    #elif defined( NUMAKER_IOT_BOARD )
+    printf("* Current WiFi module pin selection is for NuMaker-IOT board.\n\n");
+    #else
+    printf("* Current WiFi module pin selection is for NuMaker board.\n\n");
+    #endif
+
     CLK_SysTickDelay(200000);
 
     /* Create FW INFO */

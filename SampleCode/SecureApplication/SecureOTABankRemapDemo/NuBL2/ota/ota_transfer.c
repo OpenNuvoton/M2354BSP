@@ -32,14 +32,29 @@ static uint8_t g_au8WifiIp[32];
 //static uint8_t g_au8WifiPort[32];
 #endif
 
-#define WIFI_PORT   UART3    // Used to connect to WIFI module
+#define WIFI_PORT   UART4    // Used to connect to WIFI module
 
 #define LED_OFF         PA11 // Green LED
-#define PWR_OFF         PD7
-#define FW_UPDATE_OFF   PD6
+
+#if defined( NUMAKER_BOARD )
+#define RST_PIN         PC13
+#define FW_UPDATE_OFF   PD12
 #define IOCTL_INIT      { \
-    PD->MODE = (GPIO_MODE_OUTPUT << 6*2) | (GPIO_MODE_OUTPUT << 7*2); \
-    PA->MODE = (GPIO_MODE_OUTPUT << 10*2) | (GPIO_MODE_OUTPUT << 11*2) ;}
+        PD->MODE = (GPIO_MODE_OUTPUT << 12*2); \
+        PC->MODE = (GPIO_MODE_OUTPUT << 13*2);}
+#elif defined( NUMAKER_IOT_BOARD )
+#define RST_PIN         PE12
+#define FW_UPDATE_OFF   PD12
+#define IOCTL_INIT      { \
+        PD->MODE = (GPIO_MODE_OUTPUT << 12*2); \
+        PE->MODE = (GPIO_MODE_OUTPUT << 12*2);}
+#else
+#define RST_PIN         PC13
+#define FW_UPDATE_OFF   PD12
+#define IOCTL_INIT      { \
+        PD->MODE = (GPIO_MODE_OUTPUT << 12*2); \
+        PC->MODE = (GPIO_MODE_OUTPUT << 13*2);}
+#endif
 
 
 /* ESP working structure and result enumeration */
@@ -62,9 +77,9 @@ static const uint8_t requestData[] = ""
 /* ESP callback declaration */
 int ESP_Callback(ESP_Event_t evt, ESP_EventParams_t* params);
 void SysTick_Handler(void);
-__WEAK void UART3_ReceiveHandler(uint8_t c);
-void UART3_IRQHandler(void);
-void UART3_Init(void);
+__WEAK void UART4_ReceiveHandler(uint8_t c);
+void UART4_IRQHandler(void);
+void UART4_Init(void);
 
 
 static struct pt PT;
@@ -207,7 +222,7 @@ void SysTick_Handler(void)
 
 }
 
-__WEAK void UART3_ReceiveHandler(uint8_t c)
+__WEAK void UART4_ReceiveHandler(uint8_t c)
 {
     (void)c;
 }
@@ -224,16 +239,16 @@ void Transfer_WiFiProcess(void)
     {
         while(UART_IS_RX_READY(WIFI_PORT))
         {
-//            printf("%c",UART_READ(WIFI_PORT));
-            UART3_ReceiveHandler((uint8_t)UART_READ(WIFI_PORT));
+            //printf("%c",UART_READ(WIFI_PORT));
+            UART4_ReceiveHandler((uint8_t)UART_READ(WIFI_PORT));
         }
     }
 }
 
 /*----------------------------------------------------------------------------
-  UART3 IRQ Handler(Wifi module)
+  UART4 IRQ Handler(Wifi module)
  *----------------------------------------------------------------------------*/
-void UART3_IRQHandler(void)
+void UART4_IRQHandler(void)
 {
     Transfer_WiFiProcess();
 }
@@ -288,19 +303,17 @@ int ESP_Callback(ESP_Event_t evt, ESP_EventParams_t* params)
     return 0;
 }
 
-/* Init UART3 settings(WiFi module) */
-void UART3_Init(void)
+/* Init UART4 settings(WiFi module) */
+void UART4_Init(void)
 {
-    CLK->APBCLK0 |= CLK_APBCLK0_UART3CKEN_Msk;
-    //CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_UART3SEL_Msk)) | CLK_CLKSEL2_UART3SEL_HIRC;
-    CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_UART3SEL_Msk)) | CLK_CLKSEL2_UART3SEL_HXT;
+    CLK->APBCLK0 |= CLK_APBCLK0_UART4CKEN_Msk;
+    CLK->CLKSEL3 = (CLK->CLKSEL3 & (~CLK_CLKSEL3_UART4SEL_Msk)) | CLK_CLKSEL3_UART4SEL_HXT;
 
-    UART3->LINE = UART_PARITY_NONE | UART_STOP_BIT_1 | UART_WORD_LEN_8;
-    //UART3->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
-    UART3->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HXT, 115200);
+    UART4->LINE = UART_PARITY_NONE | UART_STOP_BIT_1 | UART_WORD_LEN_8;
+    UART4->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HXT, 115200);
 
-    /* Set multi-function pins for UART3 RXD and TXD */
-    SYS->GPD_MFPL = (SYS->GPD_MFPL & (~(UART3_RXD_PD0_Msk | UART3_TXD_PD1_Msk))) | UART3_RXD_PD0 | UART3_TXD_PD1;
+    /* Set multi-function pins for RXD and TXD */
+    SYS->GPC_MFPL = (SYS->GPC_MFPL & (~(UART4_RXD_PC6_Msk | UART4_TXD_PC7_Msk))) | UART4_RXD_PC6 | UART4_TXD_PC7;
 }
 
 /**
@@ -311,11 +324,13 @@ void UART3_Init(void)
   */
 void Transfer_Init(void)
 {
-    UART3_Init();
+    int32_t i;
+
+    UART4_Init();
 
     IOCTL_INIT
     LED_OFF = 1;
-    PWR_OFF = 1;
+    RST_PIN = 0;
     FW_UPDATE_OFF = 1;
 
     CLK_SysTickLongDelay(3000000);
@@ -325,8 +340,14 @@ void Transfer_Init(void)
     CLK_SysTickLongDelay(1000000);
 
     LED_OFF = 0;
-    PWR_OFF = 0;
+    RST_PIN = 1;
 
+    /* Waiting for module ready */
+    for(i = 0; i < 5; i++)
+    {
+        CLK_SysTickLongDelay(1000000);
+        putchar('.');
+    }
     /* Generate Systick interrupt each 1 ms */
     SysTick_Config(SystemCoreClock / 1000);
 }

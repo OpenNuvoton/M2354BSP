@@ -45,16 +45,14 @@ __NONSECURE_ENTRY int32_t Secure_LED_On(uint32_t u32Num);
 __NONSECURE_ENTRY int32_t Secure_LED_Off(uint32_t u32Num);
 __NONSECURE_ENTRY int32_t Secure_LED_On_callback(NonSecure_funcptr *callback);
 __NONSECURE_ENTRY int32_t Secure_LED_Off_callback(NonSecure_funcptr *callback);
-int32_t LED_On(void);
-int32_t LED_Off(void);
 void SysTick_Handler(void);
 void CRPT_IRQHandler(void);
-void UART3_IRQHandler(void);
+void UART4_IRQHandler(void);
 void GPA_IRQHandler(void);
 void Nonsecure_Init(void);
 void SYS_Init(void);
 void UART_Init(void);
-void UART3_Init(void);
+void UART4_Init(void);
 void GPIO_init(void);
 /*----------------------------------------------------------------------------
   Secure function for NonSecure callbacks exported to NonSecure application
@@ -121,8 +119,13 @@ int32_t Secure_LED_On(uint32_t u32Num)
 {
     (void)u32Num;
     printf("Secure LED On call by Non-secure\n");
-    PA10 = 0;
-    PB0 = 0;
+	#if defined( NUMAKER_BOARD )
+    PD2 = 0;
+	#elif defined( NUMAKER_IOT_BOARD )
+	PD0 = 0;
+	#else
+	PD2 = 0;
+	#endif
     return 0;
 }
 
@@ -131,8 +134,13 @@ int32_t Secure_LED_Off(uint32_t u32Num)
 {
     (void)u32Num;
     printf("Secure LED Off call by Non-secure\n");
-    PA10 = 1;
-    PB0 = 1;
+    #if defined( NUMAKER_BOARD )
+    PD2 = 1;
+	#elif defined( NUMAKER_IOT_BOARD )
+	PD0 = 1;
+	#else
+	PD2 = 1;
+	#endif
     return 1;
 }
 
@@ -158,24 +166,6 @@ int32_t Secure_LED_Off_callback(NonSecure_funcptr *callback)
     return 0;
 }
 
-/*----------------------------------------------------------------------------
-  Secure LED control function
- *----------------------------------------------------------------------------*/
-int32_t LED_On(void)
-{
-    printf("Secure LED On\n");
-    PA11 = 0;
-    PB1 = 0;
-    return 1;
-}
-
-int32_t LED_Off(void)
-{
-    printf("Secure LED Off\n");
-    PA11 = 1;
-    PB1 = 1;
-    return 1;
-}
 
 
 /*----------------------------------------------------------------------------
@@ -195,18 +185,12 @@ void SysTick_Handler(void)
     switch(ticks++)
     {
         case   0:
-            LED_On();
-            break;
-        case 400:
-            LED_Off();
-            break;
-        case 600:
             if(pfNonSecure_LED_On != NULL)
             {
                 pfNonSecure_LED_On(1u);
             }
             break;
-        case 1000:
+        case 400:
             if(pfNonSecure_LED_Off != NULL)
             {
                 pfNonSecure_LED_Off(1u);
@@ -214,7 +198,7 @@ void SysTick_Handler(void)
             break;
 
         default:
-            if(ticks > 1200)
+            if(ticks > 500)
             {
                 ticks = 0;
             }
@@ -227,9 +211,9 @@ void CRPT_IRQHandler()
     BL2_ECC_ISR();
 }
 
-void UART3_IRQHandler(void)
+void UART4_IRQHandler(void)
 {
-//    printf("UART3\n");
+//    printf("UART4\n");
     OTA_WiFiProcess();
 }
 
@@ -333,7 +317,13 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
+    #if defined( NUMAKER_BOARD )
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+    #elif defined( NUMAKER_IOT_BOARD )
+    SYS->GPB_MFPH = (SYS->GPB_MFPH & (~(UART0_RXD_PB8_Msk | UART0_TXD_PB9_Msk))) | UART0_RXD_PB8 | UART0_TXD_PB9;
+    #else
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+    #endif
 
 }
 
@@ -349,16 +339,16 @@ void UART_Init(void)
     UART_Open((UART_T *)DEBUG_PORT, 115200);
 }
 
-void UART3_Init()
+void UART4_Init()
 {
-    CLK->APBCLK0 |= CLK_APBCLK0_UART3CKEN_Msk;
-    CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_UART3SEL_Msk)) | CLK_CLKSEL2_UART3SEL_HIRC;
+    CLK->APBCLK0 |= CLK_APBCLK0_UART4CKEN_Msk;
+    CLK->CLKSEL3 = (CLK->CLKSEL3 & (~CLK_CLKSEL3_UART4SEL_Msk)) | CLK_CLKSEL3_UART4SEL_HIRC;
 
-    UART3->LINE = UART_PARITY_NONE | UART_STOP_BIT_1 | UART_WORD_LEN_8;
-    UART3->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
+    UART4->LINE = UART_PARITY_NONE | UART_STOP_BIT_1 | UART_WORD_LEN_8;
+    UART4->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
 
-    /* Set multi-function pins for UART3 RXD and TXD */
-    SYS->GPD_MFPL = (SYS->GPD_MFPL & (~(UART3_RXD_PD0_Msk | UART3_TXD_PD1_Msk))) | UART3_RXD_PD0 | UART3_TXD_PD1;
+    /* Set multi-function pins for RXD and TXD */
+    SYS->GPC_MFPL = (SYS->GPC_MFPL & (~(UART4_RXD_PC6_Msk | UART4_TXD_PC7_Msk))) | UART4_RXD_PC6 | UART4_TXD_PC7;
 }
 
 void GPIO_init(void)
@@ -421,12 +411,6 @@ int main(void)
     FMC_Open();
     printf("[Secure regon boundary: 0x%x]\n\n", SCU->FNSADDR);
 
-    /* Init GPIO Port A for secure LED control */
-    GPIO_SetMode(PA, BIT11 | BIT10, GPIO_MODE_OUTPUT);
-
-    /* Init GPIO Port B for secure LED control */
-    GPIO_SetMode(PB, BIT1 | BIT0, GPIO_MODE_OUTPUT);
-
     /* Generate Systick interrupt each 10 ms */
     SysTick_Config(SystemCoreClock / 100);
 
@@ -438,7 +422,22 @@ int main(void)
     /* init OTA */
     OTA_Init(__HSI, (ISP_INFO_T *)(uint32_t)&g_ISPInfo);
 
-    UART3_Init();
+    UART4_Init();
+	
+#if defined( NUMAKER_BOARD )
+    /* Init GPIO Port D for secure LED control */
+    GPIO_SetMode(PD, BIT2, GPIO_MODE_OUTPUT);
+    /* Init GPIO Port D for non-secure LED control */
+    GPIO_SetMode(PD_NS, BIT3, GPIO_MODE_OUTPUT);
+#elif defined( NUMAKER_IOT_BOARD )
+    /* Init GPIO Port D for secure LED control */
+    GPIO_SetMode(PD, BIT0, GPIO_MODE_OUTPUT);
+#else
+    /* Init GPIO Port D for secure LED control */
+    GPIO_SetMode(PD, BIT2, GPIO_MODE_OUTPUT);
+    /* Init GPIO Port D for non-secure LED control */
+    GPIO_SetMode(PD_NS, BIT3, GPIO_MODE_OUTPUT);
+#endif
 
     SystemCoreClockUpdate();
     /* Generate Systick interrupt each 1 ms */

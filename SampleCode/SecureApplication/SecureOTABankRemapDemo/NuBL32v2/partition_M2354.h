@@ -281,7 +281,7 @@
 //   <o.14>  PD14       <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_IONSSET3_VAL      0x00000000
+#define SCU_INIT_IONSSET3_VAL      0x00000008
 
 
 /*
