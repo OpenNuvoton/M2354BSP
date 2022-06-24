@@ -52,12 +52,12 @@ __NONSECURE_ENTRY
 int32_t BL32_GetBL33FwVer(uint32_t * pu32FwVer);
 void SysTick_Handler(void);
 void CRPT_IRQHandler(void);
-void UART3_IRQHandler(void);
+void UART4_IRQHandler(void);
 void GPA_IRQHandler(void);
 void Nonsecure_Init(void);
 void SYS_Init(void);
 void UART_Init(void);
-void UART3_Init(void);
+void UART4_Init(void);
 void GPIO_init(void);
 
 #if (OTA_UPGRADE_FROM_SD)
@@ -148,9 +148,9 @@ void CRPT_IRQHandler(void)
     BL2_ECC_ISR();
 }
 
-void UART3_IRQHandler(void)
+void UART4_IRQHandler(void)
 {
-//    printf("UART3\n");
+//    printf("UART4\n");
     OTA_WiFiProcess();
 }
 
@@ -268,7 +268,13 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
+    #if defined( NUMAKER_BOARD )
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+    #elif defined( NUMAKER_IOT_BOARD )
+    SYS->GPB_MFPH = (SYS->GPB_MFPH & (~(UART0_RXD_PB8_Msk | UART0_TXD_PB9_Msk))) | UART0_RXD_PB8 | UART0_TXD_PB9;
+    #else
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+    #endif
 
 }
 
@@ -284,16 +290,16 @@ void UART_Init(void)
     UART_Open((UART_T *)DEBUG_PORT, 115200);
 }
 
-void UART3_Init(void)
+void UART4_Init()
 {
-    CLK->APBCLK0 |= CLK_APBCLK0_UART3CKEN_Msk;
-    CLK->CLKSEL2 = (CLK->CLKSEL2 & (~CLK_CLKSEL2_UART3SEL_Msk)) | CLK_CLKSEL2_UART3SEL_HIRC;
+    CLK->APBCLK0 |= CLK_APBCLK0_UART4CKEN_Msk;
+    CLK->CLKSEL3 = (CLK->CLKSEL3 & (~CLK_CLKSEL3_UART4SEL_Msk)) | CLK_CLKSEL3_UART4SEL_HIRC;
 
-    UART3->LINE = UART_PARITY_NONE | UART_STOP_BIT_1 | UART_WORD_LEN_8;
-    UART3->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
+    UART4->LINE = UART_PARITY_NONE | UART_STOP_BIT_1 | UART_WORD_LEN_8;
+    UART4->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
 
-    /* Set multi-function pins for UART3 RXD and TXD */
-    SYS->GPD_MFPL = (SYS->GPD_MFPL & (~(UART3_RXD_PD0_Msk | UART3_TXD_PD1_Msk))) | UART3_RXD_PD0 | UART3_TXD_PD1;
+    /* Set multi-function pins for RXD and TXD */
+    SYS->GPC_MFPL = (SYS->GPC_MFPL & (~(UART4_RXD_PC6_Msk | UART4_TXD_PC7_Msk))) | UART4_RXD_PC6 | UART4_TXD_PC7;
 }
 
 #if (OTA_UPGRADE_FROM_SD)
@@ -385,7 +391,7 @@ int main(void)
     /* init OTA */
     OTA_Init(__HSI, (ISP_INFO_T *)((uint32_t)&g_ISPInfo));
 
-    UART3_Init();
+    UART4_Init();
 
 #if (OTA_UPGRADE_FROM_SD)
     /* Init SD */

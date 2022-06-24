@@ -115,8 +115,13 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
+    #if defined( NUMAKER_BOARD )
     SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
-
+    #elif defined( NUMAKER_IOT_BOARD )
+    SYS->GPB_MFPH = (SYS->GPB_MFPH & (~(UART0_RXD_PB8_Msk | UART0_TXD_PB9_Msk))) | UART0_RXD_PB8 | UART0_TXD_PB9;
+    #else
+    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+    #endif
 }
 
 void UART_Init(void)
@@ -428,6 +433,17 @@ int main(void)
     printf("+------------------------------------+\n");
     printf("|    M2354 Secure OTA Sample Code    |\n");
     printf("+------------------------------------+\n\n");
+    printf("* Compile define for WiFi module pin selection:\n");
+    printf(" \tNUMAKER_BOARD     : for NuMaker board.\n");
+    printf(" \tNUMAKER_IOT_BOARD : for NuMaker-IOT board.\n\n");
+    #if defined( NUMAKER_BOARD )
+    printf("* Current WiFi module pin selection is for NuMaker board.\n\n");
+    #elif defined( NUMAKER_IOT_BOARD )
+    printf("* Current WiFi module pin selection is for NuMaker-IOT board.\n\n");
+    #else
+    printf("* Current WiFi module pin selection is for NuMaker board.\n\n");
+    #endif
+
     CLK_SysTickDelay(200000);
 
     /* Create FW INFO */
