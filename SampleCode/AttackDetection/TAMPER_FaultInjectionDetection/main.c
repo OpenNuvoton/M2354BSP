@@ -243,12 +243,15 @@ int main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for AES encrypt done time-out!\n");
-            return -1;
+            break;
         }
     }
 
-    printf("AES encrypt done.\n\n");
-    DumpBuffHex(au8OutputData, sizeof(au8InputData));
+    if(g_AES_done)
+    {
+        printf("AES encrypt done.\n\n");
+        DumpBuffHex(au8OutputData, sizeof(au8InputData));
+    }
 
     while(1);
 }

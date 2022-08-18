@@ -241,7 +241,7 @@ int32_t main(void)
         {
             /* Invalid key */
             printf("Current k is not valid\n");
-            return -1;
+            goto lexit;
 
         }
 
@@ -249,7 +249,7 @@ int32_t main(void)
         if(SM2_Sign(CRPT, CURVE_P_SIZE, e, d, k, R, S) < 0)
         {
             printf("ECC signature generation failed!!\n");
-            return -1;
+            goto lexit;
         }
         time = 0xffffff - SysTick->VAL;
 
@@ -263,7 +263,7 @@ int32_t main(void)
         if(err < 0)
         {
             printf("ECC signature verification failed!!\n");
-            return -1;
+            goto lexit;
         }
         else
         {
@@ -290,7 +290,7 @@ int32_t main(void)
         printf("public calculation check PASS\n");
     }
 
-
+lexit:
 
     while(1);
 }

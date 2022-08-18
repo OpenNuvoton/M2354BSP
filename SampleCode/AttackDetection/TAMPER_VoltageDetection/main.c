@@ -117,7 +117,7 @@ int main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for over voltage detector stable time-out!\n");
-            return -1;
+            goto lexit;
         }
     }
     SYS_LockReg();
@@ -140,6 +140,8 @@ int main(void)
 
     /* Enable to trigger chip reset */
     TAMPER_ENABLE_CHIPRST();
+
+lexit:
 
     /* Wait for voltage detection interrupt happened */
     while(1);

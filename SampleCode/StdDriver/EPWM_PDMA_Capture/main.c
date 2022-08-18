@@ -296,13 +296,13 @@ int32_t main(void)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for EPWM1 channel 2 Timer start time-out!\n");
-                return -1;
+                goto lexit;
             }
         }
 
         /* Capture the Input Waveform Data */
         if( CalPeriodTime(EPWM1, 2) < 0 )
-            return -1;
+            goto lexit;
         /*------------------------------------------------------------------------------------------------------------*/
         /* Stop EPWM1 channel 0 (Recommended procedure method 1)                                                      */
         /* Set EPWM Timer loaded value(Period) as 0. When EPWM internal counter(CNT) reaches to 0, disable EPWM Timer */
@@ -318,7 +318,7 @@ int32_t main(void)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for EPWM1 channel 0 Timer stop time-out!\n");
-                return -1;
+                goto lexit;
             }
         }
 
@@ -343,7 +343,7 @@ int32_t main(void)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for EPWM1 channel 2 current counter reach to 0 time-out!\n");
-                return -1;
+                goto lexit;
             }
         }
 
@@ -362,6 +362,10 @@ int32_t main(void)
         /* Close PDMA */
         PDMA_Close(PDMA0);
     }
+
+lexit:
+
+    while(1);
 }
 
 /*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/

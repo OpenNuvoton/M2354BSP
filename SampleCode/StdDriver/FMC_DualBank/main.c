@@ -346,18 +346,19 @@ int32_t main(void)
         if(inpw(u32Addr) != u32Addr)
         {
             printf("Flash address 0x%x verify failed! expect: 0x%x, read: 0x%x.\n", u32Addr, u32Addr, inpw(u32Addr));
-            return -1;
+            goto lexit;
         }
     }
     printf("Verify OK.\n");
+    printf("\nFMC Sample Code Completed.\n");
+
+lexit:
 
     /* Disable FMC ISP function */
     FMC_Close();
 
     /* Lock protected registers */
     SYS_LockReg();
-
-    printf("\nFMC Sample Code Completed.\n");
 
     while(1);
 }

@@ -238,7 +238,7 @@ int main(void)
     {
         printf("\n RTC initial fail!!");
         printf("\n Please check h/w setting!!");
-        return -1;
+        goto lexit;
     }
 
     /* Enable spare register */
@@ -249,6 +249,8 @@ int main(void)
     /* Check spare register data */
     s_u32SpareData = RTC_READ_SPARE_REGISTER(RTC, 0);
     printf("# SPARE_REGISTER[%d] = 0x%x.\n\n", 0, s_u32SpareData);
+
+lexit:
 
     /* Wait for LXT clock frequency monitor fail/stop interrupt happened */
     while(1);

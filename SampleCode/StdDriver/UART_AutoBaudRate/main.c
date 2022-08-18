@@ -264,6 +264,8 @@ uint32_t GetUartBaudrate(UART_T* uart)
             if(u8UartClkSrcSel == 4ul)
                 au32ClkTbl[4] = CLK_GetPCLK1Freq();
             break;
+        default:
+            return 0;
     }
 
     /* Get PLL clock frequency if UART clock source selection is PLL */

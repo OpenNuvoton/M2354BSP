@@ -330,7 +330,7 @@ int32_t main(void)
     {
         if(--u32TimeOutCnt == 0)
         {
-            printf("Wait for operation done  RSA time-out!\n");
+            printf("Wait for RSA operation done time-out!\n");
             goto lexit;
         }
     }

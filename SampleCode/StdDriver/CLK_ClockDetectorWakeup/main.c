@@ -186,9 +186,9 @@ int32_t main(void)
     printf("+-----------------------------------------------------------------+\n");
     printf("|           Clock Detector Wake-up Sample Code                    |\n");
     printf("+-----------------------------------------------------------------+\n");
-    printf("| 1. System can be waken-up by LXT clock stop interrupt.          |\n");
-    printf("| 2. System can be waken-up by GPIO interrupt (PB.3 rising edge). |\n");
-    printf("| 3. If HXT clock is stopped, system still can be waken-up by     |\n");
+    printf("| 1. System can wake-up by LXT clock stop interrupt.              |\n");
+    printf("| 2. System can wake-up by GPIO interrupt (PB.3 rising edge).     |\n");
+    printf("| 3. If HXT clock is stopped, system still can wake-up by         |\n");
     printf("|    GPIO interrupt and HCLK clock source will be switched from   |\n");
     printf("|    HXT to HIRC.                                                 |\n");
     printf("+-----------------------------------------------------------------+\n");
@@ -231,11 +231,9 @@ int32_t main(void)
 
     /* Enter to Power-down mode */
     printf("Enter to Power-Down ......\n");
-
-    /* Enter to Power-down mode */
     PowerDownFunction();
 
-    printf("System waken-up done.\n\n");
+    printf("System wake-up done.\n\n");
 
     /* Wait for clock fail detector interrupt happened */
     while(1);

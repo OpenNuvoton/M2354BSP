@@ -552,31 +552,33 @@ int main(void)
         DumpBuffHex(g_C, plen);
         printf("g_au8Out:\n");
         DumpBuffHex(g_au8Out, plen);
-        return -1;
+        goto lexit;
     }
 
     if(memcmp(&g_C[plen], &g_au8Out[plen_aligned], tlen))
     {
         printf("ERR: Encrypted tag fail!\n");
-        return -1;
+        goto lexit;
     }
 
     if( AES_CCM(0, g_key, klen, g_iv, ivlen, g_A, alen, g_C, plen, g_au8Out2, &size, &plen_aligned, tlen) < 0 )
-        return -1;
+        goto lexit;
 
     if(memcmp(g_P, g_au8Out2, plen))
     {
         printf("ERR: Decrypted data fail!\n");
-        return -1;
+        goto lexit;
     }
 
     if(memcmp(&g_C[plen], &g_au8Out2[plen_aligned], tlen))
     {
         printf("ERR: Decrypted tag fail!\n");
-        return -1;
+        goto lexit;
     }
 
     printf("Test PASS!\n");
+
+lexit:
 
     while(1) {}
 

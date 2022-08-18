@@ -525,7 +525,7 @@ int main(void)
     if((FMC->ISPSTS & FMC_ISPSTS_MIRBOUND_Msk) == 0)
     {
         printf("Please enable Flash mirror boundary by ICP programming tool first.(FMC ISPSTS:0x%08x)\n", FMC->ISPSTS);
-        return -1;
+        while(1);
     }
 
     /* Enable WDT and check if system reset by WDT */

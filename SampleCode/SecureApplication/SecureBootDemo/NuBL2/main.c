@@ -135,7 +135,7 @@ int main(void)
     if(VerifyNuBL3x((uint32_t *)((uint32_t)&g_NuBL3xFwInfo), NUBL32_FW_INFO_BASE) == -1)
     {
         printf("\n\nNuBL2 verifies NuBL32 FAIL.\n");
-        return -1;
+        goto lexit;
     }
     else
     {
@@ -149,7 +149,7 @@ int main(void)
     if(VerifyNuBL3x((uint32_t *)((uint32_t)&g_NuBL3xFwInfo), NUBL33_FW_INFO_BASE) == -1)
     {
         printf("\n\nNuBL2 verifies NuBL33 FAIL.\n");
-        return -1;
+        goto lexit;
     }
     else
     {
@@ -170,6 +170,8 @@ int main(void)
 
     /* Reset to execute NuBL32 FW */
     NVIC_SystemReset();
+
+lexit:
 
     while(1) {}
 }

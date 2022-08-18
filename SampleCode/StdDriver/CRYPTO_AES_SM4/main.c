@@ -184,7 +184,7 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for AES encrypt done time-out!\n");
-            return -1;
+            goto lexit;
         }
     }
 
@@ -200,7 +200,7 @@ int32_t main(void)
             printf("Golden pattern:\n");
             DumpBuffHex(g_au8Golden1, sizeof(au8InputData));
             i32Err = -1;
-            return -1;
+            goto lexit;
         }
     }
 
@@ -222,7 +222,7 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for AES decrypt done time-out!\n");
-            return -1;
+            goto lexit;
         }
     }
 
@@ -235,7 +235,7 @@ int32_t main(void)
         if(g_au8Out[i] != au8InputData[i])
         {
             i32Err = -1;
-            break;
+            goto lexit;
         }
     }
 
@@ -265,7 +265,7 @@ int32_t main(void)
             if(--u32TimeOutCnt == 0)
             {
                 printf("Wait for AES time-out!\n");
-                return -1;
+                goto lexit;
             }
         }
     }
@@ -297,7 +297,7 @@ int32_t main(void)
         printf("TEST PASSED\n");
     }
 
-
+lexit:
 
     while(1);
 }

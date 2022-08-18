@@ -109,7 +109,7 @@ int main(void)
     printf("\n");
 
     if( SM3((uint32_t *)g_au8Test, 3, hash) < 0 )
-        return -1;
+        goto lexit;
 
     pu8 = (uint8_t *)hash;
     printf("\nOutput Hash:\n");
@@ -131,7 +131,7 @@ int main(void)
     printf("\n");
 
     if( SM3((uint32_t *)g_au8Test2, 64, hash) < 0 )
-        return -1;
+        goto lexit;
 
     printf("\nOutput Hash:\n");
     pu8 = (uint8_t *)hash;
@@ -145,5 +145,8 @@ int main(void)
     printf("debe9ff92275b8a138604889c18e5a4d6fdb70e5387e5765293dcba39c0c5732\n\n");
 
     printf("Demo Finished.\n");
+
+lexit:
+
     while(1) {}
 }

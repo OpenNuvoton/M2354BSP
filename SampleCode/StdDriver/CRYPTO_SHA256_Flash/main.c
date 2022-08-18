@@ -158,10 +158,12 @@ int main(void)
     printf("\n");
 
     if( SHA256((uint32_t *)((uint32_t)&g_au8Test), 32, hash) < 0 )
-        return -1;
+        goto lexit;
 
     printf("\nOutput Hash:\n");
     printf("%08x%08x%08x%08x%08x%08x%08x%08x\n", hash[0], hash[1], hash[2], hash[3], hash[4], hash[5], hash[6], hash[7]);
+
+lexit:
 
     while(1);
 }

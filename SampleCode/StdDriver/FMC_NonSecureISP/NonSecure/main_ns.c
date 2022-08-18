@@ -69,7 +69,7 @@ int main(void)
         if(i32Ret != 0)
         {
             printf("[%d] Error:  ISP Fail\n", __LINE__);
-            return -1;
+            goto lexit;
         }
     }
 
@@ -82,12 +82,12 @@ int main(void)
         if((FMC_NS->ISPSTS & FMC_ISPSTS_ISPFF_Msk) == FMC_ISPSTS_ISPFF_Msk)
         {
             printf("[%d] Error:  ISP Fail\n", __LINE__);
-            return -1;
+            goto lexit;
         }
         if(u32ISPData != 0xFFFFFFFF)
         {
             printf("[%d] ISP read rrror:  address[0x%x]  data[0x%x]  -> should be 0xFFFFFFFF\n", __LINE__, u32Addr, u32ISPData);
-            return -1;
+            goto lexit;
         }
 
     }
@@ -100,7 +100,7 @@ int main(void)
         if((FMC_NS->ISPSTS & FMC_ISPSTS_ISPFF_Msk) == FMC_ISPSTS_ISPFF_Msk)
         {
             printf("[%d] Error:  ISP Fail\n", __LINE__);
-            return -1;
+            goto lexit;
         }
     }
 
@@ -113,18 +113,20 @@ int main(void)
         if((FMC_NS->ISPSTS & FMC_ISPSTS_ISPFF_Msk) == FMC_ISPSTS_ISPFF_Msk)
         {
             printf("[%d] Error:  ISP Fail\n", __LINE__);
-            return -1;
+            goto lexit;
         }
         if(u32ISPData != u32Addr)
         {
             printf("[%d] ISP read rrror:  address[0x%x]  data[0x%x]  -> should be 0xFFFFFFFF\n", __LINE__, u32Addr, u32ISPData);
-            return -1;
+            goto lexit;
         }
 
     }
     printf("  Non Secure ISP program check pass \n");
 
     printf("\n\n  Non Secure ISP Test OK\n");
+
+lexit:
 
     while(1);
 }

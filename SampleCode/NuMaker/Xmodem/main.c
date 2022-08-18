@@ -78,7 +78,6 @@ int32_t main(void)
     if(i32Err < 0)
     {
         printf("Xmodem transfer fail!\n");
-        return -1;
     }
     else
     {

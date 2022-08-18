@@ -63,6 +63,7 @@ void I2C0_IRQHandler(void)
 /*---------------------------------------------------------------------------------------------------------*/
 void I2C_MasterRx(uint32_t u32Status)
 {
+    uint32_t u32TimeOutCnt;
 
     if(u32Status == 0x08)                       /* START has been transmitted and prepare SLA+W */
     {
@@ -139,7 +140,9 @@ void I2C_MasterRx(uint32_t u32Status)
         s_u8MstRxAbortFlag = 1;
         getchar();
         I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
-        while(I2C0->CTL0 & I2C_CTL0_SI_Msk);
+        u32TimeOutCnt = I2C_TIMEOUT;
+        while(I2C0->CTL0 & I2C_CTL0_SI_Msk)
+            if(--u32TimeOutCnt == 0) break;
     }
 }
 /*---------------------------------------------------------------------------------------------------------*/
@@ -147,6 +150,8 @@ void I2C_MasterRx(uint32_t u32Status)
 /*---------------------------------------------------------------------------------------------------------*/
 void I2C_MasterTx(uint32_t u32Status)
 {
+    uint32_t u32TimeOutCnt;
+
     if(u32Status == 0x08)                       /* START has been transmitted */
     {
         I2C_SET_DATA(I2C0, (uint32_t)(s_u8DeviceAddr << 1));    /* Write SLA+W to Register I2CDAT */
@@ -215,7 +220,9 @@ void I2C_MasterTx(uint32_t u32Status)
         s_u8MstTxAbortFlag = 1;
         getchar();
         I2C_SET_CONTROL_REG(I2C0, I2C_CTL_SI);
-        while(I2C0->CTL0 & I2C_CTL0_SI_Msk);
+        u32TimeOutCnt = I2C_TIMEOUT;
+        while(I2C0->CTL0 & I2C_CTL0_SI_Msk)
+            if(--u32TimeOutCnt == 0) break;
     }
 }
 

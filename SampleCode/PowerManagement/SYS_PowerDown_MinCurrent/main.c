@@ -182,7 +182,7 @@ int32_t main(void)
     /* Check if all the debug messages are finished */
     UART_WAIT_TX_EMPTY(DEBUG_PORT);
 
-    /* Set function pin to GPIO mode expect UART pin to print message */
+    /* Set function pin to GPIO mode except UART pin to print message */
     SYS->GPA_MFPH = 0;
     SYS->GPA_MFPL = 0;
     SYS->GPA_MFPL = (UART0_RXD_PA6 | UART0_TXD_PA7);

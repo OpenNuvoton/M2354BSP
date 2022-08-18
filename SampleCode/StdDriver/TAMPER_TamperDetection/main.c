@@ -331,10 +331,10 @@ int main(void)
         SYS_UnlockReg();
 
         /* Init Key Store */
-        if( KS_Init() <0 ) return -1;
+        if( KS_Init() <0 ) goto lexit;
 
         printf("# Write keys ...");
-        if( KeyStoreSRAM() < 0 ) return -1;
+        if( KeyStoreSRAM() < 0 ) goto lexit;
         printf(" Done!\n\n");
 
         printf("# Please connect TAMPER2/3(PF.8/9) pins to Low to generate TAMPER event.\n");
@@ -346,4 +346,9 @@ int main(void)
         /* Wait for tamper event interrupt happened */
         while(1);
     }
+
+lexit:
+
+    while(1);
+
 }

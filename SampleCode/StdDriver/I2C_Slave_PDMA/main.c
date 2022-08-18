@@ -379,7 +379,7 @@ int32_t I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr)
     {
         if(--u32TimeOutCnt == 0)
         {
-            printf("Wait for I2C Tx time-out!\n");
+            printf("Wait for I2C Tx finish time-out!\n");
             return -1;
         }
     }
@@ -405,7 +405,7 @@ int32_t I2C_Write_to_Slave_PDMA_RX(uint8_t u8SlvAddr)
 int32_t main(void)
 {
     uint32_t u32i, u32TimeOutCnt;
-    uint8_t u8Err;
+    uint8_t u8Err = 0;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -460,7 +460,11 @@ int32_t main(void)
     printf("\nI2C1 Slave Mode is Running.\n\n");
 
     /* I2C0 access I2C1 */
-    if( I2C_Write_to_Slave_PDMA_RX(0x16) < 0 ) return -1;
+    if( I2C_Write_to_Slave_PDMA_RX(0x16) < 0 )
+    {
+        u8Err = 1;
+        goto lexit;
+    }
 
     /* Waiting for PDMA channel 1 transfer done */
     u32TimeOutCnt = SystemCoreClock; /* 1 second time-out */
@@ -469,12 +473,12 @@ int32_t main(void)
         if(--u32TimeOutCnt == 0)
         {
             printf("Wait for PDMA transfer done time-out!\n");
-            return -1;
+            u8Err = 1;
+            goto lexit;
         }
     }
     g_u32IsTestOver = 0;
 
-    u8Err = 0;
     for(u32i = 0; u32i < I2C_PDMA_RX_LENGTH; u32i++)
     {
         /* Compare Master Tx data with Slave Rx data */
@@ -484,6 +488,8 @@ int32_t main(void)
             printf("[%03d]: Tx[0x%X] != Rx[0x%X]\n", u32i, g_au8MstTxData[u32i], g_au8SlvData[u32i]);
         }
     }
+
+lexit:
 
     if(u8Err)
         printf("Master write data to Slave(PDMA RX) fail...\n");

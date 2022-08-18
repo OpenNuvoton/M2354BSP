@@ -41,7 +41,7 @@
  */
 void UART_ClearIntFlag(UART_T* uart, uint32_t u32InterruptFlag)
 {
-    if(u32InterruptFlag & UART_INTSTS_SWBEINT_Msk)      /* Clear Bit Error Detection Interrupt */
+    if(u32InterruptFlag & UART_INTSTS_SWBEINT_Msk)      /* Clear Single-wire Bit Error Detection Interrupt */
     {
         uart->FIFOSTS = UART_INTSTS_SWBEIF_Msk;
     }
@@ -166,6 +166,7 @@ void UART_EnableFlowCtrl(UART_T* uart)
  *    @param[in]    u32InterruptFlag    The specified interrupt of UART module:
  *                                      - \ref UART_INTEN_TXENDIEN_Msk   : Transmitter Empty Interrupt
  *                                      - \ref UART_INTEN_ABRIEN_Msk     : Auto-baud Rate Interrupt
+ *                                      - \ref UART_INTEN_SWBEIEN_Msk    : Single-wire Bit Error Detect Interrupt
  *                                      - \ref UART_INTEN_LINIEN_Msk     : Lin Bus interrupt
  *                                      - \ref UART_INTEN_WKIEN_Msk      : Wake-up interrupt
  *                                      - \ref UART_INTEN_BUFERRIEN_Msk  : Buffer Error interrupt
@@ -468,7 +469,7 @@ void UART_SetTimeoutCnt(UART_T* uart, uint32_t u32TOC)
  *                                  - \ref UART_IRDA_RXEN
  *
  *    @return       None
-  *
+ *
  *    @details      The function is used to configure IrDA relative settings. It consists of TX or RX mode and baudrate.
  */
 void UART_SelectIrDAMode(UART_T* uart, uint32_t u32Buadrate, uint32_t u32Direction)
@@ -580,7 +581,7 @@ void UART_SelectRS485Mode(UART_T* uart, uint32_t u32Mode, uint32_t u32Addr)
     /* Select UART RS485 function mode */
     uart->FUNCSEL = UART_FUNCSEL_RS485;
 
-    /* Set RS585 configuration */
+    /* Set RS485 configuration */
     uart->ALTCTL &= ~(UART_ALTCTL_RS485NMM_Msk | UART_ALTCTL_RS485AUD_Msk | UART_ALTCTL_RS485AAD_Msk | UART_ALTCTL_ADDRMV_Msk);
     uart->ALTCTL |= (u32Mode | (u32Addr << UART_ALTCTL_ADDRMV_Pos));
 }
@@ -666,7 +667,7 @@ uint32_t UART_Write(UART_T* uart, uint8_t pu8TxBuf[], uint32_t u32WriteBytes)
  */
 void UART_SelectSingleWireMode(UART_T *uart)
 {
-    /* Select UART SingleWire function mode */
+    /* Select UART Single Wire function mode */
     uart->FUNCSEL = ((uart->FUNCSEL & (~UART_FUNCSEL_FUNCSEL_Msk)) | UART_FUNCSEL_SINGLE_WIRE);
 }
 

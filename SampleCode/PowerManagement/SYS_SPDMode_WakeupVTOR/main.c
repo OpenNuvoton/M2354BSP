@@ -208,7 +208,7 @@ int main(void)
     printf("+--------------------------------------------------------+\n");
 
     /* Init RTC */
-    if( RTC_Init() < 0 ) return -1;
+    if( RTC_Init() < 0 ) goto lexit;
 
     while(1)
     {
@@ -251,4 +251,7 @@ int main(void)
 
     }
 
+lexit:
+
+    while(1);
 }

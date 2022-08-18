@@ -335,12 +335,12 @@ int main(void)
     printf("+-------------------------------------------------------------------------+\n");
 
     /* Wait ready */
-    if( SpiFlash_WaitReady() < 0 ) return -1;
+    if( SpiFlash_WaitReady() < 0 ) goto lexit;
 
     if((u16ID = SpiFlash_ReadMidDid()) != 0xEF14)
     {
         printf("Wrong ID, 0x%x\n", u16ID);
-        return -1;
+        goto lexit;
     }
     else
         printf("Flash found: W25X16 ...\n");
@@ -351,7 +351,7 @@ int main(void)
     SpiFlash_ChipErase();
 
     /* Wait ready */
-    if( SpiFlash_WaitReady() < 0 ) return -1;
+    if( SpiFlash_WaitReady() < 0 ) goto lexit;
 
     printf("[OK]\n");
 
@@ -368,7 +368,7 @@ int main(void)
     {
         /* page program */
         SpiFlash_NormalPageProgram(u32FlashAddress, s_au8SrcArray);
-        if( SpiFlash_WaitReady() < 0 ) return -1;
+        if( SpiFlash_WaitReady() < 0 ) goto lexit;
         u32FlashAddress += 0x100;
     }
 
@@ -401,6 +401,8 @@ int main(void)
         printf("[OK]\n");
     else
         printf("[FAIL]\n");
+
+lexit:
 
     while(1);
 }

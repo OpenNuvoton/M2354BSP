@@ -301,7 +301,7 @@ int main(void)
         
         sprintf(text, "%s", "FAIL 1");
         LCDLIB_Printf(ZONE_MAIN_DIGIT, text);
-        return -1;
+        goto lexit;
 	}
 	
 	if(m2354_bme680_config(&bme680) != BME680_OK) {
@@ -309,7 +309,7 @@ int main(void)
         
         sprintf(text, "%s", "FAIL 2");
         LCDLIB_Printf(ZONE_MAIN_DIGIT, text);
-        return -1;
+        goto lexit;
 	}
 	
 	bme680_get_profile_dur(&meas_period, &bme680);
@@ -323,7 +323,7 @@ int main(void)
         {
             sprintf(text, "%s", "FAIL 3");
             LCDLIB_Printf(ZONE_MAIN_DIGIT, text);
-            return -1;
+            goto lexit;
         }
         
         /* Trigger the next measurement if you would like to read data out continuously */
@@ -334,7 +334,7 @@ int main(void)
             {
                 sprintf(text, "%s", "FAIL 4");
                 LCDLIB_Printf(ZONE_MAIN_DIGIT, text);
-                return -1;
+                goto lexit;
             }
         }
             
@@ -382,4 +382,8 @@ int main(void)
             LCDLIB_Printf(ZONE_MAIN_DIGIT, text);
         }
     }
+
+lexit:
+
+    while(1);
 }

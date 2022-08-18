@@ -163,7 +163,7 @@ int main(void)
     {
         printf("\n RTC initial fail!!");
         printf("\n Please check h/w setting!!");
-        return -1;
+        goto lexit;
     }
 
     RTC_GetDateAndTime(&sGetTime);
@@ -193,4 +193,8 @@ int main(void)
         while(g_u32IsTamper == FALSE) {}
         g_u32IsTamper = FALSE;
     }
+
+lexit:
+
+    while(1);
 }

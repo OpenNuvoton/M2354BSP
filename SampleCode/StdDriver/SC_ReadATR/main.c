@@ -77,7 +77,7 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Initialization for sample code                                                                          */
     /*---------------------------------------------------------------------------------------------------------*/
-    /* Enable SC0 module clock and clock source from HIRC divide 3, 4MH */
+    /* Enable SC0 module clock and clock source from HIRC divide 3, 4MHz */
     CLK_EnableModuleClock(SC0_MODULE);
     CLK_SetModuleClock(SC0_MODULE, CLK_CLKSEL3_SC0SEL_HIRC, CLK_CLKDIV1_SC0(3));
 

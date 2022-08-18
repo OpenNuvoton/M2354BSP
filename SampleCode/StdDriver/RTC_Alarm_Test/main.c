@@ -148,7 +148,7 @@ int main(void)
     {
         printf("\n RTC initial fail!!");
         printf("\n Please check h/w setting!!");
-        return -1;
+        goto lexit;
     }
 
     printf("\nRTC Alarm Test (Alarm after 10 seconds)\n\n");
@@ -189,6 +189,8 @@ int main(void)
     NVIC_DisableIRQ(RTC_IRQn);
 
     printf("\nRTC Alarm Test End !!\n");
+
+lexit:
 
     while(1) {}
 }

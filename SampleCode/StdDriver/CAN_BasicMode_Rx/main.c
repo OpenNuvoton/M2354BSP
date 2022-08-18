@@ -341,7 +341,7 @@ int main()
     printf("+------------------------------------------------------------------ +\n");
     printf("|  Nuvoton CAN BUS DRIVER DEMO                                      |\n");
     printf("+-------------------------------------------------------------------+\n");
-    printf("|  Receive a message by basic mode                                 |\n");
+    printf("|  Receive a message by basic mode                                  |\n");
     printf("+-------------------------------------------------------------------+\n");
 
     printf("Press any key to continue ...\n\n");

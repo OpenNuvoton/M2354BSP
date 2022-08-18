@@ -26,7 +26,7 @@ void SelectCANSpeed(CAN_T  *tCAN);
 void Test_NormalMode_Rx(CAN_T *tCAN);
 void CAN0_IRQHandler(void);
 /*---------------------------------------------------------------------------------------------------------*/
-/* ISR to handle CAN interrupt event                                                            */
+/* ISR to handle CAN interrupt event                                                                       */
 /*---------------------------------------------------------------------------------------------------------*/
 void CAN_MsgInterrupt(CAN_T *tCAN, uint32_t u32IIDR)
 {
