@@ -10,6 +10,14 @@ For more information about NuMaker-IoT-M2354 clould demo, please refer to link:
 
 https://www.nuvoton.com/board/numaker-iot-m2354/?index=2
 
+The pin footprint is different between NuMaker and NuMaker-IoT boards.
+For example, the VCOM pins UART0 RXD, TXD of NuMaker are PA6, PA7.
+However, the VCOM pin of UART0 RXD, TXD are changed to PB8, PB9.
+Most sample codes in BSP is based on NuMaker board except the sample codes under NuMaker-IoT folder.
+Therefore, to run these samples on NuMaker-IoT, re-assign the I/O pin may be necessary.
 
+The detail pin comparison list between NuMaker and NuMaker IoT board, please refer to 
+
+NuMaker and NuMaker-IoT board pin table.xlsx
 
 
