@@ -214,7 +214,7 @@
 //   </h>
 
 */
-#define SCU_INIT_IONSSET0_VAL      0x00000C00
+#define SCU_INIT_IONSSET0_VAL      0x00000000
 
 /*
 // Bit 0..31
@@ -280,7 +280,7 @@
 //   <o.14>  PD14       <0=> Secure <1=> Non-Secure
 //   </h>
 */
-#define SCU_INIT_IONSSET3_VAL      0x00000000
+#define SCU_INIT_IONSSET3_VAL      0x0000000C
 
 
 /*

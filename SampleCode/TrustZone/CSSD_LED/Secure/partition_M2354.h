@@ -214,7 +214,7 @@
 //   </h>
 
 */
-#define SCU_INIT_IONSSET0_VAL      0x00003C00
+#define SCU_INIT_IONSSET0_VAL      0x00000000
 
 /*
 // Bit 0..31

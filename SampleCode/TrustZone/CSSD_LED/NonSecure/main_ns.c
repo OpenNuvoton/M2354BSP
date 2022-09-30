@@ -44,16 +44,16 @@ void SysTick_Handler(void)
         case   0:
             // second developer handle
             LED_On(7u);
-            Secure_PA11_LED_On(0u);
+            Secure_PD2_LED_On(0u);
             break;
         case 100:
             // second developer handle
-            Secure_PA11_LED_Off(0u);
-            Secure_PA12_LED_On(0u);
+            Secure_PD2_LED_Off(0u);
+            Secure_PD1_LED_On(0u);
             break;
         case 200:
             // second developer handle
-            Secure_PA12_LED_Off(0u);
+            Secure_PD1_LED_Off(0u);
             break;
         case 300:
             // second developer handle
@@ -61,13 +61,13 @@ void SysTick_Handler(void)
             break;
         case 400:
             // second developer handle
-            Secure_PA11_LED_On(0u);
-            Secure_PA12_LED_On(0u);
+            Secure_PD2_LED_On(0u);
+            Secure_PD1_LED_On(0u);
             break;
         case 500:
             // second developer handle
-            Secure_PA11_LED_Off(0u);
-            Secure_PA12_LED_Off(0u);
+            Secure_PD2_LED_Off(0u);
+            Secure_PD1_LED_Off(0u);
             break;
         case 600:
             u32Ticks = 0;

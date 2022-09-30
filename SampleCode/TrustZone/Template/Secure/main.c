@@ -53,8 +53,7 @@ int32_t Secure_LED_On(uint32_t num)
 {
     (void)num;
     printf("Secure LED On call by Non-secure\n");
-    PA10 = 0;
-    PB0 = 0;
+    PD2 = 0;
     return 0;
 }
 
@@ -63,8 +62,7 @@ int32_t Secure_LED_Off(uint32_t num)
 {
     (void)num;
     printf("Secure LED Off call by Non-secure\n");
-    PA10 = 1;
-    PB0 = 1;
+    PD2 = 1;
     return 1;
 }
 
@@ -95,16 +93,14 @@ int32_t Secure_LED_Off_callback(NonSecure_funcptr *callback)
 int32_t LED_On(void)
 {
     printf("Secure LED On\n");
-    PA11 = 0;
-    PB1 = 0;
+    PD3 = 0;
     return 1;
 }
 
 int32_t LED_Off(void)
 {
     printf("Secure LED Off\n");
-    PA11 = 1;
-    PB1 = 1;
+    PD3 = 1;
     return 1;
 }
 
@@ -209,11 +205,8 @@ int main(void)
 
     printf("Secure is running ...\n");
 
-    /* Init GPIO Port A for secure LED control */
-    GPIO_SetMode(PA, BIT11 | BIT10, GPIO_MODE_OUTPUT);
-
-    /* Init GPIO Port B for secure LED control */
-    GPIO_SetMode(PB, BIT1 | BIT0, GPIO_MODE_OUTPUT);
+    /* Init GPIO Port D for secure LED control */
+    GPIO_SetMode(PD, BIT2 | BIT3, GPIO_MODE_OUTPUT);
 
     /* Generate Systick interrupt each 10 ms */
     SysTick_Config(SystemCoreClock / 100);

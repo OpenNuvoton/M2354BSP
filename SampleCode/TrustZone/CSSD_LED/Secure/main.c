@@ -19,17 +19,17 @@
 typedef __NONSECURE_CALL int32_t (*NonSecure_funcptr)(uint32_t);
 
 __NONSECURE_ENTRY
-int32_t Secure_PA11_LED_On(uint32_t num);
+int32_t Secure_PD2_LED_On(uint32_t num);
 __NONSECURE_ENTRY
-int32_t Secure_PA11_LED_Off(uint32_t num);
+int32_t Secure_PD2_LED_Off(uint32_t num);
 __NONSECURE_ENTRY
-int32_t Secure_PA12_LED_On(uint32_t num);
+int32_t Secure_PD1_LED_On(uint32_t num);
 __NONSECURE_ENTRY
-int32_t Secure_PA12_LED_Off(uint32_t num);
+int32_t Secure_PD1_LED_Off(uint32_t num);
 __NONSECURE_ENTRY
-int32_t Secure_PA13_LED_On(uint32_t num);
+int32_t Secure_PD0_LED_On(uint32_t num);
 __NONSECURE_ENTRY
-int32_t Secure_PA13_LED_Off(uint32_t num);
+int32_t Secure_PD0_LED_Off(uint32_t num);
 __NONSECURE_ENTRY
 uint32_t GetSystemCoreClock(void);
 int32_t LED_On(void);
@@ -41,56 +41,56 @@ void SysTick_Handler(void);
   Must place in Non-secure Callable
  *----------------------------------------------------------------------------*/
 __NONSECURE_ENTRY
-int32_t Secure_PA11_LED_On(uint32_t num)
+int32_t Secure_PD2_LED_On(uint32_t num)
 {
     (void)num;
-    printf("Secure PA11 LED On call by secure\n");
-    PA11 = 0;
+    printf("Secure PD2 LED On call by secure\n");
+    PD2 = 0;
     return 0;
 }
 
 __NONSECURE_ENTRY
-int32_t Secure_PA11_LED_Off(uint32_t num)
+int32_t Secure_PD2_LED_Off(uint32_t num)
 {
     (void)num;
-    printf("Secure PA11 LED Off call by secure\n");
-    PA11 = 1;
+    printf("Secure PD2 LED Off call by secure\n");
+    PD2 = 1;
     return 1;
 }
 
 __NONSECURE_ENTRY
-int32_t Secure_PA12_LED_On(uint32_t num)
+int32_t Secure_PD1_LED_On(uint32_t num)
 {
     (void)num;
-    printf("Secure PA12 LED On call by secure\n");
-    PA12 = 0;
+    printf("Secure PD1 LED On call by secure\n");
+    PD1 = 0;
     return 0;
 }
 
 __NONSECURE_ENTRY
-int32_t Secure_PA12_LED_Off(uint32_t num)
+int32_t Secure_PD1_LED_Off(uint32_t num)
 {
     (void)num;
-    printf("Secure PA12 LED Off call by secure\n");
-    PA12 = 1;
+    printf("Secure PD1 LED Off call by secure\n");
+    PD1 = 1;
     return 1;
 }
 
 __NONSECURE_ENTRY
-int32_t Secure_PA13_LED_On(uint32_t num)
+int32_t Secure_PD0_LED_On(uint32_t num)
 {
     (void)num;
-    printf("Secure PA13 LED On call by secure\n");
-    PA13 = 0;
+    printf("Secure PD0 LED On call by secure\n");
+    PD0 = 0;
     return 0;
 }
 
 __NONSECURE_ENTRY
-int32_t Secure_PA13_LED_Off(uint32_t num)
+int32_t Secure_PD0_LED_Off(uint32_t num)
 {
     (void)num;
-    printf("Secure PA13 LED Off call by secure\n");
-    PA13 = 1;
+    printf("Secure PD0 LED Off call by secure\n");
+    PD0 = 1;
     return 1;
 }
 
@@ -104,7 +104,7 @@ uint32_t GetSystemCoreClock(void)
 int32_t LED_On(void)
 {
     printf("Secure/Non-secure LED On call by Secure\n");
-    PA10 = 0;
+    PD3 = 0;
     PC1_NS = 0;
     return 0;
 }
@@ -112,7 +112,7 @@ int32_t LED_On(void)
 int32_t LED_Off(void)
 {
     printf("Secure/Non-secure LED Off call by Secure\n");
-    PA10 = 1;
+    PD3 = 1;
     PC1_NS = 1;
     return 1;
 }
@@ -192,8 +192,8 @@ int main(void)
 
     printf("Secure code is running ...\n");
 
-    /* Init GPIO Port A for secure LED control */
-    GPIO_SetMode(PA, BIT13 | BIT12 | BIT11 | BIT10, GPIO_MODE_OUTPUT);
+    /* Init GPIO Port D for secure LED control */
+    GPIO_SetMode(PD, BIT3 | BIT2 | BIT1 | BIT0, GPIO_MODE_OUTPUT);
 
     /* Init GPIO Port C for non-secure LED control */
     GPIO_SetMode(PC_NS, BIT1, GPIO_MODE_OUTPUT);

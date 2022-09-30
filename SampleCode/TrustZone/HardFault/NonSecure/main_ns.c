@@ -83,12 +83,12 @@ int main(void)
                 break;
             case '3':
                 printf("LED blinking...\n");
-                PA10_NS = 0;
-                PA11_NS = 1;
+                PD2_NS = 0;
+                PD3_NS = 1;
                 while(1)
                 {
-                    PA10_NS ^= 1;
-                    PA11_NS ^= 1;
+                    PD2_NS ^= 1;
+                    PD3_NS ^= 1;
                     i = 0x100000;
                     while(i-- > 0);
 
@@ -104,7 +104,7 @@ int main(void)
 
 void HardFault_Handler(void)
 {
-    PA10_NS = 0;
+    PD2_NS = 0;
     printf("Non-secure Hand Fault Handler\n");
     while(1);
 }

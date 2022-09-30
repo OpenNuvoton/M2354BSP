@@ -60,10 +60,10 @@ int main(void)
     /* UART0 is configured as Nonsecure for debug in both secure and nonsecure region */
     UART0_Init();
 
-    /* Init PA for non-secure LED control */
-    PA_NS->MODE = (GPIO_MODE_OUTPUT << 10 * 2) | (GPIO_MODE_OUTPUT << 11 * 2);
-    PA10_NS = 0;
-    PA11_NS = 1;
+    /* Init PD for non-secure LED control */
+    PD_NS->MODE = (GPIO_MODE_OUTPUT << 2 * 2) | (GPIO_MODE_OUTPUT << 3 * 2);
+    PD2_NS = 0;
+    PD3_NS = 1;
 
     /*
         NOTE: It is necessary to prepare non-secure vector table before setting "Hard Fault" exception to be
@@ -115,7 +115,7 @@ int main(void)
         switch(ch)
         {
             case '0':
-                PA10_NS = 1;
+                PD2_NS = 1;
                 Boot_Init(NEXT_BOOT_BASE);
                 break;
             case '1':
