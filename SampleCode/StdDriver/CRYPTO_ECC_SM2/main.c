@@ -148,9 +148,6 @@ int32_t main(void)
     printf("|            Crypto SM2 Demo                  |\n");
     printf("+---------------------------------------------+\n");
 
-    NVIC_EnableIRQ(CRPT_IRQn);
-    ECC_ENABLE_INT(CRPT);
-
     nbits = KEY_LENGTH;
 
     err = RNG_Open();
@@ -165,6 +162,10 @@ int32_t main(void)
     printf("msg         = %s\n", msg);
     printf("e           = %s\n", e);
 
+    NVIC_EnableIRQ(CRPT_IRQn);
+    ECC_ENABLE_INT(CRPT);
+
+    
     do
     {
 
