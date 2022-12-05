@@ -27,7 +27,7 @@ static char e[168];
 static char d[168];                         /* private key */
 static char Qx[168], Qy[168];               /* temporary buffer used to keep output public keys */
 static char k[168];                         /* random integer k form [1, n-1]                */
-static char msg[] = "abc";
+__ALIGNED(4) static char msg[] = "abc";
 static char R[168], S[168];                 /* temporary buffer used to keep digital signature (R,S) pair */
 
 
@@ -134,6 +134,7 @@ int32_t main(void)
     uint32_t au32r[(KEY_LENGTH + 31) / 32];
     uint8_t *au8r;
     uint32_t hash[8];
+    uint8_t *pu8;
 
 
     SYS_UnlockReg();
@@ -150,15 +151,17 @@ int32_t main(void)
 
     nbits = KEY_LENGTH;
 
+    /* hash the message */
+    SM3((uint32_t*)msg, 3, hash);
+
     err = RNG_Open();
     if(err)
         printf("RNG Init FAIL\n");
 
     au8r = (uint8_t *)&au32r[0];
 
-    /* hash the message */
-    SM3((uint32_t*)msg, 3, hash);
-    sprintf(e, "%08x%08x%08x%08x%08x%08x%08x%08x", hash[0], hash[1], hash[2], hash[3], hash[4], hash[5], hash[6], hash[7]);
+    sprintf(e, "%08x%08x%08x%08x%08x%08x%08x%08x", ENDIAN(hash[0]), ENDIAN(hash[1]), ENDIAN(hash[2]), ENDIAN(hash[3]), 
+    ENDIAN(hash[4]), ENDIAN(hash[5]), ENDIAN(hash[6]), ENDIAN(hash[7]));
     printf("msg         = %s\n", msg);
     printf("e           = %s\n", e);
 
