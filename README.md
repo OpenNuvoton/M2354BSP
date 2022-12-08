@@ -97,7 +97,7 @@ To experience the powerful features of M2354 in few minutes, please refer to NuM
 - FreeRTOS<br>
 	FreeRTOS porting for M2354.
 
-- mbedtls-2.6.0<br>
+- mbedTLS<br>
 	An open source crypto library.
 
 - SX1276<br>

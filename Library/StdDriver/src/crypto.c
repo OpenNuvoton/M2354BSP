@@ -1020,54 +1020,6 @@ int32_t is_zero(char* s)
 }
 
 
-
-/*
-    Compare hex string with non-case senstive
-    s1 > s2 return 1
-    s1 = s2 return 0
-    s1 < s2 return -1
-
-    s1 or s2 should not be leading zero.
-    The signifcant bytes in left of s1 or s2 
-
-*/
-static int32_t hex_compare(char* s1, char* s2)
-{
-    int32_t l1, l2, i;
-    char c1, c2;
-    l1 = strlen(s1);
-    l2 = strlen(s2);
-
-    if(l1 > l2)
-    {
-        return 1;
-    }
-    if(l1 < l2)
-    {
-        return -1;
-    }
-
-    for(i = 0; i < l1; i++)
-    {
-        c1 = s1[i];
-        c2 = s2[i];
-
-        /* To upper case if necessary */
-        if(c1 > 0x60) c1 -= 0x20;
-        if(c2 > 0x60) c2 -= 0x20;
-
-        if(c1 > c2)
-        {
-            return 1;
-        }
-        else if(c1 < c2)
-        {
-            return -1;
-        }
-    }
-    return 0;
-}
-
 /*
     Clean register array to 0
 */
@@ -1217,7 +1169,7 @@ int ECC_IsPrivateKeyValid(CRPT_T *crpt, E_ECC_CURVE ecc_curve,  char private_k[]
   */
 int32_t  ECC_GeneratePublicKey(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[])
 {
-    int32_t  ret = 0, i, i32TimeOutCnt;
+    int32_t  ret = 0, i32TimeOutCnt;
 
     if(ecc_init_curve(crpt, ecc_curve) != 0)
     {
@@ -3295,7 +3247,7 @@ int32_t  SM2_Verify(CRPT_T* crpt, E_ECC_CURVE ecc_curve, char* e, char* public_k
 {
     uint32_t  r[18] = {0}, s[18] = {0}, t[18], e1[18];
     uint32_t  x[18], y[18];
-    int32_t   i, ret = 0;
+    int32_t   i;
 
     /*
         1.	Verify that r and s are integers in the interval [1, n-1]. If not, the signature is invalid
@@ -3540,7 +3492,6 @@ int32_t  SM2_Verify(CRPT_T* crpt, E_ECC_CURVE ecc_curve, char* e, char* public_k
 int32_t SM3(uint32_t* pu32Addr, uint32_t u32Size, uint32_t digest[])
 {
     int32_t i;
-    int32_t size;
     int32_t timeout;
 
     /* Reset Crypto for SM3 */

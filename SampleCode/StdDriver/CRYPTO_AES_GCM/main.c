@@ -1186,10 +1186,9 @@ int32_t AES_GCMEnc(uint8_t *key, uint32_t klen, uint8_t *iv, uint32_t ivlen, uin
     int32_t plen_cur;
     int32_t len;
     uint8_t *pin, *pout;
-    int32_t i, j;
+    int32_t i;
     uint32_t u32OptKeySize;
     uint32_t u32OptBasic;
-    uint32_t u32CTRIV[4] = {0};
 
     printf("\n");
 
@@ -1476,7 +1475,6 @@ int main(void)
 {
     int i, n;
     uint32_t size, klen, plen, tlen, plen_aligned, alen, ivlen;
-    uint8_t tagbuf[16];
 
     // Enable ETM
     SET_TRACE_CLK_PE12();

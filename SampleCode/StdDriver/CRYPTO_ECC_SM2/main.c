@@ -134,7 +134,6 @@ int32_t main(void)
     uint32_t au32r[(KEY_LENGTH + 31) / 32];
     uint8_t *au8r;
     uint32_t hash[8];
-    uint8_t *pu8;
 
 
     SYS_UnlockReg();
