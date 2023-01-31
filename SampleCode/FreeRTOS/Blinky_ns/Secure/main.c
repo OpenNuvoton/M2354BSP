@@ -5,7 +5,6 @@
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
- *
  ******************************************************************************/
 
 #include <arm_cmse.h>
@@ -128,6 +127,7 @@ int main(void)
     /* Generate Systick interrupt each 10 ms */
     SysTick_Config(SystemCoreClock / 100);
 
+    /* Init and jump to Non-secure code */
     Boot_Init(NEXT_BOOT_BASE);
 
     do
@@ -187,5 +187,3 @@ void DEBUG_PORT_Init(void)
     DEBUG_PORT->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
     DEBUG_PORT->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
 }
-
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
