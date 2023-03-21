@@ -65,7 +65,7 @@ extern "C"
 
 
 /*---------------------------------------------------------------------------------------------------------*/
-/*  GPIO Pull-up And Pull-down Type Constant Definitions                                                   */
+/*  GPIO Pull-up and Pull-down Type Constant Definitions                                                   */
 /*---------------------------------------------------------------------------------------------------------*/
 #define GPIO_PUSEL_DISABLE          0x0UL           /*!< GPIO PUSEL setting for Disable Mode */
 #define GPIO_PUSEL_PULL_UP          0x1UL           /*!< GPIO PUSEL setting for Pull-up Mode */
@@ -1050,7 +1050,7 @@ extern "C"
  * @return      None
  *
  * @details     Set the interrupt de-bounce sampling cycle time based on the debounce counter clock source. \n
- *              Example: _GPIO_SET_DEBOUNCE_TIME(PA, GPIO_DBCTL_DBCLKSRC_LIRC, GPIO_DBCTL_DBCLKSEL_4). \n
+ *              Example: GPIO_SET_DEBOUNCE_TIME(PA, GPIO_DBCTL_DBCLKSRC_LIRC, GPIO_DBCTL_DBCLKSEL_4). \n
  *              It's meaning the De-debounce counter clock source is internal 32 KHz and sampling cycle selection is 4. \n
  *              Then the target de-bounce sampling cycle time is (4)*(1/(32*1000)) s = 125 us,
  *              and system will sampling interrupt input once per 125 us.

@@ -116,7 +116,6 @@ void GPIO_DisableInt(GPIO_T *port, uint32_t u32Pin)
 /**
  * @brief       Set GPIO slew rate control
  *
-
  * @param[in]   port        GPIO port. It could be PA, PB, PC, PD, PE, PF, PG or PH.
  * @param[in]   u32PinMask  The single or multiple pins of specified GPIO port. \n
  *                          It could be BIT0 ~ BIT15 for PA, PB and PE. \n
@@ -132,7 +131,7 @@ void GPIO_DisableInt(GPIO_T *port, uint32_t u32Pin)
  *
  * @return      None
  *
- * @details     This function is used to set specified GPIO operation mode.
+ * @details     This function is used to set specified GPIO slew rate control.
  */
 void GPIO_SetSlewCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
 {
@@ -150,7 +149,6 @@ void GPIO_SetSlewCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
 /**
  * @brief       Set GPIO Pull-up and Pull-down control
  *
-
  * @param[in]   port        GPIO port. It could be PA, PB, PC, PD, PE, PF, PG or PH.
  * @param[in]   u32PinMask  The single or multiple pins of specified GPIO port. \n
  *                          It could be BIT0 ~ BIT15 for PA, PB and PE. \n
@@ -166,7 +164,7 @@ void GPIO_SetSlewCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
  *
  * @return      None
  *
- * @details     Set the pin mode of specified GPIO pin.
+ * @details     This function is used to set specified GPIO pull-up and pull-down control.
  */
 void GPIO_SetPullCtl(GPIO_T *port, uint32_t u32PinMask, uint32_t u32Mode)
 {
