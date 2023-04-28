@@ -53,12 +53,14 @@ void SYS_Init(void)
     /* User can use SystemCoreClockUpdate() to calculate SystemCoreClock and CyclesPerUs automatically. */
     SystemCoreClockUpdate();
 
-    /* Set PB4 multi-function pin for ACMP1 positive input pin and PB6 multi-function pin for ACMP1 output pin*/
-    SYS->GPB_MFPL &= ~(SYS_GPB_MFPL_PB4MFP_Msk | SYS_GPB_MFPL_PB6MFP_Msk);
-    SYS->GPB_MFPL |= SYS_GPB_MFPL_PB4MFP_ACMP1_P1 | SYS_GPB_MFPL_PB6MFP_ACMP1_O;
+    /* Set PA10 multi-function pin for ACMP1 positive input pin and PB6 multi-function pin for ACMP1 output pin*/
+    SET_ACMP1_P0_PA10();
+    SET_ACMP1_O_PB6();
+    
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+    SET_UART0_RXD_PA6();
+    SET_UART0_TXD_PA7();
 
     /* Disable digital input path of analog pin ACMP1_P1 to prevent leakage */
     GPIO_DISABLE_DIGITAL_PATH(PB, (1ul << 4));
@@ -84,7 +86,7 @@ int32_t main(void)
     /* Configure UART0: 115200, 8-bit word, no parity bit, 1 stop bit. */
     UART_Open(UART0, 115200);
 
-    printf("\nThis sample code demonstrates ACMP1 function. Using ACMP1_P1 (PB4) as ACMP1\n");
+    printf("\nThis sample code demonstrates ACMP1 function. Using ACMP1_P0 (PA10) as ACMP1\n");
     printf("positive input and using internal band-gap voltage as the negative input.\n");
     printf("The compare result reflects on ACMP1_O (PB6).\n");
 
@@ -92,10 +94,10 @@ int32_t main(void)
     getchar();
     printf("\n");
 
-    /* Configure ACMP1. Enable ACMP1 and select DAC0 output as the source of ACMP negative input. */
-    ACMP_Open(ACMP01, 1, ACMP_CTL_NEGSEL_DAC, ACMP_CTL_HYSTERESIS_DISABLE);
+    /* Configure ACMP1. Enable ACMP1 and select VBG output as the source of ACMP negative input. */
+    ACMP_Open(ACMP01, 1, ACMP_CTL_NEGSEL_VBG, ACMP_CTL_HYSTERESIS_DISABLE);
     /* Select P1 as ACMP positive input channel */
-    ACMP_SELECT_P(ACMP01, 1, ACMP_CTL_POSSEL_P1);
+    ACMP_SELECT_P(ACMP01, 1, ACMP_CTL_POSSEL_P0);
     /* Enable interrupt */
     ACMP_ENABLE_INT(ACMP01, 1);
 

@@ -27,7 +27,7 @@ set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_PATH})
 
 #SET(CMAKE_C_FLAGS    "-mcpu=cortex-m23 -Wno-ignored-optimization-argument -Wno-unused-command-line-argument -Wall    -Wno-error=cpp    -c    -fdata-sections    -ffunction-sections        -fshort-enums    -fshort-wchar -funsigned-char -masm=auto -nostdlib -mfpu=none -g -std=c99 -D__MICROLIB")
 #SET(CMAKE_CXX_FLAGS  "-mcpu=cortex-m23 -Wno-ignored-optimization-argument -Wno-unused-command-line-argument -Wall    -Wno-error=cpp    -c    -fdata-sections    -ffunction-sections        -fshort-enums    -fshort-wchar -funsigned-char -masm=auto -nostdlib -mfpu=none -g -D__MICROLIB")
-set(C_FLAGS "--target=arm-arm-none-eabi -mcpu=cortex-m23 -c -fno-rtti -funsigned-char -fshort-enums -fshort-wchar -D__MICROLIB -gdwarf-3 -O2 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -D__MICROLIB")
+set(C_FLAGS "--target=arm-arm-none-eabi -mcpu=cortex-m23 -c -fno-rtti -funsigned-char -fshort-enums -fshort-wchar -D__MICROLIB -gdwarf-3 -O2 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -D__MICROLIB -Ic:/Keil_v5/ARM/ARMCLANG/include")
 set(CMAKE_C_FLAGS "-xc -std=c99  ${C_FLAGS}")
 set(CMAKE_CXX_FLAGS ${C_FLAGS})
 set(CMAKE_ASM_FLAGS "--cpu Cortex-M23 -g --16 --apcs=interwork --pd \"__MICROLIB SETA 1\"" )
@@ -52,6 +52,8 @@ add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/CRYPTO_ECC_SM2)
 add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/CRYPTO_SHA_SM3)
 add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/CRYPTO_AES_GCM)
 add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/CRYPTO_AES_CCM)
+add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/ACMP_CompareDAC)
+add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/ACMP_CompareVBG)
 
 
 

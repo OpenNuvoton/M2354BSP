@@ -2,7 +2,7 @@
 
 set(PRJ CRYPTO_AES_CCM)
 add_executable(${PRJ} main.c)
-target_link_libraries(${PRJ} m2354_startup m2354_driver)
+target_link_libraries(${PRJ} libstartup libdriver)
 
 target_link_options(${PRJ} 
    PUBLIC 

@@ -1,6 +1,6 @@
 
 
-set(PRJ CRYPTO_AES_GCM)
+set(PRJ ACMP_CompareVBG)
 add_executable(${PRJ} main.c)
 target_link_libraries(${PRJ} libstartup libdriver)
 
@@ -25,13 +25,11 @@ target_link_options(${PRJ}
     --callgraph 
     --symbols
 )
-
-# Download to board
-set(DOWNLOAD_BOARD FALSE)
-
+ 
 # Convert to binary and copy to target device
 if(${DOWNLOAD_BOARD})
 
+    message("Convert elf to binary file and download to target board .... ")
     add_custom_command(TARGET ${PRJ} POST_BUILD
        COMMAND ${ARM_FROMELF} --bin --output e:/${PRJ}.bin ${PRJ}.elf
        VERBATIM
