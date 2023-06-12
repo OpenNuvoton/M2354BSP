@@ -123,8 +123,8 @@ void vParTestInitialise(void)
     UART0->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, 115200);
     UART0->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
 
-    /* LED IO PA11*/
-    PA->MODE = (PA->MODE & (~(3ul << 11 * 2))) | GPIO_MODE_OUTPUT << 11 * 2;
+    /* LED IO PD2 */
+    PD->MODE = (PD->MODE & (~(3ul << 2 * 2))) | GPIO_MODE_OUTPUT << 2 * 2;
 
 #if 1 // ETM MFP
     SYS->GPE_MFPH &= ~(TRACE_CLK_PE12_Msk | TRACE_DATA0_PE11_Msk | TRACE_DATA1_PE10_Msk | TRACE_DATA2_PE9_Msk | TRACE_DATA3_PE8_Msk);
@@ -156,12 +156,12 @@ void vParTestSetLED(unsigned long ulLED, signed portBASE_TYPE xValue)
     if(xValue == pdTRUE)
     {
         /* Turn the LED on. */
-        PA11 = 0;
+        PD2 = 0;
     }
     else
     {
         /* Turn the LED off. */
-        PA11 = 1;
+        PD2 = 1;
     }
 }
 /*-----------------------------------------------------------*/
@@ -169,7 +169,7 @@ void vParTestSetLED(unsigned long ulLED, signed portBASE_TYPE xValue)
 void vParTestToggleLED(unsigned long ulLED)
 {
     (void)ulLED;
-    PA11 ^= 1;
+    PD2 ^= 1;
 
 }
 /*-----------------------------------------------------------*/

@@ -53,6 +53,8 @@ SECTIONS
 
 		*(.text*)
 
+        *(EXCLUDE_FILE(./User/exeinsram.o) .text*)
+
 		KEEP(*(.init))
 		KEEP(*(.fini))
 
@@ -71,6 +73,8 @@ SECTIONS
  		*(.dtors)
 
 		*(.rodata*)
+
+        *(EXCLUDE_FILE(./User/exeinsram.o) .rodata*)
 
 		KEEP(*(.eh_frame*))
 	} > FLASH
@@ -142,6 +146,11 @@ SECTIONS
 	{
 		__data_start__ = .;
 		. = SIZEOF(.stack_dummy);
+
+		./User/exeinsram.o (.text*)
+		*(.fastcode)
+		./User/exeinsram.o (.rodata*)
+
 		*(vtable)
 		*(.data*)
 
