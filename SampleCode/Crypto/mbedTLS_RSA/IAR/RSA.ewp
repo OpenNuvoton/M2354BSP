@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.30.1.17146</state>
+                    <state>8.42.1.23678</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>28</version>
                     <state>58</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>28</version>
                     <state>58</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>28</version>
                     <state>58</state>
                 </option>
                 <option>
@@ -215,12 +215,13 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>34</version>
+                <version>36</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
                     <name>CCDefines</name>
                     <state>NDEBUG</state>
+                    <state>MBEDTLS_CONFIG_FILE=mbedtls_config.h</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -348,8 +349,10 @@
                     <state>$PROJ_DIR$\..\..\..\..\Library\CMSIS\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\Library\Device\Nuvoton\M2354\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\Library\StdDriver\inc</state>
-                    <state>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\include\mbedtls</state>
+                    <state>D:\MCU\M2354\M2354\m2354bsp\ThirdParty\mbedtls-3.1.0\include</state>
                     <state>$PROJ_DIR$\..\</state>
+                    <state>D:\MCU\M2354\M2354\m2354bsp\ThirdParty\mbedtls-3.1.0\library</state>
+                    <state>D:\MCU\M2354\M2354\m2354bsp\Library\CryptoAccelerator</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -465,6 +468,14 @@
                 </option>
                 <option>
                     <name>IccRTTI2</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>OICompilerExtraOption</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>CCStackProtection</name>
                     <state>0</state>
                 </option>
             </data>
@@ -649,7 +660,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>RSA.bin</state>
+                    <state>AES.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -687,7 +698,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>21</version>
+                <version>23</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -704,7 +715,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>RSA.out</state>
+                    <state>AES.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -1001,7 +1012,27 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>RSA_import_lib.o</state>
+                    <state>AES_import_lib.o</state>
+                </option>
+                <option>
+                    <name>OILinkExtraOption</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>IlinkRawBinaryFile2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySymbol2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySegment2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinaryAlign2</name>
+                    <state></state>
                 </option>
             </data>
         </settings>
@@ -1047,262 +1078,22 @@
             <name>$PROJ_DIR$\..\..\..\..\Library\StdDriver\src\clk.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\Library\StdDriver\src\retarget.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Library\CryptoAccelerator\IAR\mbedcrypto.a</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\Library\StdDriver\src\uart.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Library\StdDriver\src\retarget.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\..\Library\StdDriver\src\sys.c</name>
         </file>
-    </group>
-    <group>
-        <name>mbedTLS</name>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\aes.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\aesni.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\arc4.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\aria.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\asn1parse.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\asn1write.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\base64.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\bignum.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\blowfish.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\camellia.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ccm.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\certs.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\chacha20.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\chachapoly.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\cipher.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\cipher_wrap.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\cmac.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ctr_drbg.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\debug.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\des.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\dhm.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ecdh.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ecdsa.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ecjpake.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ecp.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ecp_curves.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\entropy.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\entropy_poll.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\error.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\gcm.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\havege.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\hkdf.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\hmac_drbg.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\md.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\md2.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\md4.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\md5.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\md_wrap.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\memory_buffer_alloc.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\net_sockets.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\nist_kw.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\oid.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\padlock.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\pem.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\pk.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\pk_wrap.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\pkcs11.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\pkcs12.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\pkcs5.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\pkparse.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\pkwrite.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\platform.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\platform_util.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\poly1305.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ripemd160.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\rsa.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\rsa_internal.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\sha1.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\sha256.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\sha512.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ssl_cache.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ssl_ciphersuites.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ssl_cli.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ssl_cookie.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ssl_srv.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ssl_ticket.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\ssl_tls.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\threading.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\timing.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\version.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\version_features.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\x509.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\x509_create.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\x509_crl.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\x509_crt.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\x509_csr.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\x509write_crt.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\x509write_csr.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\ThirdParty\mbedTLS\library\xtea.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Library\StdDriver\src\uart.c</name>
         </file>
     </group>
     <group>
         <name>User</name>
         <file>
             <name>$PROJ_DIR$\..\main.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\rsa_test.c</name>
         </file>
     </group>
 </project>

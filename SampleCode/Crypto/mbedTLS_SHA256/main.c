@@ -1,17 +1,27 @@
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
+ * $Revision: 3 $
+ * $Date: 19/11/22 2:06p $
  * @brief    Show how mbedTLS SHA256 function works.
- *
- * @copyright SPDX-License-Identifier: Apache-2.0
- * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * SPDX-License-Identifier: Apache-2.0
+ * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
-
+#include "mbedtls/rsa.h"
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include "NuMicro.h"
 
 #define MBEDTLS_EXIT_SUCCESS    0
 #define MBEDTLS_EXIT_FAILURE    -1
+
+extern int mbedtls_sha256_self_test(int verbose);
+
+volatile uint32_t g_u32Ticks = 0;
 
 
 void SYS_Init(void)
@@ -28,6 +38,9 @@ void SYS_Init(void)
 
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
+    
+    /* Enable CRPT */
+    CLK_EnableModuleClock(CRPT_MODULE);
 
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
@@ -40,11 +53,28 @@ void SYS_Init(void)
     /*---------------------------------------------------------------------------------------------------------*/
 
     /* Set multi-function pins for UART0 RXD and TXD */
-    SYS->GPA_MFPL = (SYS->GPA_MFPL & (~(UART0_RXD_PA6_Msk | UART0_TXD_PA7_Msk))) | UART0_RXD_PA6 | UART0_TXD_PA7;
+    SET_UART0_RXD_PA6();
+    SET_UART0_TXD_PA7();
 
 }
 
-extern int SHA256Test(void);
+void UART0_Init(void)
+{
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init UART                                                                                               */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Reset UART0 */
+    SYS_ResetModule(UART0_RST);
+
+    /* Configure UART0 and set UART0 baud rate */
+    UART_Open(UART0, 115200);
+}
+
+void SysTick_Handler()
+{
+    g_u32Ticks++;
+}
+
 
 int32_t main(void)
 {
@@ -56,38 +86,85 @@ int32_t main(void)
     /* Init System, IP clock and multi-function I/O. */
     SYS_Init();
 
-    /* Lock protected registers */
-    SYS_LockReg();
+    /* Init debug message */
+    UART0_Init();
 
-    /* Configure UART0: 115200, 8-bit word, no parity bit, 1 stop bit. */
-    UART_Open(UART0, 115200);
+    SysTick_Config(SystemCoreClock / 1000);
 
-    /*
-        This sample code is used to show how to use StdDriver API to implement ISP functions.
-    */
+    printf("MBEDTLS SHA256 self test ...\n");
 
-    printf("\n\n");
-    printf("+----------------------------------+\n");
-    printf("|        SHA256 Sample Code        |\n");
-    printf("+----------------------------------+\n");
+#ifdef MBEDTLS_SHA256_ALT
+    printf("Hardware Accellerator Enabled.\n");
+#else
+    printf("Pure software crypto running.\n");
+#endif
 
-    printf("\n SHA256 test start...\n\n");
-    i32Ret = SHA256Test();
-    printf("\n SHA256 test done ...\n");
+    g_u32Ticks = 0;
+    i32Ret = mbedtls_sha256_self_test(1);
+    printf("Total elapsed time is %d ms\n", g_u32Ticks);
 
-
-    if(i32Ret == MBEDTLS_EXIT_SUCCESS)
+    if(i32Ret < 0)
     {
-        printf("\nTest OK\n");
+        printf("Test fail!\n");
     }
-    else
-    {
-        printf("\nTest Fail\n");
-    }
-
+    printf("Test Done!\n");
     while(1);
 
 }
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
 
+
+void show(void)
+{
+    int i,j;
+    int n = 128;
+    uint8_t *pu8;
+
+    printf("\n");
+    for(i=0;i<3;i++)
+    {
+        printf("SADDR[%d]", i);
+        pu8 = (uint8_t *)CRPT->RSA_SADDR[i];
+        for(j=0;j<n;j++)
+        {
+            if((j & 0xf) == 0)
+                printf("\n");
+            printf("%02x ", pu8[j]);
+        }
+        printf("\n");
+    }
+
+    printf("DADDR");
+    pu8 = (uint8_t *)CRPT->RSA_DADDR;
+    for(j=0;j<n;j++)
+    {
+        if((j & 0xf) == 0)
+            printf("\n");
+        printf("%02x ", pu8[j]);
+    }
+    printf("\n");
+
+}
+
+void dump(uint8_t *p, uint32_t size)
+{
+    int i;
+
+    for(i=0;i<size;i++)
+    {
+        if((i & 0xf) == 0)
+            printf("\n");
+        printf("%02x ", p[i]);
+    }
+    printf("\n");
+
+
+}
+
+
+
+int mbedtls_platform_entropy_poll( void *data,
+                           unsigned char *output, size_t len, size_t *olen )
+{
+    return 0;
+}
 

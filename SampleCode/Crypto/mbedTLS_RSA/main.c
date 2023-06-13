@@ -1,21 +1,27 @@
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
+ * $Revision: 3 $
+ * $Date: 19/11/22 2:06p $
  * @brief    Show how mbedTLS RSA function works.
- *
- * @copyright SPDX-License-Identifier: Apache-2.0
- * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @note
+ * SPDX-License-Identifier: Apache-2.0
+ * @copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
-#include "rsa.h"
+#include "mbedtls/rsa.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include "NuMicro.h"
 
 #define MBEDTLS_EXIT_SUCCESS    0
 #define MBEDTLS_EXIT_FAILURE    -1
 
+int mbedtls_rsa_self_test(int verbose);
+
+volatile uint32_t g_u32Ticks = 0;
 
 
 void SYS_Init(void)
@@ -33,6 +39,9 @@ void SYS_Init(void)
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
 
+    /* Enable CRYPTO module */
+    CLK_EnableModuleClock(CRPT_MODULE);
+
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
@@ -48,16 +57,27 @@ void SYS_Init(void)
 
 }
 
+void UART0_Init(void)
+{
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init UART                                                                                               */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Reset UART0 */
+    SYS_ResetModule(UART0_RST);
 
+    /* Configure UART0 and set UART0 baud rate */
+    UART_Open(UART0, 115200);
+}
 
+void SysTick_Handler()
+{
+    g_u32Ticks++;
+}
 
-extern int PEMtoRSA(void);
-extern int RSAEncryptWithHashTest(int verbose);
 
 int32_t main(void)
 {
-    uint32_t  u32Verbose;
-    int32_t  i32Ret;
+    int  i32Ret = MBEDTLS_EXIT_SUCCESS;
 
     /* Unlock protected registers */
     SYS_UnlockReg();
@@ -65,60 +85,85 @@ int32_t main(void)
     /* Init System, IP clock and multi-function I/O. */
     SYS_Init();
 
-    /* Lock protected registers */
-    SYS_LockReg();
+    /* Init debug message */
+    UART0_Init();
 
-    /* Configure UART0: 115200, 8-bit word, no parity bit, 1 stop bit. */
-    UART_Open(UART0, 115200);
-    /*
-        This sample code is used to show how to use StdDriver API to implement ISP functions.
-    */
+    SysTick_Config(SystemCoreClock / 1000);
 
-    printf("\n\n");
-    printf("+---------------------------------+\n");
-    printf("|         RSA Sample Code         |\n");
-    printf("+---------------------------------+\n");
+    printf("MBEDTLS RSA self test ...\n");
 
-    /* Unlock protected registers */
-    SYS_UnlockReg();
-
-    i32Ret = MBEDTLS_EXIT_SUCCESS;
-
-    printf("\n  PEM to RSA key test start\n");
-    i32Ret = PEMtoRSA();
-    printf("\n  PEM to RSA key test done\n");
-
-    if(i32Ret != MBEDTLS_EXIT_SUCCESS)
-    {
-        printf("\n  Test fail\n");
-        goto lexit;
-    }
-#if 0
-    printf("\n RSA encrypt with hash test. \n Please enter the [verbose] value, then press Enter Key:\n");
-    scanf("%d", &u32Verbose);
-    printf("\n RSA encrypt with hash test start...   verbose[%d]\n", u32Verbose);
+#ifdef MBEDTLS_RSA_ALT
+    printf("Hardware Accellerator Enabled.\n");
 #else
-    u32Verbose = 1;
-    printf("\n  RSA encrypt with hash test start\n");
+    printf("Pure software crypto running.\n");
 #endif
 
-    i32Ret = RSAEncryptWithHashTest(u32Verbose);
-    printf("\n  RSA encrypt with hash test done\n");
+    g_u32Ticks = 0;
+    i32Ret = mbedtls_rsa_self_test(1);
+    printf("Total elapsed time is %d ms\n", g_u32Ticks);
 
-    if(i32Ret == MBEDTLS_EXIT_SUCCESS)
+    if(i32Ret < 0)
     {
-        printf("\n  Test OK\n");
+        printf("Test fail!\n");
     }
-    else
-    {
-        printf("\n  Test fail\n");
-    }
-
-lexit:
-
+    printf("Test Done!\n");
     while(1);
 
 }
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
 
+
+void show(void)
+{
+    int i,j;
+    int n = 128;
+    uint8_t *pu8;
+
+    printf("\n");
+    for(i=0;i<3;i++)
+    {
+        printf("SADDR[%d]", i);
+        pu8 = (uint8_t *)CRPT->RSA_SADDR[i];
+        for(j=0;j<n;j++)
+        {
+            if((j & 0xf) == 0)
+                printf("\n");
+            printf("%02x ", pu8[j]);
+        }
+        printf("\n");
+    }
+
+    printf("DADDR");
+    pu8 = (uint8_t *)CRPT->RSA_DADDR;
+    for(j=0;j<n;j++)
+    {
+        if((j & 0xf) == 0)
+            printf("\n");
+        printf("%02x ", pu8[j]);
+    }
+    printf("\n");
+
+}
+
+void dump(uint8_t *p, uint32_t size)
+{
+    int i;
+
+    for(i=0;i<size;i++)
+    {
+        if((i & 0xf) == 0)
+            printf("\n");
+        printf("%02x ", p[i]);
+    }
+    printf("\n");
+
+
+}
+
+
+
+int mbedtls_platform_entropy_poll( void *data,
+                           unsigned char *output, size_t len, size_t *olen )
+{
+    return 0;
+}
 

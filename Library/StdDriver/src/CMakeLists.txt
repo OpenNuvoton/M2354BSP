@@ -44,4 +44,4 @@ set(DRV_SRC
 )
 
 
-add_library(libdriver ${DRV_SRC})
+add_library(standard_driver ${DRV_SRC})

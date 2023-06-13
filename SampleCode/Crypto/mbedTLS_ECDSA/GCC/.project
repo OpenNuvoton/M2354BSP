@@ -30,6 +30,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>CryptoAccelerator</name>
+			<type>2</type>
+			<location>D:/MCU/M2354/M2354/m2354bsp/Library/CryptoAccelerator</location>
+		</link>
+		<link>
 			<name>Library</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -55,22 +60,58 @@
 			<locationURI>PARENT-4-PROJECT_LOC/Library/StdDriver/src</locationURI>
 		</link>
 		<link>
-			<name>User/ecdsa_test.c</name>
+			<name>User/test_suite_ecdsa.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/ecdsa_test.c</locationURI>
-		</link>
-		<link>
-			<name>User/main.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/main.c</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/test_suite_ecdsa.c</locationURI>
 		</link>
 		<link>
 			<name>mbedTLS/mbedTLS</name>
 			<type>2</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ThirdParty/mbedTLS/library</locationURI>
+			<locationURI>PARENT-4-PROJECT_LOC/ThirdParty/mbedtls-3.1.0/library</locationURI>
+		</link>
+		<link>
+			<name>mbedTLS/test</name>
+			<type>2</type>
+			<locationURI>PARENT-4-PROJECT_LOC/ThirdParty/mbedtls-3.1.0/tests/src</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>
+		<filter>
+			<id>1686560170581</id>
+			<name>CryptoAccelerator</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Keil</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1686560170591</id>
+			<name>CryptoAccelerator</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-IAR</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1686560170596</id>
+			<name>CryptoAccelerator</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-crypto.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1686560170602</id>
+			<name>CryptoAccelerator</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-huk_derive_key.c</arguments>
+			</matcher>
+		</filter>
 		<filter>
 			<id>1574734657248</id>
 			<name>CMSIS/CMSIS</name>
@@ -90,7 +131,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1574736233643</id>
+			<id>1574732817060</id>
 			<name>Library/Library</name>
 			<type>5</type>
 			<matcher>
@@ -99,7 +140,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1574736233652</id>
+			<id>1574732817072</id>
 			<name>Library/Library</name>
 			<type>5</type>
 			<matcher>
@@ -108,7 +149,16 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1574736233660</id>
+			<id>1574732817072</id>
+			<name>Library/Library</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-sys.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1574732817102</id>
 			<name>Library/Library</name>
 			<type>5</type>
 			<matcher>
@@ -117,12 +167,48 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1574736233669</id>
-			<name>Library/Library</name>
-			<type>5</type>
+			<id>1686566807351</id>
+			<name>mbedTLS/test</name>
+			<type>6</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-sys.c</arguments>
+				<arguments>1.0-name-matches-false-false-asn1_helpers.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1686566807356</id>
+			<name>mbedTLS/test</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-certs.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1686566807361</id>
+			<name>mbedTLS/test</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-fake*</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1686566807366</id>
+			<name>mbedTLS/test</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-psa_exercise_key.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1686566807372</id>
+			<name>mbedTLS/test</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-threading_helpers.c</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

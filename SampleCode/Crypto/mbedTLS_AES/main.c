@@ -1,17 +1,42 @@
 /******************************************************************************
  * @file     main.c
  * @version  V3.00
+ * $Revision: 3 $
+ * $Date: 19/11/22 2:06p $
  * @brief    Show how mbedTLS AES function works.
- *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include "NuMicro.h"
+#include "common.h"
+#include "mbedtls/aes.h"
+//*** <<< Use Configuration Wizard in Context Menu >>> ***
+// <c0> Enable AES Test
+#define TEST_AES
+// </c>
+// <c0> Enable CCM Test
+#define TEST_CCM
+// </c>
+// <c0> Enable GCM Test
+#define TEST_GCM
+// </c>
+
+
+//*** <<< end of configuration section >>>    ***
+
 
 
 #define MBEDTLS_EXIT_SUCCESS    0
 #define MBEDTLS_EXIT_FAILURE    -1
+
+extern int mbedtls_aes_self_test( int verbose );
+extern int mbedtls_gcm_self_test( int verbose );
+extern int mbedtls_ccm_self_test( int verbose );
+void SYS_Init(void);
+
+
+volatile uint32_t g_u32Ticks = 0;
 
 
 void SYS_Init(void)
@@ -29,6 +54,9 @@ void SYS_Init(void)
     /* Set core clock to 96MHz */
     CLK_SetCoreClock(96000000);
 
+    /* Enable CRYPTO module */
+    CLK_EnableModuleClock(CRPT_MODULE);
+
     /* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
@@ -44,7 +72,24 @@ void SYS_Init(void)
 
 }
 
-extern int AESTest(void);
+
+void UART0_Init(void)
+{
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Init UART                                                                                               */
+    /*---------------------------------------------------------------------------------------------------------*/
+    /* Reset UART0 */
+    SYS_ResetModule(UART0_RST);
+
+    /* Configure UART0 and set UART0 baud rate */
+    UART_Open(UART0, 115200);
+}
+
+void SysTick_Handler()
+{
+    g_u32Ticks++;
+}
+
 
 int32_t main(void)
 {
@@ -56,38 +101,42 @@ int32_t main(void)
     /* Init System, IP clock and multi-function I/O. */
     SYS_Init();
 
-    /* Lock protected registers */
-    SYS_LockReg();
+    /* Init debug message */
+    UART0_Init();
 
-    /* Configure UART0: 115200, 8-bit word, no parity bit, 1 stop bit. */
-    UART_Open(UART0, 115200);
+    SysTick_Config(SystemCoreClock / 1000);
 
-    /*
-        This sample code is used to show how to use StdDriver API to implement ISP functions.
-    */
+    printf("MBEDTLS AES self test ...\n");
 
-    printf("\n\n");
-    printf("+--------------------------------+\n");
-    printf("|        AES Sample Code         |\n");
-    printf("+--------------------------------+\n");
+#ifdef MBEDTLS_AES_ALT
+    printf("Hardware Accellerator Enabled.\n");
+#else
+    printf("Pure software crypto running.\n");
+#endif
 
-    printf("\n AES test start...\n\n");
-    i32Ret = AESTest();
-    printf("\n AES test done ...\n");
+#ifdef TEST_AES
+    g_u32Ticks = 0;
+    i32Ret = mbedtls_aes_self_test(1);
+    printf("Total elapsed time is %d ms\n", g_u32Ticks);
+#endif    
 
+#ifdef TEST_GCM
+    g_u32Ticks = 0;
+    i32Ret |= mbedtls_gcm_self_test(1);
+    printf("Total elapsed time is %d ms\n", g_u32Ticks);
+#endif
 
-    if(i32Ret == MBEDTLS_EXIT_SUCCESS)
+#ifdef TEST_CCM
+    g_u32Ticks = 0;
+    i32Ret |= mbedtls_ccm_self_test(1);
+    printf("Total elapsed time is %d ms\n", g_u32Ticks);
+#endif
+
+    if(i32Ret < 0)
     {
-        printf("\nTest OK\n");
+        printf("Test fail!\n");
     }
-    else
-    {
-        printf("\nTest fail\n");
-    }
-
+    printf("Test Done!\n");
     while(1);
 
 }
-/*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
-
-

@@ -30,17 +30,22 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>CryptoAccelerator</name>
+			<type>2</type>
+			<location>D:/MCU/M2354/M2354/m2354bsp/Library/CryptoAccelerator</location>
+		</link>
+		<link>
 			<name>Library</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>mbedTLS</name>
+			<name>User</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>User</name>
+			<name>mbedTLS</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -55,27 +60,53 @@
 			<locationURI>PARENT-4-PROJECT_LOC/Library/StdDriver/src</locationURI>
 		</link>
 		<link>
-			<name>mbedTLS/mbedTLS</name>
-			<type>2</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ThirdParty/mbedTLS/library</locationURI>
-		</link>
-		<link>
-			<name>mbedTLS/mbedTLS</name>
-			<type>2</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ThirdParty\mbedTLS\library</locationURI>
-		</link>		
-		<link>
-			<name>User/aes_test.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/aes_test.c</locationURI>
-		</link>
-		<link>
 			<name>User/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/main.c</locationURI>
 		</link>
+		<link>
+			<name>mbedTLS/mbedTLS</name>
+			<type>2</type>
+			<location>D:/MCU/M2354/M2354/m2354bsp/ThirdParty/mbedtls-3.1.0/library</location>
+		</link>
 	</linkedResources>
 	<filteredResources>
+		<filter>
+			<id>1686560170581</id>
+			<name>CryptoAccelerator</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Keil</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1686560170591</id>
+			<name>CryptoAccelerator</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-IAR</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1686560170596</id>
+			<name>CryptoAccelerator</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-crypto.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1686560170602</id>
+			<name>CryptoAccelerator</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-huk_derive_key.c</arguments>
+			</matcher>
+		</filter>
 		<filter>
 			<id>1574734657248</id>
 			<name>CMSIS/CMSIS</name>
