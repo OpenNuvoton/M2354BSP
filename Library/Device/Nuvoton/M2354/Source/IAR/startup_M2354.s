@@ -169,6 +169,10 @@ __vector_table
     SECTION .text:CODE:NOROOT:REORDER(2)       ; 4 bytes alignment
 Reset_Handler
 
+        ; Set MSPLIM for stack overflow
+        LDR     R0, =sfb(CSTACK)
+        MSR     MSPLIM, R0
+
         LDR      R0, =SystemInit
         BLX      R0
         LDR      R0, =__iar_program_start
@@ -176,9 +180,14 @@ Reset_Handler
 
      PUBWEAK HardFault_Handler
 HardFault_Handler\
-
         MOV     R0, LR
+
         MRS     R1, MSP
+        ; Check MSP Overflow
+        MRS     R3, MSPLIM
+        CMP     R1, R3
+        BEQ     .   ; Loop here when Stack Overflow
+        
         MRS     R2, PSP
         LDR     R3, =ProcessHardFault
         BLX     R3

@@ -218,7 +218,9 @@ Reset_Handler   PROC
 ;                CMP     r1, #0
 ;                BEQ     myloop
 
-
+                ; Set MSPLIM for stack overflow
+                LDR     R0, =Stack_Mem
+                MSR     MSPLIM, R0
 
                 LDR     R0, =SystemInit
                 BLX     R0
@@ -237,11 +239,18 @@ HardFault_Handler\
                 PROC
                 IMPORT  ProcessHardFault
                 EXPORT  HardFault_Handler         [WEAK]
+
                 MOV     R0, LR
+
                 MRS     R1, MSP
-                MRS     R2, PSP
+                ; Check MSP Overflow
+                MRS     R3, MSPLIM
+                CMP     R1, R3
+                BEQ     .   ; Loop here when Stack Overflow
+                
                 LDR     R3, =ProcessHardFault
                 BLX     R3
+                
                 BX      R0
                 ENDP
 ProcessHardFaultx\

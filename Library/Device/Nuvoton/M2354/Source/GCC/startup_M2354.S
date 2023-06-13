@@ -15,7 +15,7 @@
     .section .stack
     .align  3
 #ifndef Stack_Size
-    .equ    Stack_Size, 0x00001000
+    .equ    Stack_Size, 0x00003000
 #endif
     .global __StackTop
     .global __StackLimit
@@ -329,7 +329,9 @@ Reset_Handler:
 #endif /* __STARTUP_CLEAR_BSS_MULTIPLE || __STARTUP_CLEAR_BSS */
 
 
-
+    # Set MSPLIM for stac overflow
+    LDR     R0, =__StackLimit
+    MSR     MSPLIM, R0
 
 #ifndef __START
 #define __START _start
@@ -348,6 +350,11 @@ Reset_Handler:
 
     MOV     R0, LR
     MRS     R1, MSP
+    # Check stack overflow
+    MRS     R3, MSPLIM
+    CMP     R1, R3
+    BEQ     .
+    
     MRS     R2, PSP
     LDR     R3, =ProcessHardFault
     BLX     R3
