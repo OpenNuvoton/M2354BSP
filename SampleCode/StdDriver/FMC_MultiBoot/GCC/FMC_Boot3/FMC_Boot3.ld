@@ -1,9 +1,8 @@
 /* Linker script to configure memory regions. */
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 0x10000   /* 64k */
-  XOM0 (x)   : ORIGIN = 0x00010000, LENGTH = 0x1000    /* 4k  */
-  RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 0x40000   /* 256k */
+  FLASH (rx) : ORIGIN = 0x00010000, LENGTH = 0x8000     /* 32k */
+  RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 0x40000    /* 256k */
 }
 
 /* Library configurations */
@@ -52,8 +51,7 @@ SECTIONS
 		__Vectors_Size = __Vectors_End - __Vectors;
 		__end__ = .;
 
-		/* *(.text*)*/
-		*(EXCLUDE_FILE(./User/xom_add.o) .text*)
+		*(.text*)
 
 		KEEP(*(.init))
 		KEEP(*(.fini))
@@ -196,12 +194,4 @@ SECTIONS
 
 	/* Check if data + heap + stack exceeds RAM limit */
 	/*ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack")*/
-}
-SECTIONS{
-
-	.xom0 :
-	{
-		./User/xom_add.o(.text*)
-	} > XOM0
-
 }

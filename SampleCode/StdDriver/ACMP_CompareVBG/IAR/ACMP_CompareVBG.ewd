@@ -112,7 +112,7 @@
                 </option>
                 <option>
                     <name>FlashLoadersV3</name>
-                    <state>D:\Software\UART\ttpro313\ttermpro.exe /c=1 /baud=115200</state>
+                    <state>$TOOLKIT_DIR$\config\flashloader\Nuvoton\M2354_APROM.board</state>
                 </option>
                 <option>
                     <name>OCImagesSuppressCheck1</name>

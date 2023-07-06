@@ -487,9 +487,9 @@ __STATIC_INLINE uint32_t FMC_ReadPID(void)
 
     g_FMC_i32ErrCode = 0;
 
-    FMC->ISPCMD = FMC_ISPCMD_READ_DID;          /* Set ISP Command Code */
-    FMC->ISPADDR = 0x04u;                       /* Must keep 0x4 when read PID */
-    FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;         /* Trigger to start ISP procedure */
+    FMC_ISP->ISPCMD = FMC_ISPCMD_READ_DID;          /* Set ISP Command Code */
+    FMC_ISP->ISPADDR = 0x04u;                       /* Must keep 0x4 when read PID */
+    FMC_ISP->ISPTRG = FMC_ISPTRG_ISPGO_Msk;         /* Trigger to start ISP procedure */
 #if ISBEN
     __ISB();
 #endif                                          /* To make sure ISP/CPU be Synchronized */

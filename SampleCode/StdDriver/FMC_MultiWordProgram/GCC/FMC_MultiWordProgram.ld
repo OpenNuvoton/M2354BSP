@@ -2,7 +2,7 @@
 MEMORY
 {
   FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 0x100000   /* 1M */
-  RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 0x50000    /* 320k */
+  RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 0x40000    /* 256k */
 }
 
 /* Library configurations */
@@ -51,7 +51,8 @@ SECTIONS
 		__Vectors_Size = __Vectors_End - __Vectors;
 		__end__ = .;
 
-		*(.text*)
+		/* *(.text*) */
+		*(EXCLUDE_FILE(./Library/Library/fmc.o) .text*)
 
 		KEEP(*(.init))
 		KEEP(*(.fini))
@@ -142,6 +143,9 @@ SECTIONS
 	{
 		__data_start__ = .;
 		. = SIZEOF(.stack_dummy);
+
+		./Library/Library/fmc.o (.text*)
+
 		*(vtable)
 		*(.data*)
 
