@@ -94,8 +94,6 @@ void UI2C_SLV_Toggle_Wakeup(uint32_t u32Status)
         /* Event process */
         if(s_Event == SLAVE_ADDRESS_ACK)
         {
-            g_u8DataLenS = 0;
-
             if((UI2C0->PROTSTS & UI2C_PROTSTS_SLAREAD_Msk) == UI2C_PROTSTS_SLAREAD_Msk)
             {
                 /* Own SLA+R has been receive; ACK has been return */
@@ -105,6 +103,7 @@ void UI2C_SLV_Toggle_Wakeup(uint32_t u32Status)
             }
             else
             {
+                g_u8DataLenS = 0;
                 s_Event = SLAVE_GET_DATA;
             }
             g_u16RecvAddr = (uint8_t)UI2C_GET_DATA(UI2C0);
@@ -190,8 +189,6 @@ void UI2C_SLV_Address_Wakeup(uint32_t u32Status)
         /* Event process */
         if(s_Event == SLAVE_ADDRESS_ACK)
         {
-            g_u8DataLenS = 0;
-
             if((UI2C0->PROTSTS & UI2C_PROTSTS_SLAREAD_Msk) == UI2C_PROTSTS_SLAREAD_Msk)
             {
                 /* Own SLA+R has been receive; ACK has been return */
@@ -201,6 +198,7 @@ void UI2C_SLV_Address_Wakeup(uint32_t u32Status)
             }
             else
             {
+                g_u8DataLenS = 0;
                 s_Event = SLAVE_GET_DATA;
             }
             g_u16RecvAddr = (uint8_t)UI2C_GET_DATA(UI2C0);

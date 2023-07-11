@@ -76,6 +76,7 @@ void UI2C_LB_SlaveTRx(uint32_t u32Status)
         else if(s_Event == SLAVE_H_RD_ADDRESS_ACK)
         {
             g_u8SlvDataLen = 0;
+            s_Event = SLAVE_L_RD_ADDRESS_ACK;
 
             UI2C_SET_DATA(UI2C0, g_u8SlvData[slave_buff_addr]);
             slave_buff_addr++;
@@ -98,6 +99,10 @@ void UI2C_LB_SlaveTRx(uint32_t u32Status)
         {
             UI2C_SET_DATA(UI2C0, g_u8SlvData[slave_buff_addr]);
             slave_buff_addr++;
+            if(slave_buff_addr == 256)
+            {
+                slave_buff_addr = 0;
+            }
         }
         else if(s_Event == SLAVE_GET_DATA)
         {
@@ -194,8 +199,8 @@ void UI2C0_Init(uint32_t u32ClkSpeed)
     printf("UI2C0 clock %d Hz\n", UI2C_GetBusClockFreq(UI2C0));
 
     /* Set UI2C0 Slave Addresses */
-    UI2C_SetSlaveAddr(UI2C0, 0, 0x116, UI2C_GCMODE_DISABLE);   /* Slave Address : 0x16 */
-    UI2C_SetSlaveAddr(UI2C0, 1, 0x136, UI2C_GCMODE_DISABLE);   /* Slave Address : 0x36 */
+    UI2C_SetSlaveAddr(UI2C0, 0, 0x116, UI2C_GCMODE_DISABLE);   /* Slave Address : 0x116 */
+    UI2C_SetSlaveAddr(UI2C0, 1, 0x136, UI2C_GCMODE_DISABLE);   /* Slave Address : 0x136 */
 
     /* Set UI2C0 Slave Addresses Mask */
     UI2C_SetSlaveAddrMask(UI2C0, 0, 0x04);                    /* Slave Address Mask : 0x4 */

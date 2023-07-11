@@ -50,7 +50,7 @@ void I2C_MasterTx(uint32_t u32Status);
 void SYS_Init(void);
 void I2C0_Init(void);
 void I2C0_Close(void);
-int32_t I2C0_Read_Write_SLAVE(uint8_t u8SlvAddr);
+int32_t I2C0_Read_Write_SLAVE(uint16_t u16SlvAddr);
 
 /*---------------------------------------------------------------------------------------------------------*/
 /*  I2C0 IRQ Handler                                                                                       */
@@ -326,7 +326,7 @@ void I2C0_Close(void)
 
 }
 
-int32_t I2C0_Read_Write_SLAVE(uint8_t u8SlvAddr)
+int32_t I2C0_Read_Write_SLAVE(uint16_t u16SlvAddr)
 {
     uint32_t u32i;
 
@@ -336,10 +336,10 @@ int32_t I2C0_Read_Write_SLAVE(uint8_t u8SlvAddr)
         I2C_EnableTimeout(I2C0, 0);
         s_u8MstReStartFlag = 0;
 #if (I2C_10Bit_MODE)
-        s_u8DeviceAddr = (u8SlvAddr >> 8)| SLV_10BIT_ADDR;
-        s_u8DeviceLAddr = u8SlvAddr & 0xFF;
+        s_u8DeviceAddr = (u16SlvAddr >> 8)| SLV_10BIT_ADDR;
+        s_u8DeviceLAddr = u16SlvAddr & 0xFF;
 #else
-        s_u8DeviceAddr = u8SlvAddr;
+        s_u8DeviceAddr = (uint8_t)u16SlvAddr;
 #endif
         s_u8TimeoutFlag = 0;
         for(u32i = 0; u32i < 0x100; u32i++)
@@ -393,9 +393,9 @@ int32_t I2C0_Read_Write_SLAVE(uint8_t u8SlvAddr)
             s_I2C0HandlerFn = (I2C_FUNC)I2C_MasterRx;
             s_u8MstDataLen = 0;
 #if (I2C_10Bit_MODE)
-            s_u8DeviceAddr = (u8SlvAddr >> 8) | SLV_10BIT_ADDR;
+            s_u8DeviceAddr = (u16SlvAddr >> 8) | SLV_10BIT_ADDR;
 #else
-            s_u8DeviceAddr = u8SlvAddr;
+            s_u8DeviceAddr = (uint8_t)u16SlvAddr;
 #endif
 
             I2C_SET_CONTROL_REG(I2C0, I2C_CTL_STA);
@@ -440,7 +440,7 @@ int32_t I2C0_Read_Write_SLAVE(uint8_t u8SlvAddr)
         }
     } while(s_u8MstReStartFlag); /*If unexpected abort happens, re-start the transmition*/
 
-    printf("Master Access Slave (0x%X) Test OK\n", u8SlvAddr);
+    printf("Master Access Slave (0x%X) Test OK\n", u16SlvAddr);
     return 0;
 }
 
