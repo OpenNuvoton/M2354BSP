@@ -356,7 +356,7 @@ static int32_t _GCMTag(mbedtls_gcm_context *ctx, const uint8_t *iv, uint32_t ivl
 
     // GHASH(128'align(A) || 128'align(C) || 64'bitlen(A) || 64'bitlen(C))
     // GHASH Calculation
-    if(plen <= GCM_PBLOCK_SIZE)
+    if(ivlen + alen + plen + 16 <= MAX_GCM_BUF)
     {
         /* Just one shot if plen < maximum block size */
 
@@ -571,7 +571,7 @@ static int32_t _GCM(mbedtls_gcm_context *ctx, const uint8_t *iv, size_t ivlen, c
     CRPT->AES_GCM_PCNT[1] = (uint64_t)plen >> 32;
 
     plen_aligned = (plen & 0xful) ? ((plen + 16) / 16) * 16 : plen;
-    if(plen <= GCM_PBLOCK_SIZE)
+    if(ivlen + alen + plen + 16 <= MAX_GCM_BUF)
     {
         /* Just one shot */
 
