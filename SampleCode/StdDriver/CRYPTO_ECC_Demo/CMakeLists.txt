@@ -1,6 +1,6 @@
 
 
-set(PRJ ACMP_CompareVBG)
+set(PRJ CRYPTO_ECC_Demo)
 add_executable(${PRJ} main.c)
 target_link_libraries(${PRJ} system_startup standard_driver)
 
@@ -27,12 +27,9 @@ target_link_options(${PRJ}
 )
  
 # Convert to binary and copy to target device
-if(${DOWNLOAD_BOARD})
+message("Convert elf to binary file and download to target board .... ")
+add_custom_command(TARGET ${PRJ} POST_BUILD
+    COMMAND ${ARM_FROMELF} --bin --output ${PRJ}.bin ${PRJ}.elf
+    VERBATIM
+)
 
-    message("Convert elf to binary file and download to target board .... ")
-    add_custom_command(TARGET ${PRJ} POST_BUILD
-       COMMAND ${ARM_FROMELF} --bin --output e:/${PRJ}.bin ${PRJ}.elf
-       VERBATIM
-    )
-
-endif()

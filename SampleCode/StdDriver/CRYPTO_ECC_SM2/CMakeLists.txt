@@ -2,7 +2,7 @@
 
 set(PRJ CRYPTO_ECC_SM2)
 add_executable(${PRJ} main.c)
-target_link_libraries(${PRJ} libstartup libdriver)
+target_link_libraries(${PRJ} system_startup standard_driver)
 
 target_link_options(${PRJ} 
    PUBLIC 

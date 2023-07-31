@@ -107,11 +107,12 @@ target_include_directories(test_lib
 #add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/CRYPTO_AES_CCM)
 #add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/ACMP_CompareDAC)
 #add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/ACMP_CompareVBG)
-add_subdirectory(${BSP_DIR}/SampleCode/Crypto/mbedTLS_SHA256)
-add_subdirectory(${BSP_DIR}/SampleCode/Crypto/mbedTLS_RSA)
-add_subdirectory(${BSP_DIR}/SampleCode/Crypto/mbedTLS_ECDSA)
-add_subdirectory(${BSP_DIR}/SampleCode/Crypto/mbedTLS_ECDH)
-add_subdirectory(${BSP_DIR}/SampleCode/Crypto/mbedTLS_AES)
+#add_subdirectory(${BSP_DIR}/SampleCode/Crypto/mbedTLS_SHA256)
+#add_subdirectory(${BSP_DIR}/SampleCode/Crypto/mbedTLS_RSA)
+#add_subdirectory(${BSP_DIR}/SampleCode/Crypto/mbedTLS_ECDSA)
+#add_subdirectory(${BSP_DIR}/SampleCode/Crypto/mbedTLS_ECDH)
+#add_subdirectory(${BSP_DIR}/SampleCode/Crypto/mbedTLS_AES)
+add_subdirectory(${BSP_DIR}/SampleCode/StdDriver/CRYPTO_ECC_Demo)
 
 
 
