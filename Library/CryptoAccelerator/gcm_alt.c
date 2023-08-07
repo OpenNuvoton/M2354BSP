@@ -329,8 +329,8 @@ static int32_t _GCMTag(mbedtls_gcm_context *ctx, const uint8_t *iv, uint32_t ivl
     int32_t i, len, plen_cur;
     const uint8_t *pin;
     uint8_t *pout;
-    uint32_t inputblock[MAX_GCM_BUF * 2] = {0}; /* 2 block buffer, 1 for A, 1 for P */
-    uint32_t ghashbuf[MAX_GCM_BUF + 16] = {0};
+    uint32_t inputblock[(MAX_GCM_BUF * 2 + 128) / 4] = {0}; /* alen + ivlen + ivlen must < 128 */
+    uint32_t ghashbuf[16 / 4] = {0};
     uint8_t *pblock;
     uint32_t u32OptBasic;
     uint32_t u32OptKeySize;
@@ -383,8 +383,7 @@ static int32_t _GCMTag(mbedtls_gcm_context *ctx, const uint8_t *iv, uint32_t ivl
         CRPT->AES_CNT = len;
 
 
-        AES_Run(u32OptBasic | GHASH_MODE | DMAEN /*| DMALAST*/);
-
+        AES_Run(u32OptBasic | GHASH_MODE | DMAEN | DMALAST);
 
     }
     else
@@ -431,6 +430,7 @@ static int32_t _GCMTag(mbedtls_gcm_context *ctx, const uint8_t *iv, uint32_t ivl
                 CRPT->AES_CNT = len;
 
                 AES_Run(u32OptBasic | GHASH_MODE | FBIN | FBOUT | DMAEN | DMACC);
+
             }
             else
             {
@@ -468,13 +468,14 @@ static int32_t _GCMTag(mbedtls_gcm_context *ctx, const uint8_t *iv, uint32_t ivl
                 CRPT->AES_CNT = len;
 
                 AES_Run(u32OptBasic | GHASH_MODE | FBIN | FBOUT | DMAEN | DMACC | DMALAST);
+                
 
             }
-
+            
             pin += len;
         }
     }
-
+    
     // CTR(IV, GHASH(128'align(A) || 128'align(C) || 64'bitlen(A) || 64'bitlen(C)))
     // CTR calculation
 
@@ -493,7 +494,7 @@ static int32_t _GCMTag(mbedtls_gcm_context *ctx, const uint8_t *iv, uint32_t ivl
         CRPT->AES_DADDR = (uint32_t)piv;
         CRPT->AES_CNT = len;
 
-        if((ret = AES_Run(u32OptBasic | GHASH_MODE | DMAEN/* | DMALAST*/)))
+        if((ret = AES_Run(u32OptBasic | GHASH_MODE | DMAEN | DMALAST)))
         {
             return ret;
         }
@@ -522,7 +523,7 @@ static int32_t _GCMTag(mbedtls_gcm_context *ctx, const uint8_t *iv, uint32_t ivl
     CRPT->AES_DADDR = (uint32_t)&tag[0];
     CRPT->AES_CNT = 16;
 
-    ret = AES_Run(u32OptBasic | CTR_MODE | DMAEN /*| DMALAST*/);
+    ret = AES_Run(u32OptBasic | CTR_MODE | DMAEN | DMALAST);
 
     memcpy(tagbuf, tag, 16);
 
@@ -667,7 +668,7 @@ static int32_t _GCM(mbedtls_gcm_context *ctx, const uint8_t *iv, size_t ivlen, c
         /* Need to calculate Tag when plen % 16 == 1 or 15 */
         if(((plen & 0xf) == 1) || ((plen & 0xf) == 15))
         {
-            if((ret = _GCMTag(ctx, iv, ivlen, A, alen, ctx->out_buf, plen, tag)))
+            if((ret = _GCMTag(ctx, iv, ivlen, A, alen, buf, plen, tag)))
             {
                 return ret;
             }

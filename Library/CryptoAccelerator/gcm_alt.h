@@ -61,8 +61,8 @@ typedef struct mbedtls_gcm_context
     uint32_t iv[4];         /* IV for next block cipher */
     uint32_t keys[8];       /* Cipher key */
     uint32_t basicOpt;      /* Basic option of AES controller */
-    uint8_t  gcm_buf[MAX_GCM_BUF]; /* buffer for GCM DMA input */
-    uint8_t  out_buf[MAX_GCM_BUF+16]; /* buffer for GCM DMA output */
+    uint8_t  gcm_buf[MAX_GCM_BUF   +16]; /* buffer for GCM DMA input */
+    uint8_t  out_buf[MAX_GCM_BUF+16+16]; /* buffer for GCM DMA output */
     uint8_t  fb_buf[72];    /* feedback buffer for GCM DMA */
     uint8_t  fb_buf2[72];   /* feedback buffer 2 for GCM DMA */
     uint8_t  tag[16];       /* Tag */
