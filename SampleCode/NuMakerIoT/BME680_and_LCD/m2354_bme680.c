@@ -3,8 +3,8 @@
  * @version  V3.00
  * @brief    Initialize the BME680 device and related functions in M2354.
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2019-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2019-2020 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include "m2354_bme680.h"
 

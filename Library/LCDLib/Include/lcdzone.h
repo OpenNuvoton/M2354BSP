@@ -3,8 +3,8 @@
  * @version  V1.00
  * @brief    RHE6616TP01(8-COM, 40-SEG, 1/4 Bias) LCD zone header file
  *
- * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2022 Nuvoton Technology Corp. All rights reserved.
+ * @copyright SPDX-License-Identifier: Apache-2.0
+ * @copyright Copyright (C) 2022 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #ifndef __LCDZONE_H
 #define __LCDZONE_H
