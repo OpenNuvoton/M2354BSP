@@ -4,7 +4,7 @@
  * @brief    USBD CCID interface header
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
- * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __CCID_IF_H__
 #define __CCID_IF_H__

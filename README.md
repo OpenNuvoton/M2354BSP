@@ -20,6 +20,9 @@ To experience the powerful features of M2354 in few minutes, please refer to NuM
 - CMSIS<br>
 	Cortex® Microcontroller Software Interface Standard (CMSIS) V5.0 definitions by ARM® Corp.
 
+- CryptoAccelerator<br>
+	A C library that implements cryptographic primitives, X.509 certificate manipulation and the SSL/TLS and DTLS protocols.
+	
 - Device<br>
 	CMSIS compliant device header file.
 
@@ -100,6 +103,9 @@ To experience the powerful features of M2354 in few minutes, please refer to NuM
 - mbedTLS<br>
 	An open source crypto library.
 
+- mbedtls-3.1.0<br>
+	An open source crypto library.
+	
 - SX1276<br>
 	The Semtech SX1276 LoRa transceiver library.
 
