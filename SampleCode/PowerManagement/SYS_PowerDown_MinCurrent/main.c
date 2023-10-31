@@ -37,7 +37,7 @@
 //      <0=> Disable
 //      <1=> Enable
 */
-#define SET_LVR       0
+#define SET_LVR       1
 
 /*
 // <o0> POR
@@ -398,14 +398,13 @@ int32_t main(void)
     printf("|  1. Remove all continuous load, e.g. LED.                         |\n");
     printf("|  2. Disable Tamper function from config3                          |\n");
     printf("|  3. Configure all GPIO as Quasi-bidirectional Mode                |\n");
-    printf("|  4. Disable LVR                                                   |\n");
-    printf("|  5. Disable analog function, e.g. POR module                      |\n");
-    printf("|  6. Disable unused clock, e.g. LIRC                               |\n");
-    printf("|  7. Set main voltage regulator to DCDC mode                       |\n");
-    printf("|  8. Disable unused crypto power switch                            |\n");
-    printf("|  9. Disable unused SRAM                                           |\n");
-    printf("| 10. Enter to Power-Down                                           |\n");
-    printf("| 11. Wait for PC.0 falling-edge interrupt event to wake-up the MCU |\n");
+    printf("|  4. Disable analog function, e.g. POR module                      |\n");
+    printf("|  5. Disable unused clock, e.g. LIRC                               |\n");
+    printf("|  6. Set main voltage regulator to DCDC mode                       |\n");
+    printf("|  7. Disable unused crypto power switch                            |\n");
+    printf("|  8. Disable unused SRAM                                           |\n");
+    printf("|  9. Enter to Power-Down                                           |\n");
+    printf("| 10. Wait for PC.0 falling-edge interrupt event to wake-up the MCU |\n");
     printf("+-------------------------------------------------------------------+\n\n");
 
     /*
