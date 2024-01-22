@@ -78,26 +78,6 @@ extern "C"
 #define AES_IN_SWAP             (2UL)     /*!< AES swap input data                     \hideinitializer */
 #define AES_IN_OUT_SWAP         (3UL)     /*!< AES swap both input and output data     \hideinitializer */
 
-#define DES_MODE_ECB            (0x000UL) /*!< DES select ECB mode                     \hideinitializer */
-#define DES_MODE_CBC            (0x100UL) /*!< DES select CBC mode                     \hideinitializer */
-#define DES_MODE_CFB            (0x200UL) /*!< DES select CFB mode                     \hideinitializer */
-#define DES_MODE_OFB            (0x300UL) /*!< DES select OFB mode                     \hideinitializer */
-#define DES_MODE_CTR            (0x400UL) /*!< DES select CTR mode                     \hideinitializer */
-#define TDES_MODE_ECB           (0x004UL) /*!< TDES select ECB mode                    \hideinitializer */
-#define TDES_MODE_CBC           (0x104UL) /*!< TDES select CBC mode                    \hideinitializer */
-#define TDES_MODE_CFB           (0x204UL) /*!< TDES select CFB mode                    \hideinitializer */
-#define TDES_MODE_OFB           (0x304UL) /*!< TDES select OFB mode                    \hideinitializer */
-#define TDES_MODE_CTR           (0x404UL) /*!< TDES select CTR mode                    \hideinitializer */
-
-#define TDES_NO_SWAP            (0UL)     /*!< TDES do not swap data                       \hideinitializer */
-#define TDES_WHL_SWAP           (1UL)     /*!< TDES swap high-low word                     \hideinitializer */
-#define TDES_OUT_SWAP           (2UL)     /*!< TDES swap output data                       \hideinitializer */
-#define TDES_OUT_WHL_SWAP       (3UL)     /*!< TDES swap output data and high-low word     \hideinitializer */
-#define TDES_IN_SWAP            (4UL)     /*!< TDES swap input data                        \hideinitializer */
-#define TDES_IN_WHL_SWAP        (5UL)     /*!< TDES swap input data and high-low word      \hideinitializer */
-#define TDES_IN_OUT_SWAP        (6UL)     /*!< TDES swap both input and output data        \hideinitializer */
-#define TDES_IN_OUT_WHL_SWAP    (7UL)     /*!< TDES swap input, output and high-low word   \hideinitializer */
-
 #define SHA_MODE_SHA1           (0UL)     /*!< SHA select SHA-1 160-bit                \hideinitializer */
 #define SHA_MODE_SHA224         (5UL)     /*!< SHA select SHA-224 224-bit              \hideinitializer */
 #define SHA_MODE_SHA256         (4UL)     /*!< SHA select SHA-256 256-bit              \hideinitializer */
@@ -199,6 +179,9 @@ typedef struct
     uint32_t au32RsaN[128]; /* The base of modulus operation word. */
     uint32_t au32RsaM[128]; /* The base of exponentiation words. */
     uint32_t au32RsaE[128]; /* The exponent of exponentiation words. */
+    uint32_t au32RsaP[128]; /* The Factor of Modulus Operation. */
+    uint32_t au32RsaQ[128]; /* The Factor of Modulus Operation. */
+    uint32_t au32RsaTmpE[128+4]; /* The Temporary Buffer for SCAP      */
 } RSA_BUF_NORMAL_T;
 
 /* RSA working buffer for CRT ( + CRT bypass) mode */
@@ -216,6 +199,7 @@ typedef struct
     uint32_t au32RsaTmpDq[128]; /* The Temporary Value(Dq) of RSA CRT. */
     uint32_t au32RsaTmpRp[128]; /* The Temporary Value(Rp) of RSA CRT. */
     uint32_t au32RsaTmpRq[128]; /* The Temporary Value(Rq) of RSA CRT. */
+    uint32_t au32RsaTmpE[128+4]; /* The Temporary Buffer for SCAP      */
 } RSA_BUF_CRT_T;
 
 /* RSA working buffer for SCAP mode */
@@ -227,7 +211,7 @@ typedef struct
     uint32_t au32RsaE[128]; /* The exponent of exponentiation words. */
     uint32_t au32RsaP[128]; /* The Factor of Modulus Operation. */
     uint32_t au32RsaQ[128]; /* The Factor of Modulus Operation. */
-    uint32_t au32RsaTmpBlindKey[128+4]; /* The Temporary Value(blind key) of RSA SCAP. */
+    uint32_t au32RsaTmpE[128+4]; /* The Temporary Buffer for SCAP      */
 } RSA_BUF_SCAP_T;
 
 /* RSA working buffer for CRT ( + CRT bypass ) + SCAP mode */
@@ -245,7 +229,7 @@ typedef struct
     uint32_t au32RsaTmpDq[128]; /* The Temporary Value(Dq) of RSA CRT. */
     uint32_t au32RsaTmpRp[128]; /* The Temporary Value(Rp) of RSA CRT. */
     uint32_t au32RsaTmpRq[128]; /* The Temporary Value(Rq) of RSA CRT. */
-    uint32_t au32RsaTmpBlindKey[128]; /* The Temporary Value(blind key) of RSA SCAP. */
+    uint32_t au32RsaTmpE[128+4]; /* The Temporary Buffer for SCAP      */
 } RSA_BUF_CRT_SCAP_T;
 
 /* RSA working buffer for using key store */
@@ -254,6 +238,7 @@ typedef struct
     uint32_t au32RsaOutput[128]; /* The RSA answer. */
     uint32_t au32RsaN[128]; /* The base of modulus operation word. */
     uint32_t au32RsaM[128]; /* The base of exponentiation words. */
+    uint32_t au32RsaTmpE[128+4]; /* The Temporary Buffer for SCAP      */
 } RSA_BUF_KS_T;
 
 /**@}*/ /* end of group CRYPTO_EXPORTED_CONSTANTS */
@@ -347,56 +332,6 @@ typedef struct
   */
 #define AES_DISABLE_KEY_PROTECT(crpt) ((crpt)->AES_CTL = ((crpt)->AES_CTL & ~CRPT_AES_CTL_KEYPRT_Msk) | (0x16UL<<CRPT_AES_CTL_KEYUNPRT_Pos)); \
                                       ((crpt)->AES_CTL &= ~CRPT_AES_CTL_KEYPRT_Msk)
-
-/**
-  * @brief This macro enables TDES interrupt.
-  * @param crpt     Specified crypto module
-  * @return None
-  * \hideinitializer
-  */
-#define TDES_ENABLE_INT(crpt)       ((crpt)->INTEN |= (CRPT_INTEN_TDESIEN_Msk|CRPT_INTEN_TDESEIEN_Msk))
-
-/**
-  * @brief This macro disables TDES interrupt.
-  * @param crpt     Specified crypto module
-  * @return None
-  * \hideinitializer
-  */
-#define TDES_DISABLE_INT(crpt)      ((crpt)->INTEN &= ~(CRPT_INTEN_TDESIEN_Msk|CRPT_INTEN_TDESEIEN_Msk))
-
-/**
-  * @brief This macro gets TDES interrupt flag.
-  * @param crpt     Specified crypto module
-  * @return TDES interrupt flag.
-  * \hideinitializer
-  */
-#define TDES_GET_INT_FLAG(crpt)     ((crpt)->INTSTS & (CRPT_INTSTS_TDESIF_Msk|CRPT_INTSTS_TDESEIF_Msk))
-
-/**
-  * @brief This macro clears TDES interrupt flag.
-  * @param crpt     Specified crypto module
-  * @return None
-  * \hideinitializer
-  */
-#define TDES_CLR_INT_FLAG(crpt)     ((crpt)->INTSTS = (CRPT_INTSTS_TDESIF_Msk|CRPT_INTSTS_TDESEIF_Msk))
-
-/**
-  * @brief This macro enables TDES key protection.
-  * @param crpt     Specified crypto module
-  * @return None
-  * \hideinitializer
-  */
-#define TDES_ENABLE_KEY_PROTECT(crpt)  ((crpt)->TDES_CTL |= CRPT_TDES_CTL_KEYPRT_Msk)
-
-/**
-  * @brief This macro disables TDES key protection.
-  * @param crpt     Specified crypto module
-  * @return None
-  * \hideinitializer
-  */
-#define TDES_DISABLE_KEY_PROTECT(crpt) ((crpt)->TDES_CTL = ((crpt)->TDES_CTL & ~CRPT_TDES_CTL_KEYPRT_Msk) | (0x16UL<<CRPT_TDES_CTL_KEYUNPRT_Pos)); \
-                                       ((crpt)->TDES_CTL &= ~CRPT_TDES_CTL_KEYPRT_Msk)
-
 /**
   * @brief This macro enables SHA interrupt.
   * @param crpt     Specified crypto module
@@ -503,7 +438,7 @@ typedef struct
 */
 
 /*---------------------------------------------------------------------------------------------------------*/
-/*  Functions                                                                                              */
+/*  Functions                                                                                      */
 /*---------------------------------------------------------------------------------------------------------*/
 
 void PRNG_Open(CRPT_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32_t u32Seed);

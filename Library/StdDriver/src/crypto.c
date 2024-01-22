@@ -1,4 +1,4 @@
-﻿/**************************************************************************//**
+/**************************************************************************//**
  * @file     crypto.c
  * @version  V3.00
  * @brief  Cryptographic Accelerator driver source file
@@ -87,7 +87,7 @@ void PRNG_Open(CRPT_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32
     }
 
     crpt->PRNG_CTL = (u32KeySize << CRPT_PRNG_CTL_KEYSZ_Pos) |
-                     (u32SeedReload << CRPT_PRNG_CTL_SEEDRLD_Pos);
+                     (u32SeedReload << CRPT_PRNG_CTL_SEEDRLD_Pos) | CRPT_PRNG_CTL_START_Msk;
 }
 
 /**
@@ -2809,7 +2809,7 @@ int32_t RSA_SetDMATransfer(CRPT_T *crpt, char *Src, char *n, char *P, char *Q)
         crpt->RSA_MADDR[5] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaTmpRq; /* for storing the intermediate temporary value(Rq) */
 
         /* For SCAP mode to store the intermediate temporary value(blind key) */
-        crpt->RSA_MADDR[6] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaTmpBlindKey;
+        crpt->RSA_MADDR[6] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaTmpE;
     }
     else if(s_u32RsaOpMode & CRPT_RSA_CTL_CRT_Msk)
     {
@@ -2837,7 +2837,7 @@ int32_t RSA_SetDMATransfer(CRPT_T *crpt, char *Src, char *n, char *P, char *Q)
         crpt->RSA_SADDR[4] = (uint32_t) & ((RSA_BUF_SCAP_T *)s_pRSABuf)->au32RsaQ; /* prime Q */
 
         /* For SCAP mode to store the intermediate temporary value(blind key) */
-        crpt->RSA_MADDR[6] = (uint32_t) & ((RSA_BUF_SCAP_T *)s_pRSABuf)->au32RsaTmpBlindKey;
+        crpt->RSA_MADDR[6] = (uint32_t) & ((RSA_BUF_SCAP_T *)s_pRSABuf)->au32RsaTmpE;
     }
 
     return 0;
