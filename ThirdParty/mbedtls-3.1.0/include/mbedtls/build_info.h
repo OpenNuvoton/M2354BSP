@@ -53,12 +53,12 @@
 #define _CRT_SECURE_NO_DEPRECATE 1
 #endif
 
-#if !defined(MBEDTLS_CONFIG_FILE)
-#include "mbedtls/mbedtls_config.h"
-#else
+//#if !defined(MBEDTLS_CONFIG_FILE)
+//#include "mbedtls/mbedtls_config.h"
+//#else
 //#include MBEDTLS_CONFIG_FILE
 #include "mbedtls_config.h"
-#endif
+//#endif
 
 #if defined(MBEDTLS_CONFIG_VERSION) && ( \
     MBEDTLS_CONFIG_VERSION < 0x03000000 || \
