@@ -29,7 +29,7 @@ static volatile uint8_t s_u8SlvDataLen;
 
 typedef void (*I2C_FUNC)(uint32_t u32Status);
 
-static I2C_FUNC s_I2C0HandlerFn = NULL;
+static volatile I2C_FUNC s_I2C0HandlerFn = NULL;
 
 void I2C0_IRQHandler(void);
 void I2C_SlaveTRx(uint32_t u32Status);
