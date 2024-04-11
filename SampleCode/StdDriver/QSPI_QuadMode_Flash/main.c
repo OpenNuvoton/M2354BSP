@@ -9,8 +9,14 @@
 #include <stdio.h>
 #include "NuMicro.h"
 
-#define TEST_NUMBER 1   /* page numbers */
-#define TEST_LENGTH 256 /* length */
+// *** <<< Use Configuration Wizard in Context Menu >>> ***
+// <o> GPIO Slew Rate Control
+// <0=> Normal <1=> High <2=> Fast
+#define SlewRateMode    0
+// *** <<< end of configuration section >>> ***
+
+#define TEST_NUMBER     1   /* page numbers */
+#define TEST_LENGTH     256 /* length */
 
 #define SPI_FLASH_PORT  QSPI0
 
@@ -392,6 +398,17 @@ void SYS_Init(void)
                        SYS_GPC_MFPL_PC4MFP_Msk | SYS_GPC_MFPL_PC5MFP_Msk);
     SYS->GPC_MFPL |= (SYS_GPC_MFPL_PC0MFP_QSPI0_MOSI0 | SYS_GPC_MFPL_PC1MFP_QSPI0_MISO0 | SYS_GPC_MFPL_PC2MFP_QSPI0_CLK | SYS_GPC_MFPL_PC3MFP_QSPI0_SS |
                       SYS_GPC_MFPL_PC4MFP_QSPI0_MOSI1 | SYS_GPC_MFPL_PC5MFP_QSPI0_MISO1);
+
+#if (SlewRateMode == 0)
+    /* Enable QSPI0 I/O normal slew rate */
+    GPIO_SetSlewCtl(PC, BIT0 | BIT1 | BIT2 | BIT3 | BIT4 | BIT5, GPIO_SLEWCTL_NORMAL);
+#elif (SlewRateMode == 1)
+    /* Enable QSPI0 I/O high slew rate */
+    GPIO_SetSlewCtl(PC, BIT0 | BIT1 | BIT2 | BIT3 | BIT4 | BIT5, GPIO_SLEWCTL_HIGH);
+#elif (SlewRateMode == 2)
+    /* Enable QSPI0 I/O fast slew rate */
+    GPIO_SetSlewCtl(PC, BIT0 | BIT1 | BIT2 | BIT3 | BIT4 | BIT5, GPIO_SLEWCTL_FAST);
+#endif
 }
 
 /* Main */
@@ -437,7 +454,7 @@ int main(void)
     SpiFlash_ChipErase();
 
     /* Wait ready */
-    if( SpiFlash_WaitReady() < 0 ) goto lexit;
+    if(SpiFlash_WaitReady() < 0) goto lexit;
 
     printf("[OK]\n");
 
@@ -454,7 +471,7 @@ int main(void)
     {
         /* page program */
         SpiFlash_NormalPageProgram(u32FlashAddress, s_au8SrcArray);
-        if( SpiFlash_WaitReady() < 0 ) goto lexit;
+        if(SpiFlash_WaitReady() < 0) goto lexit;
         u32FlashAddress += 0x100;
     }
 

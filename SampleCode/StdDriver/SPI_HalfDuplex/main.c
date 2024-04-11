@@ -12,7 +12,13 @@
 #include <stdio.h>
 #include "NuMicro.h"
 
-#define TEST_COUNT  4
+// *** <<< Use Configuration Wizard in Context Menu >>> ***
+// <o> GPIO Slew Rate Control
+// <0=> Normal <1=> High <2=> Fast
+#define SlewRateMode    0
+// *** <<< end of configuration section >>> ***
+
+#define TEST_COUNT      4
 
 static uint32_t s_au32DestinationData[TEST_COUNT];
 static volatile uint32_t s_u32RxDataCount;
@@ -68,6 +74,26 @@ void SYS_Init(void)
     /* Configure SPI1 related multi-function pins. GPH[7:5] : SPI1_SS, SPI1_CLK, SPI1_MOSI. */
     SYS->GPH_MFPL &= ~(SYS_GPH_MFPL_PH7MFP_Msk | SYS_GPH_MFPL_PH6MFP_Msk | SYS_GPH_MFPL_PH5MFP_Msk);
     SYS->GPH_MFPL |= (SYS_GPH_MFPL_PH7MFP_SPI1_SS | SYS_GPH_MFPL_PH6MFP_SPI1_CLK | SYS_GPH_MFPL_PH5MFP_SPI1_MOSI);
+
+#if (SlewRateMode == 0)
+    /* Enable SPI0 I/O normal slew rate */
+    GPIO_SetSlewCtl(PD, BIT0 | BIT2 | BIT3, GPIO_SLEWCTL_NORMAL);
+
+    /* Enable SPI1 I/O normal slew rate */
+    GPIO_SetSlewCtl(PH, BIT5 | BIT6 | BIT7, GPIO_SLEWCTL_NORMAL);
+#elif (SlewRateMode == 1)
+    /* Enable SPI0 I/O high slew rate */
+    GPIO_SetSlewCtl(PD, BIT0 | BIT2 | BIT3, GPIO_SLEWCTL_HIGH);
+
+    /* Enable SPI1 I/O high slew rate */
+    GPIO_SetSlewCtl(PH, BIT5 | BIT6 | BIT7, GPIO_SLEWCTL_HIGH);
+#elif (SlewRateMode == 2)
+    /* Enable SPI0 I/O fast slew rate */
+    GPIO_SetSlewCtl(PD, BIT0 | BIT2 | BIT3, GPIO_SLEWCTL_FAST);
+
+    /* Enable SPI1 I/O fast slew rate */
+    GPIO_SetSlewCtl(PH, BIT5 | BIT6 | BIT7, GPIO_SLEWCTL_FAST);
+#endif
 }
 
 void SPI_Init(void)
