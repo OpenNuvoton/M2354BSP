@@ -206,18 +206,23 @@ Reset_Handler   PROC
                 IMPORT  __main
 
 
-                ; hold by PC0
+                ; Check if non-secure code
+                LDR     r0,=0x30000000
+                CMP     sp, r0
+                ; skip io/sram config when it is non-secure code
+                BGE     skip_cfg
+                ; Enable all GPIO and SRAM
                 LDR     r0,=0x40000204
                 LDR     r1,[r0]
-                LDR     r2,=0xfff00000
+                LDR     r2,=0xfff00000  
                 ORRS    r1,r1,r2
                 STR     r1, [r0]
-;                LDR     r0,=0x40004880
+                LDR     r0,=0x40004880
 ;myloop
 ;                LDR     r1,[r0]
 ;                CMP     r1, #0
 ;                BEQ     myloop
-
+skip_cfg
                 ; Set MSPLIM for stack overflow
                 LDR     R0, =Stack_Mem
                 MSR     MSPLIM, R0
