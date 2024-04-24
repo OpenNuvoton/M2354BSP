@@ -207,11 +207,11 @@ Reset_Handler   PROC
 
 
                 ; hold by PC0
-;                LDR     r0,=0x40000204
-;                LDR     r1,[r0]
-;                LDR     r2,=0xfff00000
-;                ORRS    r1,r1,r2
-;                STR     r1, [r0]
+                LDR     r0,=0x40000204
+                LDR     r1,[r0]
+                LDR     r2,=0xfff00000
+                ORRS    r1,r1,r2
+                STR     r1, [r0]
 ;                LDR     r0,=0x40004880
 ;myloop
 ;                LDR     r1,[r0]
@@ -221,6 +221,7 @@ Reset_Handler   PROC
                 ; Set MSPLIM for stack overflow
                 LDR     R0, =Stack_Mem
                 MSR     MSPLIM, R0
+                
 
                 LDR     R0, =SystemInit
                 BLX     R0
