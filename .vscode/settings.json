@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "usbd_audio.h": "c",
+        "numicro.h": "c"
+    },
+    "C_Cpp.default.compilerPath": "c:\\Keil_v5\\ARM\\ARMCLANG\\bin\\armclang.exe",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+}
