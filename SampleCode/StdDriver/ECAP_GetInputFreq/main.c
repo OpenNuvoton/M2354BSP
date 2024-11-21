@@ -213,7 +213,7 @@ int32_t main(void)
     /* Initial Timer0 function */
     Timer0_Init();
 
-    /* Configure PA.4 as output mode */
+    /* Configure PC.2 as output mode */
     GPIO_SetMode(PC, BIT2, GPIO_MODE_OUTPUT);
 
     /* Start Timer0 counting */
