@@ -148,6 +148,7 @@ void I2C_SlaveTRx(uint32_t u32Status)
         }
         s_u8SlvTRxAbortFlag = 1;
     }
+    I2C_WAIT_SI_CLEAR(I2C0);
 }
 
 
