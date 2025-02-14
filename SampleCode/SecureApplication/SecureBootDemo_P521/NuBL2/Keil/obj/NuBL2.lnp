@@ -1,0 +1,19 @@
+--cpu=Cortex-M23
+".\obj\nubl2_startup.o"
+".\obj\system_m2354.o"
+".\obj\main.o"
+".\obj\fwinfo.o"
+".\obj\verifynubl3x.o"
+".\obj\cdi.o"
+".\obj\retarget.o"
+".\obj\sys.o"
+".\obj\clk.o"
+".\obj\uart.o"
+".\obj\fmc.o"
+".\obj\crypto.o"
+".\obj\keystore.o"
+--library_type=microlib --diag_suppress 6340 --strict --scatter ".\NuBL2.sct"
+--import-cmse-lib-out="..\NuBL2\Keil\obj\NuBL2_CMSE_Lib.o"
+--map --first='NuBL2_startup.o(RESET)' --datacompressor=off --info=inline --entry Reset_Handler --keep=FwInfo.o(*) --keep=VerifyNuBL3x.o(*) --import-cmse-lib-out ..\lib\nsclib_NuBL2.o --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\lst\NuBL2.map" -o .\obj\NuBL2.axf

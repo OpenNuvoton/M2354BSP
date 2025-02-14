@@ -1,0 +1,79 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.38.0.0
+Copyright (C) 2022 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: WH Huang
+Nuvoton
+User-based license: Keil MDK Nuvoton Edition - Full Cortex-M
+Valid until: Sep 27 2034. Cached until: Feb 20 2025
+ 
+Tool Versions:
+Toolchain:       Keil MDK Nuvoton Edition - Full Cortex-M  Version: 5.38.0.0
+Toolchain Path:  C:\Keil_v538\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.19
+Assembler:       Armasm.exe V6.19
+Linker/Locator:  ArmLink.exe V6.19
+Library Manager: ArmAr.exe V6.19
+Hex Converter:   FromElf.exe V6.19
+CPU DLL:         
+Dialog DLL:      
+Target DLL:      NULink\Nu_Link.dll V3.16
+Dialog DLL:      TCM.DLL V1.56.4.0
+ 
+<h2>Project:</h2>
+C:\[git]\M2354\SampleCode\SecureApplication\SecureBootDemo_P521\NuBL2\Keil\NuBL2.uvprojx
+Project File Date:  02/13/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.19', folder: 'C:\Keil_v538\ARM\ARMCLANG\Bin'
+Rebuild Project 'NuBL2' - Target 'NuBL2'
+assembling NuBL2_startup.s...
+compiling cdi.c...
+compiling FwInfo.c...
+compiling VerifyNuBL3x.c...
+compiling main.c...
+compiling clk.c...
+compiling uart.c...
+compiling system_M2354.c...
+compiling fmc.c...
+compiling sys.c...
+compiling retarget.c...
+compiling crypto.c...
+compiling keystore.c...
+linking...
+Program Size: Code=16500 RO-data=25028 RW-data=32 ZI-data=7820  
+FromELF: creating hex file...
+After Build - User command #1: fromelf --bin ".\obj\NuBL2.axf" --output ".\NuBL2"
+After Build - User command #2: FwSign NuBL2\NuBL2.bin NuBL2\FwInfo.bin 0x18000
+Pub Key1: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+Pub Key2: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+Firmware: NuBL2\NuBL2.bin
+FW Base : 0x0
+FW Size : 41216
+FW Hash : 7e25cf3529f48608903dd7f18a4e7239c4dc05fdaa3092227de2046ae65b1fb9cbee831b2996e42b87af4a5f4733973cb6809db469bad011833c78864a15e850
+FIB Hash: 1540c06ae8a959479f2207791a06bd643aeb113ace78a0b0394adcf3cb862e6f13af5de6c641447eb72433bef134e7b429be8b53414f201840e11cde87f491c4
+R       : 0058776f501650ad391c416551480dcd7776135d4d497f84576809ecc33d6342b5259b5ba345e85eb4588a910a7a84a5712f94cb51004da3220541d9e35d12a19173
+S       : 0035cdb70fdb655977c16255dd30c4cc8e7559dbf3cf5b1085eae1302dd650e29a3a9286303dcb672490b1ca1777a302244fdcbf7164861e6f1cb94d67e5083a9c04
+Pub Hash: 82ce81d72528714968b66f22bc7f6f63a0f16cc05eda09144b0e3e59ed2a28df604103f86b2a84b62c0fd5770935ccc9aa6e96884bc1473f3f92c2c2c0f3198b
+FW info raw data of FIB hash : 
+0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff01000000080000000000000000a100000c0000001102252000000000000000007e25cf3529f48608903dd7f18a4e7239c4dc05fdaa3092227de2046ae65b1fb9cbee831b2996e42b87af4a5f4733973cb6809db469bad011833c78864a15e850
+".\obj\NuBL2.axf" - 0 Error(s), 0 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: Nuvoton
+                https://github.com/OpenNuvoton/cmsis-packs/raw/master/Nuvoton_DFP/Nuvoton.NuMicro_DFP.1.3.25.pack
+                Nuvoton.NuMicro_DFP.1.3.25
+                Nuvoton ARM Cortex-M NuMicro Family Device Support
+
+<h2>Collection of Component include folders:</h2>
+  C:/Users/whhuang1/AppData/Local/Arm/Packs/Nuvoton/NuMicro_DFP/1.3.25/Device/M2354/Include
+
+<h2>Collection of Component Files used:</h2>
+Build Time Elapsed:  00:00:06
+</pre>
+</body>
+</html>
