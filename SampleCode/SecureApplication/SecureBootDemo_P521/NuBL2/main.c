@@ -106,7 +106,7 @@ static int32_t CheckROTPKStatus(void)
                 KS_WriteOTP(3, (KS_META_256 | KS_META_CPU | KS_META_READABLE | KS_META_BOOT), (uint32_t *)&g_au32ROTPK[24]);
                 KS_WriteOTP(4, (KS_META_256 | KS_META_CPU | KS_META_READABLE | KS_META_BOOT), (uint32_t *)&g_au32ROTPK[32]);
                 // UDS for CDI calculation
-                KS_WriteOTP(7, (KS_META_256 | KS_META_CPU | KS_META_READABLE), (uint32_t *)&g_au32UDS[0]);
+                KS_WriteOTP(7, (KS_META_256 | KS_META_CPU | KS_META_READABLE | KS_META_BOOT), (uint32_t *)&g_au32UDS[0]);
         */
 #if (WRITE_ROTPK == 1)
         printf("Hit [K] to program ROTPK.\n\n");
@@ -125,7 +125,7 @@ static int32_t CheckROTPKStatus(void)
         KS_WriteOTP(3, (KS_META_256 | KS_META_CPU | KS_META_READABLE | KS_META_BOOT), (uint32_t *)&g_au32ROTPK[24]);
         KS_WriteOTP(4, (KS_META_256 | KS_META_CPU | KS_META_READABLE | KS_META_BOOT), (uint32_t *)&g_au32ROTPK[32]);
         // UDS for CDI calculation.
-        KS_WriteOTP(7, (KS_META_256 | KS_META_CPU | KS_META_READABLE), (uint32_t *)&g_au32UDS[0]);
+        KS_WriteOTP(7, (KS_META_256 | KS_META_CPU | KS_META_READABLE | KS_META_BOOT), (uint32_t *)&g_au32UDS[0]);
 
         printf("Program ROTPK ... Done.\n\n");
 #endif
