@@ -257,7 +257,7 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
     uint32_t *sp = NULL;
     uint32_t i;
     uint32_t u32Reg;
-    uint32_t inst, addr, taddr, tdata;
+    uint32_t inst = 0, addr = 0, taddr, tdata;
     int32_t secure;
     uint32_t rm, rn, rt, imm5, imm8;
 

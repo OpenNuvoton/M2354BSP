@@ -8,9 +8,9 @@
 #include <stdio.h>
 #include "fmc_user.h"
 
-int FMC_Proc(unsigned int u32Cmd, unsigned int addr_start, unsigned int addr_end, unsigned int *data);
+int FMC_Proc(uint32_t u32Cmd, uint32_t addr_start, uint32_t addr_end, uint32_t *data);
 
-int FMC_Proc(unsigned int u32Cmd, unsigned int addr_start, unsigned int addr_end, unsigned int *data)
+int FMC_Proc(uint32_t u32Cmd, uint32_t addr_start, uint32_t addr_end, uint32_t *data)
 {
     unsigned int u32Addr, Reg;
     uint32_t u32TimeOutCnt;
@@ -81,18 +81,18 @@ int FMC_Proc(unsigned int u32Cmd, unsigned int addr_start, unsigned int addr_end
  *              before using this function. User can check the status of
  *              Register Write-Protection Function with DrvSYS_IsProtectedRegLocked().
  */
-int FMC_Read_User(unsigned int u32Addr, unsigned int *data)
+int FMC_Read_User(uint32_t u32Addr, uint32_t *data)
 {
     return FMC_Proc(FMC_ISPCMD_READ, u32Addr, u32Addr + 4, data);
 }
 
-void ReadData(unsigned int addr_start, unsigned int addr_end, unsigned int *data)    // Read data from flash
+void ReadData(uint32_t addr_start, uint32_t addr_end, uint32_t *data)    // Read data from flash
 {
     FMC_Proc(FMC_ISPCMD_READ, addr_start, addr_end, data);
     return;
 }
 
-void WriteData(unsigned int addr_start, unsigned int addr_end, unsigned int *data)  // Write data into flash
+void WriteData(uint32_t addr_start, uint32_t addr_end, uint32_t *data)  // Write data into flash
 {
     FMC_Proc(FMC_ISPCMD_PROGRAM, addr_start, addr_end, data);
     return;

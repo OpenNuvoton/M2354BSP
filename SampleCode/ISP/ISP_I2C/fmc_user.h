@@ -27,13 +27,13 @@
 #define _FMC_DISABLE_CFG_UPDATE()  (FMC->ISPCTL &= ~FMC_ISPCTL_CFGUEN_Msk) /*!< Disable CONFIG Update Function */
 
 
-int FMC_WriteUser(unsigned int u32Addr, unsigned int u32Data);
-int FMC_ReadUser(unsigned int u32Addr, unsigned int *pu32Data);
-int FMC_EraseUser(unsigned int u32Addr);
-void ReadData(unsigned int u32AddrStart, unsigned int u32AddrEnd, unsigned int *pu32Data);
-void WriteData(unsigned int u32AddrStart, unsigned int u32AddrEnd, unsigned int *pu32Data);
-int EraseAP(unsigned int u32AddrStart, unsigned int u32TotalSize);
-void UpdateConfig(unsigned int *pu32Data, unsigned int *pu32Res);
+int FMC_WriteUser(uint32_t u32Addr, uint32_t u32Data);
+int FMC_ReadUser(uint32_t u32Addr, uint32_t *pu32Data);
+int FMC_EraseUser(uint32_t u32Addr);
+void ReadData(uint32_t u32AddrStart, uint32_t u32AddrEnd, uint32_t *pu32Data);
+void WriteData(uint32_t u32AddrStart, uint32_t u32AddrEnd, uint32_t *pu32Data);
+int EraseAP(uint32_t u32AddrStart, uint32_t u32TotalSize);
+void UpdateConfig(uint32_t *pu32Data, uint32_t *pu32Res);
 
 void GetDataFlashInfo(uint32_t *pu32Addr, uint32_t *pu32Size);
 

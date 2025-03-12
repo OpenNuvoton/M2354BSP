@@ -128,7 +128,10 @@ void SysTick_Handler(void)
         case 500:
             if(pfNonSecure_LED_Off != NULL)
             {
+#if defined (__ARMCC_VERSION) || defined (__ICCARM__)
+                /* This func call caused GCC compiler internal error - Skip in GCC */
                 pfNonSecure_LED_Off(1u);
+#endif	
             }
             break;
 

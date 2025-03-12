@@ -541,7 +541,7 @@ static int32_t _GCM(mbedtls_gcm_context *ctx, const uint8_t *iv, size_t ivlen, c
     int32_t i;
     uint32_t u32OptBasic;
     size_t plen_aligned;
-    size_t size;
+    uint32_t size;
     uint32_t key[8];
 
     for(i = 0; i < 8; i++)

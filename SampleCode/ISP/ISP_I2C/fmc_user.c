@@ -12,9 +12,9 @@
 
 #define FMC_BLOCK_SIZE           (FMC_FLASH_PAGE_SIZE * 4UL)
 
-int FMC_Proc(unsigned int u32Cmd, unsigned int u32AddrStart, unsigned int u32AddrEnd, unsigned int *pu32Data);
+int FMC_Proc(uint32_t u32Cmd, uint32_t u32AddrStart, uint32_t u32AddrEnd, uint32_t *pu32Data);
 
-int FMC_Proc(unsigned int u32Cmd, unsigned int u32AddrStart, unsigned int u32AddrEnd, unsigned int *pu32Data)
+int FMC_Proc(uint32_t u32Cmd, uint32_t u32AddrStart, uint32_t u32AddrEnd, uint32_t *pu32Data)
 {
     unsigned int u32Addr, u32Reg;
     uint32_t u32TimeOutCnt;
@@ -30,7 +30,7 @@ int FMC_Proc(unsigned int u32Cmd, unsigned int u32AddrStart, unsigned int u32Add
         }
 
         FMC->ISPTRG = 0x1;
-        __ISB()
+        __ISB();
 
         /* Wait ISP cmd complete */
         u32TimeOutCnt = FMC_TIMEOUT_WRITE;
@@ -80,7 +80,7 @@ int FMC_Proc(unsigned int u32Cmd, unsigned int u32AddrStart, unsigned int u32Add
  *             before using this function. User can check the status of
  *             Register Write-Protection Function with DrvSYS_IsProtectedRegLocked().
  */
-int FMC_WriteUser(unsigned int u32Addr, unsigned int u32Data)
+int FMC_WriteUser(uint32_t u32Addr, uint32_t u32Data)
 {
     return FMC_Proc(FMC_ISPCMD_PROGRAM, u32Addr, u32Addr + 4, &u32Data);
 }
@@ -99,7 +99,7 @@ int FMC_WriteUser(unsigned int u32Addr, unsigned int u32Data)
  *              before using this function. User can check the status of
  *              Register Write-Protection Function with DrvSYS_IsProtectedRegLocked().
  */
-int FMC_ReadUser(unsigned int u32Addr, unsigned int *pu32Data)
+int FMC_ReadUser(uint32_t u32Addr, uint32_t *pu32Data)
 {
     return FMC_Proc(FMC_ISPCMD_READ, u32Addr, u32Addr + 4, pu32Data);
 }
@@ -117,18 +117,18 @@ int FMC_ReadUser(unsigned int u32Addr, unsigned int *pu32Data)
  *             before using this function. User can check the status of
  *             Register Write-Protection Function with DrvSYS_IsProtectedRegLocked().
  */
-int FMC_EraseUser(unsigned int u32Addr)
+int FMC_EraseUser(uint32_t u32Addr)
 {
     return FMC_Proc(FMC_ISPCMD_PAGE_ERASE, u32Addr, u32Addr + 4, 0);
 }
 
-void ReadData(unsigned int u32AddrStart, unsigned int u32AddrEnd, unsigned int *pu32Data)    /* Read data from flash */
+void ReadData(uint32_t u32AddrStart, uint32_t u32AddrEnd, uint32_t *pu32Data)    /* Read data from flash */
 {
     FMC_Proc(FMC_ISPCMD_READ, u32AddrStart, u32AddrEnd, pu32Data);
     return;
 }
 
-void WriteData(unsigned int u32AddrStart, unsigned int u32AddrEnd, unsigned int *pu32Data)  /* Write data into flash */
+void WriteData(uint32_t u32AddrStart, uint32_t u32AddrEnd, uint32_t *pu32Data)  /* Write data into flash */
 {
     FMC_Proc(FMC_ISPCMD_PROGRAM, u32AddrStart, u32AddrEnd, pu32Data);
     return;
@@ -136,7 +136,7 @@ void WriteData(unsigned int u32AddrStart, unsigned int u32AddrEnd, unsigned int 
 
 
 
-int EraseAP(unsigned int u32AddrStart, unsigned int u32TotalSize)
+int EraseAP(uint32_t u32AddrStart, uint32_t u32TotalSize)
 {
     unsigned int u32Addr, u32Cmd, u32UintSize;
     uint32_t u32TimeOutCnt;
@@ -159,7 +159,7 @@ int EraseAP(unsigned int u32AddrStart, unsigned int u32TotalSize)
         FMC->ISPCMD = u32Cmd;
         FMC->ISPADDR = u32Addr;
         FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
-        __ISB()
+        __ISB();
 
         /* Wait for ISP command done. */
         u32TimeOutCnt = FMC_TIMEOUT_ERASE;
@@ -182,7 +182,7 @@ int EraseAP(unsigned int u32AddrStart, unsigned int u32TotalSize)
     return 0;
 }
 
-void UpdateConfig(unsigned int *pu32Data, unsigned int *pu32Res)
+void UpdateConfig(uint32_t *pu32Data, uint32_t *pu32Res)
 {
     FMC_ENABLE_CFG_UPDATE();
     FMC_Proc(FMC_ISPCMD_PAGE_ERASE, CONFIG0, CONFIG0 + 16, 0);
