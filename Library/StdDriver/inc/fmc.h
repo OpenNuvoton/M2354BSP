@@ -42,8 +42,8 @@ extern "C"
 #define FMC_APROM_BANK0_END     (FMC_APROM_END/2UL)  /*!< APROM bank0 end address */
 #define FMC_LDROM_BASE          0x00100000UL    /*!< LDROM  Base Address          */
 #define FMC_LDROM_END           0x00104000UL    /*!< LDROM end address            */
-#define FMC_DTFSH_BASE          0x00110000UL    /*!< LDROM  Base Address          */
-#define FMC_DTFSH_END           0x00112000UL    /*!< LDROM end address            */
+#define FMC_DTFSH_BASE          0x00110000UL    /*!< Data Flash  Base Address     */
+#define FMC_DTFSH_END           0x00112000UL    /*!< Data Flash end address       */
 #define FMC_XOM_BASE            0x00200000UL    /*!< XOM  Base Address            */
 #define FMC_XOMR0_BASE          0x00200000UL    /*!< XOMR 0 Base Address */
 #define FMC_XOMR1_BASE          0x00200010UL    /*!< XOMR 1 Base Address */
@@ -234,7 +234,7 @@ extern int32_t  g_FMC_i32ErrCode;
  *
  * @return     None
  *
- * @details    This function is used to get ISP fail flag when do ISP actoin.
+ * @details    This function is used to get ISP fail flag when do ISP action.
  *
  */
 #define FMC_GET_FAIL_FLAG()         ((FMC_ISP->ISPCTL & FMC_ISPCTL_ISPFF_Msk) ? 1UL : 0UL)  /*!< Get ISP fail flag */

@@ -204,7 +204,7 @@
 //   <o.6>  PA6         <0=> Secure <1=> Non-Secure
 //   <o.7>  PA7         <0=> Secure <1=> Non-Secure
 //   <o.8>  PA8         <0=> Secure <1=> Non-Secure
-//   <o.7>  PA9         <0=> Secure <1=> Non-Secure
+//   <o.9>  PA9         <0=> Secure <1=> Non-Secure
 //   <o.10>  PA10       <0=> Secure <1=> Non-Secure
 //   <o.11>  PA11       <0=> Secure <1=> Non-Secure
 //   <o.12>  PA12       <0=> Secure <1=> Non-Secure

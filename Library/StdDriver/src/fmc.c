@@ -110,7 +110,7 @@ uint32_t  FMC_CheckAllOne(uint32_t u32addr, uint32_t u32count)
   *
   * @return   None
   *
-  * @details  This function will clear ISPEN bit of ISPCON to disable ISP function
+  * @details  This function will clear ISPEN bit of ISPCTL to disable ISP function
   *
   */
 void FMC_Close(void)
@@ -629,7 +629,7 @@ int32_t FMC_LockOTP(uint32_t u32OtpNum)
   *
   * @return   None
   *
-  * @details  ISPEN bit of ISPCON must be set before we can use ISP commands.
+  * @details  ISPEN bit of ISPCTL must be set before we can use ISP commands.
   *           Therefore, To use all FMC function APIs, user needs to call FMC_Open() first to enable ISP functions.
   *
   * @note     ISP functions are write-protected. user also needs to unlock it by calling SYS_UnlockReg() before using all ISP functions.

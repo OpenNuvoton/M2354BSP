@@ -889,7 +889,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -907,7 +907,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -925,7 +925,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  * @return      None
  *
@@ -942,7 +942,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -960,7 +960,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -978,7 +978,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -996,7 +996,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -1014,7 +1014,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @retval      0           No interrupt at specified GPIO pin
