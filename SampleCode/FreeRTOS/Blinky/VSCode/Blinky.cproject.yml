@@ -16,8 +16,6 @@ project:
   setups:
     - output:
         type: ["elf", "bin"]
-    - define:
-        - Heap_Size: "0x3800"
   linker:
     - for-compiler: AC6
       script: ../secure.sct
