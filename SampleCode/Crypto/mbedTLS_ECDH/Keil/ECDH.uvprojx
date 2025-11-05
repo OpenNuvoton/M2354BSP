@@ -356,7 +356,7 @@
             <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>Stack_Size=0x4000,Heap_Size=0x13000</Define>
+              <Define>Stack_Size=0x4000</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
