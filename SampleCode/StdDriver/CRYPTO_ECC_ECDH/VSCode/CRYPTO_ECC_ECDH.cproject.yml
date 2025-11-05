@@ -19,7 +19,7 @@ project:
         type: ["elf", "bin"]
   linker:
     - for-compiler: GCC
-      script: ../GCC/CRYPTO_ECC_ECDH.ld
+      script: ../../../../Library/Device/Nuvoton/M2354/Source/GCC/gcc_arm.ld
   add-path:
     - ../../../../Library/Device/Nuvoton/M2354/Include
     - ../../../../Library/StdDriver/inc
