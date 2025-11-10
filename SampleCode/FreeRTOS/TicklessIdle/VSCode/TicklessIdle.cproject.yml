@@ -17,6 +17,8 @@ project:
     - output:
         type: ["elf", "bin"]
   linker:
+    - for-compiler: AC6
+      script: ./TicklessIdle.sct
     - for-compiler: GCC
       script: ../GCC/TicklessIdle.ld
   add-path:

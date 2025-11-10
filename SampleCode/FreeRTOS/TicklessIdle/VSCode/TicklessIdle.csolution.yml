@@ -4,8 +4,6 @@ solution:
   select-compiler:
     - compiler: AC6@>=5.19.0
   build-types:
-    - type: debug
-      optimize: debug
     - type: release
       optimize: balanced
   target-types:

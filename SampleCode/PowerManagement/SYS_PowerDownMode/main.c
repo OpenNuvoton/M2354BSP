@@ -10,7 +10,7 @@
 #include "NuMicro.h"
 
 
-#define PDMD_FLAG_ADDR      0x20002FFC
+#define PDMD_FLAG_ADDR      0x20003FFC
 
 
 

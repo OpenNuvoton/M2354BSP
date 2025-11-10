@@ -2,7 +2,7 @@
 MEMORY
 {
   FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 0x100000   /* 1M */
-  RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 0x50000    /* 320k */
+  RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 0x40000    /* 256k */
 }
 
 /* Library configurations */
@@ -143,12 +143,8 @@ SECTIONS
 
 	/* Set stack top to size of stack_dummy section in RAM, and stack limit move down by
 	* size of stack_dummy section */
-	/*
 	__StackTop = ORIGIN(RAM) + SIZEOF(.stack_dummy);
 	__StackLimit = ORIGIN(RAM);
-	*/
-	__StackTop = __HeapLimit + SIZEOF(.stack_dummy);
-	__StackLimit = __HeapLimit;
 	PROVIDE(__stack = __StackTop);
 
 	.data : AT (__etext)
