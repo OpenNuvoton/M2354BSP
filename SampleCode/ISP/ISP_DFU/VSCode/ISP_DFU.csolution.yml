@@ -3,7 +3,6 @@ solution:
   created-for: CMSIS-Toolbox@2.4.0
   select-compiler:
     - compiler: AC6@>=5.19.0
-    - compiler: GCC@>=10.3.1
   build-types:
     - type: debug
       optimize: size
@@ -12,9 +11,6 @@ solution:
   target-types:
     - type: ARMCLANG
       compiler: AC6
-      device: Nuvoton::M2354KJFAE
-    - type: GNUC
-      compiler: GCC
       device: Nuvoton::M2354KJFAE
   projects:
     - project: ISP_DFU.cproject.yml
