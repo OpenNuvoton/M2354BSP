@@ -236,7 +236,7 @@ void I2C_PDMA_MasterTx(uint32_t u32Status)
     {
         /* TO DO */
         printf("Status 0x%x is NOT processed\n", u32Status);
-if(u32Status == 0x38)                   /* Master arbitration lost, stop I2C and clear SI */
+        if(u32Status == 0x38)                   /* Master arbitration lost, stop I2C and clear SI */
         {
             I2C_SET_CONTROL_REG(I2C1, I2C_CTL_STO_SI);
             I2C_SET_CONTROL_REG(I2C1, I2C_CTL_SI);
