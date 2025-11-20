@@ -25,7 +25,7 @@ static volatile uint8_t g_u8MstRxData;
 static volatile uint8_t g_u8MstEndFlag = 0;
 static volatile uint8_t g_u8MstDataLen;
 
-static enum UI2C_MASTER_EVENT m_Event;
+static volatile enum UI2C_MASTER_EVENT m_Event;
 
 typedef void (*UI2C_FUNC)(uint32_t u32Status);
 static volatile UI2C_FUNC s_UI2C0HandlerFn = NULL;
@@ -412,7 +412,7 @@ int main()
         printf("SLAVE Address(0x136) test FAIL.\n");
     
     if ((i32Ret1 == 0) && (i32Ret2 == 0))
-    printf("SLAVE Address test OK.\n");
+        printf("SLAVE Address test OK.\n");
 
     /* Master Access Slave with address mask */
     printf("\n");
@@ -424,7 +424,7 @@ int main()
         printf("SLAVE Address Mask(0x134) test FAIL.\n");
     
     if ((i32Ret1 == 0) && (i32Ret2 == 0))
-    printf("SLAVE Address Mask test OK.\n");
+        printf("SLAVE Address Mask test OK.\n");
 
     while(1);
 }

@@ -13,8 +13,8 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-static uint8_t g_u8DeviceAddr;
-static uint8_t g_au8TxData[3];
+static volatile uint8_t g_u8DeviceAddr;
+static volatile uint8_t g_au8TxData[3];
 static volatile uint8_t g_u8RxData;
 static volatile uint8_t g_u8DataLenM;
 static volatile uint8_t g_u8EndFlagM = 0;
