@@ -24,7 +24,7 @@ Stack_Mem:
 __initial_sp:
 
 
-    .section .bss.HEAP, "aw", %nobits
+    .section HEAP, "aw", %nobits
     .align  3
     .global Heap_Mem
     .global __heap_base
