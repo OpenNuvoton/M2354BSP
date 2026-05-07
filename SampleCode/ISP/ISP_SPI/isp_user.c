@@ -81,6 +81,7 @@ int ParseCmd(unsigned char *buffer, uint8_t len)
     else if(lcmd == CMD_ERASE_ALL)
     {
         EraseAP(FMC_APROM_BASE, g_apromSize);
+        EraseAP(FMC_DTFSH_BASE, g_dataFlashSize);
     }
 
     if((lcmd == CMD_UPDATE_APROM) || (lcmd == CMD_UPDATE_DATAFLASH))
