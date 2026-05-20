@@ -28,9 +28,9 @@
 /** @cond HIDDEN_SYMBOLS */
 
 #if defined(CAN1)
-static uint8_t gu8LockCanIf[2][2] = {{0U}};    /* The chip has two CANs. */
+static uint8_t gu8LockCanIf[2][2] = {{0U, 0U}, {0U, 0U}};    /* The chip has two CANs. */
 #elif defined(CAN0) || defined(CAN)
-static uint8_t gu8LockCanIf[1][2] = {{0U}};    /* The chip only has one CAN. */
+static uint8_t gu8LockCanIf[1][2] = {{0U, 0U}};    /* The chip only has one CAN. */
 #endif
 
 #define RETRY_COUNTS    (0x10000000UL)
@@ -126,7 +126,8 @@ static uint32_t LockIF_TL(CAN_T *tCAN)
 
     for(u32Count = 0U; u32Count < (uint32_t)RETRY_COUNTS; u32Count++)
     {
-        if((u32FreeIfNo = LockIF(tCAN)) != 2U)
+        u32FreeIfNo = LockIF(tCAN);
+        if(u32FreeIfNo != 2U)
         {
             break;
         }
@@ -200,7 +201,12 @@ void CAN_LeaveInitMode(CAN_T *tCAN)
 
     tCAN->CON &= (~(CAN_CON_INIT_Msk | CAN_CON_CCE_Msk));
     while(tCAN->CON & CAN_CON_INIT_Msk) /* Check INIT bit is released */
-        if(--u32TimeOutCount == 0) break;
+    {
+        if(--u32TimeOutCount == 0)
+        {
+            break;
+        }
+    }
 }
 
 /**
@@ -240,9 +246,10 @@ void CAN_WaitMsg(CAN_T *tCAN)
   * @return Current Bit-Rate (kilo bit per second)
   * @details Return current CAN bit rate according to the user bit-timing parameter settings
   */
-uint32_t CAN_GetCANBitRate(CAN_T *tCAN)
+uint32_t CAN_GetCANBitRate(const CAN_T *tCAN)
 {
-    uint8_t u8Tseg1, u8Tseg2;
+    uint8_t u8Tseg1;
+    uint8_t u8Tseg2;
     uint32_t u32Bpr;
 
     u8Tseg1 = (uint8_t)((tCAN->BTIME & CAN_BTIME_TSEG1_Msk) >> CAN_BTIME_TSEG1_Pos);
@@ -295,17 +302,17 @@ void CAN_LeaveTestMode(CAN_T *tCAN)
   * @retval 0 No message object has new data.
   * @details This function is used to get the waiting status of a received message.
   */
-uint32_t CAN_IsNewDataReceived(CAN_T *tCAN, uint8_t u8MsgObj)
+uint32_t CAN_IsNewDataReceived(const CAN_T *tCAN, uint8_t u8MsgObj)
 {
     uint32_t ret;
 
     if((uint32_t)u8MsgObj < 16U)
     {
-        ret = tCAN->NDAT1 & (1UL << u8MsgObj);
+        ret = tCAN->NDAT1 & (1UL << (uint32_t)u8MsgObj);
     }
     else
     {
-        ret = tCAN->NDAT2 & (1UL << (u8MsgObj - 16U));
+        ret = tCAN->NDAT2 & (1UL << ((uint32_t)u8MsgObj - 16U));
     }
 
     return ret;
@@ -329,7 +336,10 @@ int32_t CAN_BasicSendMsg(CAN_T *tCAN, STR_CANMSG_T* pCanMsg)
 
     while(tCAN->IF[0].CREQ & CAN_IF_CREQ_BUSY_Msk)
     {
-        if(++i > CAN_TIMEOUT) return -1;
+        if(++i > CAN_TIMEOUT)
+        {
+            return -1;
+        }
     }
 
     tCAN->STATUS &= (~CAN_STATUS_TXOK_Msk);
@@ -473,7 +483,8 @@ int32_t CAN_SetRxMsgObjAndMsk(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8idType, u
     uint8_t u8MsgIfNum;
 
     /* Get and lock a free interface */
-    if((u8MsgIfNum = (uint8_t)LockIF_TL(tCAN)) == 2U)
+    u8MsgIfNum = (uint8_t)LockIF_TL(tCAN);
+    if(u8MsgIfNum == 2U)
     {
         return (int32_t)FALSE;
     }
@@ -540,7 +551,8 @@ int32_t CAN_SetRxMsgObj(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8idType, uint32_
     uint8_t u8MsgIfNum;
 
     /* Get and lock a free interface */
-    if((u8MsgIfNum = (uint8_t)LockIF_TL(tCAN)) == 2U)
+    u8MsgIfNum = (uint8_t)LockIF_TL(tCAN);
+    if(u8MsgIfNum == 2U)
     {
         return (int32_t)FALSE;
     }
@@ -599,7 +611,6 @@ int32_t CAN_SetRxMsgObj(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8idType, uint32_
 int32_t CAN_ReadMsgObj(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8Release, STR_CANMSG_T* pCanMsg)
 {
     uint8_t u8MsgIfNum;
-    uint32_t u32Tmp;
     uint32_t u32TimeOutCount = CAN_TIMEOUT<<1;
 
     if(!CAN_IsNewDataReceived(tCAN, u8MsgObj))
@@ -608,7 +619,8 @@ int32_t CAN_ReadMsgObj(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8Release, STR_CAN
     }
 
     /* Get and lock a free interface */
-    if((u8MsgIfNum = (uint8_t)LockIF_TL(tCAN)) == 2U)
+    u8MsgIfNum = (uint8_t)LockIF_TL(tCAN);
+    if(u8MsgIfNum == 2U)
     {
         return (int32_t)FALSE;
     }
@@ -644,6 +656,7 @@ int32_t CAN_ReadMsgObj(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8Release, STR_CAN
     else
     {
         /* extended ID*/
+        uint32_t u32Tmp;
         pCanMsg->IdType = CAN_EXT_ID;
 
         u32Tmp = (((tCAN->IF[u8MsgIfNum].ARB2) & 0x1FFFUL) << 16);
@@ -702,29 +715,33 @@ static int can_update_spt(int sampl_pt, int tseg, int *tseg1, int *tseg2)
   */
 uint32_t CAN_SetBaudRate(CAN_T *tCAN, uint32_t u32BaudRate)
 {
-    long rate;
-    long best_error = 1000000000, error = 0;
-    int best_tseg = 0, best_brp = 0, brp = 0;
-    int tsegall, tseg = 0, tseg1 = 0, tseg2 = 0;
-    int spt_error = 1000, spt = 0, sampl_pt;
+    long best_error = 1000000000;
+    int best_tseg = 0;
+    int best_brp = 0;
+    int tseg = 0;
+    int tseg1 = 0;
+    int tseg2 = 0;
+    int spt_error = 1000;
+    int sampl_pt;
     int64_t clock_freq = 0;
     uint32_t sjw = 1UL;
+    uint32_t u32BaudRateLocal = u32BaudRate;
 
     CAN_EnterInitMode(tCAN, 0U);
 
     clock_freq = (int64_t)CLK_GetPCLK0Freq();
 
-    if(u32BaudRate >= 1000000UL)
+    if(u32BaudRateLocal >= 1000000UL)
     {
-        u32BaudRate = 1000000UL;
+        u32BaudRateLocal = 1000000UL;
     }
 
     /* Use CIA recommended sample points */
-    if(u32BaudRate > 800000UL)
+    if(u32BaudRateLocal > 800000UL)
     {
         sampl_pt = 750;
     }
-    else if(u32BaudRate > 500000UL)
+    else if(u32BaudRateLocal > 500000UL)
     {
         sampl_pt = 800;
     }
@@ -734,23 +751,21 @@ uint32_t CAN_SetBaudRate(CAN_T *tCAN, uint32_t u32BaudRate)
     }
 
     /* tseg even = round down, odd = round up */
-    for(tseg = (TSEG1_MAX + TSEG2_MAX) * 2 + 1; tseg >= (TSEG1_MIN + TSEG2_MIN) * 2; tseg--)
+    for(tseg = (((TSEG1_MAX + TSEG2_MAX) * 2) + 1); tseg >= ((TSEG1_MIN + TSEG2_MIN) * 2); tseg--)
     {
-        tsegall = 1 + tseg / 2;
+        int tsegall = 1 + (tseg / 2);
+        int brp;
         /* Compute all possible tseg choices (tseg=tseg1+tseg2) */
 
         /* brp = (int32_t)(clock_freq / (tsegall * u32BaudRate)) + (tseg % 2); */
-        brp = (int32_t)(clock_freq / ((int64_t)tsegall * (int32_t)u32BaudRate)) + (tseg % 2);
+        brp = (int32_t)(clock_freq / ((int64_t)tsegall * (int32_t)u32BaudRateLocal)) + (tseg % 2);
 
-
-        /* chose brp step which is possible in system */
-        brp = (brp / BRP_INC) * BRP_INC;
+        /* BRP_INC == 1, so brp rounding step is a no-op and omitted */
 
         if((brp >= BRP_MIN) && (brp <= BRP_MAX))
         {
-            rate = (int32_t)(clock_freq / ((int64_t)brp * tsegall));
-
-            error = (int32_t)u32BaudRate - rate;
+            long rate = (int32_t)(clock_freq / ((int64_t)brp * tsegall));
+            long error = (int32_t)u32BaudRateLocal - rate;
 
             /* tseg brp biterror */
             if(error < 0)
@@ -763,7 +778,7 @@ uint32_t CAN_SetBaudRate(CAN_T *tCAN, uint32_t u32BaudRate)
                 best_error = error;
                 if(error == 0)
                 {
-                    spt = can_update_spt(sampl_pt, tseg / 2, &tseg1, &tseg2);
+                    int spt = can_update_spt(sampl_pt, tseg / 2, &tseg1, &tseg2);
                     error = sampl_pt - spt;
                     if(error < 0)
                     {
@@ -789,7 +804,7 @@ uint32_t CAN_SetBaudRate(CAN_T *tCAN, uint32_t u32BaudRate)
         }
     }
 
-    spt = can_update_spt(sampl_pt, best_tseg, &tseg1, &tseg2);
+    (void)can_update_spt(sampl_pt, best_tseg, &tseg1, &tseg2);
 
     /* check for sjw user settings */
     /* bt->sjw is at least 1 -> sanitize upper bound to sjw_max */
@@ -804,7 +819,7 @@ uint32_t CAN_SetBaudRate(CAN_T *tCAN, uint32_t u32BaudRate)
     }
 
     /* real bit-rate */
-    u32BaudRate = (uint32_t)(int32_t)(clock_freq / (int32_t)(best_brp * (tseg1 + tseg2 + 1)));
+    u32BaudRateLocal = (uint32_t)(int32_t)(clock_freq / (int32_t)(best_brp * (tseg1 + tseg2 + 1)));
 
     tCAN->BTIME = (((uint32_t)tseg2 - 1UL) << CAN_BTIME_TSEG2_Pos) | (((uint32_t)tseg1 - 1UL) << CAN_BTIME_TSEG1_Pos) |
                   (((uint32_t)best_brp - 1UL) & CAN_BTIME_BRP_Msk) | (sjw << CAN_BTIME_SJW_Pos);
@@ -816,7 +831,7 @@ uint32_t CAN_SetBaudRate(CAN_T *tCAN, uint32_t u32BaudRate)
 
     CAN_LeaveInitMode(tCAN);
 
-    return u32BaudRate;
+    return u32BaudRateLocal;
 }
 
 /**
@@ -881,7 +896,8 @@ int32_t CAN_SetTxMsg(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T* pCanMsg)
 {
     uint8_t u8MsgIfNum;
 
-    if((u8MsgIfNum = (uint8_t)LockIF_TL(tCAN)) == 2U)
+    u8MsgIfNum = (uint8_t)LockIF_TL(tCAN);
+    if(u8MsgIfNum == 2U)
     {
         return (int32_t)FALSE;
     }
@@ -943,7 +959,8 @@ int32_t CAN_TriggerTxMsg(CAN_T  *tCAN, uint32_t u32MsgNum)
     uint8_t u8MsgIfNum;
     uint32_t u32TimeOutCount = CAN_TIMEOUT;
 
-    if((u8MsgIfNum = (uint8_t)LockIF_TL(tCAN)) == 2U)
+    u8MsgIfNum = (uint8_t)LockIF_TL(tCAN);
+    if(u8MsgIfNum == 2U)
     {
         return (int32_t)FALSE;
     }
@@ -1091,21 +1108,19 @@ int32_t CAN_SetRxMsgAndMsk(CAN_T *tCAN, uint32_t u32MsgNum, uint32_t u32IDType, 
 int32_t CAN_SetMultiRxMsg(CAN_T *tCAN, uint32_t u32MsgNum, uint32_t u32MsgCount, uint32_t u32IDType, uint32_t u32ID)
 {
     uint32_t i;
-    uint32_t u32TimeOutCount;
     uint32_t u32EOB_Flag = 0UL;
 
     for(i = 1UL; i <= u32MsgCount; i++)
     {
-        u32TimeOutCount = 0UL;
-
-        u32MsgNum += (i - 1UL);
+        uint32_t u32MsgNumLocal = u32MsgNum + (i - 1UL);
+        uint32_t u32TimeOutCount = 0UL;
 
         if(i == u32MsgCount)
         {
             u32EOB_Flag = 1UL;
         }
 
-        while(CAN_SetRxMsgObj(tCAN, (uint8_t)u32MsgNum, (uint8_t)u32IDType, u32ID, (uint8_t)u32EOB_Flag) == (int32_t)FALSE)
+        while(CAN_SetRxMsgObj(tCAN, (uint8_t)u32MsgNumLocal, (uint8_t)u32IDType, u32ID, (uint8_t)u32EOB_Flag) == (int32_t)FALSE)
         {
             if(++u32TimeOutCount >= RETRY_COUNTS)
             {
@@ -1134,7 +1149,8 @@ int32_t CAN_SetMultiRxMsg(CAN_T *tCAN, uint32_t u32MsgNum, uint32_t u32MsgCount,
   */
 int32_t CAN_Transmit(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T* pCanMsg)
 {
-    uint32_t cond0, cond1;
+    uint32_t cond0;
+    uint32_t cond1;
 
     cond0 = tCAN->CON & CAN_CON_TEST_Msk;
     cond1 = tCAN->TEST & CAN_TEST_BASIC_Msk;
@@ -1148,7 +1164,7 @@ int32_t CAN_Transmit(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T* pCanMsg)
         {
             return (int32_t)FALSE;
         }
-        CAN_TriggerTxMsg(tCAN, u32MsgNum);
+        (void)CAN_TriggerTxMsg(tCAN, u32MsgNum);
     }
 
     return (int32_t)TRUE;
@@ -1169,7 +1185,8 @@ int32_t CAN_Transmit(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T* pCanMsg)
   */
 int32_t CAN_Receive(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T* pCanMsg)
 {
-    uint32_t cond0, cond1;
+    uint32_t cond0;
+    uint32_t cond1;
 
     cond0 = tCAN->CON & CAN_CON_TEST_Msk;
     cond1 = tCAN->TEST & CAN_TEST_BASIC_Msk;
@@ -1197,7 +1214,8 @@ void CAN_CLR_INT_PENDING_BIT(CAN_T *tCAN, uint8_t u32MsgNum)
 {
     uint32_t u32MsgIfNum;
 
-    if((u32MsgIfNum = LockIF_TL(tCAN)) == 2UL)
+    u32MsgIfNum = LockIF_TL(tCAN);
+    if(u32MsgIfNum == 2UL)
     {
         u32MsgIfNum = 0UL;
     }

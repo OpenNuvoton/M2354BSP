@@ -64,7 +64,7 @@ int32_t RNG_Open(void)
     TRNG->ACT |= TRNG_ACT_ACT_Msk;
     /* Waiting for ready */
     i = 0;
-    while((TRNG->CTL & TRNG_CTL_READY_Msk) == 0)
+    while((TRNG->CTL & TRNG_CTL_READY_Msk) == 0U)
     {
         if(i++ > timeout)
         {
@@ -73,15 +73,15 @@ int32_t RNG_Open(void)
         }
     }
 
-    TRNG->CTL = (0 << TRNG_CTL_CLKPSC_Pos);
+    TRNG->CTL = (0UL << TRNG_CTL_CLKPSC_Pos);
 
 
     /* Enable SEEDGEN */
-    TRNG->CTL |= (1 << 8);
+    TRNG->CTL |= (1UL << 8U);
 
     /* Waiting for seed ready */
     i = 0;
-    while((TRNG->CTL & (1 << 9)) == 0)
+    while((TRNG->CTL & (1UL << 9U)) == 0U)
     {
         if(i++ > timeout)
         {
@@ -92,7 +92,7 @@ int32_t RNG_Open(void)
 
     // Waiting for PRNG busy
     i = 0;
-    while(CRPT->PRNG_CTL & (1 << 8))
+    while(CRPT->PRNG_CTL & (1UL << 8U))
     {
         if(i++ > timeout)
         {
@@ -106,7 +106,7 @@ int32_t RNG_Open(void)
 
     /* Waiting for seed src ok */
     i = 0;
-    while((CRPT->PRNG_CTL & CRPT_PRNG_CTL_SEEDSRC_Msk) == 0)
+    while((CRPT->PRNG_CTL & CRPT_PRNG_CTL_SEEDSRC_Msk) == 0U)
     {
         if(i++ > timeout)
         {
@@ -116,7 +116,7 @@ int32_t RNG_Open(void)
     }
 
     /* Reload seed only at first time */
-    CRPT->PRNG_CTL |= (PRNG_KEY_SIZE_256 << CRPT_PRNG_CTL_KEYSZ_Pos) | CRPT_PRNG_CTL_START_Msk | CRPT_PRNG_CTL_SEEDRLD_Msk;
+    CRPT->PRNG_CTL |= ((uint32_t)PRNG_KEY_SIZE_256 << CRPT_PRNG_CTL_KEYSZ_Pos) | CRPT_PRNG_CTL_START_Msk | CRPT_PRNG_CTL_SEEDRLD_Msk;
 
     i = 0;
     while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
@@ -147,33 +147,40 @@ int32_t RNG_Random(uint32_t *pu32Buf, int32_t nWords)
 {
     int32_t i;
     int32_t timeout = 0x10000;
+     int32_t nWordsLocal = nWords;
 
     /* Waiting for Busy */
     while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
     {
         if(timeout-- < 0)
+        {
             return 0;
+        }
     }
 
-    if(nWords > 8)
-        nWords = 8;
+    if(nWordsLocal > 8)
+    {
+        nWordsLocal = 8;
+    }
 
     /* Trig to generate seed 256 bits random number */
-    CRPT->PRNG_CTL = (6 << CRPT_PRNG_CTL_KEYSZ_Pos) | CRPT_PRNG_CTL_START_Msk;
+    CRPT->PRNG_CTL = (6UL << CRPT_PRNG_CTL_KEYSZ_Pos) | CRPT_PRNG_CTL_START_Msk;
 
     timeout = 0x10000;
     while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
     {
         if(timeout-- < 0)
+        {
             return 0;
+        }
     }
 
-    for(i = 0; i < nWords; i++)
+    for(i = 0; i < nWordsLocal; i++)
     {
         pu32Buf[i] = CRPT->PRNG_KEY[i];
     }
 
-    return nWords;
+    return nWordsLocal;
 }
 
 
@@ -191,7 +198,7 @@ int32_t RNG_Random(uint32_t *pu32Buf, int32_t nWords)
  *  @details    The function is used to generate a key to KS SRAM for ECDSA.
  *              This key is necessary for ECDSA+Key Store function of ECC.
  */
-int32_t RNG_ECDSA_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
+int32_t RNG_ECDSA_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
 {
     int32_t i;
     int32_t timeout = 0x1000000;
@@ -206,7 +213,7 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
     TRNG->ACT |= TRNG_ACT_ACT_Msk;
     /* Waiting for ready */
     i = 0;
-    while((TRNG->CTL & TRNG_CTL_READY_Msk) == 0)
+    while((TRNG->CTL & TRNG_CTL_READY_Msk) == 0U)
     {
         if(i++ > timeout)
         {
@@ -214,10 +221,10 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
         }
     }
 
-    TRNG->CTL = (0 << TRNG_CTL_CLKPSC_Pos);
+    TRNG->CTL = (0UL << TRNG_CTL_CLKPSC_Pos);
 
     /* Reset seed select of PRNG */
-    CRPT->PRNG_CTL = 0;
+    CRPT->PRNG_CTL = 0U;
 
 
     /* Enable SEEDGEN */
@@ -225,7 +232,7 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
 
     /* Waiting for seed ready */
     i = 0;
-    while((TRNG->CTL & TRNG_CTL_SEEDRDY_Msk) == 0)
+    while((TRNG->CTL & TRNG_CTL_SEEDRDY_Msk) == 0U)
     {
         if(i++ > timeout)
         {
@@ -245,11 +252,11 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
 
 
     // Set seed select to TRNG
-    CRPT->PRNG_CTL = 1 << CRPT_PRNG_CTL_SEEDSEL_Pos;
+    CRPT->PRNG_CTL = 1UL << CRPT_PRNG_CTL_SEEDSEL_Pos;
 
     // Waiting for seed src ok
     i = 0;
-    while((CRPT->PRNG_CTL & CRPT_PRNG_CTL_SEEDSRC_Msk) == 0)
+    while((CRPT->PRNG_CTL & CRPT_PRNG_CTL_SEEDSRC_Msk) == 0U)
     {
         if(i++ > timeout)
         {
@@ -259,9 +266,11 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
 
     /* It is necessary to set ECC_N for ECDSA */
     for(i = 0; i < 18; i++)
+    {
         CRPT->ECC_N[i] = au32ECC_N[i];
+    }
 
-    CRPT->PRNG_KSCTL = 0;
+    CRPT->PRNG_KSCTL = 0U;
 
     /* Reload seed only at first time */
     CRPT->PRNG_CTL |= (u32KeySize << CRPT_PRNG_CTL_KEYSZ_Pos) |
@@ -278,10 +287,10 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
     }
 
 
-    CRPT->PRNG_KSCTL = (KS_OWNER_ECC << CRPT_PRNG_KSCTL_OWNER_Pos) |
+    CRPT->PRNG_KSCTL = ((uint32_t)KS_OWNER_ECC << CRPT_PRNG_KSCTL_OWNER_Pos) |
                        CRPT_PRNG_KSCTL_ECDSA_Msk |
                        (CRPT_PRNG_KSCTL_WDST_Msk) |
-                       (KS_SRAM << CRPT_PRNG_KSCTL_WSDST_Pos);
+                       ((uint32_t)KS_SRAM << CRPT_PRNG_KSCTL_WSDST_Pos);
 
     return 0;
 }
@@ -303,7 +312,7 @@ int32_t RNG_ECDSA(uint32_t u32KeySize)
 
     /* Reload seed only at first time */
     CRPT->PRNG_CTL = (u32KeySize << CRPT_PRNG_CTL_KEYSZ_Pos) |
-                     0xc0 |
+                     0xc0U |
                      CRPT_PRNG_CTL_START_Msk;
 
     timeout = 0x10000;
@@ -341,7 +350,7 @@ int32_t RNG_ECDSA(uint32_t u32KeySize)
  *  @details    The function is used to generate a key to KS SRAM for ECDH.
  *              This key is necessary for ECDH+Key Store function of ECC.
  */
-int32_t RNG_ECDH_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
+int32_t RNG_ECDH_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
 {
     int32_t i;
     int32_t timeout = 0x1000000;
@@ -356,7 +365,7 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
     TRNG->ACT |= TRNG_ACT_ACT_Msk;
     /* Waiting for ready */
     i = 0;
-    while((TRNG->CTL & TRNG_CTL_READY_Msk) == 0)
+    while((TRNG->CTL & TRNG_CTL_READY_Msk) == 0U)
     {
         if(i++ > timeout)
         {
@@ -365,7 +374,7 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
         }
     }
 
-    TRNG->CTL = (0 << TRNG_CTL_CLKPSC_Pos);
+    TRNG->CTL = (0UL << TRNG_CTL_CLKPSC_Pos);
 
 
     /* Enable SEEDGEN */
@@ -373,7 +382,7 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
 
     /* Waiting for seed ready */
     i = 0;
-    while((TRNG->CTL & TRNG_CTL_SEEDRDY_Msk) == 0)
+    while((TRNG->CTL & TRNG_CTL_SEEDRDY_Msk) == 0U)
     {
         if(i++ > timeout)
         {
@@ -396,11 +405,11 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
 
 
     /* Set seed select to TRNG */
-    CRPT->PRNG_CTL = (1 << 6);
+    CRPT->PRNG_CTL = (1UL << 6U);
 
     // Waiting for seed src ok
     i = 0;
-    while((CRPT->PRNG_CTL & (1 << 7)) == 0)
+    while((CRPT->PRNG_CTL & (1UL << 7U)) == 0U)
     {
         if(i++ > timeout)
         {
@@ -411,9 +420,11 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
 
     /* It is necessary to set ECC_N for ECDSA */
     for(i = 0; i < 18; i++)
+    {
         CRPT->ECC_N[i] = au32ECC_N[i];
+    }
 
-    CRPT->PRNG_KSCTL = 0;
+    CRPT->PRNG_KSCTL = 0U;
 
     /* Reload seed only at first time */
     CRPT->PRNG_CTL |= (u32KeySize << CRPT_PRNG_CTL_KEYSZ_Pos) |
@@ -430,10 +441,10 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, uint32_t au32ECC_N[18])
         }
     }
 
-    CRPT->PRNG_KSCTL = (KS_OWNER_ECC << CRPT_PRNG_KSCTL_OWNER_Pos) |
+    CRPT->PRNG_KSCTL = ((uint32_t)KS_OWNER_ECC << CRPT_PRNG_KSCTL_OWNER_Pos) |
                        (CRPT_PRNG_KSCTL_ECDH_Msk) |
                        (CRPT_PRNG_KSCTL_WDST_Msk) |
-                       (KS_SRAM << CRPT_PRNG_KSCTL_WSDST_Pos);
+                       ((uint32_t)KS_SRAM << CRPT_PRNG_KSCTL_WSDST_Pos);
 
     return 0;
 }
@@ -455,7 +466,7 @@ int32_t RNG_ECDH(uint32_t u32KeySize)
 
     /* Reload seed only at first time */
     CRPT->PRNG_CTL = (u32KeySize << CRPT_PRNG_CTL_KEYSZ_Pos) |
-                     0xc0 |
+                     0xc0U |
                      CRPT_PRNG_CTL_START_Msk;
 
     timeout = 0x10000;
@@ -463,11 +474,15 @@ int32_t RNG_ECDH(uint32_t u32KeySize)
     while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
     {
         if(i++ > timeout)
+        {
             return -1;
+        }
     }
 
     if(CRPT->PRNG_KSSTS & CRPT_PRNG_KSSTS_KCTLERR_Msk)
+    {
         return -1;
+    }
 
     return (CRPT->PRNG_KSSTS & CRPT_PRNG_KSCTL_NUM_Msk);
 }

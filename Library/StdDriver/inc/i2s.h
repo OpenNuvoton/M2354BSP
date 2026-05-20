@@ -120,6 +120,13 @@ extern "C"
   @{
 */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* static inline functions                                                                                 */
+/*---------------------------------------------------------------------------------------------------------*/
+/* Declare these inline functions here to avoid MISRA C 2012 rule 5.8 */
+static __INLINE void I2S_ENABLE_TX_ZCD(I2S_T *i2s, uint32_t u32ChMask);
+static __INLINE void I2S_DISABLE_TX_ZCD(I2S_T *i2s, uint32_t u32ChMask);
+static __INLINE void I2S_SET_MONO_RX_CHANNEL(I2S_T *i2s, uint32_t u32Ch);
 
 /**
   * @brief  Enable zero cross detect function.
@@ -258,7 +265,7 @@ __STATIC_INLINE void I2S_DISABLE_TX_ZCD(I2S_T *i2s, uint32_t u32ChMask)
   */
 __STATIC_INLINE void I2S_SET_MONO_RX_CHANNEL(I2S_T *i2s, uint32_t u32Ch)
 {
-    u32Ch == I2S_MONO_LEFT ?
+    (u32Ch == I2S_MONO_LEFT) ?
     (i2s->CTL0 |= I2S_CTL0_RXLCH_Msk) :
     (i2s->CTL0 &= ~I2S_CTL0_RXLCH_Msk);
 }

@@ -552,13 +552,13 @@ void SPI_DisableAutoSS(SPI_T *spi);
 void SPI_EnableAutoSS(SPI_T *spi, uint32_t u32SSPinMask, uint32_t u32ActiveLevel);
 uint32_t SPI_SetBusClock(SPI_T *spi, uint32_t u32BusClock);
 void SPI_SetFIFO(SPI_T *spi, uint32_t u32TxThreshold, uint32_t u32RxThreshold);
-uint32_t SPI_GetBusClock(SPI_T *spi);
+uint32_t SPI_GetBusClock(const SPI_T *spi);
 void SPI_EnableInt(SPI_T *spi, uint32_t u32Mask);
 void SPI_DisableInt(SPI_T *spi, uint32_t u32Mask);
-uint32_t SPI_GetIntFlag(SPI_T *spi, uint32_t u32Mask);
+uint32_t SPI_GetIntFlag(const SPI_T *spi, uint32_t u32Mask);
 void SPI_ClearIntFlag(SPI_T *spi, uint32_t u32Mask);
-uint32_t SPI_GetStatus(SPI_T *spi, uint32_t u32Mask);
-uint32_t SPI_GetStatus2(SPI_T *spi, uint32_t u32Mask);
+uint32_t SPI_GetStatus(const SPI_T *spi, uint32_t u32Mask);
+uint32_t SPI_GetStatus2(const SPI_T *spi, uint32_t u32Mask);
 
 uint32_t SPII2S_Open(SPI_T *i2s, uint32_t u32MasterSlave, uint32_t u32SampleRate, uint32_t u32WordWidth, uint32_t u32Channels, uint32_t u32DataFormat);
 void SPII2S_Close(SPI_T *i2s);

@@ -70,7 +70,7 @@ uint32_t SYS_GetResetSrc(void)
   */
 uint32_t SYS_IsRegLocked(void)
 {
-    return SYS->REGLCTL & 1UL ? 0UL : 1UL;
+    return (SYS->REGLCTL & 1UL) ? 0UL : 1UL;
 }
 
 /**
@@ -168,7 +168,8 @@ void SYS_ResetCPU(void)
   */
 void SYS_ResetModule(uint32_t u32ModuleIndex)
 {
-    uint32_t u32TmpVal = 0UL, u32TmpAddr = 0UL;
+    uint32_t u32TmpVal = 0UL;
+    uint32_t u32TmpAddr = 0UL;
 
     /* Generate reset signal to the corresponding module */
     u32TmpVal = (1UL << (u32ModuleIndex & 0x00ffffffUL));
@@ -206,10 +207,15 @@ int32_t SYS_EnableBOD(int32_t i32Mode, uint32_t u32BODLevel)
     /* Select Brown-out Detector threshold voltage */
     SYS_WAIT_BODCTL_WRBUSY();
 
-    if( (SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk) == 0 )
+    if( (SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk) == 0U )
+    {
         SYS->BODCTL = (SYS->BODCTL & ~(SYS_BODCTL_BODRSTEN_Msk | SYS_BODCTL_BODVL_Msk)) | \
                   ((uint32_t)i32Mode) | (u32BODLevel) | (SYS_BODCTL_BODEN_Msk);
-    else return SYS_ERR_TIMEOUT;
+    }
+    else
+    {
+        return SYS_ERR_TIMEOUT;
+    }
 
     return SYS_OK;
 }
@@ -226,9 +232,14 @@ int32_t SYS_DisableBOD(void)
 {
     SYS_WAIT_BODCTL_WRBUSY();
 
-    if( (SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk) == 0 )
+    if( (SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk) == 0U )
+    {
         SYS->BODCTL &= ~SYS_BODCTL_BODEN_Msk;
-    else return SYS_ERR_TIMEOUT;
+    }
+    else
+    {
+        return SYS_ERR_TIMEOUT;
+    }
 
     return SYS_OK;
 }
@@ -254,7 +265,10 @@ int32_t SYS_SetPowerLevel(uint32_t u32PowerLevel)
     u32TimeOutCnt = SYS_TIMEOUT;
     while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk)
     {
-        if(--u32TimeOutCnt == 0) return -1;
+        if(--u32TimeOutCnt == 0U)
+        {
+            return -1;
+        }
     }
 
     /* Set power voltage level */
@@ -264,7 +278,10 @@ int32_t SYS_SetPowerLevel(uint32_t u32PowerLevel)
     u32TimeOutCnt = SYS_TIMEOUT;
     while(SYS->PLSTS & SYS_PLSTS_PLCBUSY_Msk)
     {
-        if(--u32TimeOutCnt == 0) return -1;
+        if(--u32TimeOutCnt == 0U)
+        {
+            return -1;
+        }
     }
 
     return 0;
@@ -299,7 +316,10 @@ int32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
         i32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk)
         {
-            if(i32TimeOutCnt-- <= 0) return SYS_ERR_TIMEOUT;
+            if(i32TimeOutCnt-- <= 0)
+            {
+                return SYS_ERR_TIMEOUT;
+            }
         }
         SYS->PLCTL |= SYS_PLCTL_MVRS_Msk;
 
@@ -307,7 +327,10 @@ int32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
         i32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->PLSTS & SYS_PLSTS_MVRCBUSY_Msk)
         {
-            if(i32TimeOutCnt-- <= 0) return SYS_ERR_TIMEOUT;
+            if(i32TimeOutCnt-- <= 0)
+            {
+                return SYS_ERR_TIMEOUT;
+            }
         }
         if((SYS->PLSTS & SYS_PLSTS_CURMVR_Msk) != SYS_PLSTS_CURMVR_DCDC)
         {
@@ -320,7 +343,10 @@ int32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
         i32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->PLCTL & SYS_PLCTL_WRBUSY_Msk)
         {
-            if(i32TimeOutCnt-- <= 0) return SYS_ERR_TIMEOUT;
+            if(i32TimeOutCnt-- <= 0)
+            {
+                return SYS_ERR_TIMEOUT;
+            }
         }
         SYS->PLCTL &= (~SYS_PLCTL_MVRS_Msk);
 
@@ -328,12 +354,19 @@ int32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator)
         i32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->PLSTS & SYS_PLSTS_MVRCBUSY_Msk)
         {
-            if(i32TimeOutCnt-- <= 0) return SYS_ERR_TIMEOUT;
+            if(i32TimeOutCnt-- <= 0)
+            {
+                return SYS_ERR_TIMEOUT;
+            }
         }
         if((SYS->PLSTS & SYS_PLSTS_CURMVR_Msk) != SYS_PLSTS_CURMVR_LDO)
         {
             u32Ret = 0U;    /* Main voltage regulator type change time-out */
         }
+    }
+    else
+    {
+        /* No action required for other regulator values */
     }
 
     /* Clear main voltage regulator type change error flag */
@@ -388,7 +421,7 @@ int32_t SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
     /* Get system SRAM power mode setting position */
     while(u32SRAMSelPos < 30UL)
     {
-        if(u32SRAMSel & (1 << u32SRAMSelPos))
+        if(u32SRAMSel & (1UL << u32SRAMSelPos))
         {
             break;
         }
@@ -404,7 +437,10 @@ int32_t SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
         u32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->SRAMPC1 & SYS_SRAMPC1_PCBUSY_Msk)
         {
-            if(--u32TimeOutCnt == 0) return -1;
+            if(--u32TimeOutCnt == 0U)
+            {
+                return -1;
+            }
         }
         SYS->SRAMPC1 = (SYS->SRAMPC1 & (~u32SRAMSel)) | (u32PowerMode << u32SRAMSelPos);
     }
@@ -413,7 +449,10 @@ int32_t SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
         u32TimeOutCnt = SYS_TIMEOUT;
         while(SYS->SRAMPC0 & SYS_SRAMPC0_PCBUSY_Msk)
         {
-            if(--u32TimeOutCnt == 0) return -1;
+            if(--u32TimeOutCnt == 0U)
+            {
+                return -1;
+            }
         }
         SYS->SRAMPC0 = (SYS->SRAMPC0 & (~u32SRAMSel)) | (u32PowerMode << u32SRAMSelPos);
     }
@@ -448,7 +487,7 @@ int32_t SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
     /* Get peripheral SRAM power mode setting position */
     while(u32SRAMSelPos < 30UL)
     {
-        if(u32SRAMSel & (1 << u32SRAMSelPos))
+        if(u32SRAMSel & (1UL << u32SRAMSelPos))
         {
             break;
         }
@@ -462,7 +501,10 @@ int32_t SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode)
     u32TimeOutCnt = SYS_TIMEOUT;
     while(SYS->SRAMPC1 & SYS_SRAMPC1_PCBUSY_Msk)
     {
-        if(--u32TimeOutCnt == 0)  return -1;
+        if(--u32TimeOutCnt == 0U)
+        {
+            return -1;
+        }
     }
     SYS->SRAMPC1 = (SYS->SRAMPC1 & (~u32SRAMSel)) | (u32PowerMode << u32SRAMSelPos);
 

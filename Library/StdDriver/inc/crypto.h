@@ -446,16 +446,16 @@ int32_t PRNG_Start(CRPT_T *crpt);
 void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[]);
 void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec, uint32_t u32OpMode, uint32_t u32KeySize, uint32_t u32SwapType);
 void AES_Start(CRPT_T *crpt, int32_t u32Channel, uint32_t u32DMAMode);
-void AES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t u32KeySize);
+void AES_SetKey(CRPT_T *crpt, uint32_t u32Channel, const uint32_t au32Keys[], uint32_t u32KeySize);
 void AES_SetKey_KS(CRPT_T *crpt, KS_MEM_Type mem, int32_t i32KeyIdx);
-void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32IV[]);
+void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, const uint32_t au32IV[]);
 void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr, uint32_t u32DstAddr, uint32_t u32TransCnt);
 void SHA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32SwapType, uint32_t hmac_key_len);
 void SHA_Start(CRPT_T *crpt, uint32_t u32DMAMode);
 void SHA_SetDMATransfer(CRPT_T *crpt, uint32_t u32SrcAddr, uint32_t u32TransCnt);
 void SHA_Read(CRPT_T *crpt, uint32_t u32Digest[]);
 void ECC_DriverISR(CRPT_T *crpt);
-int  ECC_IsPrivateKeyValid(CRPT_T *crpt, E_ECC_CURVE ecc_curve,  char private_k[]);
+int  ECC_IsPrivateKeyValid(CRPT_T *crpt, E_ECC_CURVE ecc_curve, const char private_k[]);
 int32_t  ECC_GenerateSecretZ(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[], char secret_z[]);
 int32_t  ECC_GeneratePublicKey(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[]);
 int32_t  ECC_GenerateSignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, char *d, char *k, char *R, char *S);
@@ -466,7 +466,7 @@ int32_t RSA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32KeySize, void *ps
 int32_t RSA_SetKey(CRPT_T *crpt, char *Key);
 int32_t RSA_SetDMATransfer(CRPT_T *crpt, char *Src, char *n, char *P, char *Q);
 void RSA_Start(CRPT_T *crpt);
-int32_t RSA_Read(CRPT_T *crpt, char * Output);
+int32_t RSA_Read(const CRPT_T *crpt, char * Output);
 int32_t RSA_SetKey_KS(CRPT_T *crpt, uint32_t u32KeyNum, uint32_t u32KSMemType, uint32_t u32BlindKeyNum);
 int32_t RSA_SetDMATransfer_KS(CRPT_T *crpt, char *Src, char *n, uint32_t u32PNum,
                               uint32_t u32QNum, uint32_t u32CpNum, uint32_t u32CqNum, uint32_t u32DpNum,
@@ -482,7 +482,7 @@ int32_t ECC_GetCurve(CRPT_T *crpt, E_ECC_CURVE ecc_curve, ECC_CURVE *curve);
 
 int32_t SM2_Sign(CRPT_T* crpt, E_ECC_CURVE ecc_curve, char* e, char* d, char* k, char* R, char* S);
 int32_t SM2_Verify(CRPT_T* crpt, E_ECC_CURVE ecc_curve, char* e, char* public_k1, char* public_k2, char* R, char* S);
-int32_t SM3(uint32_t* pu32Addr, uint32_t u32Size, uint32_t digest[]);
+int32_t SM3(const uint32_t* pu32Addr, uint32_t u32Size, uint32_t digest[]);
 
 /**@}*/ /* end of group CRYPTO_EXPORTED_FUNCTIONS */
 

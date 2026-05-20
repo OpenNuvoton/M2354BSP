@@ -280,8 +280,8 @@ extern "C"
 #define CLK_PLLCTL_PLLSRC_HXT   0x00000000UL    /*!< For PLL clock source is HXT.  2MHz < FIN/NR < 8MHz */
 #define CLK_PLLCTL_PLLSRC_HIRC  0x00080000UL    /*!< For PLL clock source is HIRC. 2MHz < FIN/NR < 8MHz */
 
-#define CLK_PLLCTL_NF(x)        ((x)-2UL)       /*!< x must be constant and 2 <= x <= 513. 96MHz < FIN*(2*NF)/NR < 200MHz */
-#define CLK_PLLCTL_NR(x)        (((x)-1UL)<<9)  /*!< x must be constant and 2 <= x <= 33.  2MHz < FIN/NR < 8MHz */
+#define CLK_PLLCTL_NF(x)        ((uint32_t)(x)-2UL)       /*!< x must be constant and 2 <= x <= 513. 96MHz < FIN*(2*NF)/NR < 200MHz */
+#define CLK_PLLCTL_NR(x)        (((uint32_t)(x)-1UL)<<9UL) /*!< x must be constant and 2 <= x <= 33.  2MHz < FIN/NR < 8MHz */
 
 #define CLK_PLLCTL_NO_1         0x0000UL        /*!< For output divider is 1 */
 #define CLK_PLLCTL_NO_2         0x4000UL        /*!< For output divider is 2 */
@@ -1005,20 +1005,21 @@ __STATIC_INLINE void CLK_SysTickDelay(uint32_t us)
 __STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us)
 {
     uint32_t u32Delay;
+    uint32_t usLocal = us;  /* local copy to avoid modifying parameter (Rule 17.8) */
 
     /* It should <= 65536us for each delay loop */
     u32Delay = 65536UL;
 
     do
     {
-        if(us > u32Delay)
+        if(usLocal > u32Delay)
         {
-            us -= u32Delay;
+            usLocal -= u32Delay;
         }
         else
         {
-            u32Delay = us;
-            us = 0UL;
+            u32Delay = usLocal;
+            usLocal = 0UL;
         }
 
         SysTick->LOAD = u32Delay * CyclesPerUs;
@@ -1030,7 +1031,7 @@ __STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us)
 
         /* Disable SysTick counter */
         SysTick->CTRL = 0UL;
-    }while(us > 0UL);
+    }while(usLocal > 0UL);
 }
 
 

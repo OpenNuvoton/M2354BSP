@@ -33,7 +33,8 @@ static uint32_t I2S_GetSourceClockFreq(I2S_T *i2s);
 static uint32_t I2S_GetSourceClockFreq(I2S_T *i2s)
 {
     (void)i2s;
-    uint32_t u32Freq = 0UL, u32ClkSrcSel;
+    uint32_t u32Freq = 0UL;
+    uint32_t u32ClkSrcSel;
 
     u32ClkSrcSel = CLK_GetModuleClockSource(I2S0_MODULE) << CLK_CLKSEL3_I2S0SEL_Pos;
 
@@ -94,7 +95,9 @@ static uint32_t I2S_GetSourceClockFreq(I2S_T *i2s)
 uint32_t I2S_Open(I2S_T *i2s, uint32_t u32MasterSlave, uint32_t u32SampleRate, uint32_t u32WordWidth, uint32_t u32MonoData, uint32_t u32DataFormat)
 {
     uint16_t u16Divider;
-    uint32_t u32BitRate, u32SrcClk;
+    uint32_t u32BitRate;
+    uint32_t u32SrcClk;
+    uint32_t u32SampleRateLocal;
 
     if(!(__PC() & NS_OFFSET))
     {
@@ -117,12 +120,12 @@ uint32_t I2S_Open(I2S_T *i2s, uint32_t u32MasterSlave, uint32_t u32SampleRate, u
 
     /* Calculate real sample rate */
     u32BitRate = u32SrcClk / (((uint32_t)u16Divider + 1UL) * 2UL);
-    u32SampleRate = u32BitRate / ((((u32WordWidth >> 4UL) & 0x3UL) + 1UL) * 16UL);
+    u32SampleRateLocal = u32BitRate / ((((u32WordWidth >> 4UL) & 0x3UL) + 1UL) * 16UL);
 
     /* Enable I2S controller */
     i2s->CTL0 |= I2S_CTL0_I2SEN_Msk;
 
-    return u32SampleRate;
+    return u32SampleRateLocal;
 }
 
 /**
@@ -173,7 +176,9 @@ void I2S_DisableInt(I2S_T *i2s, uint32_t u32Mask)
 uint32_t I2S_EnableMCLK(I2S_T *i2s, uint32_t u32BusClock)
 {
     uint8_t u8Divider;
-    uint32_t u32SrcClk, u32Reg, u32Clock;
+    uint32_t u32SrcClk;
+    uint32_t u32Reg;
+    uint32_t u32Clock;
 
     u32SrcClk = I2S_GetSourceClockFreq(i2s);
     if(u32BusClock == u32SrcClk)
@@ -182,7 +187,7 @@ uint32_t I2S_EnableMCLK(I2S_T *i2s, uint32_t u32BusClock)
     }
     else
     {
-        u8Divider = (uint8_t)(u32SrcClk / u32BusClock) >> 1UL;
+        u8Divider = (uint8_t)((u32SrcClk / u32BusClock) >> 1UL);
     }
 
     i2s->CLKDIV = (i2s->CLKDIV & ~I2S_CLKDIV_MCLKDIV_Msk) | u8Divider;

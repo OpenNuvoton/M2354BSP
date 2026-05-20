@@ -179,14 +179,14 @@ __STATIC_INLINE void TIMER_EnableInt(TIMER_T *timer);
 __STATIC_INLINE void TIMER_DisableInt(TIMER_T *timer);
 __STATIC_INLINE void TIMER_EnableCaptureInt(TIMER_T *timer);
 __STATIC_INLINE void TIMER_DisableCaptureInt(TIMER_T *timer);
-__STATIC_INLINE uint32_t TIMER_GetIntFlag(TIMER_T *timer);
+__STATIC_INLINE uint32_t TIMER_GetIntFlag(const TIMER_T *timer);
 __STATIC_INLINE void TIMER_ClearIntFlag(TIMER_T *timer);
-__STATIC_INLINE uint32_t TIMER_GetCaptureIntFlag(TIMER_T *timer);
+__STATIC_INLINE uint32_t TIMER_GetCaptureIntFlag(const TIMER_T *timer);
 __STATIC_INLINE void TIMER_ClearCaptureIntFlag(TIMER_T *timer);
-__STATIC_INLINE uint32_t TIMER_GetWakeupFlag(TIMER_T *timer);
+__STATIC_INLINE uint32_t TIMER_GetWakeupFlag(const TIMER_T *timer);
 __STATIC_INLINE void TIMER_ClearWakeupFlag(TIMER_T *timer);
-__STATIC_INLINE uint32_t TIMER_GetCaptureData(TIMER_T *timer);
-__STATIC_INLINE uint32_t TIMER_GetCounter(TIMER_T *timer);
+__STATIC_INLINE uint32_t TIMER_GetCaptureData(const TIMER_T *timer);
+__STATIC_INLINE uint32_t TIMER_GetCounter(const TIMER_T *timer);
 
 
 /**
@@ -397,7 +397,7 @@ __STATIC_INLINE void TIMER_DisableCaptureInt(TIMER_T *timer)
   *
   * @details    This function indicates timer time-out interrupt occurred or not.
   */
-__STATIC_INLINE uint32_t TIMER_GetIntFlag(TIMER_T *timer)
+__STATIC_INLINE uint32_t TIMER_GetIntFlag(const TIMER_T *timer)
 {
     return (((timer->INTSTS & TIMER_INTSTS_TIF_Msk) == TIMER_INTSTS_TIF_Msk) ? 1UL : 0UL);
 }
@@ -426,7 +426,7 @@ __STATIC_INLINE void TIMER_ClearIntFlag(TIMER_T *timer)
   *
   * @details    This function indicates timer capture trigger interrupt occurred or not.
   */
-__STATIC_INLINE uint32_t TIMER_GetCaptureIntFlag(TIMER_T *timer)
+__STATIC_INLINE uint32_t TIMER_GetCaptureIntFlag(const TIMER_T *timer)
 {
     return timer->EINTSTS;
 }
@@ -455,7 +455,7 @@ __STATIC_INLINE void TIMER_ClearCaptureIntFlag(TIMER_T *timer)
   *
   * @details    This function indicates timer interrupt event has waked up system or not.
   */
-__STATIC_INLINE uint32_t TIMER_GetWakeupFlag(TIMER_T *timer)
+__STATIC_INLINE uint32_t TIMER_GetWakeupFlag(const TIMER_T *timer)
 {
     return (((timer->INTSTS & TIMER_INTSTS_TWKF_Msk) == TIMER_INTSTS_TWKF_Msk) ? 1UL : 0UL);
 }
@@ -483,7 +483,7 @@ __STATIC_INLINE void TIMER_ClearWakeupFlag(TIMER_T *timer)
   *
   * @details    This function reports the current 24-bit timer capture value.
   */
-__STATIC_INLINE uint32_t TIMER_GetCaptureData(TIMER_T *timer)
+__STATIC_INLINE uint32_t TIMER_GetCaptureData(const TIMER_T *timer)
 {
     return timer->CAP;
 }
@@ -497,7 +497,7 @@ __STATIC_INLINE uint32_t TIMER_GetCaptureData(TIMER_T *timer)
   *
   * @details    This function reports the current 24-bit timer counter value.
   */
-__STATIC_INLINE uint32_t TIMER_GetCounter(TIMER_T *timer)
+__STATIC_INLINE uint32_t TIMER_GetCounter(const TIMER_T *timer)
 {
     return timer->CNT;
 }
@@ -510,7 +510,7 @@ void TIMER_EnableCapture(TIMER_T *timer, uint32_t u32CapMode, uint32_t u32Edge);
 void TIMER_DisableCapture(TIMER_T *timer);
 void TIMER_EnableEventCounter(TIMER_T *timer, uint32_t u32Edge);
 void TIMER_DisableEventCounter(TIMER_T *timer);
-uint32_t TIMER_GetModuleClock(TIMER_T *timer);
+uint32_t TIMER_GetModuleClock(const TIMER_T *timer);
 void TIMER_EnableFreqCounter(TIMER_T *timer, uint32_t u32DropCount, uint32_t u32Timeout, uint32_t u32EnableInt);
 void TIMER_DisableFreqCounter(TIMER_T *timer);
 void TIMER_SetTriggerSource(TIMER_T *timer, uint32_t u32Src);

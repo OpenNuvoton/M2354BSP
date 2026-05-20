@@ -1,4 +1,4 @@
-/**************************************************************************//**
+﻿/**************************************************************************//**
  * @file     fmc.h
  * @version  V3.0
  * @brief    M2354 Series Flash Memory Controller(FMC) driver header file
@@ -31,8 +31,8 @@ extern "C"
 /* Global constant definitions                                                                             */
 /*---------------------------------------------------------------------------------------------------------*/
 #define ISBEN   0UL
-#define FMC_ISP   ( (__PC() & 0x10000000) ? FMC_NS : FMC)
-#define FULL_ROMSIZE_SEL (M32(0x4000CFF8) & 0x00000020UL) >> 5   /* Full size APROM selection */
+#define FMC_ISP   ( (__PC() & 0x10000000U) ? FMC_NS : FMC)
+#define FULL_ROMSIZE_SEL (((M32(0x4000CFF8) & 0x00000020UL) >> 5U))   /* Full size APROM selection */
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Define Base Address                                                                                     */
@@ -462,7 +462,7 @@ __STATIC_INLINE uint32_t FMC_ReadCID(void)
         if( i32TimeOutCnt-- <= 0)
         {
             g_FMC_i32ErrCode = -1;
-            return 0xFFFFFFFF;
+            return 0xFFFFFFFFU;
         }
     }
 
@@ -498,7 +498,7 @@ __STATIC_INLINE uint32_t FMC_ReadPID(void)
         if( i32TimeOutCnt-- <= 0)
         {
             g_FMC_i32ErrCode = -1;
-            return 0xFFFFFFFF;
+            return 0xFFFFFFFFU;
         }
     }
 
@@ -527,7 +527,7 @@ __STATIC_INLINE uint32_t FMC_ReadUID(uint8_t u8Index)
     FMC_ISP->ISPCMD = FMC_ISPCMD_READ_UID;
     FMC_ISP->ISPADDR = ((uint32_t)u8Index << 2u);
     FMC_ISP->ISPDAT = 0u;
-    FMC_ISP->ISPTRG = 0x1u;
+    FMC_ISP->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
 #if ISBEN
     __ISB();
 #endif
@@ -536,7 +536,7 @@ __STATIC_INLINE uint32_t FMC_ReadUID(uint8_t u8Index)
         if( i32TimeOutCnt-- <= 0)
         {
             g_FMC_i32ErrCode = -1;
-            return 0xFFFFFFFF;
+            return 0xFFFFFFFFU;
         }
     }
 
@@ -571,7 +571,7 @@ __STATIC_INLINE uint32_t FMC_ReadUCID(uint32_t u32Index)
         if( i32TimeOutCnt-- <= 0)
         {
             g_FMC_i32ErrCode = -1;
-            return 0xFFFFFFFF;
+            return 0xFFFFFFFFU;
         }
     }
 
@@ -639,24 +639,24 @@ __STATIC_INLINE void FMC_SetScrambleKey(uint32_t u32ScrambleKey)
 
 extern uint32_t  FMC_CheckAllOne(uint32_t u32addr, uint32_t u32count);
 extern void FMC_Close(void);
-extern int32_t FMC_ConfigXOM(uint32_t xom_num, uint32_t xom_base, uint8_t xom_page);
+extern int32_t FMC_ConfigXOM(uint32_t u32XomNum, uint32_t u32XomBase, uint8_t u8XomPage);
 extern int32_t FMC_Erase(uint32_t u32PageAddr);
 extern int32_t FMC_EraseBank(uint32_t u32BankAddr);
-extern int32_t FMC_EraseXOM(uint32_t xom_num);
+extern int32_t FMC_EraseXOM(uint32_t u32XomNum);
 extern uint32_t  FMC_GetChkSum(uint32_t u32addr, uint32_t u32count);
-extern int32_t FMC_IsOTPLocked(uint32_t otp_num);
-extern int32_t FMC_GetXOMState(uint32_t xom_num);
-extern int32_t FMC_LockOTP(uint32_t otp_num);
+extern int32_t FMC_IsOTPLocked(uint32_t u32OtpNum);
+extern int32_t FMC_GetXOMState(uint32_t u32XomNum);
+extern int32_t FMC_LockOTP(uint32_t u32OtpNum);
 extern void FMC_Open(void);
 extern uint32_t FMC_Read(uint32_t u32Addr);
 extern int32_t FMC_Read64(uint32_t u32addr, uint32_t * u32data0, uint32_t * u32data1);
-extern int32_t FMC_ReadOTP(uint32_t otp_num, uint32_t *low_word, uint32_t *high_word);
+extern int32_t FMC_ReadOTP(uint32_t u32OtpNum, uint32_t *u32LowWord, uint32_t *u32HighWord);
 extern int32_t FMC_ReadConfig(uint32_t u32Config[], uint32_t u32Count);
 extern int32_t FMC_Write(uint32_t u32Addr, uint32_t u32Data);
 extern int32_t FMC_Write8Bytes(uint32_t u32addr, uint32_t u32data0, uint32_t u32data1);
-extern int32_t FMC_WriteConfig(uint32_t au32Config[], uint32_t u32Count);
-extern int32_t FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len);
-extern int32_t FMC_WriteOTP(uint32_t otp_num, uint32_t low_word, uint32_t high_word);
+extern int32_t FMC_WriteConfig(const uint32_t au32Config[], uint32_t u32Count);
+extern int32_t FMC_WriteMultiple(uint32_t u32Addr, const uint32_t pu32Buf[], uint32_t u32Len);
+extern int32_t FMC_WriteOTP(uint32_t u32OtpNum, uint32_t u32LowWord, uint32_t u32HighWord);
 extern int32_t FMC_WriteMultipleA(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len);
 extern int32_t FMC_RemapBank(uint32_t u32Bank);
 

@@ -13,8 +13,18 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global file scope (static) variables                                                                    */
 /*---------------------------------------------------------------------------------------------------------*/
-static volatile uint32_t g_u32hiYear, g_u32loYear, g_u32hiMonth, g_u32loMonth, g_u32hiDay, g_u32loDay;
-static volatile uint32_t g_u32hiHour, g_u32loHour, g_u32hiMin, g_u32loMin, g_u32hiSec, g_u32loSec;
+static volatile uint32_t g_u32hiYear;
+static volatile uint32_t g_u32loYear;
+static volatile uint32_t g_u32hiMonth;
+static volatile uint32_t g_u32loMonth;
+static volatile uint32_t g_u32hiDay;
+static volatile uint32_t g_u32loDay;
+static volatile uint32_t g_u32hiHour;
+static volatile uint32_t g_u32loHour;
+static volatile uint32_t g_u32hiMin;
+static volatile uint32_t g_u32loMin;
+static volatile uint32_t g_u32hiSec;
+static volatile uint32_t g_u32loSec;
 
 /** @endcond HIDDEN_SYMBOLS */
 
@@ -68,11 +78,14 @@ int32_t RTC_Open(S_RTC_TIME_DATA_T *sPt)
         RTC->INIT = RTC_INIT_KEY;
         while(RTC->INIT != RTC_INIT_ACTIVE_Msk)
         {
-            if(--u32TimeOutCount == 0) return -1;
+            if(--u32TimeOutCount == 0)
+            {
+                return -1;
+            }
         }
     }
 
-    if(sPt != 0)
+    if(sPt != NULL)
     {
         /* Enable frequency dynamic compensation function */
         RTC->CLKFMT |= RTC_CLKFMT_DCOMPEN_Msk;
@@ -114,8 +127,8 @@ void RTC_Close(void)
   */
 int32_t RTC_32KCalibration(int32_t i32FrequencyX10000)
 {
-    int32_t i32RegInt, i32RegFra;
-    uint32_t u32TimeOutCnt;
+    int32_t i32RegInt;
+    int32_t i32RegFra;
 
     /* Compute integer and fraction for RTC FCR register */
     i32RegInt = (i32FrequencyX10000 / 10000) - RTC_FCR_REFERENCE;
@@ -130,13 +143,24 @@ int32_t RTC_32KCalibration(int32_t i32FrequencyX10000)
     /* Judge Integer part is reasonable */
     if((i32RegInt >= 0) && (i32RegInt <= 31))
     {
+        uint32_t u32TimeOutCnt;
         u32TimeOutCnt = SystemCoreClock<<1; /* 2 second time-out */
         while((RTC->FREQADJ & RTC_FREQADJ_FCRBUSY_Msk) == RTC_FREQADJ_FCRBUSY_Msk)
-            if(--u32TimeOutCnt == 0) return RTC_ERR_TIMEOUT;
-        RTC->FREQADJ = (uint32_t)((i32RegInt << 8) | i32RegFra);
+        {
+            if(--u32TimeOutCnt == 0)
+            {
+                return RTC_ERR_TIMEOUT;
+            }
+        }
+        RTC->FREQADJ = ((uint32_t)i32RegInt << 8U) | (uint32_t)i32RegFra;
         u32TimeOutCnt = SystemCoreClock<<1; /* 2 second time-out */
         while((RTC->FREQADJ & RTC_FREQADJ_FCRBUSY_Msk) == RTC_FREQADJ_FCRBUSY_Msk)
-            if(--u32TimeOutCnt == 0) return RTC_ERR_TIMEOUT;
+        {
+            if(--u32TimeOutCnt == 0)
+            {
+                return RTC_ERR_TIMEOUT;
+            }
+        }
     }
 
     return RTC_OK;
@@ -354,9 +378,7 @@ void RTC_GetAlarmDateAndTime(S_RTC_TIME_DATA_T *sPt)
   */
 void RTC_SetDateAndTime(S_RTC_TIME_DATA_T *sPt)
 {
-    uint32_t u32RegCAL, u32RegTIME;
-
-    if(sPt != 0)
+    if(sPt != NULL)
     {
         /*-----------------------------------------------------------------------------------------------------*/
         /* Set RTC 24/12 hour setting and Day of the Week                                                      */
@@ -384,6 +406,8 @@ void RTC_SetDateAndTime(S_RTC_TIME_DATA_T *sPt)
         /*-----------------------------------------------------------------------------------------------------*/
         /* Set RTC Current Date and Time                                                                       */
         /*-----------------------------------------------------------------------------------------------------*/
+        uint32_t u32RegCAL;
+        uint32_t u32RegTIME;
         u32RegCAL  = ((sPt->u32Year - (uint32_t)RTC_YEAR2000) / 10UL) << 20;
         u32RegCAL |= (((sPt->u32Year - (uint32_t)RTC_YEAR2000) % 10UL) << 16);
         u32RegCAL |= ((sPt->u32Month  / 10UL) << 12);
@@ -428,9 +452,7 @@ void RTC_SetDateAndTime(S_RTC_TIME_DATA_T *sPt)
   */
 void RTC_SetAlarmDateAndTime(S_RTC_TIME_DATA_T *sPt)
 {
-    uint32_t u32RegCALM, u32RegTALM;
-
-    if(sPt != 0)
+    if(sPt != NULL)
     {
         /*-----------------------------------------------------------------------------------------------------*/
         /* Set RTC 24/12 hour setting and Day of the Week                                                      */
@@ -455,6 +477,8 @@ void RTC_SetAlarmDateAndTime(S_RTC_TIME_DATA_T *sPt)
         /*-----------------------------------------------------------------------------------------------------*/
         /* Set RTC Alarm Date and Time                                                                         */
         /*-----------------------------------------------------------------------------------------------------*/
+        uint32_t u32RegCALM;
+        uint32_t u32RegTALM;
         u32RegCALM  = ((sPt->u32Year - (uint32_t)RTC_YEAR2000) / 10UL) << 20;
         u32RegCALM |= (((sPt->u32Year - (uint32_t)RTC_YEAR2000) % 10UL) << 16);
         u32RegCALM |= ((sPt->u32Month  / 10UL) << 12);
@@ -523,15 +547,16 @@ void RTC_SetDate(uint32_t u32Year, uint32_t u32Month, uint32_t u32Day, uint32_t 
 void RTC_SetTime(uint32_t u32Hour, uint32_t u32Minute, uint32_t u32Second, uint32_t u32TimeMode, uint32_t u32AmPm)
 {
     uint32_t u32RegTIME;
+    uint32_t u32HourVal = u32Hour;
 
     /* Important, range of 12-hour PM mode is 21 up to 32 */
     if((u32TimeMode == (uint32_t)RTC_CLOCK_12) && (u32AmPm == (uint32_t)RTC_PM))
     {
-        u32Hour += 20UL;
+        u32HourVal = u32Hour + 20UL;
     }
 
-    u32RegTIME  = ((u32Hour   / 10UL) << 20);
-    u32RegTIME |= ((u32Hour   % 10UL) << 16);
+    u32RegTIME  = ((u32HourVal   / 10UL) << 20);
+    u32RegTIME |= ((u32HourVal   % 10UL) << 16);
     u32RegTIME |= ((u32Minute / 10UL) << 12);
     u32RegTIME |= ((u32Minute % 10UL) << 8);
     u32RegTIME |= ((u32Second / 10UL) << 4);
@@ -595,15 +620,16 @@ void RTC_SetAlarmDate(uint32_t u32Year, uint32_t u32Month, uint32_t u32Day)
 void RTC_SetAlarmTime(uint32_t u32Hour, uint32_t u32Minute, uint32_t u32Second, uint32_t u32TimeMode, uint32_t u32AmPm)
 {
     uint32_t u32RegTALM;
+    uint32_t u32HourVal = u32Hour;
 
     /* Important, range of 12-hour PM mode is 21 up to 32 */
     if((u32TimeMode == (uint32_t)RTC_CLOCK_12) && (u32AmPm == (uint32_t)RTC_PM))
     {
-        u32Hour += 20UL;
+        u32HourVal = u32Hour + 20UL;
     }
 
-    u32RegTALM  = ((u32Hour   / 10UL) << 20);
-    u32RegTALM |= ((u32Hour   % 10UL) << 16);
+    u32RegTALM  = ((u32HourVal   / 10UL) << 20);
+    u32RegTALM |= ((u32HourVal   % 10UL) << 16);
     u32RegTALM |= ((u32Minute / 10UL) << 12);
     u32RegTALM |= ((u32Minute % 10UL) << 8);
     u32RegTALM |= ((u32Second / 10UL) << 4);
@@ -906,7 +932,8 @@ void RTC_DynamicTamperEnable(uint32_t u32PairSel, uint32_t u32DebounceEn, uint32
     uint32_t i;
     uint32_t u32Reg;
     uint32_t u32TmpReg;
-    uint32_t u32Tamper2Debounce, u32Tamper4Debounce;
+    uint32_t u32Tamper2Debounce;
+    uint32_t u32Tamper4Debounce;
 
     u32Reg = RTC->TAMPCTL;
     u32Reg &= ~(RTC_TAMPCTL_TAMP0EN_Msk | RTC_TAMPCTL_TAMP1EN_Msk | RTC_TAMPCTL_TAMP2EN_Msk |
@@ -971,7 +998,8 @@ void RTC_DynamicTamperDisable(uint32_t u32PairSel)
     uint32_t i;
     uint32_t u32Reg;
     uint32_t u32TmpReg;
-    uint32_t u32Tamper2En = 0UL, u32Tamper4En = 0UL;
+    uint32_t u32Tamper2En = 0UL;
+    uint32_t u32Tamper4En = 0UL;
 
     u32Reg = RTC->TAMPCTL;
 
@@ -1059,7 +1087,7 @@ void RTC_DynamicTamperConfig(uint32_t u32ChangeRate, uint32_t u32SeedReload, uin
   */
 uint32_t RTC_SetClockSource(uint32_t u32ClkSrc)
 {
-    uint32_t u32TrimDefault = inpw(SYS_BASE + 0x14Cul);
+    uint32_t u32TrimDefault = inpw(SYS_BASE + 0x14CUL);
 
     if(u32ClkSrc == RTC_CLOCK_SOURCE_LXT)
     {
@@ -1072,7 +1100,7 @@ uint32_t RTC_SetClockSource(uint32_t u32ClkSrc)
     else if(u32ClkSrc == RTC_CLOCK_SOURCE_LIRC32K)
     {
         /* Load LIRC32 trim setting */
-        RTC->LXTCTL = ((RTC->LXTCTL & ~(0x1FFul << 16)) | ((u32TrimDefault & 0x1FFul) << 16));
+        RTC->LXTCTL = ((RTC->LXTCTL & ~(0x1FFUL << 16)) | ((u32TrimDefault & 0x1FFUL) << 16));
 
         /* RTC clock source is LIRC32K */
         RTC->LXTCTL |= RTC_LXTCTL_LIRC32KEN_Msk;
@@ -1124,30 +1152,30 @@ void RTC_SetGPIOMode(uint32_t u32PFPin, uint32_t u32Mode, uint32_t u32DigitalCtl
 {
     uint32_t u32Offset;
 
-    if((u32PFPin == 4) || (u32PFPin == 5) || (u32PFPin == 6) || (u32PFPin == 7))
+    if((u32PFPin == 4U) || (u32PFPin == 5U) || (u32PFPin == 6U) || (u32PFPin == 7U))
     {
-        u32Offset = u32PFPin - 4;
+        u32Offset = u32PFPin - 4U;
 
         RTC_SET_IOCTL_BY_RTC(RTC);
 
-        RTC->GPIOCTL0 = (RTC->GPIOCTL0 & ~(0x3FUL << (u32Offset * 8))) |
-                        (u32Mode << (u32Offset * 8)) |
-                        (u32OutputLevel << ((u32Offset * 8) + 2)) |
-                        (u32DigitalCtl << ((u32Offset * 8) + 3)) |
-                        (u32PullCtl << ((u32Offset * 8) + 4));
+        RTC->GPIOCTL0 = (RTC->GPIOCTL0 & ~(0x3FUL << (u32Offset * 8U))) |
+                        (u32Mode << (u32Offset * 8U)) |
+                        (u32OutputLevel << ((u32Offset * 8U) + 2U)) |
+                        (u32DigitalCtl << ((u32Offset * 8U) + 3U)) |
+                        (u32PullCtl << ((u32Offset * 8U) + 4U));
     }
 
-    if((u32PFPin == 8) || (u32PFPin == 9) || (u32PFPin == 10) || (u32PFPin == 11))
+    if((u32PFPin == 8U) || (u32PFPin == 9U) || (u32PFPin == 10U) || (u32PFPin == 11U))
     {
-        u32Offset = u32PFPin - 8;
+        u32Offset = u32PFPin - 8U;
 
         RTC_SET_IOCTL_BY_RTC(RTC);
 
-        RTC->GPIOCTL1 = (RTC->GPIOCTL1 & ~(0x3FUL << (u32Offset * 8))) |
-                        (u32Mode << (u32Offset * 8)) |
-                        (u32OutputLevel << ((u32Offset * 8) + 2)) |
-                        (u32DigitalCtl << ((u32Offset * 8) + 3)) |
-                        (u32PullCtl << ((u32Offset * 8) + 4));
+        RTC->GPIOCTL1 = (RTC->GPIOCTL1 & ~(0x3FUL << (u32Offset * 8U))) |
+                        (u32Mode << (u32Offset * 8U)) |
+                        (u32OutputLevel << ((u32Offset * 8U) + 2U)) |
+                        (u32DigitalCtl << ((u32Offset * 8U) + 3U)) |
+                        (u32PullCtl << ((u32Offset * 8U) + 4U));
     }
 }
 
@@ -1166,20 +1194,20 @@ void RTC_SetGPIOLevel(uint32_t u32PFPin, uint32_t u32OutputLevel)
 {
     uint32_t u32Offset;
 
-    if((u32PFPin == 4) || (u32PFPin == 5) || (u32PFPin == 6) || (u32PFPin == 7))
+    if((u32PFPin == 4U) || (u32PFPin == 5U) || (u32PFPin == 6U) || (u32PFPin == 7U))
     {
-        u32Offset = u32PFPin - 4;
+        u32Offset = u32PFPin - 4U;
 
-        RTC->GPIOCTL0 = (RTC->GPIOCTL0 & ~(0x4UL << (u32Offset * 8))) |
-                        (u32OutputLevel << ((u32Offset * 8) + 2));
+        RTC->GPIOCTL0 = (RTC->GPIOCTL0 & ~(0x4UL << (u32Offset * 8U))) |
+                        (u32OutputLevel << ((u32Offset * 8U) + 2U));
     }
 
-    if((u32PFPin == 8) || (u32PFPin == 9) || (u32PFPin == 10) || (u32PFPin == 11))
+    if((u32PFPin == 8U) || (u32PFPin == 9U) || (u32PFPin == 10U) || (u32PFPin == 11U))
     {
-        u32Offset = u32PFPin - 8;
+        u32Offset = u32PFPin - 8U;
 
-        RTC->GPIOCTL1 = (RTC->GPIOCTL1 & ~(0x4UL << (u32Offset * 8))) |
-                        (u32OutputLevel << ((u32Offset * 8) + 2));
+        RTC->GPIOCTL1 = (RTC->GPIOCTL1 & ~(0x4UL << (u32Offset * 8U))) |
+                        (u32OutputLevel << ((u32Offset * 8U) + 2U));
     }
 }
 
