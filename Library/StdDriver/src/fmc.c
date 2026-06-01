@@ -999,7 +999,6 @@ int32_t FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len)
         }
         else
         {
-            u32OnProg = 0u;
             break;
         }
         FMC->MPDAT0 = pu32Buf[idx + 0u];
@@ -1026,7 +1025,7 @@ int32_t FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len)
                 if( i32TimeOutCnt-- <= 0)
                 {
                     g_FMC_i32ErrCode = -1;
-                    err = -1;
+                    return -1;
                 }
             }
             while((FMC->MPSTS & (3u << FMC_MPSTS_D0_Pos)) && (err == 0));
@@ -1051,7 +1050,7 @@ int32_t FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len)
                     if( i32TimeOutCnt-- <= 0)
                     {
                         g_FMC_i32ErrCode = -1;
-                        err = -1;
+                        return -1;
                     }
                 }
                 while((FMC->MPSTS & (3u << FMC_MPSTS_D2_Pos)) && (err == 0));
@@ -1081,7 +1080,7 @@ int32_t FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len)
                         if( i32TimeOutCnt-- <= 0)
                         {
                             g_FMC_i32ErrCode = -1;
-                            err = -1;
+                            return -1;
                         }
                     }
                     while((u32MPStatus & (0xF << FMC_MPSTS_D0_Pos)) && (err == 0));
@@ -1102,7 +1101,7 @@ int32_t FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len)
                 if( i32TimeOutCnt-- <= 0)
                 {
                     g_FMC_i32ErrCode = -1;
-                    break;
+                    return -1;
                 }
             }
         }
