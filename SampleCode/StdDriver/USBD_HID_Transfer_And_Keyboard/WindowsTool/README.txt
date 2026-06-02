@@ -1,0 +1,21 @@
+Windows Test Tool
+=================
+
+DESCRIPTION
+-----------
+The Windows test tool for this sample is located in the BSP directory:
+
+  BSP/Utilities/HIDTransferTest/
+
+This tool is used to verify HID transfer functionality between the host PC
+and the M2L31 device running the USBD_HID_Transfer_And_Keyboard firmware.
+
+USAGE
+-----
+To run the test with a 4096-byte page size:
+
+  HIDTransferTest -pagesize 4096
+
+For full usage information, refer to:
+
+  BSP/Utilities/HIDTransferTest/README.txt
