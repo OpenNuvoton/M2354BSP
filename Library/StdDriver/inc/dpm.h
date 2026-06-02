@@ -31,8 +31,8 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 /* DPM Control Register Constant Definitions                                                               */
 /*---------------------------------------------------------------------------------------------------------*/
-#define SECURE_DPM          0   /*!< Secure DPM module */
-#define NONSECURE_DPM       1   /*!< Non-secure DPM module */
+#define SECURE_DPM          0U   /*!< Secure DPM module */
+#define NONSECURE_DPM       1U   /*!< Non-secure DPM module */
 
 #define DPM_CTL_WVCODE      (0x5AUL<<DPM_CTL_WVCODE_Pos)    /*!< Secure DPM control register write verify code */
 #define DPM_CTL_RVCODE      (0xA5UL<<DPM_CTL_RVCODE_Pos)    /*!< Secure DPM control register read verify code */
@@ -160,8 +160,8 @@ void DPM_SetDebugDisable(uint32_t u32dpm);
 void DPM_SetDebugLock(uint32_t u32dpm);
 int32_t DPM_GetDebugDisable(uint32_t u32dpm);
 int32_t DPM_GetDebugLock(uint32_t u32dpm);
-int32_t DPM_SetPasswordUpdate(uint32_t u32dpm, uint32_t au32Pwd[]);
-int32_t DPM_SetPasswordCompare(uint32_t u32dpm, uint32_t au32Pwd[]);
+int32_t DPM_SetPasswordUpdate(uint32_t u32dpm, const uint32_t au32Pwd[]);
+int32_t DPM_SetPasswordCompare(uint32_t u32dpm, const uint32_t au32Pwd[]);
 int32_t DPM_GetPasswordErrorFlag(uint32_t u32dpm);
 int32_t DPM_GetIntFlag(void);
 void DPM_ClearPasswordErrorFlag(uint32_t u32dpm);

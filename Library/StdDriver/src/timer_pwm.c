@@ -53,9 +53,10 @@ void TPWM_SetCounterClockSource(TIMER_T *timer, uint32_t u32CntClkSrc)
   * @details    This API is used to get the timer pwm clock frequency.
   * @note       This API cannot return correct clock rate if timer source is from external clock input.
   */
-static uint32_t TPWM_GetModuleClockFreq(TIMER_T *timer)
+static uint32_t TPWM_GetModuleClockFreq(const TIMER_T *timer)
 {
-    uint32_t u32Src, u32ClkFreq = __HIRC;
+    uint32_t u32Src;
+    uint32_t u32ClkFreq = __HIRC;
     const uint32_t au32Clk[] = {__HXT, __LXT, 0UL, 0UL, __MIRC, __LIRC, 0UL, __HIRC};
 
     if(timer == TIMER0)
@@ -122,8 +123,12 @@ static uint32_t TPWM_GetModuleClockFreq(TIMER_T *timer)
   */
 uint32_t TPWM_ConfigOutputFreqAndDuty(TIMER_T *timer, uint32_t u32Frequency, uint32_t u32DutyCycle)
 {
-    uint32_t u32PWMClockFreq, u32TargetFreq;
-    uint32_t u32Prescaler = 0x1000UL, u32Period = 1UL, u32CMP, u32MaxCLKPSC = 0x1000UL;
+    uint32_t u32PWMClockFreq;
+    uint32_t u32TargetFreq;
+    uint32_t u32Prescaler = 0x1000UL;
+    uint32_t u32Period = 1UL;
+    uint32_t u32CMP;
+    uint32_t u32MaxCLKPSC = 0x1000UL;
 
     if((timer == TIMER0) || (timer == TIMER1))
     {
@@ -139,9 +144,13 @@ uint32_t TPWM_ConfigOutputFreqAndDuty(TIMER_T *timer, uint32_t u32Frequency, uin
     }
 
     if((timer == TIMER4) || (timer == TIMER4_NS) || (timer == TIMER5) || (timer == TIMER5_NS))
-        u32MaxCLKPSC = 0x100UL; // 8-bit clock prescale on TIMER4 and TIMER5 PWM
+    {
+        u32MaxCLKPSC = 0x100UL; /* 8-bit clock prescale on TIMER4 and TIMER5 PWM */
+    }
     else
-        u32MaxCLKPSC = 0x1000UL; // 12-bit clock prescale on TIMER0 ~ TIMER3 PWM
+    {
+        u32MaxCLKPSC = 0x1000UL; /* 12-bit clock prescale on TIMER0 ~ TIMER3 PWM */
+    }
 
     /* Calculate u16PERIOD and u16PSC */
     for(u32Prescaler = 1UL; u32Prescaler <= u32MaxCLKPSC; u32Prescaler++)
@@ -426,7 +435,7 @@ void TPWM_DisableFaultBrakeInt(TIMER_T *timer, uint32_t u32IntSource)
   * @details    This function is used to indicate fault brake interrupt flag occurred or not of selected source.
   * @note       NOT available on TIMER4 and TIMER5.
   */
-uint32_t TPWM_GetFaultBrakeIntFlag(TIMER_T *timer, uint32_t u32IntSource)
+uint32_t TPWM_GetFaultBrakeIntFlag(const TIMER_T *timer, uint32_t u32IntSource)
 {
     return ((timer->PWMINTSTS1 & (0x3UL << u32IntSource)) ? 1UL : 0UL);
 }

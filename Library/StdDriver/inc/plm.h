@@ -69,10 +69,10 @@ __STATIC_INLINE int32_t PLM_SetStage(PLM_STAGE_T stage)
 {
 
     /* Do nothing when stage is not changed */
-    if(PLM_GetStage() == stage)
+    if(PLM_GetStage() == (uint32_t)stage)
         return 0;
 
-    PLM->CTL = PLM_VCODE | (stage);
+    PLM->CTL = PLM_VCODE | (uint32_t)(stage);
 
     /* The dirty flag should be set when PLM stage set successfully. */
     if(PLM->STS & PLM_STS_DIRTY_Msk)

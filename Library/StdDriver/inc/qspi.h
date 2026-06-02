@@ -377,13 +377,13 @@ void QSPI_DisableAutoSS(QSPI_T *qspi);
 void QSPI_EnableAutoSS(QSPI_T *qspi, uint32_t u32SSPinMask, uint32_t u32ActiveLevel);
 uint32_t QSPI_SetBusClock(QSPI_T *qspi, uint32_t u32BusClock);
 void QSPI_SetFIFO(QSPI_T *qspi, uint32_t u32TxThreshold, uint32_t u32RxThreshold);
-uint32_t QSPI_GetBusClock(QSPI_T *qspi);
+uint32_t QSPI_GetBusClock(const QSPI_T *qspi);
 void QSPI_EnableInt(QSPI_T *qspi, uint32_t u32Mask);
 void QSPI_DisableInt(QSPI_T *qspi, uint32_t u32Mask);
-uint32_t QSPI_GetIntFlag(QSPI_T *qspi, uint32_t u32Mask);
+uint32_t QSPI_GetIntFlag(const QSPI_T *qspi, uint32_t u32Mask);
 void QSPI_ClearIntFlag(QSPI_T *qspi, uint32_t u32Mask);
-uint32_t QSPI_GetStatus(QSPI_T *qspi, uint32_t u32Mask);
-uint32_t QSPI_GetStatus2(QSPI_T *qspi, uint32_t u32Mask);
+uint32_t QSPI_GetStatus(const QSPI_T *qspi, uint32_t u32Mask);
+uint32_t QSPI_GetStatus2(const QSPI_T *qspi, uint32_t u32Mask);
 
 
 /**@}*/ /* end of group QSPI_EXPORTED_FUNCTIONS */

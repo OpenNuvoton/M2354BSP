@@ -41,7 +41,10 @@ int32_t EADC_Open(EADC_T *eadc, uint32_t u32InputMode)
 
     while(!(eadc->PWRM & EADC_PWRM_PWUPRDY_Msk))
     {
-        if(--u32TimeOutCnt == 0) return EADC_ERR_TIMEOUT;
+        if(--u32TimeOutCnt == 0U)
+        {
+            return EADC_ERR_TIMEOUT;
+        }
     }
 
     return EADC_OK;

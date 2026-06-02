@@ -10,6 +10,9 @@
 
 #include <stdio.h>
 #include "NuMicro.h"
+#if defined (__ICCARM__)
+#include <LowLevelIOInterface.h>
+#endif
 
 
 __attribute__((weak, noreturn))
@@ -54,7 +57,9 @@ void abort(void);
 __attribute__((weak, noreturn))
 void __aeabi_assert(const char* expr, const char* file, int line)
 {
-    char str[12], * p;
+    char str[12];
+    char * p;
+    int linelocal = line;
 
     fputs("*** assertion failed: ", stderr);
     fputs(expr, stderr);
@@ -62,13 +67,16 @@ void __aeabi_assert(const char* expr, const char* file, int line)
     fputs(file, stderr);
     fputs(", line ", stderr);
 
-    p = str + sizeof(str);
-    *--p = '\0';
-    *--p = '\n';
-    while(line > 0)
+    p = &str[sizeof(str)];
+    p--;
+    *p = '\0';
+    p--;
+    *p = '\n';
+    while(linelocal > 0)
     {
-        *--p = '0' + (line % 10);
-        line /= 10;
+        p--;
+        *p = '0' + (linelocal % 10);
+        linelocal /= 10;
     }
     fputs(p, stderr);
 
@@ -79,7 +87,7 @@ void __aeabi_assert(const char* expr, const char* file, int line)
 __attribute__((weak))
 void abort(void)
 {
-    for(;;);
+    for(;;) {}
 }
 
 #else
@@ -96,7 +104,7 @@ void _sys_exit(int return_code)__attribute__((noreturn));
 void _sys_exit(int return_code)
 {
     (void) return_code;
-    while(1);
+    while(1) {}
 }
 
 
@@ -135,8 +143,6 @@ void SendChar(int ch);
 #if defined(DEBUG_ENABLE_SEMIHOST)
 #if (defined(__ARMCC_VERSION) || defined(__ICCARM__))
 /* The static buffer is used to speed up the semihost */
-static char g_buf[16];
-static uint8_t g_buf_len = 0;
 static volatile int32_t g_ICE_Conneced = 1;
 
 
@@ -154,43 +160,53 @@ void _sys_exit(int return_code)__attribute__((noreturn));
 uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
 {
     uint32_t *sp = NULL;
-    uint32_t inst;
+    uint32_t inst = 0U;
 
     /* Check the used stack */
-    if(lr & 0x40)
+    if((lr & 0x40U) != 0U)
     {
         /* Secure stack used */
-        if(lr & 4)
+        if((lr & 4U) != 0U)
+        {
             sp = (uint32_t *)psp;
+        }
         else
+        {
             sp = (uint32_t *)msp;
+        }
 
     }
 #if defined (__ARM_FEATURE_CMSE) &&  (__ARM_FEATURE_CMSE == 3U)
     else
     {
         /* Non-secure stack used */
-        if(lr & 4)
+        if((lr & 4U) != 0U)
+        {
             sp = (uint32_t *)__TZ_get_PSP_NS();
+        }
         else
+        {
             sp = (uint32_t *)__TZ_get_MSP_NS();
+        }
 
     }
 #endif
 
     /* Get the instruction caused the hardfault */
     if( sp != NULL )
+    {
         inst = M16(sp[6]);
+    }
 
 
-    if(inst == 0xBEAB)
+    if(inst == 0xBEABU)
     {
         /*
             If the instruction is 0xBEAB, it means it is caused by BKPT without ICE connected.
             We still return for output/input message to UART.
         */
         g_ICE_Conneced = 0; // Set a flag for ICE offline
-        sp[6] += 2; // return to next instruction
+        sp[6] += 2U; // return to next instruction
         return lr;  // Keep lr in R0
     }
 
@@ -233,7 +249,9 @@ int32_t SH_Return(int32_t n32In_R0, int32_t n32In_R1, int32_t *pn32Out_R0)
     if(g_ICE_Conneced)
     {
         if(pn32Out_R0)
+        {
             *pn32Out_R0 = n32In_R0;
+        }
 
         return 1;
     }
@@ -254,29 +272,36 @@ __attribute__((weak))
 #endif
 uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
 {
-    uint32_t *sp = NULL;
+    const uint32_t *sp = NULL;
     uint32_t i;
     uint32_t u32Reg;
-    uint32_t inst = 0, addr = 0, taddr, tdata;
+    uint32_t inst = 0U;
+    uint32_t addr = 0U;
+    uint32_t taddr;
+    uint32_t tdata;
     int32_t secure;
-    uint32_t rm, rn, rt, imm5, imm8;
+    uint32_t rm;
+    uint32_t rn;
+    uint32_t rt;
+    uint32_t imm5;
+    uint32_t imm8;
 
     /* It is casued by hardfault. Just process the hard fault */
     /* TODO: Implement your hardfault handle code here */
 
 
     /* Check the used stack */
-    secure = (lr & 0x40ul) ? 1 : 0;
+    secure = ((lr & 0x40UL) != 0UL) ? 1 : 0;
     if(secure)
     {
         /* Secure stack used */
         if(lr & 4UL)
         {
-            sp = (uint32_t *)psp;
+            sp = (const uint32_t *)psp;
         }
         else
         {
-            sp = (uint32_t *)msp;
+            sp = (const uint32_t *)msp;
         }
 
     }
@@ -285,9 +310,13 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
     {
         /* Non-secure stack used */
         if(lr & 4)
-            sp = (uint32_t *)(__TZ_get_PSP_NS());
+        {
+            sp = (const uint32_t *)(__TZ_get_PSP_NS());
+        }
         else
-            sp = (uint32_t *)(__TZ_get_MSP_NS());
+        {
+            sp = (const uint32_t *)(__TZ_get_MSP_NS());
+        }
 
     }
 #endif
@@ -304,10 +333,10 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
     */
 
 
-    printf("HardFault @ 0x%08x\n", sp[6]);
     /* Get the instruction caused the hardfault */
     if( sp != NULL )
     {
+        printf("HardFault @ 0x%08x\n", sp[6]);
         addr = sp[6];
         inst = M16(addr);
     }
@@ -316,66 +345,66 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
 
     printf("Instruction code = %x\n", inst);
 
-    if((!secure) && ((addr & NS_OFFSET) == 0))
+    if((!secure) && ((addr & NS_OFFSET) == 0U))
     {
         printf("Non-secure CPU try to fetch secure code\n");
     }
-    else if(inst == 0xBEAB)
+    else if(inst == 0xBEABU)
     {
         printf("Execute BKPT without ICE connected\n");
     }
-    else if((inst >> 12) == 5)
+    else if((inst >> 12U) == 5U)
     {
         /* 0101xx Load/store (register offset) on page C2-327 of armv8m ref */
-        rm = (inst >> 6) & 0x7;
-        rn = (inst >> 3) & 0x7;
-        rt = inst & 0x7;
+        rm = (inst >> 6U) & 0x7U;
+        rn = (inst >> 3U) & 0x7U;
+        rt = inst & 0x7U;
 
         printf("LDR/STR rt=%x rm=%x rn=%x\n", rt, rm, rn);
         taddr = sp[rn] + sp[rm];
         tdata = sp[rt];
         printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n", addr, inst,
-               (inst & BIT11) ? "LDR" : "STR", tdata, taddr);
+               ((inst & BIT11) != 0U) ? "LDR" : "STR", tdata, taddr);
 
     }
-    else if((inst >> 13) == 3)
+    else if((inst >> 13U) == 3U)
     {
         /* 011xxx    Load/store word/byte (immediate offset) on page C2-327 of armv8m ref */
-        imm5 = (inst >> 6) & 0x1f;
-        rn = (inst >> 3) & 0x7;
-        rt = inst & 0x7;
+        imm5 = (inst >> 6U) & 0x1fU;
+        rn = (inst >> 3U) & 0x7U;
+        rt = inst & 0x7U;
 
         printf("LDR/STR rt=%x rn=%x imm5=%x\n", rt, rn, imm5);
         taddr = sp[rn] + imm5;
         tdata = sp[rt];
         printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n", addr, inst,
-               (inst & BIT11) ? "LDR" : "STR", tdata, taddr);
+               ((inst & BIT11) != 0U) ? "LDR" : "STR", tdata, taddr);
     }
-    else if((inst >> 12) == 8)
+    else if((inst >> 12U) == 8U)
     {
         /* 1000xx    Load/store halfword (immediate offset) on page C2-328 */
-        imm5 = (inst >> 6) & 0x1f;
-        rn = (inst >> 3) & 0x7;
-        rt = inst & 0x7;
+        imm5 = (inst >> 6U) & 0x1fU;
+        rn = (inst >> 3U) & 0x7U;
+        rt = inst & 0x7U;
 
         printf("LDRH/STRH rt=%x rn=%x imm5=%x\n", rt, rn, imm5);
         taddr = sp[rn] + imm5;
         tdata = sp[rt];
         printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n", addr, inst,
-               (inst & BIT11) ? "LDR" : "STR", tdata, taddr);
+               ((inst & BIT11) != 0U) ? "LDR" : "STR", tdata, taddr);
 
     }
-    else if((inst >> 12) == 9)
+    else if((inst >> 12U) == 9U)
     {
         /* 1001xx    Load/store (SP-relative) on page C2-328 */
-        imm8 = inst & 0xff;
-        rt = (inst >> 8) & 0x7;
+        imm8 = inst & 0xffU;
+        rt = (inst >> 8U) & 0x7U;
 
         printf("LDRH/STRH rt=%x imm8=%x\n", rt, imm8);
         taddr = sp[6] + imm8;
         tdata = sp[rt];
         printf("[0x%08x] 0x%04x %s 0x%x [0x%x]\n", addr, inst,
-               (inst & BIT11) ? "LDR" : "STR", tdata, taddr);
+               ((inst & BIT11) != 0U) ? "LDR" : "STR", tdata, taddr);
     }
     else
     {
@@ -395,9 +424,9 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
         /* Get violation address and source */
         for(i = 0; i < sizeof(ipname); i++)
         {
-            if(u32Reg & (1 << i))
+            if((u32Reg & (1U << i)) != 0U)
             {
-                printf("%s(0x%08x) Violation! ", ipname[i], M32(SCU_BASE + info[i] + 4));
+                printf("%s(0x%08x) Violation! ", ipname[i], M32(SCU_BASE + (uint32_t)info[i] + 4U));
                 printf("Caused by %s\n", master[M32(SCU_BASE + (uint32_t)info[i])]);
                 break;
             }
@@ -461,7 +490,10 @@ void SendChar_ToUART(int ch)
         if(ch == '\n')
         {
             i32Tmp = i32Head + 1;
-            if(i32Tmp > BUF_SIZE) i32Tmp = 0;
+            if(i32Tmp > BUF_SIZE)
+            {
+                i32Tmp = 0;
+            }
             if(i32Tmp != i32Tail)
             {
                 u8Buf[i32Head] = '\r';
@@ -471,7 +503,10 @@ void SendChar_ToUART(int ch)
 
         // Push char
         i32Tmp = i32Head + 1;
-        if(i32Tmp > BUF_SIZE) i32Tmp = 0;
+        if(i32Tmp > BUF_SIZE)
+        {
+            i32Tmp = 0;
+        }
         if(i32Tmp != i32Tail)
         {
             u8Buf[i32Head] = ch;
@@ -482,14 +517,19 @@ void SendChar_ToUART(int ch)
     else
     {
         if(i32Tail == i32Head)
+        {
             return;
+        }
     }
 
     // pop char
     do
     {
         i32Tmp = i32Tail + 1;
-        if(i32Tmp > BUF_SIZE) i32Tmp = 0;
+        if(i32Tmp > BUF_SIZE)
+        {
+            i32Tmp = 0;
+        }
 
         if((DEBUG_PORT->FSR & UART_FSR_TX_FULL_Msk) == 0)
         {
@@ -497,7 +537,9 @@ void SendChar_ToUART(int ch)
             i32Tail = i32Tmp;
         }
         else
+        {
             break; // FIFO full
+        }
     }
     while(i32Tail != i32Head);
 }
@@ -515,10 +557,14 @@ void SendChar_ToUART(int ch)
 void SendChar(int ch)
 {
 #if defined(DEBUG_ENABLE_SEMIHOST)
+    /* The static buffer is used to speed up the semihost */
+    static char g_buf[16];
+    static uint8_t g_buf_len = 0U;
 
-    g_buf[g_buf_len++] = (char)ch;
+    g_buf[g_buf_len] = (char)ch;
+    g_buf_len++;
     g_buf[g_buf_len] = '\0';
-    if(g_buf_len + 1 >= sizeof(g_buf) || ch == '\n' || ch == '\0')
+    if(((g_buf_len + 1U) >= sizeof(g_buf)) || ((char)ch == '\n') || ((char)ch == '\0'))
     {
         /* Send the char */
         if(g_ICE_Conneced)
@@ -533,11 +579,13 @@ void SendChar(int ch)
         }
         else
         {
-# if (DEBUG_ENABLE_SEMIHOST == 2) // Re-direct to UART Debug Port only when DEBUG_ENABLE_SEMIHOST=2           
+#if defined(DEBUG_ENABLE_SEMIHOST) && (DEBUG_ENABLE_SEMIHOST == 2) // Re-direct to UART Debug Port only when DEBUG_ENABLE_SEMIHOST=2
             int i;
 
             for(i = 0; i < g_buf_len; i++)
+            {
                 SendChar_ToUART(g_buf[i]);
+            }
             g_buf_len = 0;
 # endif
         }
@@ -564,7 +612,9 @@ char GetChar(void)
     while(SH_DoCommand(0x7, 0, &nRet) != 0)
     {
         if(nRet != 0)
+        {
             return (char)nRet;
+        }
     }
 # else
     int nRet;
@@ -678,52 +728,56 @@ int fputc(int ch, FILE *stream)
     return ch;
 }
 #if defined (__ICCARM__)
-	#include <LowLevelIOInterface.h>
-	size_t __write(int handle, const unsigned char *buf, size_t bufSize)
-	{
-			size_t nChars = 0;
+    size_t __write(int handle, const unsigned char *buf, size_t bufSize)
+    {
+        size_t nChars = 0;
 
-			/* Check for the command to flush all handles */
-			if (handle == -1)
-			{
-					return 0;
-			}
+        /* Check for the command to flush all handles */
+        if (handle == -1)
+        {
+            return 0;
+        }
 
-			/* Check for stdout and stderr (only necessary if FILE descriptors are enabled.) */
-			if (handle != 1 && handle != 2)
-			{
-					return -1;
-			}
+        /* Check for stdout and stderr (only necessary if FILE descriptors are enabled.) */
+        if ((handle != 1) && (handle != 2))
+        {
+            return -1;
+        }
 
-			for (/* Empty */; bufSize > 0; --bufSize)
-			{
-					//lcdIO = *buf;
-					SendChar_ToUART(*buf);
-					++buf;
-					++nChars;
-			}
-
-			return nChars;
-	}
+        size_t remaining = bufSize;
+        const unsigned char *p = buf;
+        for (; remaining > 0U; --remaining)
+        {
+            //lcdIO = *p;
+            SendChar_ToUART(*p);
+            ++p;
+            ++nChars;
+        }
+        return nChars;
+    }
 #endif
 
 #if (defined(__GNUC__) && !defined(__ARMCC_VERSION))
 
 #if !defined(OS_USE_SEMIHOSTING)
-int _write(int fd, char *ptr, int len)
+int _write(int fd, const char *ptr, int len)
 {
     int i = len;
+    const char *p = ptr;
+    (void)fd;
 
-    while(i--)
+    while(i > 0)
     {
-        if(*ptr == '\n')
+        i--;
+        if(*p == '\n')
         {
-            while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
+            while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk) != 0U) {}
             DEBUG_PORT->DAT = '\r';
         }
 
-        while(DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
-        DEBUG_PORT->DAT = *ptr++;
+        while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_TXFULL_Msk) != 0U) {}
+        DEBUG_PORT->DAT = (uint32_t)*p;
+        p++;
 
     }
     return len;
@@ -731,8 +785,10 @@ int _write(int fd, char *ptr, int len)
 
 int _read(int fd, char *ptr, int len)
 {
+    (void)fd;
+    (void)len;
 
-    while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) != 0);
+    while((DEBUG_PORT->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) != 0U) {}
     *ptr = DEBUG_PORT->DAT;
     return 1;
 
@@ -784,15 +840,15 @@ int ferror(FILE *stream)
 # ifdef __ICCARM__
 void __exit(int return_code)
 {
+    (void)return_code;
 
     /* Check if link with ICE */
     if(SH_DoCommand(0x18, 0x20026, NULL) == 0)
     {
         /* Make sure all message is print out */
-        while(IsDebugFifoEmpty() == 0);
+        while(IsDebugFifoEmpty() == 0) {}
     }
-label:
-    goto label;  /* endless loop */
+    for(;;) {}  /* endless loop */
 }
 # else
 void _sys_exit(int return_code)
@@ -802,10 +858,9 @@ void _sys_exit(int return_code)
     if(SH_DoCommand(0x18, 0x20026, NULL) == 0)
     {
         /* Make sure all message is print out */
-        while(IsDebugFifoEmpty() == 0);
+        while(IsDebugFifoEmpty() == 0) {}
     }
-label:
-    goto label;  /* endless loop */
+    for(;;) {}  /* endless loop */
 }
 # endif
 #endif

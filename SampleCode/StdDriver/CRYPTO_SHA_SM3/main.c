@@ -17,7 +17,7 @@
 
 void SYS_Init(void);
 void DEBUG_PORT_Init(void);
-int32_t SM3(uint32_t *pu32Addr, uint32_t size, uint32_t digest[]);
+int32_t SM3(const uint32_t *pu32Addr, uint32_t u32Size, uint32_t digest[]);
 
 void SYS_Init(void)
 {

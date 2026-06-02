@@ -36,7 +36,8 @@ uint32_t EPWM_ConfigCaptureChannel(EPWM_T *epwm, uint32_t u32ChannelNum, uint32_
 {
     uint32_t u32PWMClockSrc;
     uint32_t u32NearestUnitTimeNsec = 0;
-    uint32_t u32Prescale = 1U, u32CNR = 0xFFFFU;
+    uint32_t u32Prescale = 1U;
+    uint32_t u32CNR = 0xFFFFUL;
     uint8_t u8BreakLoop = 0U;
 
     (void)u32CaptureEdge;
@@ -108,7 +109,8 @@ uint32_t EPWM_ConfigOutputChannel(EPWM_T *epwm, uint32_t u32ChannelNum, uint32_t
 {
     uint32_t u32PWMClockSrc;
     uint32_t i;
-    uint32_t u32Prescale = 1U, u32CNR = 0xFFFFU;
+    uint32_t u32Prescale = 1U;
+    uint32_t u32CNR = 0xFFFFUL;
 
     /* clock source is from PCLK */
     if((epwm == EPWM0) || (epwm == EPWM0_NS))
@@ -283,7 +285,9 @@ int32_t EPWM_EnableADCTriggerPrescale(EPWM_T *epwm, uint32_t u32ChannelNum, uint
 {
     /* User can write only when PSCENn(n = 0 ~ 5) is 0 */
     if((epwm)->EADCPSCCTL & (1UL << u32ChannelNum))
+    {
         return (-1);
+    }
 
     if(u32ChannelNum < 4UL)
     {
@@ -345,7 +349,7 @@ void EPWM_ClearADCTriggerFlag(EPWM_T *epwm, uint32_t u32ChannelNum, uint32_t u32
  * @retval 1 The specified channel trigger ADC to start of conversion flag is set
  * @details This function is used to get EPWM trigger ADC to start of conversion flag for specified channel.
  */
-uint32_t EPWM_GetADCTriggerFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
+uint32_t EPWM_GetADCTriggerFlag(const EPWM_T *epwm, uint32_t u32ChannelNum)
 {
     return (((epwm)->STATUS & (EPWM_STATUS_EADCTRGF0_Msk << u32ChannelNum)) ? 1UL : 0UL);
 }
@@ -410,7 +414,7 @@ void EPWM_ClearDACTriggerFlag(EPWM_T *epwm, uint32_t u32ChannelNum, uint32_t u32
  * @retval 1 The specified channel trigger DAC to start of conversion flag is set
  * @details This function is used to get selected channel trigger DAC flag.
  */
-uint32_t EPWM_GetDACTriggerFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
+uint32_t EPWM_GetDACTriggerFlag(const EPWM_T *epwm, uint32_t u32ChannelNum)
 {
     (void)u32ChannelNum;
     return (((epwm)->STATUS & EPWM_STATUS_DACTRGF_Msk) ? 1UL : 0UL);
@@ -700,7 +704,7 @@ void EPWM_ClearCaptureIntFlag(EPWM_T *epwm, uint32_t u32ChannelNum, uint32_t u32
  * @retval 3 Rising and falling latch interrupt
  * @details This function is used to get capture interrupt of selected channel.
  */
-uint32_t EPWM_GetCaptureIntFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
+uint32_t EPWM_GetCaptureIntFlag(const EPWM_T *epwm, uint32_t u32ChannelNum)
 {
     uint32_t u32CapIf = 0UL;
 
@@ -764,7 +768,7 @@ void EPWM_ClearDutyIntFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
  * @retval 1 Duty interrupt occurred
  * @details This function is used to get duty interrupt flag of selected channel.
  */
-uint32_t EPWM_GetDutyIntFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
+uint32_t EPWM_GetDutyIntFlag(const EPWM_T *epwm, uint32_t u32ChannelNum)
 {
     return ((((epwm)->INTSTS0 & ((EPWM_INTSTS0_CMPDIF0_Msk | EPWM_INTSTS0_CMPUIF0_Msk) << u32ChannelNum))) ? 1UL : 0UL);
 }
@@ -827,7 +831,7 @@ void EPWM_ClearFaultBrakeIntFlag(EPWM_T *epwm, uint32_t u32BrakeSource)
  * @retval 1 Fault brake interrupt occurred
  * @details This function is used to get fault brake interrupt flag of selected source.
  */
-uint32_t EPWM_GetFaultBrakeIntFlag(EPWM_T *epwm, uint32_t u32BrakeSource)
+uint32_t EPWM_GetFaultBrakeIntFlag(const EPWM_T *epwm, uint32_t u32BrakeSource)
 {
     return (((epwm)->INTSTS1 & (0x3fUL << u32BrakeSource)) ? 1UL : 0UL);
 }
@@ -887,7 +891,7 @@ void EPWM_ClearPeriodIntFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
  * @retval 1 Period interrupt occurred
  * @details This function is used to get period interrupt of selected channel.
  */
-uint32_t EPWM_GetPeriodIntFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
+uint32_t EPWM_GetPeriodIntFlag(const EPWM_T *epwm, uint32_t u32ChannelNum)
 {
     return ((((epwm)->INTSTS0 & (EPWM_INTSTS0_PIF0_Msk << u32ChannelNum))) ? 1UL : 0UL);
 }
@@ -945,7 +949,7 @@ void EPWM_ClearZeroIntFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
  * @retval 1 Zero interrupt occurred
  * @details This function is used to get zero interrupt of selected channel.
  */
-uint32_t EPWM_GetZeroIntFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
+uint32_t EPWM_GetZeroIntFlag(const EPWM_T *epwm, uint32_t u32ChannelNum)
 {
     return ((((epwm)->INTSTS0 & (EPWM_INTSTS0_ZIF0_Msk << u32ChannelNum))) ? 1UL : 0UL);
 }
@@ -1037,7 +1041,7 @@ void EPWM_ClearAccInt(EPWM_T *epwm, uint32_t u32ChannelNum)
  * @retval 1 Accumulator interrupt occurred
  * @details This function is used to Get interrupt flag accumulator interrupt of selected channel.
  */
-uint32_t EPWM_GetAccInt(EPWM_T *epwm, uint32_t u32ChannelNum)
+uint32_t EPWM_GetAccInt(const EPWM_T *epwm, uint32_t u32ChannelNum)
 {
     return (((epwm)->AINTSTS & (1UL << (u32ChannelNum))) ? 1UL : 0UL);
 }
@@ -1123,7 +1127,7 @@ void EPWM_ClearFTDutyIntFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
  * @retval 1 Free trigger duty interrupt occurred
  * @details This function is used to get free trigger duty interrupt flag of selected channel.
  */
-uint32_t EPWM_GetFTDutyIntFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
+uint32_t EPWM_GetFTDutyIntFlag(const EPWM_T *epwm, uint32_t u32ChannelNum)
 {
     return (((epwm)->FTCI & ((EPWM_FTCI_FTCMU0_Msk | EPWM_FTCI_FTCMD0_Msk) << (u32ChannelNum >> 1))) ? 1UL : 0UL);
 }
@@ -1186,10 +1190,10 @@ void EPWM_DisableLoadMode(EPWM_T *epwm, uint32_t u32ChannelNum, uint32_t u32Load
 void EPWM_ConfigSyncPhase(EPWM_T *epwm, uint32_t u32ChannelNum, uint32_t u32SyncSrc, uint32_t u32Direction, uint32_t u32StartPhase)
 {
     /* every two channels shares the same setting */
-    u32ChannelNum >>= 1;
-    (epwm)->SYNC = (((epwm)->SYNC & ~((EPWM_SYNC_SINSRC0_Msk << (u32ChannelNum << 1)) | (EPWM_SYNC_PHSDIR0_Msk << u32ChannelNum))) | \
-                    (u32Direction << EPWM_SYNC_PHSDIR0_Pos << u32ChannelNum) | (u32SyncSrc << EPWM_SYNC_SINSRC0_Pos) << (u32ChannelNum << 1));
-    (epwm)->PHS[(u32ChannelNum)] = u32StartPhase;
+    uint32_t u32ChIdx = u32ChannelNum >> 1U;
+    (epwm)->SYNC = (((epwm)->SYNC & ~((EPWM_SYNC_SINSRC0_Msk << (u32ChIdx << 1U)) | (EPWM_SYNC_PHSDIR0_Msk << u32ChIdx))) | \
+                    (u32Direction << EPWM_SYNC_PHSDIR0_Pos << u32ChIdx) | (u32SyncSrc << EPWM_SYNC_SINSRC0_Pos) << (u32ChIdx << 1U));
+    (epwm)->PHS[(u32ChIdx)] = u32StartPhase;
 }
 
 
@@ -1452,7 +1456,7 @@ void EPWM_SetLeadingEdgeBlanking(EPWM_T *epwm, uint32_t u32TrigSrcSel, uint32_t 
  * @retval 1 Count to max interrupt occurred
  * @details This function is used to get the time-base counter reached its maximum value flag of selected channel.
  */
-uint32_t EPWM_GetWrapAroundFlag(EPWM_T *epwm, uint32_t u32ChannelNum)
+uint32_t EPWM_GetWrapAroundFlag(const EPWM_T *epwm, uint32_t u32ChannelNum)
 {
     return (((epwm)->STATUS & (EPWM_STATUS_CNTMAXF0_Msk << u32ChannelNum)) ? 1UL : 0UL);
 }
@@ -1646,7 +1650,7 @@ void EPWM_ClearFaultDetectInt(EPWM_T *epwm, uint32_t u32ChannelNum)
  * @retval 1 Fault detect interrupt occurred.
  * @details This function is used to Get fault detect interrupt of selected channel.
  */
-uint32_t EPWM_GetFaultDetectInt(EPWM_T *epwm, uint32_t u32ChannelNum)
+uint32_t EPWM_GetFaultDetectInt(const EPWM_T *epwm, uint32_t u32ChannelNum)
 {
     return (((epwm)->FDSTS & (EPWM_FDSTS_FDIF0_Msk << (u32ChannelNum))) ? 1UL : 0UL);
 }

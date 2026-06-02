@@ -310,7 +310,7 @@ __STATIC_INLINE void SC_SetRxRetry(SC_T *sc, uint32_t u32Count)
 }
 
 
-uint32_t SC_IsCardInserted(SC_T *sc);
+uint32_t SC_IsCardInserted(const SC_T *sc);
 void SC_ClearFIFO(SC_T *sc);
 void SC_Close(SC_T *sc);
 void SC_Open(SC_T *sc, uint32_t u32CardDet, uint32_t u32PWR);
@@ -320,7 +320,7 @@ void SC_SetCharGuardTime(SC_T *sc, uint32_t u32CGT);
 void SC_StopAllTimer(SC_T *sc);
 void SC_StartTimer(SC_T *sc, uint32_t u32TimerNum, uint32_t u32Mode, uint32_t u32ETUCount);
 void SC_StopTimer(SC_T *sc, uint32_t u32TimerNum);
-uint32_t SC_GetInterfaceClock(SC_T *sc);
+uint32_t SC_GetInterfaceClock(const SC_T *sc);
 
 /**@}*/ /* end of group SC_EXPORTED_FUNCTIONS */
 

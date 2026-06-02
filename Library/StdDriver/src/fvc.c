@@ -36,14 +36,16 @@ int32_t FVC_Open(void)
 
     /* Just return when it is ready */
     if(FVC->STS & FVC_STS_RDY_Msk)
+    {
         return 0;
+    }
 
     /* Init FVC */
     FVC->CTL = FVC_VCODE | FVC_CTL_INIT_Msk;
 
     /* Waiting for ready */
     timeout = 0x100000;
-    while((FVC->STS & FVC_STS_RDY_Msk) == 0)
+    while((FVC->STS & FVC_STS_RDY_Msk) == 0UL)
     {
         if(timeout-- < 0)
         {
@@ -77,7 +79,9 @@ int32_t FVC_EnableMonotone(void)
     while(FVC->STS & FVC->STS & FVC_STS_BUSY_Msk)
     {
         if(timeout-- < 0)
+        {
             return -1;
+        }
     }
 
     return 0;
@@ -96,33 +100,45 @@ int32_t FVC_SetNVC(uint32_t u32NvcIdx, uint32_t u32Cnt)
 {
     int32_t timeout;
 
-    if(u32NvcIdx < 2)
+    if(u32NvcIdx < 2U)
     {
-        if(u32Cnt >= 64)
+        if(u32Cnt >= 64U)
+        {
             /* The counter value is out of range */
             return -1;
+        }
     }
-    else if(u32NvcIdx < 4)
+    else if(u32NvcIdx < 4U)
+    {
         return -1;
-    else if(u32NvcIdx < 6)
+    }
+    else if(u32NvcIdx < 6U)
     {
         /* The counter value is out of range */
-        if(u32Cnt >= 256)
+        if(u32Cnt >= 256U)
+        {
             /* The counter value is out of range */
             return -1;
+        }
     }
     else
+    {
         return -1;
+    }
 
-    FVC->NVC[u32NvcIdx] = (FVC->NVC[u32NvcIdx] << 16) | (u32Cnt & 0x3ful);
+    FVC->NVC[u32NvcIdx] = (FVC->NVC[u32NvcIdx] << 16U) | (u32Cnt & 0x3FUL);
     timeout = 0x100000;
     while(FVC->STS & FVC_STS_BUSY_Msk)
     {
         if(timeout-- < 0)
+        {
             return -1;
+        }
     }
     if(FVC->NVC[u32NvcIdx] != u32Cnt)
+    {
         return -1;
+    }
 
     return 0;
 }
@@ -138,8 +154,10 @@ int32_t FVC_SetNVC(uint32_t u32NvcIdx, uint32_t u32Cnt)
   */
 int32_t FVC_GetNVC(uint32_t u32NvcIdx)
 {
-    if((u32NvcIdx == 2) || (u32NvcIdx == 3) || (u32NvcIdx > 5))
+    if((u32NvcIdx == 2U) || (u32NvcIdx == 3U) || (u32NvcIdx > 5U))
+    {
         return -1;
+    }
 
     return FVC->NVC[u32NvcIdx];
 }

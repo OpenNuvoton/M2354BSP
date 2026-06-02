@@ -123,7 +123,7 @@ extern "C"
   *         user can enable this bit to generate a PDMA data transfer request.
   * \hideinitializer
   */
-#define EADC_ENABLE_SAMPLE_MODULE_PDMA(eadc, u32ModuleMask) ((eadc)->PDMACTL |= u32ModuleMask)
+#define EADC_ENABLE_SAMPLE_MODULE_PDMA(eadc, u32ModuleMask) ((eadc)->PDMACTL |= (u32ModuleMask))
 
 /**
   * @brief Disable Sample Module PDMA transfer.

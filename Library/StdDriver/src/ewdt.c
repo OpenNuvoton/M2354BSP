@@ -64,7 +64,10 @@ int32_t EWDT_Open(uint32_t u32TimeoutInterval,
 
     while((EWDT->CTL & EWDT_CTL_SYNC_Msk) == EWDT_CTL_SYNC_Msk) /* Wait enable WDTEN bit completed, it needs 2 * EWDT_CLK. */
     {
-        if(--u32TimeOutCnt == 0) return EWDT_ERR_TIMEOUT;
+        if(--u32TimeOutCnt == 0)
+        {
+            return EWDT_ERR_TIMEOUT;
+        }
     }
 
     return EWDT_OK;

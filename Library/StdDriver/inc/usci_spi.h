@@ -397,12 +397,12 @@ void USPI_ClearTxBuf(USPI_T *uspi);
 void USPI_DisableAutoSS(USPI_T *uspi);
 void USPI_EnableAutoSS(USPI_T *uspi, uint32_t u32SSPinMask, uint32_t u32ActiveLevel);
 uint32_t USPI_SetBusClock(USPI_T *uspi, uint32_t u32BusClock);
-uint32_t USPI_GetBusClock(USPI_T *uspi);
+uint32_t USPI_GetBusClock(const USPI_T *uspi);
 void USPI_EnableInt(USPI_T *uspi, uint32_t u32Mask);
 void USPI_DisableInt(USPI_T *uspi, uint32_t u32Mask);
-uint32_t USPI_GetIntFlag(USPI_T *uspi, uint32_t u32Mask);
+uint32_t USPI_GetIntFlag(const USPI_T *uspi, uint32_t u32Mask);
 void USPI_ClearIntFlag(USPI_T *uspi, uint32_t u32Mask);
-uint32_t USPI_GetStatus(USPI_T *uspi, uint32_t u32Mask);
+uint32_t USPI_GetStatus(const USPI_T *uspi, uint32_t u32Mask);
 void USPI_EnableWakeup(USPI_T *uspi);
 void USPI_DisableWakeup(USPI_T *uspi);
 

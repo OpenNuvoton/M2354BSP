@@ -83,8 +83,8 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Duty Interrupt Type Constant Definitions                                                               */
 /*---------------------------------------------------------------------------------------------------------*/
-#define BPWM_DUTY_INT_DOWN_COUNT_MATCH_CMP        (1 << BPWM_INTEN_CMPDIEN0_Pos)   /*!< BPWM duty interrupt triggered if down count match comparator \hideinitializer */
-#define BPWM_DUTY_INT_UP_COUNT_MATCH_CMP          (1 << BPWM_INTEN_CMPUIEN0_Pos)   /*!< BPWM duty interrupt triggered if up down match comparator \hideinitializer */
+#define BPWM_DUTY_INT_DOWN_COUNT_MATCH_CMP        (1UL << BPWM_INTEN_CMPDIEN0_Pos)   /*!< BPWM duty interrupt triggered if down count match comparator \hideinitializer */
+#define BPWM_DUTY_INT_UP_COUNT_MATCH_CMP          (1UL << BPWM_INTEN_CMPUIEN0_Pos)   /*!< BPWM duty interrupt triggered if up down match comparator \hideinitializer */
 
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Load Mode Constant Definitions                                                                         */
@@ -362,7 +362,7 @@ void BPWM_ForceStop(BPWM_T *bpwm, uint32_t u32ChannelMask);
 void BPWM_EnableADCTrigger(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t u32Condition);
 void BPWM_DisableADCTrigger(BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_ClearADCTriggerFlag(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t u32Condition);
-uint32_t BPWM_GetADCTriggerFlag(BPWM_T *bpwm, uint32_t u32ChannelNum);
+uint32_t BPWM_GetADCTriggerFlag(const BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_EnableCapture(BPWM_T *bpwm, uint32_t u32ChannelMask);
 void BPWM_DisableCapture(BPWM_T *bpwm, uint32_t u32ChannelMask);
 void BPWM_EnableOutput(BPWM_T *bpwm, uint32_t u32ChannelMask);
@@ -370,23 +370,23 @@ void BPWM_DisableOutput(BPWM_T *bpwm, uint32_t u32ChannelMask);
 void BPWM_EnableCaptureInt(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t u32Edge);
 void BPWM_DisableCaptureInt(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t u32Edge);
 void BPWM_ClearCaptureIntFlag(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t u32Edge);
-uint32_t BPWM_GetCaptureIntFlag(BPWM_T *bpwm, uint32_t u32ChannelNum);
+uint32_t BPWM_GetCaptureIntFlag(const BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_EnableDutyInt(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t u32IntDutyType);
 void BPWM_DisableDutyInt(BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_ClearDutyIntFlag(BPWM_T *bpwm, uint32_t u32ChannelNum);
-uint32_t BPWM_GetDutyIntFlag(BPWM_T *bpwm, uint32_t u32ChannelNum);
+uint32_t BPWM_GetDutyIntFlag(const BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_EnablePeriodInt(BPWM_T *bpwm, uint32_t u32ChannelNum,  uint32_t u32IntPeriodType);
 void BPWM_DisablePeriodInt(BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_ClearPeriodIntFlag(BPWM_T *bpwm, uint32_t u32ChannelNum);
-uint32_t BPWM_GetPeriodIntFlag(BPWM_T *bpwm, uint32_t u32ChannelNum);
+uint32_t BPWM_GetPeriodIntFlag(const BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_EnableZeroInt(BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_DisableZeroInt(BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_ClearZeroIntFlag(BPWM_T *bpwm, uint32_t u32ChannelNum);
-uint32_t BPWM_GetZeroIntFlag(BPWM_T *bpwm, uint32_t u32ChannelNum);
+uint32_t BPWM_GetZeroIntFlag(const BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_EnableLoadMode(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t u32LoadMode);
 void BPWM_DisableLoadMode(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t u32LoadMode);
 void BPWM_SetClockSource(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t u32ClkSrcSel);
-uint32_t BPWM_GetWrapAroundFlag(BPWM_T *bpwm, uint32_t u32ChannelNum);
+uint32_t BPWM_GetWrapAroundFlag(const BPWM_T *bpwm, uint32_t u32ChannelNum);
 void BPWM_ClearWrapAroundFlag(BPWM_T *bpwm, uint32_t u32ChannelNum);
 
 /**@}*/ /* end of group BPWM_EXPORTED_FUNCTIONS */

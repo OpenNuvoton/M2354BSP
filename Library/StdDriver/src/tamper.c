@@ -196,7 +196,8 @@ void TAMPER_DynamicTamperEnable(uint32_t u32PairSel, uint32_t u32DebounceEn, uin
     uint32_t i;
     uint32_t u32Reg;
     uint32_t u32TmpReg;
-    uint32_t u32Tamper2Debounce, u32Tamper4Debounce;
+    uint32_t u32Tamper2Debounce;
+    uint32_t u32Tamper4Debounce;
 
     u32Reg = TAMPER->TIOCTL;
     u32Reg &= ~(TAMPER_TIOCTL_TAMP0EN_Msk | TAMPER_TIOCTL_TAMP1EN_Msk | TAMPER_TIOCTL_TAMP2EN_Msk |
@@ -261,7 +262,8 @@ void TAMPER_DynamicTamperDisable(uint32_t u32PairSel)
     uint32_t i;
     uint32_t u32Reg;
     uint32_t u32TmpReg;
-    uint32_t u32Tamper2En = 0UL, u32Tamper4En = 0UL;
+    uint32_t u32Tamper2En = 0UL;
+    uint32_t u32Tamper4En = 0UL;
 
     u32Reg = TAMPER->TIOCTL;
 
@@ -351,8 +353,10 @@ void TAMPER_DynamicTamperConfig(uint32_t u32ChangeRate, uint32_t u32SeedReload, 
 void TAMPER_ActiveShieldDynamicTamperEnable(uint32_t u32PairSel1, uint32_t u32Pair1Source1, uint32_t u32PairSel2, uint32_t u32Pair1Source2)
 {
     uint32_t i;
-    uint32_t u32Reg1, u32Reg2;
-    uint32_t u32TmpReg1, u32TmpReg2;
+    uint32_t u32Reg1;
+    uint32_t u32Reg2;
+    uint32_t u32TmpReg1;
+    uint32_t u32TmpReg2;
 
     u32Reg1 = TAMPER->ACTSTIOCTL1;
     u32Reg1 &= ~(TAMPER_ACTSTIOCTL1_ATAMP0EN_Msk | TAMPER_ACTSTIOCTL1_ATAMP1EN_Msk | TAMPER_ACTSTIOCTL1_ATAMP2EN_Msk |
@@ -411,9 +415,12 @@ void TAMPER_ActiveShieldDynamicTamperEnable(uint32_t u32PairSel1, uint32_t u32Pa
 void TAMPER_ActiveShieldDynamicTamperDisable(uint32_t u32PairSel1, uint32_t u32PairSel2)
 {
     uint32_t i;
-    uint32_t u32Reg1, u32Reg2;
-    uint32_t u32TmpReg1, u32TmpReg2;
-    uint32_t u32Tamper2En1 = 0UL, u32Tamper2En2 = 0UL;
+    uint32_t u32Reg1;
+    uint32_t u32Reg2;
+    uint32_t u32TmpReg1;
+    uint32_t u32TmpReg2;
+    uint32_t u32Tamper2En1 = 0UL;
+    uint32_t u32Tamper2En2 = 0UL;
 
     u32Reg1 = TAMPER->ACTSTIOCTL1;
     u32Reg2 = TAMPER->ACTSTIOCTL2;
@@ -481,7 +488,8 @@ void TAMPER_ActiveShieldDynamicTamperDisable(uint32_t u32PairSel1, uint32_t u32P
 void TAMPER_ActiveShieldDynamicTamperConfig(uint32_t u32ChangeRate1, uint32_t u32SeedReload1, uint32_t u32RefPattern1, uint32_t u32Seed,
         uint32_t u32ChangeRate2, uint32_t u32SeedReload2, uint32_t u32RefPattern2, uint32_t u32Seed2)
 {
-    uint32_t u32Reg1, u32Reg2;
+    uint32_t u32Reg1;
+    uint32_t u32Reg2;
 
     u32Reg1 = TAMPER->ACTSTIOCTL1;
     u32Reg2 = TAMPER->ACTSTIOCTL2;

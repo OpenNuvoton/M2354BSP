@@ -175,7 +175,7 @@ __STATIC_INLINE void TAMPER_IOSEL_TAMPER(uint32_t u32TamperSelect)
     {
         if(u32TamperSelect & (0x1UL << i))
         {
-            TAMPER->FUNEN = (TAMPER->FUNEN & ~0xFFUL) | (0x94 + i * 0x10UL);
+            TAMPER->FUNEN = (TAMPER->FUNEN & ~0xFFUL) | (0x94UL + (i * 0x10UL));
         }
     }
 }
@@ -204,7 +204,7 @@ __STATIC_INLINE void TAMPER_IOSEL_RTC(uint32_t u32TamperSelect)
     {
         if(u32TamperSelect & (0x1UL << i))
         {
-            TAMPER->FUNEN = (TAMPER->FUNEN & ~0xFFUL) | (0x90 + i * 0x10UL);
+            TAMPER->FUNEN = (TAMPER->FUNEN & ~0xFFUL) | (0x90UL + (i * 0x10UL));
         }
     }
 }
@@ -262,6 +262,10 @@ __STATIC_INLINE void TAMPER_VG_SAMPLE_SEL(uint32_t u32VGSampleRate)
     {
         TAMPER->FUNEN |= TAMPER_FUNEN_VGCHEN0_Msk;
     }
+    else
+    {
+        /* No valid sample rate selected; no action taken */
+    }
 }
 
 /**
@@ -275,7 +279,7 @@ __STATIC_INLINE void TAMPER_VG_SAMPLE_SEL(uint32_t u32VGSampleRate)
   *             error tolerance within 15%.
   *
   */
-__STATIC_INLINE void TAMPER_VG_TRIM_INIT()
+__STATIC_INLINE void TAMPER_VG_TRIM_INIT(void)
 {
     if(SYS->PLSTS & SYS_PLSTS_PLSTATUS_PL0)
     {
@@ -292,6 +296,10 @@ __STATIC_INLINE void TAMPER_VG_TRIM_INIT()
     else if(SYS->PLSTS & SYS_PLSTS_PLSTATUS_PL3)
     {
         TAMPER->VG2 = (TAMPER->VG2 & ~0xFFFF0000UL) | 0x2CCD0000UL;
+    }
+    else
+    {
+        /* No valid power level status; no action taken */
     }
 }
 
@@ -313,7 +321,7 @@ __STATIC_INLINE void TAMPER_VG_TRIM_INIT()
   * @details    To set TAMPER LBSTRIM control register to select under-shoot detection level trim value.
   *
   */
-#define TAMPER_TLVD_TRIM_INIT(u32TLVDTrim)   ((uint32_t)(TAMPER->LBSTRIM = (TAMPER->LBSTRIM & (~TAMPER_LBSTRIM_TLVDSEL_Msk)) | (u32TLVDTrim << TAMPER_LBSTRIM_TLVDSEL_Pos)))
+#define TAMPER_TLVD_TRIM_INIT(u32TLVDTrim)   ((uint32_t)(TAMPER->LBSTRIM = (TAMPER->LBSTRIM & (~TAMPER_LBSTRIM_TLVDSEL_Msk)) | ((u32TLVDTrim) << TAMPER_LBSTRIM_TLVDSEL_Pos)))
 
 /**
   * @brief      Over-shoot Detection Level Trim Value Initialization
@@ -327,7 +335,7 @@ __STATIC_INLINE void TAMPER_VG_TRIM_INIT()
   * @details    To set TAMPER LBSTRIM control register to select over-shoot detection level trim value.
   *
   */
-#define TAMPER_TOVD_TRIM_INIT(u32TOVDTrim)   ((uint32_t)(TAMPER->LBSTRIM = (TAMPER->LBSTRIM & (~TAMPER_LBSTRIM_TOVDSEL_Msk)) | (u32TOVDTrim << TAMPER_LBSTRIM_TOVDSEL_Pos)))
+#define TAMPER_TOVD_TRIM_INIT(u32TOVDTrim)   ((uint32_t)(TAMPER->LBSTRIM = (TAMPER->LBSTRIM & (~TAMPER_LBSTRIM_TOVDSEL_Msk)) | ((u32TOVDTrim) << TAMPER_LBSTRIM_TOVDSEL_Pos)))
 
 /**
   * @brief      Enable to Trigger Key Store
@@ -538,7 +546,7 @@ void TAMPER_DynamicTamperEnable(uint32_t u32PairSel, uint32_t u32DebounceEn, uin
 void TAMPER_DynamicTamperDisable(uint32_t u32PairSel);
 void TAMPER_DynamicTamperConfig(uint32_t u32ChangeRate, uint32_t u32SeedReload, uint32_t u32RefPattern, uint32_t u32Seed);
 void TAMPER_ActiveShieldDynamicTamperEnable(uint32_t u32PairSel1, uint32_t u32Pair1Source1, uint32_t u32PairSel2, uint32_t u32Pair1Source2);
-void TAMPER_ActiveShieldDynamicTamperDisable(uint32_t u32PairSel1, uint32_t u32PairSe2);
+void TAMPER_ActiveShieldDynamicTamperDisable(uint32_t u32PairSel1, uint32_t u32PairSel2);
 void TAMPER_ActiveShieldDynamicTamperConfig(uint32_t u32ChangeRate1, uint32_t u32SeedReload1, uint32_t u32RefPattern1, uint32_t u32Seed,
         uint32_t u32ChangeRate2, uint32_t u32SeedReload2, uint32_t u32RefPattern2, uint32_t u32Seed2);
 

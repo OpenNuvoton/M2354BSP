@@ -188,7 +188,7 @@ typedef struct
   *
   * @details    This macro is used to set the LCD operarion frequency is (LCD source frequency / div).
   */
-#define LCD_SET_FREQDIV(div)        (LCD->PCTL = (LCD->PCTL & ~LCD_PCTL_FREQDIV_Msk) | (((div)-1) << LCD_PCTL_FREQDIV_Pos))
+#define LCD_SET_FREQDIV(div)        (LCD->PCTL = (LCD->PCTL & ~LCD_PCTL_FREQDIV_Msk) | (((div)-1U) << LCD_PCTL_FREQDIV_Pos))
 
 /**
   * @brief      Set Charge Pump Voltage
@@ -263,7 +263,7 @@ typedef struct
   * @details    This macro is used to set the LCD frame counting value to configure the blink interval.
   * @note       For type-B waveform, the frame counter increases at the end of odd frames, not even frames.
   */
-#define LCD_SET_FRAME_COUNTING_VALUE(value)     (LCD->FCTL = (LCD->FCTL & ~LCD_FCTL_FCV_Msk) | (((value)-1) << LCD_FCTL_FCV_Pos))
+#define LCD_SET_FRAME_COUNTING_VALUE(value)     (LCD->FCTL = (LCD->FCTL & ~LCD_FCTL_FCV_Msk) | (((value)-1U) << LCD_FCTL_FCV_Pos))
 
 /**
   * @brief      Set Null Frame Time
@@ -529,7 +529,7 @@ typedef struct
 #define LCD_GET_CHARGE_TIME()              ((LCD->STS & LCD_STS_CTIME_Msk) >> 16)
 
 
-uint32_t LCD_Open(S_LCD_CFG_T *pLCDCfg);
+uint32_t LCD_Open(const S_LCD_CFG_T *pLCDCfg);
 void LCD_Close(void);
 void LCD_SetPixel(uint32_t u32Com, uint32_t u32Seg, uint32_t u32OnFlag);
 void LCD_SetAllPixels(uint32_t u32OnOff);

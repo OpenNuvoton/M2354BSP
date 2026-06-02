@@ -49,7 +49,7 @@ uint32_t I2C_Open(I2C_T *i2c, uint32_t u32BusClock)
         u32Pclk = CLK_GetPCLK0Freq();
     }
 
-    u32Div = (uint32_t)(((u32Pclk * 10u) / (u32BusClock * 4u) + 5u) / 10u - 1u); /* Compute proper divider for I2C clock */
+    u32Div = (uint32_t)(((((u32Pclk * 10u) / (u32BusClock * 4u)) + 5u) / 10u) - 1u); /* Compute proper divider for I2C clock */
     i2c->CLKDIV = u32Div;
 
     /* Enable I2C */
@@ -167,7 +167,7 @@ void I2C_EnableInt(I2C_T *i2c)
  *
  * @details    To get the actual I2C Bus Clock frequency.
  */
-uint32_t I2C_GetBusClockFreq(I2C_T *i2c)
+uint32_t I2C_GetBusClockFreq(const I2C_T *i2c)
 {
     uint32_t u32Divider = i2c->CLKDIV;
     uint32_t u32Pclk;
@@ -208,7 +208,7 @@ uint32_t I2C_SetBusClockFreq(I2C_T *i2c, uint32_t u32BusClock)
         u32Pclk = CLK_GetPCLK0Freq();
     }
 
-    u32Div = (uint32_t)(((u32Pclk * 10u) / (u32BusClock * 4u) + 5u) / 10u - 1u); /* Compute proper divider for I2C clock */
+    u32Div = (uint32_t)(((((u32Pclk * 10u) / (u32BusClock * 4u)) + 5u) / 10u) - 1u); /* Compute proper divider for I2C clock */
     i2c->CLKDIV = u32Div;
 
     return (u32Pclk / ((u32Div + 1u) << 2u));
@@ -223,9 +223,9 @@ uint32_t I2C_SetBusClockFreq(I2C_T *i2c, uint32_t u32BusClock)
  *
  * @details    To get I2C Bus interrupt flag.
  */
-uint32_t I2C_GetIntFlag(I2C_T *i2c)
+uint32_t I2C_GetIntFlag(const I2C_T *i2c)
 {
-    return ((i2c->CTL0 & I2C_CTL0_SI_Msk) == I2C_CTL0_SI_Msk ? 1ul : 0ul);
+    return ((i2c->CTL0 & I2C_CTL0_SI_Msk) == I2C_CTL0_SI_Msk ? 1UL : 0UL);
 }
 
 /**
@@ -237,7 +237,7 @@ uint32_t I2C_GetIntFlag(I2C_T *i2c)
  *
  * @details    To get I2C Bus Status Code.
  */
-uint32_t I2C_GetStatus(I2C_T *i2c)
+uint32_t I2C_GetStatus(const I2C_T *i2c)
 {
     return (i2c->STATUS0);
 }
@@ -251,7 +251,7 @@ uint32_t I2C_GetStatus(I2C_T *i2c)
  *
  * @details    To read a bytes data from specify I2C port.
  */
-uint8_t I2C_GetData(I2C_T *i2c)
+uint8_t I2C_GetData(const I2C_T *i2c)
 {
     return (uint8_t)(i2c->DAT);
 }
@@ -418,7 +418,7 @@ void I2C_DisableWakeup(I2C_T *i2c)
  * @details    To get the Bus Management status of I2C_BUSSTS register
  *
  */
-uint32_t I2C_SMBusGetStatus(I2C_T *i2c)
+uint32_t I2C_SMBusGetStatus(const I2C_T *i2c)
 {
     return (i2c->BUSSTS);
 }
@@ -533,7 +533,7 @@ void I2C_SMBusPECTxEnable(I2C_T *i2c, uint8_t u8PECTxEn)
  * @details    The CRC check value after a transmission or a reception by count by using CRC8
  *
  */
-uint8_t I2C_SMBusGetPECValue(I2C_T *i2c)
+uint8_t I2C_SMBusGetPECValue(const I2C_T *i2c)
 {
     return (uint8_t)i2c->PKTCRC;
 }
@@ -553,7 +553,8 @@ uint8_t I2C_SMBusGetPECValue(I2C_T *i2c)
 
 void I2C_SMBusIdleTimeout(I2C_T *i2c, uint32_t u32Us, uint32_t u32Hclk)
 {
-    uint32_t  u32Div, u32HclkKHz;
+    uint32_t u32Div;
+    uint32_t u32HclkKHz;
 
     i2c->BUSCTL |= I2C_BUSCTL_TIDLE_Msk;
     u32HclkKHz = u32Hclk / 1000U;
@@ -585,7 +586,8 @@ void I2C_SMBusIdleTimeout(I2C_T *i2c, uint32_t u32Us, uint32_t u32Hclk)
 
 void I2C_SMBusTimeout(I2C_T *i2c, uint32_t ms, uint32_t u32Pclk)
 {
-    uint32_t u32Div, u32Pclk_kHz;
+    uint32_t u32Div;
+    uint32_t u32Pclk_kHz;
 
     i2c->BUSCTL &= ~I2C_BUSCTL_TIDLE_Msk;
 
@@ -621,7 +623,8 @@ void I2C_SMBusTimeout(I2C_T *i2c, uint32_t ms, uint32_t u32Pclk)
 
 void I2C_SMBusClockLoTimeout(I2C_T *i2c, uint32_t ms, uint32_t u32Pclk)
 {
-    uint32_t u32Div, u32Pclk_kHz;
+    uint32_t u32Div;
+    uint32_t u32Pclk_kHz;
 
     i2c->BUSCTL &= ~I2C_BUSCTL_TIDLE_Msk;
 
@@ -687,10 +690,13 @@ uint8_t I2C_WriteByte(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Data)
   *
   */
 
-uint32_t I2C_WriteMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t au8Data[], uint32_t u32wLen)
+uint32_t I2C_WriteMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, const uint8_t au8Data[], uint32_t u32wLen)
 {
-    uint8_t u8Xfering = 1u, u8Err = 0u, u8Ctrl = 0u;
-    uint32_t u32txLen = 0u, u32TimeOutCount = 0u;
+    uint8_t u8Xfering = 1u;
+    uint8_t u8Err = 0u;
+    uint8_t u8Ctrl = 0u;
+    uint32_t u32txLen = 0u;
+    uint32_t u32TimeOutCount = 0u;
 
     g_I2C_i32ErrCode = 0;
 
@@ -710,7 +716,7 @@ uint32_t I2C_WriteMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t au8Data[],
         switch(I2C_GET_STATUS(i2c))
         {
         case 0x08u:
-            I2C_SET_DATA(i2c, ((uint8_t)(u8SlaveAddr << 1u) | 0x00u));  /* Write SLA+W to Register I2CDAT */
+            I2C_SET_DATA(i2c, (uint8_t)(u8SlaveAddr << 1u));            /* Write SLA+W to Register I2CDAT */
             u8Ctrl = I2C_CTL_SI;                                        /* Clear SI */
             break;
     
@@ -718,7 +724,8 @@ uint32_t I2C_WriteMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t au8Data[],
         case 0x28u:
             if(u32txLen < u32wLen)
             {
-                I2C_SET_DATA(i2c, au8Data[u32txLen++]);                 /* Write Data to I2CDAT */
+                I2C_SET_DATA(i2c, au8Data[u32txLen]);                   /* Write Data to I2CDAT */
+                u32txLen++;
             }
             else
             {
@@ -804,10 +811,13 @@ uint8_t I2C_WriteByteOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr,
   *
   */
 
-uint32_t I2C_WriteMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t au8Data[], uint32_t u32wLen)
+uint32_t I2C_WriteMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, const uint8_t au8Data[], uint32_t u32wLen)
 {
-    uint8_t u8Xfering = 1u, u8Err = 0u, u8Ctrl = 0u;
-    uint32_t u32txLen = 0u, u32TimeOutCount = 0u;
+    uint8_t u8Xfering = 1u;
+    uint8_t u8Err = 0u;
+    uint8_t u8Ctrl = 0u;
+    uint32_t u32txLen = 0u;
+    uint32_t u32TimeOutCount = 0u;
 
     g_I2C_i32ErrCode = 0;
 
@@ -828,7 +838,7 @@ uint32_t I2C_WriteMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Da
         switch(I2C_GET_STATUS(i2c))
         {
         case 0x08u:
-            I2C_SET_DATA(i2c, ((uint8_t)(u8SlaveAddr << 1u) | 0x00u));  /* Write SLA+W to Register I2CDAT */
+            I2C_SET_DATA(i2c, (uint8_t)(u8SlaveAddr << 1u));            /* Write SLA+W to Register I2CDAT */
             u8Ctrl = I2C_CTL_SI;
             break;
 
@@ -845,7 +855,8 @@ uint32_t I2C_WriteMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Da
         case 0x28u:
             if(u32txLen < u32wLen)
             {
-                I2C_SET_DATA(i2c, au8Data[u32txLen++]);
+                I2C_SET_DATA(i2c, au8Data[u32txLen]);
+                u32txLen++;
             }
             else
             {
@@ -925,10 +936,14 @@ uint8_t I2C_WriteByteTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAd
   *
   */
 
-uint32_t I2C_WriteMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t au8Data[], uint32_t u32wLen)
+uint32_t I2C_WriteMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, const uint8_t au8Data[], uint32_t u32wLen)
 {
-    uint8_t u8Xfering = 1u, u8Err = 0u, u8Addr = 1u, u8Ctrl = 0u;
-    uint32_t u32txLen = 0u, u32TimeOutCount = 0u;
+    uint8_t u8Xfering = 1u;
+    uint8_t u8Err = 0u;
+    uint8_t u8Addr = 1u;
+    uint8_t u8Ctrl = 0u;
+    uint32_t u32txLen = 0u;
+    uint32_t u32TimeOutCount = 0u;
 
     g_I2C_i32ErrCode = 0;
 
@@ -949,7 +964,7 @@ uint32_t I2C_WriteMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u1
         switch(I2C_GET_STATUS(i2c))
         {
         case 0x08u:
-            I2C_SET_DATA(i2c, ((uint8_t)(u8SlaveAddr << 1u) | 0x00u));  /* Write SLA+W to Register I2CDAT */
+            I2C_SET_DATA(i2c, (uint8_t)(u8SlaveAddr << 1u));            /* Write SLA+W to Register I2CDAT */
             u8Ctrl = I2C_CTL_SI;                                        /* Clear SI */
             break;
 
@@ -964,14 +979,15 @@ uint32_t I2C_WriteMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u1
             break;
 
         case 0x28u:
-            if(u8Addr)
+            if(u8Addr == 1U)
             {
                 I2C_SET_DATA(i2c, (uint8_t)(u16DataAddr & 0xFFu));      /* Write Lo byte address of register */
                 u8Addr = 0u;
             }
             else if((u32txLen < u32wLen) && (u8Addr == 0u))
             {
-                I2C_SET_DATA(i2c, au8Data[u32txLen++]);                 /* Write data to Register I2CDAT*/
+                I2C_SET_DATA(i2c, au8Data[u32txLen]);                 /* Write data to Register I2CDAT*/
+                u32txLen++;
             }
             else
             {
@@ -1049,8 +1065,11 @@ uint8_t I2C_ReadByte(I2C_T *i2c, uint8_t u8SlaveAddr)
   */
 uint32_t I2C_ReadMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t au8Rdata[], uint32_t u32rLen)
 {
-    uint8_t u8Xfering = 1u, u8Err = 0u, u8Ctrl = 0u;
-    uint32_t u32rxLen = 0u, u32TimeOutCount = 0u;
+    uint8_t u8Xfering = 1u;
+    uint8_t u8Err = 0u;
+    uint8_t u8Ctrl = 0u;
+    uint32_t u32rxLen = 0u;
+    uint32_t u32TimeOutCount = 0u;
 
     g_I2C_i32ErrCode = 0;
 
@@ -1071,7 +1090,7 @@ uint32_t I2C_ReadMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t au8Rdata[],
         switch(I2C_GET_STATUS(i2c))
         {
         case 0x08u:
-            I2C_SET_DATA(i2c, ((uint8_t)(u8SlaveAddr << 1u) | 0x01u));  /* Write SLA+R to Register I2CDAT */
+            I2C_SET_DATA(i2c, (uint8_t)((uint8_t)(u8SlaveAddr << 1u) | 0x01u)); /* Write SLA+R to Register I2CDAT */
             u8Ctrl = I2C_CTL_SI;                                        /* Clear SI */
             break;
 
@@ -1092,7 +1111,8 @@ uint32_t I2C_ReadMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t au8Rdata[],
             break;
 
         case 0x50u:
-            au8Rdata[u32rxLen++] = (uint8_t) I2C_GET_DATA(i2c);         /* Receive Data */
+            au8Rdata[u32rxLen] = (uint8_t) I2C_GET_DATA(i2c);           /* Receive Data */
+            u32rxLen++;
             if(u32rxLen < (u32rLen - 1u))
             {
                 u8Ctrl = I2C_CTL_SI_AA;                                 /* Clear SI and set ACK */
@@ -1104,7 +1124,8 @@ uint32_t I2C_ReadMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t au8Rdata[],
             break;
 
         case 0x58u:
-            au8Rdata[u32rxLen++] = (uint8_t) I2C_GET_DATA(i2c);         /* Receive Data */
+            au8Rdata[u32rxLen] = (uint8_t) I2C_GET_DATA(i2c);           /* Receive Data */
+            u32rxLen++;
             u8Ctrl = I2C_CTL_STO_SI;                                    /* Clear SI and send STOP */
             u8Xfering = 0u;
             break;
@@ -1180,8 +1201,11 @@ uint8_t I2C_ReadByteOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr)
   */
 uint32_t I2C_ReadMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t au8Rdata[], uint32_t u32rLen)
 {
-    uint8_t u8Xfering = 1u, u8Err = 0u, u8Ctrl = 0u;
-    uint32_t u32rxLen = 0u, u32TimeOutCount = 0u;
+    uint8_t u8Xfering = 1u;
+    uint8_t u8Err = 0u;
+    uint8_t u8Ctrl = 0u;
+    uint32_t u32rxLen = 0u;
+    uint32_t u32TimeOutCount = 0u;
 
     g_I2C_i32ErrCode = 0;
 
@@ -1202,7 +1226,7 @@ uint32_t I2C_ReadMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Dat
         switch(I2C_GET_STATUS(i2c))
         {
         case 0x08u:
-            I2C_SET_DATA(i2c, ((uint8_t)(u8SlaveAddr << 1u) | 0x00u));  /* Write SLA+W to Register I2CDAT */
+            I2C_SET_DATA(i2c, (uint8_t)(u8SlaveAddr << 1u));            /* Write SLA+W to Register I2CDAT */
             u8Ctrl = I2C_CTL_SI;                                        /* Clear SI */
             break;
             
@@ -1221,7 +1245,7 @@ uint32_t I2C_ReadMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Dat
             break;
 
         case 0x10u:
-            I2C_SET_DATA(i2c, ((uint8_t)(u8SlaveAddr << 1u) | 0x01u));  /* Write SLA+R to Register I2CDAT */
+            I2C_SET_DATA(i2c, (uint8_t)((uint8_t)(u8SlaveAddr << 1u) | 0x01u)); /* Write SLA+R to Register I2CDAT */
             u8Ctrl = I2C_CTL_SI;                                        /* Clear SI */
             break;
 
@@ -1242,7 +1266,8 @@ uint32_t I2C_ReadMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Dat
             break;
 
         case 0x50u:
-            au8Rdata[u32rxLen++] = (uint8_t) I2C_GET_DATA(i2c);         /* Receive Data */
+            au8Rdata[u32rxLen] = (uint8_t) I2C_GET_DATA(i2c);           /* Receive Data */
+            u32rxLen++;
             if(u32rxLen < (u32rLen - 1u))
             {
                 u8Ctrl = I2C_CTL_SI_AA;                                 /* Clear SI and set ACK */
@@ -1254,7 +1279,8 @@ uint32_t I2C_ReadMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Dat
             break;
 
         case 0x58u:
-            au8Rdata[u32rxLen++] = (uint8_t) I2C_GET_DATA(i2c);         /* Receive Data */
+            au8Rdata[u32rxLen] = (uint8_t) I2C_GET_DATA(i2c);           /* Receive Data */
+            u32rxLen++;
             u8Ctrl = I2C_CTL_STO_SI;                                    /* Clear SI and send STOP */
             u8Xfering = 0u;
             break;
@@ -1329,8 +1355,12 @@ uint8_t I2C_ReadByteTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAdd
   */
 uint32_t I2C_ReadMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t au8Rdata[], uint32_t u32rLen)
 {
-    uint8_t u8Xfering = 1u, u8Err = 0u, u8Addr = 1u, u8Ctrl = 0u;
-    uint32_t u32rxLen = 0u, u32TimeOutCount = 0u;
+    uint8_t u8Xfering = 1u;
+    uint8_t u8Err = 0u;
+    uint8_t u8Addr = 1u;
+    uint8_t u8Ctrl = 0u;
+    uint32_t u32rxLen = 0u;
+    uint32_t u32TimeOutCount = 0u;
 
     g_I2C_i32ErrCode = 0;
 
@@ -1351,7 +1381,7 @@ uint32_t I2C_ReadMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16
         switch(I2C_GET_STATUS(i2c))
         {
         case 0x08u:
-            I2C_SET_DATA(i2c, ((uint8_t)(u8SlaveAddr << 1u) | 0x00u));  /* Write SLA+W to Register I2CDAT */
+            I2C_SET_DATA(i2c, (uint8_t)(u8SlaveAddr << 1u));            /* Write SLA+W to Register I2CDAT */
             u8Ctrl = I2C_CTL_SI;                                        /* Clear SI */
             break;
             
@@ -1378,7 +1408,7 @@ uint32_t I2C_ReadMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16
             break;
 
         case 0x10u:
-            I2C_SET_DATA(i2c, ((uint8_t)(u8SlaveAddr << 1u) | 0x01u));  /* Write SLA+R to Register I2CDAT */
+            I2C_SET_DATA(i2c, (uint8_t)((uint8_t)(u8SlaveAddr << 1u) | 0x01u)); /* Write SLA+R to Register I2CDAT */
             u8Ctrl = I2C_CTL_SI;                                        /* Clear SI */
             break;
 
@@ -1399,7 +1429,8 @@ uint32_t I2C_ReadMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16
             break;
 
         case 0x50u:
-            au8Rdata[u32rxLen++] = (uint8_t) I2C_GET_DATA(i2c);         /* Receive Data */
+            au8Rdata[u32rxLen] = (uint8_t) I2C_GET_DATA(i2c);           /* Receive Data */
+            u32rxLen++;
             if(u32rxLen < (u32rLen - 1u))
             {
                 u8Ctrl = I2C_CTL_SI_AA;                                 /* Clear SI and set ACK */
@@ -1411,7 +1442,8 @@ uint32_t I2C_ReadMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16
             break;
 
         case 0x58u:
-            au8Rdata[u32rxLen++] = (uint8_t) I2C_GET_DATA(i2c);         /* Receive Data */
+            au8Rdata[u32rxLen] = (uint8_t) I2C_GET_DATA(i2c);           /* Receive Data */
+            u32rxLen++;
             u8Ctrl = I2C_CTL_STO_SI;                                    /* Clear SI and send STOP */
             u8Xfering = 0u;
             break;
