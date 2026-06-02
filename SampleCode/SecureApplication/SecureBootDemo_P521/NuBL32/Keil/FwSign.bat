@@ -1,0 +1,1 @@
+ ..\..\..\..\..\Utilities\FwSign\FwSign.exe %1 %2 %3
