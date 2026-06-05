@@ -35,7 +35,7 @@ void __aeabi_assert(const char* expr, const char* file, int line);
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
 #if !(defined(__ICCARM__) && (__VER__ >= 6010000))
-# if (__ARMCC_VERSION < 6040000)
+#if defined(__ARMCC_VERSION) && (__ARMCC_VERSION < 6040000)
 struct __FILE
 {
     int handle; /* Add whatever you need here */
@@ -49,8 +49,11 @@ struct __FILE
 #endif
 
 #ifdef __MICROLIB
-FILE __stdout;
-FILE __stdin;
+extern FILE __stdout;
+extern FILE __stdin;
+
+FILE __stdout = {0};
+FILE __stdin = {0};
 
 void abort(void);
 
@@ -92,7 +95,11 @@ void abort(void)
 
 #else
 # if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+/* cppcheck-suppress misra-c2012-17.3;__asm is ARM Compiler extension keyword, not a C function call;
+__ARM_use_no_argv is an ARM C library linker-protocol symbol that must be declared via .global assembly directive */
 __asm("  .global __ARM_use_no_argv\n");
+/* cppcheck-suppress misra-c2012-17.3;__asm is ARM Compiler extension keyword, not a C function call;
+__use_no_semihosting directs the linker to use semihosting stubs instead of real semihosting SVC (SVC 0xAB), preventing HardFault in production */
 __asm("  .global __use_no_semihosting\n");
 
 
@@ -434,10 +441,7 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
     }
 
 
-    /* Or *sp to remove compiler warning */
-    while(1U | *sp) {}
-
-    return lr;
+    while(1U) {}
 }
 
 
@@ -698,6 +702,12 @@ int IsDebugFifoEmpty(void)
 
 void _ttywrch(int ch)
 {
+#if !(defined(__ICCARM__) && (__VER__ >= 6010000))
+#if defined(__ARMCC_VERSION) && (__ARMCC_VERSION < 6040000)
+    (void)__stdout.handle;
+    (void)__stdin.handle;
+#endif
+#endif
     SendChar(ch);
     return;
 }
