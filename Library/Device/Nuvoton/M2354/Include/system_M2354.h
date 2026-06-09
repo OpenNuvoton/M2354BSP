@@ -91,9 +91,9 @@ extern uint32_t __PC(void);         /*!< Return the current program counter valu
  * @details    If the expression is false, an error message will be printed out
  *             from debug port (UART0 or UART1).
  */
-#define ASSERT_PARAM(expr)  { if (!(expr)) { AssertError((uint8_t*)__FILE__, __LINE__); } }
+#define ASSERT_PARAM(expr)  { if (!(expr)) { AssertError((const uint8_t*)__FILE__, __LINE__); } }
 
-void AssertError(uint8_t* file, uint32_t line);
+void AssertError(const uint8_t* file, uint32_t line);
 #else
 #define ASSERT_PARAM(expr)
 #endif

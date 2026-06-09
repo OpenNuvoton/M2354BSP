@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>MBEDTLS_CONFIG_FILE=mbedtls_config.h</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\CMSIS\Include;..\..\Device\Nuvoton\m460\Include;..\..\StdDriver\inc;..\..\CryptoAccelerator;..\..\..\ThirdParty\mbedtls-3.1.0\include;..\..\..\ThirdParty\mbedtls-3.1.0\library</IncludePath>
+              <IncludePath>..\..\CMSIS\Include;..\..\Device\Nuvoton\m2354\Include;..\..\StdDriver\inc;..\..\CryptoAccelerator;..\..\..\ThirdParty\mbedtls-3.1.0\include;..\..\..\ThirdParty\mbedtls-3.1.0\library</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
