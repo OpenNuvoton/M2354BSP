@@ -122,16 +122,8 @@ int main(void)
 
     /* Get Secure and Non-secure Flash size */
     g_u32ApromSize = GetApromSize();
-    g_u32DataFlashAddr = SCU->FNSADDR;
-
-    if(g_u32DataFlashAddr < g_u32ApromSize)
-    {
-        g_u32DataFlashSize = (g_u32ApromSize - g_u32DataFlashAddr);
-    }
-    else
-    {
-        g_u32DataFlashSize = 0;
-    }
+    g_u32DataFlashAddr = FMC_DTFSH_BASE;
+    g_u32DataFlashSize = FMC_DTFSH_END - g_u32DataFlashAddr;
 
     /* Init I2C */
     I2C_Init();
