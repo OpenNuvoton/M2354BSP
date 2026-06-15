@@ -1,0 +1,549 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:0757888c-6de6-446f-99fb-a068bd2ecbec",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-06-15T16:16:03+08:00",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "author": "anchore",
+          "name": "syft",
+          "version": "1.43.0"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "04ed2dbaee1fb902",
+      "type": "library",
+      "name": "MCU Driver",
+      "version": "v3.00.004-105-g81d38839",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsp:sbom-category",
+          "value": "product"
+        },
+        {
+          "name": "bsp:scope",
+          "value": "Components included in, linked with, deployed to, or reasonably expected to be integrated into final product firmware/software."
+        },
+        {
+          "name": "bsp:scope-policy-file",
+          "value": "product-scope.yaml"
+        },
+        {
+          "name": "bsp:runtime-scope",
+          "value": "true"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "true"
+        },
+        {
+          "name": "bsp:third-party-components",
+          "value": "none identified in product scope based on the defined Product SBOM scope policy"
+        },
+        {
+          "name": "bsp:product-scope-include-path",
+          "value": "Library/CMSIS"
+        },
+        {
+          "name": "bsp:product-scope-include-path",
+          "value": "Library/CryptoAccelerator"
+        },
+        {
+          "name": "bsp:product-scope-include-path",
+          "value": "Library/Device"
+        },
+        {
+          "name": "bsp:product-scope-include-path",
+          "value": "Library/LCDLib"
+        },
+        {
+          "name": "bsp:product-scope-include-path",
+          "value": "Library/NuMaker"
+        },
+        {
+          "name": "bsp:product-scope-include-path",
+          "value": "Library/SmartcardLib"
+        },
+        {
+          "name": "bsp:product-scope-include-path",
+          "value": "Library/StdDriver"
+        },
+        {
+          "name": "bsp:product-scope-include-path",
+          "value": "Library/UsbHostLib"
+        },
+        {
+          "name": "bsp:product-scope-exclude-path",
+          "value": "Document/"
+        },
+        {
+          "name": "bsp:product-scope-exclude-path",
+          "value": "SampleCode/"
+        },
+        {
+          "name": "bsp:product-scope-exclude-path",
+          "value": "ThirdParty/"
+        },
+        {
+          "name": "bsp:product-scope-exclude-path",
+          "value": "Utilities/"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "m2354bsp:product-component:library-cryptoaccelerator",
+      "name": "m2354 CryptoAccelerator",
+      "version": "v3.00.004-105-g81d38839",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "scope": "required",
+      "description": "Directory-level first-party BSP product component included from product scope path Library/CryptoAccelerator",
+      "properties": [
+        {
+          "name": "bsp:sbom-category",
+          "value": "product"
+        },
+        {
+          "name": "bsp:path",
+          "value": "Library/CryptoAccelerator"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "bsp:component-granularity",
+          "value": "directory"
+        },
+        {
+          "name": "bsp:scope-policy-file",
+          "value": "product-scope.yaml"
+        },
+        {
+          "name": "bsp:runtime-scope",
+          "value": "true"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "m2354bsp:product-component:library-device",
+      "name": "m2354 Device",
+      "version": "v3.00.004-105-g81d38839",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "scope": "required",
+      "description": "Directory-level first-party BSP product component included from product scope path Library/Device",
+      "properties": [
+        {
+          "name": "bsp:sbom-category",
+          "value": "product"
+        },
+        {
+          "name": "bsp:path",
+          "value": "Library/Device"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "bsp:component-granularity",
+          "value": "directory"
+        },
+        {
+          "name": "bsp:scope-policy-file",
+          "value": "product-scope.yaml"
+        },
+        {
+          "name": "bsp:runtime-scope",
+          "value": "true"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "m2354bsp:product-component:library-lcdlib",
+      "name": "m2354 LCDLib",
+      "version": "v3.00.004-105-g81d38839",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "scope": "required",
+      "description": "Directory-level first-party BSP product component included from product scope path Library/LCDLib",
+      "properties": [
+        {
+          "name": "bsp:sbom-category",
+          "value": "product"
+        },
+        {
+          "name": "bsp:path",
+          "value": "Library/LCDLib"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "bsp:component-granularity",
+          "value": "directory"
+        },
+        {
+          "name": "bsp:scope-policy-file",
+          "value": "product-scope.yaml"
+        },
+        {
+          "name": "bsp:runtime-scope",
+          "value": "true"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "m2354bsp:product-component:library-numaker",
+      "name": "m2354 NuMaker",
+      "version": "v3.00.004-105-g81d38839",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "scope": "required",
+      "description": "Directory-level first-party BSP product component included from product scope path Library/NuMaker",
+      "properties": [
+        {
+          "name": "bsp:sbom-category",
+          "value": "product"
+        },
+        {
+          "name": "bsp:path",
+          "value": "Library/NuMaker"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "bsp:component-granularity",
+          "value": "directory"
+        },
+        {
+          "name": "bsp:scope-policy-file",
+          "value": "product-scope.yaml"
+        },
+        {
+          "name": "bsp:runtime-scope",
+          "value": "true"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "m2354bsp:product-component:library-smartcardlib",
+      "name": "m2354 SmartcardLib",
+      "version": "v3.00.004-105-g81d38839",
+      "licenses": [
+        {
+          "license": {
+            "name": "Nuvoton Proprietary"
+          }
+        }
+      ],
+      "scope": "required",
+      "description": "Directory-level first-party BSP product component included from product scope path Library/SmartcardLib",
+      "properties": [
+        {
+          "name": "bsp:sbom-category",
+          "value": "product"
+        },
+        {
+          "name": "bsp:path",
+          "value": "Library/SmartcardLib"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "bsp:component-granularity",
+          "value": "directory"
+        },
+        {
+          "name": "bsp:scope-policy-file",
+          "value": "product-scope.yaml"
+        },
+        {
+          "name": "bsp:runtime-scope",
+          "value": "true"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "true"
+        },
+        {
+          "name": "bsp:license-file",
+          "value": "Library/SmartcardLib/LICENSE.md"
+        },
+        {
+          "name": "bsp:static-lib:0:path",
+          "value": "Library/SmartcardLib/SmartCardLib_IAR.a"
+        },
+        {
+          "name": "bsp:static-lib:0:sha256",
+          "value": "aa1bcd76af1d1207b8aa1492623392f3ee2127895207a039254e6263761ba34d"
+        },
+        {
+          "name": "bsp:static-lib:1:path",
+          "value": "Library/SmartcardLib/SmartCardLib_Keil.lib"
+        },
+        {
+          "name": "bsp:static-lib:1:sha256",
+          "value": "4c0f8f28c5076c96f71f065c5fdc52dbde86bd63712a3276c817de32f3d41e82"
+        },
+        {
+          "name": "bsp:static-lib:2:path",
+          "value": "Library/SmartcardLib/libsmartcard.a"
+        },
+        {
+          "name": "bsp:static-lib:2:sha256",
+          "value": "c426c4b9402edb3a8147bcb8ce9f7dbc48a22707eefac4be8d3ce734ec9232e3"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "m2354bsp:product-component:library-stddriver",
+      "name": "m2354 StdDriver",
+      "version": "v3.00.004-105-g81d38839",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "scope": "required",
+      "description": "Directory-level first-party BSP product component included from product scope path Library/StdDriver",
+      "properties": [
+        {
+          "name": "bsp:sbom-category",
+          "value": "product"
+        },
+        {
+          "name": "bsp:path",
+          "value": "Library/StdDriver"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "bsp:component-granularity",
+          "value": "directory"
+        },
+        {
+          "name": "bsp:scope-policy-file",
+          "value": "product-scope.yaml"
+        },
+        {
+          "name": "bsp:runtime-scope",
+          "value": "true"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "m2354bsp:product-component:library-usbhostlib",
+      "name": "m2354 UsbHostLib",
+      "version": "v3.00.004-105-g81d38839",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "scope": "required",
+      "description": "Directory-level first-party BSP product component included from product scope path Library/UsbHostLib",
+      "properties": [
+        {
+          "name": "bsp:sbom-category",
+          "value": "product"
+        },
+        {
+          "name": "bsp:path",
+          "value": "Library/UsbHostLib"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "bsp:component-granularity",
+          "value": "directory"
+        },
+        {
+          "name": "bsp:scope-policy-file",
+          "value": "product-scope.yaml"
+        },
+        {
+          "name": "bsp:runtime-scope",
+          "value": "true"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:generic/cmsis@5.0.2?source=vendored&path=Library/CMSIS",
+      "name": "CMSIS",
+      "version": "5.0.2",
+      "scope": "required",
+      "author": "Arm Limited",
+      "purl": "pkg:generic/cmsis@5.0.2",
+      "description": "Arm CMSIS vendored in Library/CMSIS, including CMSIS-Core(M), CMSIS-Core(A), CMSIS-DSP Library, CMSIS-Driver, CMSIS-RTOS and CMSIS-RTOS2 API headers, CMSIS-DAP firmware sources, SVD, Pack utilities, templates, libraries, and documentation.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "src_path",
+          "value": "Library/CMSIS"
+        },
+        {
+          "name": "integration",
+          "value": "vendored_source"
+        },
+        {
+          "name": "cmsis_core_m_version",
+          "value": "5.0.2"
+        },
+        {
+          "name": "cmsis_core_m_version_macro",
+          "value": "5.0"
+        },
+        {
+          "name": "cmsis_core_a_version",
+          "value": "1.0"
+        },
+        {
+          "name": "cmsis_dsp_library_version",
+          "value": "1.5.1"
+        },
+        {
+          "name": "cmsis_rtos_api_version",
+          "value": "1.02"
+        },
+        {
+          "name": "cmsis_rtos2_api_version",
+          "value": "2.1.1"
+        },
+        {
+          "name": "cmsis_driver_common_api_version",
+          "value": "2.0"
+        },
+        {
+          "name": "cmsis_driver_documentation_version",
+          "value": "2.05"
+        },
+        {
+          "name": "cmsis_dap_firmware_version",
+          "value": "1.10"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:component-source",
+          "value": "Arm CMSIS"
+        },
+        {
+          "name": "bsp:evidence-file",
+          "value": "Document/SBOM/cmsis/sca_cmsis.json"
+        },
+        {
+          "name": "bsp:evidence-path",
+          "value": "Library/CMSIS"
+        },
+        {
+          "name": "bsp:version-evidence",
+          "value": "Library/CMSIS/Include/cmsis_version.h; Library/CMSIS/Documentation/Core/html/index.html; Library/CMSIS/Core_A/Include/core_ca.h; Library/CMSIS/Include/arm_math.h; Library/CMSIS/RTOS/Template/cmsis_os.h; Library/CMSIS/RTOS2/Include/cmsis_os2.h; Library/CMSIS/Driver/Include/Driver_Common.h; Library/CMSIS/Documentation/Driver/html/index.html; Library/CMSIS/DAP/Firmware/Source/DAP.c"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "04ed2dbaee1fb902",
+      "dependsOn": [
+        "m2354bsp:product-component:library-cryptoaccelerator",
+        "m2354bsp:product-component:library-device",
+        "m2354bsp:product-component:library-lcdlib",
+        "m2354bsp:product-component:library-numaker",
+        "m2354bsp:product-component:library-smartcardlib",
+        "m2354bsp:product-component:library-stddriver",
+        "m2354bsp:product-component:library-usbhostlib"
+      ]
+    }
+  ]
+}
