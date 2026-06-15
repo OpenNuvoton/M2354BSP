@@ -28,100 +28,100 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Digit Zone Constant Definitions                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-#define ZONE_MAIN_DIGIT										0
-#define ZONE_TIME_DIGIT										1
-#define ZONE_NUMICRO_DIGIT									2
-#define ZONE_PPM_DIGIT										3
-#define ZONE_TEMP_DIGIT										4
-#define ZONE_VER_DIGIT										5
+#define ZONE_MAIN_DIGIT										0U
+#define ZONE_TIME_DIGIT										1U
+#define ZONE_NUMICRO_DIGIT									2U
+#define ZONE_PPM_DIGIT										3U
+#define ZONE_TEMP_DIGIT										4U
+#define ZONE_VER_DIGIT										5U
 
 
 /*---------------------------------------------------------------------------------------------------------*/
 /*  COM and SEG Position of Symbol Constant Definitions                                                    */
 /*---------------------------------------------------------------------------------------------------------*/
-#define SYMBOL_PLUS_1										((3)<<4 | (1)<<0)
-#define SYMBOL_MINUS_2										((3)<<4 | (3)<<0)
-#define SYMBOL_S01_10										((11)<<4 | (0)<<0)
-#define SYMBOL_S02_10										((12)<<4 | (0)<<0)
-#define SYMBOL_S03_10										((13)<<4 | (0)<<0)
-#define SYMBOL_S04_10										((14)<<4 | (0)<<0)
-#define SYMBOL_S05_10										((15)<<4 | (0)<<0)
-#define SYMBOL_S06_10										((11)<<4 | (1)<<0)
-#define SYMBOL_S07_10										((12)<<4 | (1)<<0)
-#define SYMBOL_S08_10										((13)<<4 | (1)<<0)
-#define SYMBOL_S09_10										((14)<<4 | (1)<<0)
-#define SYMBOL_S10_10										((15)<<4 | (1)<<0)
-#define SYMBOL_S11_10										((11)<<4 | (2)<<0)
-#define SYMBOL_S12_10										((12)<<4 | (2)<<0)
-#define SYMBOL_S13_10										((13)<<4 | (2)<<0)
-#define SYMBOL_S14_10										((14)<<4 | (2)<<0)
-#define SYMBOL_S15_10										((15)<<4 | (2)<<0)
-#define SYMBOL_S16_10										((11)<<4 | (3)<<0)
-#define SYMBOL_S17_10										((12)<<4 | (3)<<0)
-#define SYMBOL_S18_10										((13)<<4 | (3)<<0)
-#define SYMBOL_S19_10										((14)<<4 | (3)<<0)
-#define SYMBOL_S20_10										((15)<<4 | (3)<<0)
-#define SYMBOL_S21_10										((11)<<4 | (4)<<0)
-#define SYMBOL_S22_10										((12)<<4 | (4)<<0)
-#define SYMBOL_S23_10										((13)<<4 | (4)<<0)
-#define SYMBOL_S24_10										((14)<<4 | (4)<<0)
-#define SYMBOL_S25_10										((15)<<4 | (4)<<0)
-#define SYMBOL_S26_10										((11)<<4 | (5)<<0)
-#define SYMBOL_S27_10										((12)<<4 | (5)<<0)
-#define SYMBOL_S28_10										((13)<<4 | (5)<<0)
-#define SYMBOL_S29_10										((14)<<4 | (5)<<0)
-#define SYMBOL_S30_10										((15)<<4 | (5)<<0)
-#define SYMBOL_S31_10										((11)<<4 | (6)<<0)
-#define SYMBOL_S32_10										((12)<<4 | (6)<<0)
-#define SYMBOL_S33_10										((13)<<4 | (6)<<0)
-#define SYMBOL_S34_10										((14)<<4 | (6)<<0)
-#define SYMBOL_S35_10										((15)<<4 | (6)<<0)
-#define SYMBOL_S36_10										((11)<<4 | (7)<<0)
-#define SYMBOL_S37_10										((12)<<4 | (7)<<0)
-#define SYMBOL_S38_10										((13)<<4 | (7)<<0)
-#define SYMBOL_S39_10										((14)<<4 | (7)<<0)
-#define SYMBOL_S40_10										((15)<<4 | (7)<<0)
-#define SYMBOL_V_11										    ((39)<<4 | (4)<<0)
-#define SYMBOL_A_12										    ((37)<<4 | (4)<<0)
-#define SYMBOL_W_13										    ((35)<<4 | (4)<<0)
-#define SYMBOL_NVT_14										((10)<<4 | (4)<<0)
-#define SYMBOL_NUMICRO_15									((9)<<4 | (3)<<0)
-#define SYMBOL_WIFI_16										((10)<<4 | (5)<<0)
-#define SYMBOL_SOUND_17										((10)<<4 | (6)<<0)
-#define SYMBOL_BAT_FRAME_18									((10)<<4 | (0)<<0)
-#define SYMBOL_BAT_1_18										((10)<<4 | (2)<<0)
-#define SYMBOL_BAT_2_18										((10)<<4 | (3)<<0)
-#define SYMBOL_BAT_3_18										((10)<<4 | (1)<<0)
-#define SYMBOL_ARROW_UP_26									((1)<<4 | (4)<<0)
-#define SYMBOL_ARROW_LEFT_26								((1)<<4 | (6)<<0)
-#define SYMBOL_ARROW_DOWN_26								((0)<<4 | (7)<<0)
-#define SYMBOL_ARROW_RIGHT_26								((0)<<4 | (4)<<0)
-#define SYMBOL_CIRCLE_UP_26									((1)<<4 | (5)<<0)
-#define SYMBOL_CIRCLE_LEFT_26								((0)<<4 | (6)<<0)
-#define SYMBOL_CIRCLE_RIGHT_26								((0)<<4 | (5)<<0)
-#define SYMBOL_PERCENTAGE_30								((23)<<4 | (4)<<0)
-#define SYMBOL_PPM_31										((21)<<4 | (4)<<0)
-#define SYMBOL_TEMP_C_35									((25)<<4 | (4)<<0)
-#define SYMBOL_TEMP_F_36									((27)<<4 | (4)<<0)
-#define SYMBOL_VERSION_37									((31)<<4 | (4)<<0)
-#define SYMBOL_P_44										    ((3)<<4 | (7)<<0)
-#define SYMBOL_P_45										    ((5)<<4 | (3)<<0)
-#define SYMBOL_P_46										    ((7)<<4 | (3)<<0)
-#define SYMBOL_COL_47										((5)<<4 | (7)<<0)
-#define SYMBOL_P_49										    ((16)<<4 | (3)<<0)
-#define SYMBOL_P_50										    ((20)<<4 | (3)<<0)
-#define SYMBOL_P_51										    ((24)<<4 | (3)<<0)
-#define SYMBOL_P_52										    ((28)<<4 | (3)<<0)
-#define SYMBOL_P_53										    ((32)<<4 | (3)<<0)
-#define SYMBOL_P_54										    ((36)<<4 | (3)<<0)
-#define SYMBOL_COL_55										((16)<<4 | (1)<<0)
-#define SYMBOL_COL_57										((20)<<4 | (1)<<0)
-#define SYMBOL_COL_59										((24)<<4 | (1)<<0)
-#define SYMBOL_COL_61										((28)<<4 | (1)<<0)
-#define SYMBOL_COL_63										((32)<<4 | (1)<<0)
-#define SYMBOL_COL_65										((36)<<4 | (1)<<0)
-#define SYMBOL_P_67										    ((29)<<4 | (4)<<0)
-#define SYMBOL_P_68										    ((33)<<4 | (4)<<0)
+#define SYMBOL_PLUS_1										((3U << 4U) | (1U << 0U))
+#define SYMBOL_MINUS_2										((3U << 4U) | (3U << 0U))
+#define SYMBOL_S01_10										((11U << 4U) | (0U << 0U))
+#define SYMBOL_S02_10										((12U << 4U) | (0U << 0U))
+#define SYMBOL_S03_10										((13U << 4U) | (0U << 0U))
+#define SYMBOL_S04_10										((14U << 4U) | (0U << 0U))
+#define SYMBOL_S05_10										((15U << 4U) | (0U << 0U))
+#define SYMBOL_S06_10										((11U << 4U) | (1U << 0U))
+#define SYMBOL_S07_10										((12U << 4U) | (1U << 0U))
+#define SYMBOL_S08_10										((13U << 4U) | (1U << 0U))
+#define SYMBOL_S09_10										((14U << 4U) | (1U << 0U))
+#define SYMBOL_S10_10										((15U << 4U) | (1U << 0U))
+#define SYMBOL_S11_10										((11U << 4U) | (2U << 0U))
+#define SYMBOL_S12_10										((12U << 4U) | (2U << 0U))
+#define SYMBOL_S13_10										((13U << 4U) | (2U << 0U))
+#define SYMBOL_S14_10										((14U << 4U) | (2U << 0U))
+#define SYMBOL_S15_10										((15U << 4U) | (2U << 0U))
+#define SYMBOL_S16_10										((11U << 4U) | (3U << 0U))
+#define SYMBOL_S17_10										((12U << 4U) | (3U << 0U))
+#define SYMBOL_S18_10										((13U << 4U) | (3U << 0U))
+#define SYMBOL_S19_10										((14U << 4U) | (3U << 0U))
+#define SYMBOL_S20_10										((15U << 4U) | (3U << 0U))
+#define SYMBOL_S21_10										((11U << 4U) | (4U << 0U))
+#define SYMBOL_S22_10										((12U << 4U) | (4U << 0U))
+#define SYMBOL_S23_10										((13U << 4U) | (4U << 0U))
+#define SYMBOL_S24_10										((14U << 4U) | (4U << 0U))
+#define SYMBOL_S25_10										((15U << 4U) | (4U << 0U))
+#define SYMBOL_S26_10										((11U << 4U) | (5U << 0U))
+#define SYMBOL_S27_10										((12U << 4U) | (5U << 0U))
+#define SYMBOL_S28_10										((13U << 4U) | (5U << 0U))
+#define SYMBOL_S29_10										((14U << 4U) | (5U << 0U))
+#define SYMBOL_S30_10										((15U << 4U) | (5U << 0U))
+#define SYMBOL_S31_10										((11U << 4U) | (6U << 0U))
+#define SYMBOL_S32_10										((12U << 4U) | (6U << 0U))
+#define SYMBOL_S33_10										((13U << 4U) | (6U << 0U))
+#define SYMBOL_S34_10										((14U << 4U) | (6U << 0U))
+#define SYMBOL_S35_10										((15U << 4U) | (6U << 0U))
+#define SYMBOL_S36_10										((11U << 4U) | (7U << 0U))
+#define SYMBOL_S37_10										((12U << 4U) | (7U << 0U))
+#define SYMBOL_S38_10										((13U << 4U) | (7U << 0U))
+#define SYMBOL_S39_10										((14U << 4U) | (7U << 0U))
+#define SYMBOL_S40_10										((15U << 4U) | (7U << 0U))
+#define SYMBOL_V_11										    ((39U << 4U) | (4U << 0U))
+#define SYMBOL_A_12										    ((37U << 4U) | (4U << 0U))
+#define SYMBOL_W_13										    ((35U << 4U) | (4U << 0U))
+#define SYMBOL_NVT_14										((10U << 4U) | (4U << 0U))
+#define SYMBOL_NUMICRO_15									((9U << 4U) | (3U << 0U))
+#define SYMBOL_WIFI_16										((10U << 4U) | (5U << 0U))
+#define SYMBOL_SOUND_17										((10U << 4U) | (6U << 0U))
+#define SYMBOL_BAT_FRAME_18									((10U << 4U) | (0U << 0U))
+#define SYMBOL_BAT_1_18										((10U << 4U) | (2U << 0U))
+#define SYMBOL_BAT_2_18										((10U << 4U) | (3U << 0U))
+#define SYMBOL_BAT_3_18										((10U << 4U) | (1U << 0U))
+#define SYMBOL_ARROW_UP_26									((1U << 4U) | (4U << 0U))
+#define SYMBOL_ARROW_LEFT_26								((1U << 4U) | (6U << 0U))
+#define SYMBOL_ARROW_DOWN_26								((0U << 4U) | (7U << 0U))
+#define SYMBOL_ARROW_RIGHT_26								((0U << 4U) | (4U << 0U))
+#define SYMBOL_CIRCLE_UP_26									((1U << 4U) | (5U << 0U))
+#define SYMBOL_CIRCLE_LEFT_26								((0U << 4U) | (6U << 0U))
+#define SYMBOL_CIRCLE_RIGHT_26								((0U << 4U) | (5U << 0U))
+#define SYMBOL_PERCENTAGE_30								((23U << 4U) | (4U << 0U))
+#define SYMBOL_PPM_31										((21U << 4U) | (4U << 0U))
+#define SYMBOL_TEMP_C_35									((25U << 4U) | (4U << 0U))
+#define SYMBOL_TEMP_F_36									((27U << 4U) | (4U << 0U))
+#define SYMBOL_VERSION_37									((31U << 4U) | (4U << 0U))
+#define SYMBOL_P_44										    ((3U << 4U) | (7U << 0U))
+#define SYMBOL_P_45										    ((5U << 4U) | (3U << 0U))
+#define SYMBOL_P_46										    ((7U << 4U) | (3U << 0U))
+#define SYMBOL_COL_47										((5U << 4U) | (7U << 0U))
+#define SYMBOL_P_49										    ((16U << 4U) | (3U << 0U))
+#define SYMBOL_P_50										    ((20U << 4U) | (3U << 0U))
+#define SYMBOL_P_51										    ((24U << 4U) | (3U << 0U))
+#define SYMBOL_P_52										    ((28U << 4U) | (3U << 0U))
+#define SYMBOL_P_53										    ((32U << 4U) | (3U << 0U))
+#define SYMBOL_P_54										    ((36U << 4U) | (3U << 0U))
+#define SYMBOL_COL_55										((16U << 4U) | (1U << 0U))
+#define SYMBOL_COL_57										((20U << 4U) | (1U << 0U))
+#define SYMBOL_COL_59										((24U << 4U) | (1U << 0U))
+#define SYMBOL_COL_61										((28U << 4U) | (1U << 0U))
+#define SYMBOL_COL_63										((32U << 4U) | (1U << 0U))
+#define SYMBOL_COL_65										((36U << 4U) | (1U << 0U))
+#define SYMBOL_P_67										    ((29U << 4U) | (4U << 0U))
+#define SYMBOL_P_68										    ((33U << 4U) | (4U << 0U))
 
 
 /*@}*/ /* end of group LCDZONE_EXPORTED_CONSTANTS */
@@ -135,8 +135,8 @@ typedef struct
 {
     unsigned char   u8LCDDispTableNum;          /*!< LCD Display Table Number */
     unsigned char   u8GetLCDComSegNum;          /*!< LCD Com Seg Table Number */
-    unsigned short  *pu16LCDDispTable;          /*!< LCD Display Table Pointer */
-    unsigned char   *pu8GetLCDComSeg;           /*!< LCD Com Seg Table Pointer */
+    const unsigned short  *pu16LCDDispTable;    /*!< LCD Display Table Pointer */
+    const unsigned char   *pu8GetLCDComSeg;      /*!< LCD Com Seg Table Pointer */
 
 } LCD_ZONE_INFO_T;
 
@@ -207,7 +207,7 @@ typedef struct
 *
 *****************************************************************************/
 
-static const char acMAINDigitRawData[ZONE_MAIN_DIG_CNT][ZONE_MAIN_SEG_NUM][2] =
+static const unsigned char acMAINDigitRawData[ZONE_MAIN_DIG_CNT][ZONE_MAIN_SEG_NUM][2] =
 {
 	{
 		{0, 1}, 		{0, 0}, 		{3, 0}, 		{3, 1}, 		{2, 3}, 		{0, 3}, 		{0, 2}, 		{1, 1}, 		{1, 0}, 		{1, 2}, 		{2, 0}, 		{3, 2}, 		{2, 2}, 		{2, 1}, 
@@ -260,7 +260,7 @@ static const char acMAINDigitRawData[ZONE_MAIN_DIG_CNT][ZONE_MAIN_SEG_NUM][2] =
 *
 *****************************************************************************/
 
-static const char acTIMEDigitRawData[ZONE_TIME_DIG_CNT][ZONE_TIME_SEG_NUM][2] =
+static const unsigned char acTIMEDigitRawData[ZONE_TIME_DIG_CNT][ZONE_TIME_SEG_NUM][2] =
 {
 	{
 		{7, 2}, 		{6, 3}, 		{4, 3}, 		{4, 2}, 		{5, 2}, 		{6, 2}, 		{5, 3}, 
@@ -275,7 +275,7 @@ static const char acTIMEDigitRawData[ZONE_TIME_DIG_CNT][ZONE_TIME_SEG_NUM][2] =
 		{7, 8}, 		{6, 9}, 		{4, 9}, 		{4, 8}, 		{5, 8}, 		{6, 8}, 		{5, 9}, 
 	},
 };
-static const char acNUMICRODigitRawData[ZONE_NUMICRO_DIG_CNT][ZONE_NUMICRO_SEG_NUM][2] =
+static const unsigned char acNUMICRODigitRawData[ZONE_NUMICRO_DIG_CNT][ZONE_NUMICRO_SEG_NUM][2] =
 {
 	{
 		{3, 4}, 		{2, 5}, 		{0, 5}, 		{0, 4}, 		{1, 4}, 		{2, 4}, 		{1, 5}, 
@@ -287,7 +287,7 @@ static const char acNUMICRODigitRawData[ZONE_NUMICRO_DIG_CNT][ZONE_NUMICRO_SEG_N
 		{3, 8}, 		{2, 9}, 		{0, 9}, 		{0, 8}, 		{1, 8}, 		{2, 8}, 		{1, 9}, 
 	},
 };
-static const char acPPMDigitRawData[ZONE_PPM_DIG_CNT][ZONE_PPM_SEG_NUM][2] =
+static const unsigned char acPPMDigitRawData[ZONE_PPM_DIG_CNT][ZONE_PPM_SEG_NUM][2] =
 {
 	{
 		{4, 16}, 		{5, 17}, 		{7, 17}, 		{7, 16}, 		{6, 16}, 		{5, 16}, 		{6, 17}, 
@@ -299,7 +299,7 @@ static const char acPPMDigitRawData[ZONE_PPM_DIG_CNT][ZONE_PPM_SEG_NUM][2] =
 		{4, 20}, 		{5, 21}, 		{7, 21}, 		{7, 20}, 		{6, 20}, 		{5, 20}, 		{6, 21}, 
 	},
 };
-static const char acTEMPDigitRawData[ZONE_TEMP_DIG_CNT][ZONE_TEMP_SEG_NUM][2] =
+static const unsigned char acTEMPDigitRawData[ZONE_TEMP_DIG_CNT][ZONE_TEMP_SEG_NUM][2] =
 {
 	{
 		{4, 22}, 		{5, 23}, 		{7, 23}, 		{7, 22}, 		{6, 22}, 		{5, 22}, 		{6, 23}, 
@@ -311,7 +311,7 @@ static const char acTEMPDigitRawData[ZONE_TEMP_DIG_CNT][ZONE_TEMP_SEG_NUM][2] =
 		{4, 26}, 		{5, 27}, 		{7, 27}, 		{7, 26}, 		{6, 26}, 		{5, 26}, 		{6, 27}, 
 	},
 };
-static const char acVERDigitRawData[ZONE_VER_DIG_CNT][ZONE_VER_SEG_NUM][2] =
+static const unsigned char acVERDigitRawData[ZONE_VER_DIG_CNT][ZONE_VER_SEG_NUM][2] =
 {
 	{
 		{4, 28}, 		{5, 29}, 		{7, 29}, 		{7, 28}, 		{6, 28}, 		{5, 28}, 		{6, 29}, 
@@ -514,12 +514,12 @@ static const unsigned short auVERDigitMap[] =
 
 static const LCD_ZONE_INFO_T g_LCDZoneInfo[] =
 {
-		{ZONE_MAIN_DIG_CNT,			ZONE_MAIN_SEG_NUM,			(unsigned short *)auMAINDigitMap,			(unsigned char *)acMAINDigitRawData},
-		{ZONE_TIME_DIG_CNT,			ZONE_TIME_SEG_NUM,			(unsigned short *)auTIMEDigitMap,			(unsigned char *)acTIMEDigitRawData},
-		{ZONE_NUMICRO_DIG_CNT,		ZONE_NUMICRO_SEG_NUM,	    (unsigned short *)auNUMICRODigitMap,		(unsigned char *)acNUMICRODigitRawData},
-		{ZONE_PPM_DIG_CNT,			ZONE_PPM_SEG_NUM,			(unsigned short *)auPPMDigitMap,			(unsigned char *)acPPMDigitRawData},
-		{ZONE_TEMP_DIG_CNT,			ZONE_TEMP_SEG_NUM,			(unsigned short *)auTEMPDigitMap,			(unsigned char *)acTEMPDigitRawData},
-		{ZONE_VER_DIG_CNT,			ZONE_VER_SEG_NUM,			(unsigned short *)auVERDigitMap,			(unsigned char *)acVERDigitRawData},
+		{ZONE_MAIN_DIG_CNT,    ZONE_MAIN_SEG_NUM,    auMAINDigitMap,    &acMAINDigitRawData[0][0][0]},
+		{ZONE_TIME_DIG_CNT,    ZONE_TIME_SEG_NUM,    auTIMEDigitMap,    &acTIMEDigitRawData[0][0][0]},
+		{ZONE_NUMICRO_DIG_CNT, ZONE_NUMICRO_SEG_NUM, auNUMICRODigitMap, &acNUMICRODigitRawData[0][0][0]},
+		{ZONE_PPM_DIG_CNT,     ZONE_PPM_SEG_NUM,     auPPMDigitMap,     &acPPMDigitRawData[0][0][0]},
+		{ZONE_TEMP_DIG_CNT,    ZONE_TEMP_SEG_NUM,    auTEMPDigitMap,    &acTEMPDigitRawData[0][0][0]},
+		{ZONE_VER_DIG_CNT,     ZONE_VER_SEG_NUM,     auVERDigitMap,     &acVERDigitRawData[0][0][0]},
 
 };
 
