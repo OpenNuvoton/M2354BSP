@@ -52,7 +52,9 @@ void FMC_NSBA_Setup(void)
 {
     /* Skip NSBA Setupt according config */
     if(FMC_INIT_NSBA == 0)
+    {
         return;
+    }
 
     /* Check if NSBA value with current active NSBA */
     if(SCU->FNSADDR != FMC_SECURE_ROM_SIZE)
@@ -69,24 +71,24 @@ void FMC_NSBA_Setup(void)
         /* Read Non-secure base address config */
         FMC->ISPCMD = FMC_ISPCMD_READ;
         FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
-        while(FMC->ISPTRG);
+        while(FMC->ISPTRG) {}
 
         //while(PA0);
 
         /* Setting NSBA when it is empty */
-        if(FMC->ISPDAT != 0xfffffffful)
+        if(FMC->ISPDAT != 0xFFFFFFFFUL)
         {
             /* Erase old setting */
             FMC->ISPCMD = FMC_ISPCMD_PAGE_ERASE;
             FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
-            while(FMC->ISPTRG);
+            while(FMC->ISPTRG) {}
         }
 
         /* Set new base */
         FMC->ISPDAT = FMC_SECURE_ROM_SIZE;
         FMC->ISPCMD = FMC_ISPCMD_PROGRAM;
         FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
-        while(FMC->ISPTRG);
+        while(FMC->ISPTRG) {}
 
         /* Force Chip Reset to valid new setting */
         SYS->IPRST0 = SYS_IPRST0_CHIPRST_Msk;
@@ -131,75 +133,75 @@ void SCU_Setup(void)
     }
 
     /* Set interrupt to non-secure according to PNNSET settings */
-    if(SCU_INIT_PNSSET0_VAL & BIT9) NVIC->ITNS[1] |= BIT22;  /* Int of USBH_INT     */
-    if(SCU_INIT_PNSSET0_VAL & BIT13) NVIC->ITNS[2] |= BIT0 ; /* Int of SDHOST0_INT  */
-    if(SCU_INIT_PNSSET0_VAL & BIT24) NVIC->ITNS[3] |= BIT2 ; /* Int of PDMA1_INT    */
-    if(SCU_INIT_PNSSET1_VAL & BIT18) NVIC->ITNS[2] |= BIT7 ; /* Int of CRYPTO       */
-    if(SCU_INIT_PNSSET2_VAL & BIT2) NVIC->ITNS[3] |= BIT15;  /* Int of EWDT_INT     */
-    if(SCU_INIT_PNSSET2_VAL & BIT2) NVIC->ITNS[3] |= BIT16;  /* Int of EWWDT_INT    */
-    if(SCU_INIT_PNSSET2_VAL & BIT3) NVIC->ITNS[1] |= BIT10;  /* Int of EADC0_INT    */
-    if(SCU_INIT_PNSSET2_VAL & BIT3) NVIC->ITNS[1] |= BIT11;  /* Int of EADC1_INT    */
-    if(SCU_INIT_PNSSET2_VAL & BIT3) NVIC->ITNS[1] |= BIT14;  /* Int of EADC2_INT    */
-    if(SCU_INIT_PNSSET2_VAL & BIT3) NVIC->ITNS[1] |= BIT15;  /* Int of EADC3_INT    */
-    if(SCU_INIT_PNSSET2_VAL & BIT5) NVIC->ITNS[1] |= BIT12;  /* Int of ACMP01_INT   */
-    if(SCU_INIT_PNSSET2_VAL & BIT7) NVIC->ITNS[1] |= BIT9 ;  /* Int of DAC_INT      */
-    if(SCU_INIT_PNSSET2_VAL & BIT8) NVIC->ITNS[2] |= BIT4 ;  /* Int of I2S0_INT     */
-    if(SCU_INIT_PNSSET2_VAL & BIT13) NVIC->ITNS[1] |= BIT23; /* Int of USBOTG_INT   */
-    if(SCU_INIT_PNSSET2_VAL & BIT17) NVIC->ITNS[1] |= BIT2 ; /* Int of TMR2_INT     */
-    if(SCU_INIT_PNSSET2_VAL & BIT17) NVIC->ITNS[1] |= BIT3 ; /* Int of TMR3_INT     */
-    if(SCU_INIT_PNSSET2_VAL & BIT18) NVIC->ITNS[3] |= BIT18; /* Int of TMR4_INT     */
-    if(SCU_INIT_PNSSET2_VAL & BIT18) NVIC->ITNS[3] |= BIT19; /* Int of TMR5_INT     */
-    if(SCU_INIT_PNSSET2_VAL & BIT24) NVIC->ITNS[0] |= BIT25; /* Int of EPWM0_P0_INT */
-    if(SCU_INIT_PNSSET2_VAL & BIT24) NVIC->ITNS[0] |= BIT26; /* Int of EPWM0_P1_INT */
-    if(SCU_INIT_PNSSET2_VAL & BIT24) NVIC->ITNS[0] |= BIT27; /* Int of EPWM0_P2_INT */
-    if(SCU_INIT_PNSSET2_VAL & BIT25) NVIC->ITNS[0] |= BIT29; /* Int of EPWM1_P0_INT */
-    if(SCU_INIT_PNSSET2_VAL & BIT25) NVIC->ITNS[0] |= BIT30; /* Int of EPWM1_P1_INT */
-    if(SCU_INIT_PNSSET2_VAL & BIT25) NVIC->ITNS[0] |= BIT31; /* Int of EPWM1_P2_INT */
-    if(SCU_INIT_PNSSET2_VAL & BIT26) NVIC->ITNS[2] |= BIT14; /* Int of BPWM0_INT    */
-    if(SCU_INIT_PNSSET2_VAL & BIT27) NVIC->ITNS[2] |= BIT15; /* Int of BPWM1_INT    */
-    if(SCU_INIT_PNSSET3_VAL & BIT0) NVIC->ITNS[0] |= BIT22;  /* Int of QSPI0_INT    */
-    if(SCU_INIT_PNSSET3_VAL & BIT1) NVIC->ITNS[0] |= BIT23;  /* Int of SPI0_INT     */
-    if(SCU_INIT_PNSSET3_VAL & BIT2) NVIC->ITNS[1] |= BIT19;  /* Int of SPI1_INT     */
-    if(SCU_INIT_PNSSET3_VAL & BIT3) NVIC->ITNS[1] |= BIT20;  /* Int of SPI2_INT     */
-    if(SCU_INIT_PNSSET3_VAL & BIT4) NVIC->ITNS[1] |= BIT30;  /* Int of SPI3_INT     */
-    if(SCU_INIT_PNSSET3_VAL & BIT16) NVIC->ITNS[1] |= BIT4 ; /* Int of UART0_INT    */
-    if(SCU_INIT_PNSSET3_VAL & BIT17) NVIC->ITNS[1] |= BIT5 ; /* Int of UART1_INT    */
-    if(SCU_INIT_PNSSET3_VAL & BIT18) NVIC->ITNS[1] |= BIT16; /* Int of UART2_INT    */
-    if(SCU_INIT_PNSSET3_VAL & BIT19) NVIC->ITNS[1] |= BIT17; /* Int of UART3_INT    */
-    if(SCU_INIT_PNSSET3_VAL & BIT20) NVIC->ITNS[2] |= BIT10; /* Int of UART4_INT    */
-    if(SCU_INIT_PNSSET3_VAL & BIT21) NVIC->ITNS[2] |= BIT11; /* Int of UART5_INT    */
-    if(SCU_INIT_PNSSET4_VAL & BIT0) NVIC->ITNS[1] |= BIT6 ;  /* Int of I2C0_INT     */
-    if(SCU_INIT_PNSSET4_VAL & BIT1) NVIC->ITNS[1] |= BIT7 ;  /* Int of I2C1_INT     */
-    if(SCU_INIT_PNSSET4_VAL & BIT2) NVIC->ITNS[2] |= BIT18;  /* Int of I2C2_INT     */
-    if(SCU_INIT_PNSSET4_VAL & BIT16) NVIC->ITNS[1] |= BIT26; /* Int of SC0_INT      */
-    if(SCU_INIT_PNSSET4_VAL & BIT17) NVIC->ITNS[1] |= BIT27; /* Int of SC1_INT      */
-    if(SCU_INIT_PNSSET4_VAL & BIT18) NVIC->ITNS[1] |= BIT28; /* Int of SC2_INT      */
-    if(SCU_INIT_PNSSET5_VAL & BIT0) NVIC->ITNS[1] |= BIT24;  /* Int of CAN0_INT     */
-    if(SCU_INIT_PNSSET5_VAL & BIT16) NVIC->ITNS[2] |= BIT20; /* Int of QEI0_INT     */
-    if(SCU_INIT_PNSSET5_VAL & BIT17) NVIC->ITNS[2] |= BIT21; /* Int of QEI1_INT     */
-    if(SCU_INIT_PNSSET5_VAL & BIT20) NVIC->ITNS[2] |= BIT22; /* Int of ECAP0_INT    */
-    if(SCU_INIT_PNSSET5_VAL & BIT21) NVIC->ITNS[2] |= BIT23; /* Int of ECAP1_INT    */
-    if(SCU_INIT_PNSSET5_VAL & BIT25) NVIC->ITNS[3] |= BIT5 ; /* Int of TRNG_INT     */
-    if(SCU_INIT_PNSSET5_VAL & BIT27) NVIC->ITNS[3] |= BIT4 ; /* Int of LCD_INT      */
-    if(SCU_INIT_PNSSET6_VAL & BIT0) NVIC->ITNS[1] |= BIT21;  /* Int of USBD_INT     */
-    if(SCU_INIT_PNSSET6_VAL & BIT16) NVIC->ITNS[2] |= BIT12; /* Int of USCI0_INT    */
-    if(SCU_INIT_PNSSET6_VAL & BIT17) NVIC->ITNS[2] |= BIT13; /* Int of USCI1_INT    */
-    if(SCU_INIT_IONSSET_VAL & BIT0) NVIC->ITNS[0] |= BIT16;  /* Int of PA           */
-    if(SCU_INIT_IONSSET_VAL & BIT1) NVIC->ITNS[0] |= BIT17;  /* Int of PB           */
-    if(SCU_INIT_IONSSET_VAL & BIT2) NVIC->ITNS[0] |= BIT18;  /* Int of PC           */
-    if(SCU_INIT_IONSSET_VAL & BIT3) NVIC->ITNS[0] |= BIT19;  /* Int of PD           */
-    if(SCU_INIT_IONSSET_VAL & BIT4) NVIC->ITNS[0] |= BIT20;  /* Int of PE           */
-    if(SCU_INIT_IONSSET_VAL & BIT5) NVIC->ITNS[0] |= BIT21;  /* Int of PF           */
-    if(SCU_INIT_IONSSET_VAL & BIT6) NVIC->ITNS[2] |= BIT8 ;  /* Int of PG           */
-    if(SCU_INIT_IONSSET_VAL & BIT7) NVIC->ITNS[2] |= BIT24;  /* Int of PH           */
-    if(SCU_INIT_IONSSET_VAL & BIT8) NVIC->ITNS[0] |= BIT10;  /* Int of EINT0        */
-    if(SCU_INIT_IONSSET_VAL & BIT9) NVIC->ITNS[0] |= BIT11;  /* Int of EINT1        */
-    if(SCU_INIT_IONSSET_VAL & BIT10) NVIC->ITNS[0] |= BIT12; /* Int of EINT2        */
-    if(SCU_INIT_IONSSET_VAL & BIT11) NVIC->ITNS[0] |= BIT13; /* Int of EINT3        */
-    if(SCU_INIT_IONSSET_VAL & BIT12) NVIC->ITNS[0] |= BIT14; /* Int of EINT4        */
-    if(SCU_INIT_IONSSET_VAL & BIT13) NVIC->ITNS[0] |= BIT15; /* Int of EINT5        */
-    if(SCU_INIT_IONSSET_VAL & BIT14) NVIC->ITNS[2] |= BIT9;  /* Int of EINT6        */
-    if(SCU_INIT_IONSSET_VAL & BIT15) NVIC->ITNS[2] |= BIT25; /* Int of EINT7        */
+    if(SCU_INIT_PNSSET0_VAL & BIT9) { NVIC->ITNS[1] |= BIT22; }  /* Int of USBH_INT     */
+    if(SCU_INIT_PNSSET0_VAL & BIT13) { NVIC->ITNS[2] |= BIT0 ; } /* Int of SDHOST0_INT  */
+    if(SCU_INIT_PNSSET0_VAL & BIT24) { NVIC->ITNS[3] |= BIT2 ; } /* Int of PDMA1_INT    */
+    if(SCU_INIT_PNSSET1_VAL & BIT18) { NVIC->ITNS[2] |= BIT7 ; } /* Int of CRYPTO       */
+    if(SCU_INIT_PNSSET2_VAL & BIT2) { NVIC->ITNS[3] |= BIT15; }  /* Int of EWDT_INT     */
+    if(SCU_INIT_PNSSET2_VAL & BIT2) { NVIC->ITNS[3] |= BIT16; }  /* Int of EWWDT_INT    */
+    if(SCU_INIT_PNSSET2_VAL & BIT3) { NVIC->ITNS[1] |= BIT10; }  /* Int of EADC0_INT    */
+    if(SCU_INIT_PNSSET2_VAL & BIT3) { NVIC->ITNS[1] |= BIT11; }  /* Int of EADC1_INT    */
+    if(SCU_INIT_PNSSET2_VAL & BIT3) { NVIC->ITNS[1] |= BIT14; }  /* Int of EADC2_INT    */
+    if(SCU_INIT_PNSSET2_VAL & BIT3) { NVIC->ITNS[1] |= BIT15; }  /* Int of EADC3_INT    */
+    if(SCU_INIT_PNSSET2_VAL & BIT5) { NVIC->ITNS[1] |= BIT12; }  /* Int of ACMP01_INT   */
+    if(SCU_INIT_PNSSET2_VAL & BIT7) { NVIC->ITNS[1] |= BIT9 ; }  /* Int of DAC_INT      */
+    if(SCU_INIT_PNSSET2_VAL & BIT8) { NVIC->ITNS[2] |= BIT4 ; }  /* Int of I2S0_INT     */
+    if(SCU_INIT_PNSSET2_VAL & BIT13) { NVIC->ITNS[1] |= BIT23; } /* Int of USBOTG_INT   */
+    if(SCU_INIT_PNSSET2_VAL & BIT17) { NVIC->ITNS[1] |= BIT2 ; } /* Int of TMR2_INT     */
+    if(SCU_INIT_PNSSET2_VAL & BIT17) { NVIC->ITNS[1] |= BIT3 ; } /* Int of TMR3_INT     */
+    if(SCU_INIT_PNSSET2_VAL & BIT18) { NVIC->ITNS[3] |= BIT18; } /* Int of TMR4_INT     */
+    if(SCU_INIT_PNSSET2_VAL & BIT18) { NVIC->ITNS[3] |= BIT19; } /* Int of TMR5_INT     */
+    if(SCU_INIT_PNSSET2_VAL & BIT24) { NVIC->ITNS[0] |= BIT25; } /* Int of EPWM0_P0_INT */
+    if(SCU_INIT_PNSSET2_VAL & BIT24) { NVIC->ITNS[0] |= BIT26; } /* Int of EPWM0_P1_INT */
+    if(SCU_INIT_PNSSET2_VAL & BIT24) { NVIC->ITNS[0] |= BIT27; } /* Int of EPWM0_P2_INT */
+    if(SCU_INIT_PNSSET2_VAL & BIT25) { NVIC->ITNS[0] |= BIT29; } /* Int of EPWM1_P0_INT */
+    if(SCU_INIT_PNSSET2_VAL & BIT25) { NVIC->ITNS[0] |= BIT30; } /* Int of EPWM1_P1_INT */
+    if(SCU_INIT_PNSSET2_VAL & BIT25) { NVIC->ITNS[0] |= BIT31; } /* Int of EPWM1_P2_INT */
+    if(SCU_INIT_PNSSET2_VAL & BIT26) { NVIC->ITNS[2] |= BIT14; } /* Int of BPWM0_INT    */
+    if(SCU_INIT_PNSSET2_VAL & BIT27) { NVIC->ITNS[2] |= BIT15; } /* Int of BPWM1_INT    */
+    if(SCU_INIT_PNSSET3_VAL & BIT0) { NVIC->ITNS[0] |= BIT22; }  /* Int of QSPI0_INT    */
+    if(SCU_INIT_PNSSET3_VAL & BIT1) { NVIC->ITNS[0] |= BIT23; }  /* Int of SPI0_INT     */
+    if(SCU_INIT_PNSSET3_VAL & BIT2) { NVIC->ITNS[1] |= BIT19; }  /* Int of SPI1_INT     */
+    if(SCU_INIT_PNSSET3_VAL & BIT3) { NVIC->ITNS[1] |= BIT20; }  /* Int of SPI2_INT     */
+    if(SCU_INIT_PNSSET3_VAL & BIT4) { NVIC->ITNS[1] |= BIT30; }  /* Int of SPI3_INT     */
+    if(SCU_INIT_PNSSET3_VAL & BIT16) { NVIC->ITNS[1] |= BIT4 ; } /* Int of UART0_INT    */
+    if(SCU_INIT_PNSSET3_VAL & BIT17) { NVIC->ITNS[1] |= BIT5 ; } /* Int of UART1_INT    */
+    if(SCU_INIT_PNSSET3_VAL & BIT18) { NVIC->ITNS[1] |= BIT16; } /* Int of UART2_INT    */
+    if(SCU_INIT_PNSSET3_VAL & BIT19) { NVIC->ITNS[1] |= BIT17; } /* Int of UART3_INT    */
+    if(SCU_INIT_PNSSET3_VAL & BIT20) { NVIC->ITNS[2] |= BIT10; } /* Int of UART4_INT    */
+    if(SCU_INIT_PNSSET3_VAL & BIT21) { NVIC->ITNS[2] |= BIT11; } /* Int of UART5_INT    */
+    if(SCU_INIT_PNSSET4_VAL & BIT0) { NVIC->ITNS[1] |= BIT6 ; }  /* Int of I2C0_INT     */
+    if(SCU_INIT_PNSSET4_VAL & BIT1) { NVIC->ITNS[1] |= BIT7 ; }  /* Int of I2C1_INT     */
+    if(SCU_INIT_PNSSET4_VAL & BIT2) { NVIC->ITNS[2] |= BIT18; }  /* Int of I2C2_INT     */
+    if(SCU_INIT_PNSSET4_VAL & BIT16) { NVIC->ITNS[1] |= BIT26; } /* Int of SC0_INT      */
+    if(SCU_INIT_PNSSET4_VAL & BIT17) { NVIC->ITNS[1] |= BIT27; } /* Int of SC1_INT      */
+    if(SCU_INIT_PNSSET4_VAL & BIT18) { NVIC->ITNS[1] |= BIT28; } /* Int of SC2_INT      */
+    if(SCU_INIT_PNSSET5_VAL & BIT0) { NVIC->ITNS[1] |= BIT24; }  /* Int of CAN0_INT     */
+    if(SCU_INIT_PNSSET5_VAL & BIT16) { NVIC->ITNS[2] |= BIT20; } /* Int of QEI0_INT     */
+    if(SCU_INIT_PNSSET5_VAL & BIT17) { NVIC->ITNS[2] |= BIT21; } /* Int of QEI1_INT     */
+    if(SCU_INIT_PNSSET5_VAL & BIT20) { NVIC->ITNS[2] |= BIT22; } /* Int of ECAP0_INT    */
+    if(SCU_INIT_PNSSET5_VAL & BIT21) { NVIC->ITNS[2] |= BIT23; } /* Int of ECAP1_INT    */
+    if(SCU_INIT_PNSSET5_VAL & BIT25) { NVIC->ITNS[3] |= BIT5 ; } /* Int of TRNG_INT     */
+    if(SCU_INIT_PNSSET5_VAL & BIT27) { NVIC->ITNS[3] |= BIT4 ; } /* Int of LCD_INT      */
+    if(SCU_INIT_PNSSET6_VAL & BIT0) { NVIC->ITNS[1] |= BIT21; }  /* Int of USBD_INT     */
+    if(SCU_INIT_PNSSET6_VAL & BIT16) { NVIC->ITNS[2] |= BIT12; } /* Int of USCI0_INT    */
+    if(SCU_INIT_PNSSET6_VAL & BIT17) { NVIC->ITNS[2] |= BIT13; } /* Int of USCI1_INT    */
+    if(SCU_INIT_IONSSET_VAL & BIT0) { NVIC->ITNS[0] |= BIT16; }  /* Int of PA           */
+    if(SCU_INIT_IONSSET_VAL & BIT1) { NVIC->ITNS[0] |= BIT17; }  /* Int of PB           */
+    if(SCU_INIT_IONSSET_VAL & BIT2) { NVIC->ITNS[0] |= BIT18; }  /* Int of PC           */
+    if(SCU_INIT_IONSSET_VAL & BIT3) { NVIC->ITNS[0] |= BIT19; }  /* Int of PD           */
+    if(SCU_INIT_IONSSET_VAL & BIT4) { NVIC->ITNS[0] |= BIT20; }  /* Int of PE           */
+    if(SCU_INIT_IONSSET_VAL & BIT5) { NVIC->ITNS[0] |= BIT21; }  /* Int of PF           */
+    if(SCU_INIT_IONSSET_VAL & BIT6) { NVIC->ITNS[2] |= BIT8 ; }  /* Int of PG           */
+    if(SCU_INIT_IONSSET_VAL & BIT7) { NVIC->ITNS[2] |= BIT24; }  /* Int of PH           */
+    if(SCU_INIT_IONSSET_VAL & BIT8) { NVIC->ITNS[0] |= BIT10; }  /* Int of EINT0        */
+    if(SCU_INIT_IONSSET_VAL & BIT9) { NVIC->ITNS[0] |= BIT11; }  /* Int of EINT1        */
+    if(SCU_INIT_IONSSET_VAL & BIT10) { NVIC->ITNS[0] |= BIT12; } /* Int of EINT2        */
+    if(SCU_INIT_IONSSET_VAL & BIT11) { NVIC->ITNS[0] |= BIT13; } /* Int of EINT3        */
+    if(SCU_INIT_IONSSET_VAL & BIT12) { NVIC->ITNS[0] |= BIT14; } /* Int of EINT4        */
+    if(SCU_INIT_IONSSET_VAL & BIT13) { NVIC->ITNS[0] |= BIT15; } /* Int of EINT5        */
+    if(SCU_INIT_IONSSET_VAL & BIT14) { NVIC->ITNS[2] |= BIT9; }  /* Int of EINT6        */
+    if(SCU_INIT_IONSSET_VAL & BIT15) { NVIC->ITNS[2] |= BIT25; } /* Int of EINT7        */
 
     /* Enable SCU Int status */
     SCU->SVIOIEN = (uint32_t)(-1);
@@ -296,7 +298,7 @@ void NSC_Init(void)
     SAU->RNR  = (u32Region & SAU_RNR_REGION_Msk);
     SAU->RBAR = (u32Base & SAU_RBAR_BADDR_Msk);
     SAU->RLAR = (u32Limit & SAU_RLAR_LADDR_Msk) |
-                ((1ul << SAU_RLAR_NSC_Pos)  & SAU_RLAR_NSC_Msk) | 1ul;
+                ((1UL << SAU_RLAR_NSC_Pos)  & SAU_RLAR_NSC_Msk) | 1UL;
 
 }
 
@@ -383,7 +385,7 @@ __attribute__((weak))
 #endif
 void SCU_IRQHandler(void)
 {
-    while(1);
+    while(1) {}
 }
 #endif
 
@@ -416,7 +418,7 @@ void SystemCoreClockUpdate(void)
 void SystemInit(void)
 {
 
-    if((__PC() & NS_OFFSET) == 0)
+    if((__PC() & NS_OFFSET) == 0U)
     {
         /* Unlock protected registers */
         do
@@ -431,7 +433,7 @@ void SystemInit(void)
         SYS->PSWCTL = SYS_PSWCTL_CRPTPWREN_Msk;
 
         /* Enable all GPIO, SRAM and Trace clock */
-        CLK->AHBCLK |= (0xffful << 20) | (1ul << 14);
+        CLK->AHBCLK |= (0xfffUL << 20U) | (1UL << 14U);
     }
 
 #if defined (__VTOR_PRESENT) && (__VTOR_PRESENT == 1U)
@@ -462,13 +464,20 @@ void SystemInit(void)
  * @details    The function prints the source file name and line number where
  *             the ASSERT_PARAM() error occurs, and then stops in an infinite loop.
  */
-void AssertError(uint8_t * file, uint32_t line)
+void AssertError(const uint8_t * file, uint32_t line)
 {
-
-    printf("[%s] line %d : wrong parameters.\r\n", file, line);
+    /* cppcheck-suppress misra-c2012-21.6 */
+    /**
+     * @misra_deviation
+     * <b>Rule:</b>          MISRA C:2012 Rule 21.6<br>
+     * <b>Justification:</b> `printf` is used solely for exception handling and debug output;
+     *                      it is not part of the product functional data path and does not
+     *                      affect normal control flow.
+     */
+    (void)printf("[%s] line %u : wrong parameters.\r\n", file, line);
 
     /* Infinite loop */
-    while(1) ;
+    while(1) {}
 }
 #endif
 

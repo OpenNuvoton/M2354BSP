@@ -1179,9 +1179,6 @@
             <name>$PROJ_DIR$\..\..\..\ThirdParty\mbedtls-3.1.0\library\entropy_poll.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\ThirdParty\mbedtls-3.1.0\library\error.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\..\..\ThirdParty\mbedtls-3.1.0\library\gcm.c</name>
         </file>
         <file>
@@ -1305,9 +1302,6 @@
             <name>$PROJ_DIR$\..\..\..\ThirdParty\mbedtls-3.1.0\library\sha512.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\ThirdParty\mbedtls-3.1.0\library\ssl_debug_helpers_generated.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\..\..\ThirdParty\mbedtls-3.1.0\library\threading.c</name>
         </file>
         <file>
@@ -1315,9 +1309,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\ThirdParty\mbedtls-3.1.0\library\version.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\ThirdParty\mbedtls-3.1.0\library\version_features.c</name>
         </file>
     </group>
 </project>

@@ -9,6 +9,8 @@
 #include "crypto_hw.h"
 #include "NuMicro.h"
 
+int crypto_hw_accelerator_init(void);
+int crypto_hw_accelerator_finish(void);
 
 /*
  * \brief Initialize the stm crypto accelerator

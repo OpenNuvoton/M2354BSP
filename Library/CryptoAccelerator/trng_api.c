@@ -8,7 +8,7 @@
 #include "NuMicro.h"
 
 #ifndef ARG_UNUSED
-#define ARG_UNUSED(arg)  ((void)arg)
+#define ARG_UNUSED(arg)  ((void)(arg))
 #endif
 
 int mbedtls_hardware_poll(void* data, unsigned char* output, size_t len, size_t* olen);
@@ -16,23 +16,30 @@ int mbedtls_hardware_poll(void* data, unsigned char* output, size_t len, size_t*
 int mbedtls_hardware_poll( void *data, unsigned char *output, size_t len, size_t *olen )
 {
     int32_t i;
-    int32_t timeout = 0x1000;
     uint32_t u32Reg;
+    unsigned char *out_ptr = output;
 
     ARG_UNUSED(data);
 
     if(NULL == output)
+    {
         return -1;
+    }
 
     if(NULL == olen)
+    {
         return -1;
+    }
 
-    if(0 == len)
+    if(0U == len)
+    {
         return -1;
+    }
 
     /* Generate the seed by TRNG */
-    if((TRNG->CTL & TRNG_CTL_READY_Msk) == 0)
+    if((TRNG->CTL & TRNG_CTL_READY_Msk) == 0U)
     {
+        int32_t timeout = 0x1000;
         /* Initial only when it is not ready */
         CLK->AHBCLK |= CLK_AHBCLK_CRPTCKEN_Msk;
         CLK->APBCLK1 |= CLK_APBCLK1_TRNGCKEN_Msk;
@@ -43,7 +50,7 @@ int mbedtls_hardware_poll( void *data, unsigned char *output, size_t len, size_t
         TRNG->ACT |= TRNG_ACT_ACT_Msk;
         /* Waiting for ready */
         i = 0;
-        while((TRNG->CTL & TRNG_CTL_READY_Msk) == 0)
+        while((TRNG->CTL & TRNG_CTL_READY_Msk) == 0U)
         {
             if(i++ > timeout)
             {
@@ -52,15 +59,16 @@ int mbedtls_hardware_poll( void *data, unsigned char *output, size_t len, size_t
             }
         }
 
-        TRNG->CTL = (0 << TRNG_CTL_CLKPSC_Pos);
+        TRNG->CTL = (0U << TRNG_CTL_CLKPSC_Pos);
     }
 
     u32Reg = TRNG->CTL;
     for(i = 0; i < (int32_t)len; i++)
     {
         TRNG->CTL = TRNG_CTL_TRNGEN_Msk | u32Reg;
-        while((TRNG->CTL & TRNG_CTL_DVIF_Msk) == 0);
-        *output++ = TRNG->DATA;
+        while((TRNG->CTL & TRNG_CTL_DVIF_Msk) == 0U){}
+        *out_ptr = (unsigned char)TRNG->DATA;
+        out_ptr++;
     }
 
     *olen = len;
