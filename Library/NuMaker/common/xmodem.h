@@ -30,6 +30,6 @@
 #define MAXRETRANS  25
 
 int32_t Xmodem(uint32_t u32DestAddr);
-int32_t XmodemSend(uint8_t *pu8Src, int32_t srcsz);
+int32_t XmodemSend(const uint8_t *pu8Src, int32_t srcsz);
 
 #endif

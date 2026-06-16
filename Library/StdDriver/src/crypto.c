@@ -8,6 +8,7 @@
  *****************************************************************************/
 
 #include <stdio.h>
+#include <stddef.h>
 #include <string.h>
 #include "NuMicro.h"
 
@@ -1181,6 +1182,54 @@ static int  get_nibble_value(char c)
     return 0;
 }
 
+static int ecc_strcmp(const char *s1, const char *s2)
+{
+    char  c1;
+    char  c2;
+    const char  *lhs = s1;
+    const char  *rhs = s2;
+
+    while (*lhs == '0')
+    {
+        lhs++;
+    }
+
+    while (*rhs == '0')
+    {
+        rhs++;
+    }
+
+    while ((*lhs != '\0') || (*rhs != '\0'))
+    {
+        if ((*lhs >= 'A') && (*lhs <= 'Z'))
+        {
+            c1 = *lhs + 32;
+        }
+        else
+        {
+            c1 = *lhs;
+        }
+
+        if ((*rhs >= 'A') && (*rhs <= 'Z'))
+        {
+            c2 = *rhs + 32;
+        }
+        else
+        {
+            c2 = *rhs;
+        }
+
+        if (c1 != c2)
+        {
+            return 1;
+        }
+
+        lhs++;
+        rhs++;
+    }
+
+    return 0;
+}
 
 /**
   * @brief  Check if the private key is located in valid range of curve.
@@ -2330,7 +2379,7 @@ int32_t ECC_VerifySignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message,
         /* 6. The signature is valid if x1 * = r, otherwise it is invalid */
 
         /* Compare with test pattern to check if r is correct or not */
-        if(strcasecmp(temp_hex_str, R) != 0)
+        if(ecc_strcmp(temp_hex_str, R) != 0)
         {
             CRPT_DBGMSG("x1' (mod n) != R Test filed!!\n");
             CRPT_DBGMSG("Signature R [%s] is not matched with expected R [%s]!\n", temp_hex_str, R);
@@ -2661,7 +2710,7 @@ int32_t  ECC_VerifySignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *messa
         /* 6. The signature is valid if x1 * = r, otherwise it is invalid */
 
         /* Compare with test pattern to check if r is correct or not */
-        if(strcasecmp(temp_hex_str, R) != 0)
+        if(ecc_strcmp(temp_hex_str, R) != 0)
         {
             CRPT_DBGMSG("x1' (mod n) != R Test filed!!\n");
             CRPT_DBGMSG("Signature R [%s] is not matched with expected R [%s]!\n", temp_hex_str, R);
@@ -2771,7 +2820,7 @@ int32_t ECC_GetCurve(CRPT_T *crpt, E_ECC_CURVE ecc_curve, ECC_CURVE *curve)
 
 /** @cond HIDDEN_SYMBOLS */
 
-static void *s_pRSABuf;
+static uintptr_t s_pRSABuf;
 static uint32_t s_u32RsaOpMode;
 
 typedef enum
@@ -2786,6 +2835,15 @@ typedef enum
 } E_RSA_BUF_SEL;
 
 static int32_t CheckRsaBufferSize(uint32_t u32OpMode, uint32_t u32BufSize, uint32_t u32UseKS);
+static uint32_t *RSA_BufWordPtr(size_t u32Offset)
+{
+    return (uint32_t *)(s_pRSABuf + (uintptr_t)u32Offset);
+}
+
+static uint32_t RSA_BufAddr(size_t u32Offset)
+{
+    return (uint32_t)(s_pRSABuf + (uintptr_t)u32Offset);
+}
 
 /** @endcond HIDDEN_SYMBOLS */
 
@@ -2853,6 +2911,7 @@ static int32_t CheckRsaBufferSize(uint32_t u32OpMode, uint32_t u32BufSize, uint3
     return 0;
 }
 
+/* cppcheck-suppress constParameterPointer */
 /**
   * @brief  Open RSA encrypt/decrypt function.
   * @param[in]  crpt         The pointer of CRYPTO module
@@ -2880,6 +2939,12 @@ static int32_t CheckRsaBufferSize(uint32_t u32OpMode, uint32_t u32BufSize, uint3
   *         - \ref 1    Use key store function
   * @return  0    Success.
   * @return  -1   The value of pointer of RSA buffer struct is null.
+  *
+  * @misra_deviation
+  * <b>Rule:</b>          Cppcheck constParameterPointer<br>
+  * <b>Justification:</b> psRSA_Buf points to a writable RSA working buffer; subsequent RSA operations
+  *                       write into it via s_pRSABuf. Declaring it as const void * would
+  *                       misrepresent the buffer's writability.
   */
 int32_t RSA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32KeySize, \
                  void *psRSA_Buf, uint32_t u32BufSize, uint32_t u32UseKS)
@@ -2894,7 +2959,7 @@ int32_t RSA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32KeySize, \
     }
 
     s_u32RsaOpMode = u32OpMode;
-    s_pRSABuf = psRSA_Buf;
+    s_pRSABuf = (uintptr_t)psRSA_Buf;
     crpt->RSA_CTL = (u32OpMode) | (u32KeySize << CRPT_RSA_CTL_KEYLENG_Pos);
 
     return 0;
@@ -2913,8 +2978,8 @@ int32_t RSA_SetKey(CRPT_T *crpt, char *Key)
     {
         return (-1);
     }
-    Hex2Reg(Key, ((RSA_BUF_NORMAL_T *)s_pRSABuf)->au32RsaE);
-    crpt->RSA_SADDR[2] = (uint32_t) & ((RSA_BUF_NORMAL_T *)s_pRSABuf)->au32RsaE; /* the public key or private key */
+    Hex2Reg(Key, RSA_BufWordPtr(offsetof(RSA_BUF_NORMAL_T, au32RsaE)));
+    crpt->RSA_SADDR[2] = RSA_BufAddr(offsetof(RSA_BUF_NORMAL_T, au32RsaE)); /* the public key or private key */
 
     return 0;
 }
@@ -2935,60 +3000,60 @@ int32_t RSA_SetDMATransfer(CRPT_T *crpt, char *Src, char *n, char *P, char *Q)
     {
         return (-1);
     }
-    Hex2Reg(Src, ((RSA_BUF_NORMAL_T *)s_pRSABuf)->au32RsaM);
-    Hex2Reg(n, ((RSA_BUF_NORMAL_T *)s_pRSABuf)->au32RsaN);
+    Hex2Reg(Src, RSA_BufWordPtr(offsetof(RSA_BUF_NORMAL_T, au32RsaM)));
+    Hex2Reg(n, RSA_BufWordPtr(offsetof(RSA_BUF_NORMAL_T, au32RsaN)));
 
     /* Assign the data to DMA */
-    crpt->RSA_SADDR[0] = (uint32_t) & ((RSA_BUF_NORMAL_T *)s_pRSABuf)->au32RsaM; /* plaintext / encrypt data */
-    crpt->RSA_SADDR[1] = (uint32_t) & ((RSA_BUF_NORMAL_T *)s_pRSABuf)->au32RsaN; /* the base of modulus operation */
-    crpt->RSA_DADDR    = (uint32_t) & ((RSA_BUF_NORMAL_T *)s_pRSABuf)->au32RsaOutput; /* encrypt data / decrypt data */
+    crpt->RSA_SADDR[0] = RSA_BufAddr(offsetof(RSA_BUF_NORMAL_T, au32RsaM)); /* plaintext / encrypt data */
+    crpt->RSA_SADDR[1] = RSA_BufAddr(offsetof(RSA_BUF_NORMAL_T, au32RsaN)); /* the base of modulus operation */
+    crpt->RSA_DADDR    = RSA_BufAddr(offsetof(RSA_BUF_NORMAL_T, au32RsaOutput)); /* encrypt data / decrypt data */
 
     if((s_u32RsaOpMode & CRPT_RSA_CTL_CRT_Msk) && (s_u32RsaOpMode & CRPT_RSA_CTL_SCAP_Msk))
     {
         /* For RSA CRT/SCAP mode, two primes of private key */
-        Hex2Reg(P, ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaP);
-        Hex2Reg(Q, ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaQ);
+        Hex2Reg(P, RSA_BufWordPtr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaP)));
+        Hex2Reg(Q, RSA_BufWordPtr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaQ)));
 
-        crpt->RSA_SADDR[3] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaP; /* prime P */
-        crpt->RSA_SADDR[4] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaQ; /* prime Q */
+        crpt->RSA_SADDR[3] = RSA_BufAddr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaP)); /* prime P */
+        crpt->RSA_SADDR[4] = RSA_BufAddr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaQ)); /* prime Q */
 
-        crpt->RSA_MADDR[0] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaTmpCp; /* for storing the intermediate temporary value(Cp) */
-        crpt->RSA_MADDR[1] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaTmpCq; /* for storing the intermediate temporary value(Cq) */
-        crpt->RSA_MADDR[2] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaTmpDp; /* for storing the intermediate temporary value(Dp) */
-        crpt->RSA_MADDR[3] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaTmpDq; /* for storing the intermediate temporary value(Dq) */
-        crpt->RSA_MADDR[4] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaTmpRp; /* for storing the intermediate temporary value(Rp) */
-        crpt->RSA_MADDR[5] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaTmpRq; /* for storing the intermediate temporary value(Rq) */
+        crpt->RSA_MADDR[0] = RSA_BufAddr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaTmpCp)); /* for storing the intermediate temporary value(Cp) */
+        crpt->RSA_MADDR[1] = RSA_BufAddr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaTmpCq)); /* for storing the intermediate temporary value(Cq) */
+        crpt->RSA_MADDR[2] = RSA_BufAddr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaTmpDp)); /* for storing the intermediate temporary value(Dp) */
+        crpt->RSA_MADDR[3] = RSA_BufAddr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaTmpDq)); /* for storing the intermediate temporary value(Dq) */
+        crpt->RSA_MADDR[4] = RSA_BufAddr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaTmpRp)); /* for storing the intermediate temporary value(Rp) */
+        crpt->RSA_MADDR[5] = RSA_BufAddr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaTmpRq)); /* for storing the intermediate temporary value(Rq) */
 
         /* For SCAP mode to store the intermediate temporary value(blind key) */
-        crpt->RSA_MADDR[6] = (uint32_t) & ((RSA_BUF_CRT_SCAP_T *)s_pRSABuf)->au32RsaTmpE;
+        crpt->RSA_MADDR[6] = RSA_BufAddr(offsetof(RSA_BUF_CRT_SCAP_T, au32RsaTmpE));
     }
     else if(s_u32RsaOpMode & CRPT_RSA_CTL_CRT_Msk)
     {
         /* For RSA CRT/SCAP mode, two primes of private key */
-        Hex2Reg(P, ((RSA_BUF_CRT_T *)s_pRSABuf)->au32RsaP);
-        Hex2Reg(Q, ((RSA_BUF_CRT_T *)s_pRSABuf)->au32RsaQ);
+        Hex2Reg(P, RSA_BufWordPtr(offsetof(RSA_BUF_CRT_T, au32RsaP)));
+        Hex2Reg(Q, RSA_BufWordPtr(offsetof(RSA_BUF_CRT_T, au32RsaQ)));
 
-        crpt->RSA_SADDR[3] = (uint32_t) & ((RSA_BUF_CRT_T *)s_pRSABuf)->au32RsaP; /* prime P */
-        crpt->RSA_SADDR[4] = (uint32_t) & ((RSA_BUF_CRT_T *)s_pRSABuf)->au32RsaQ; /* prime Q */
+        crpt->RSA_SADDR[3] = RSA_BufAddr(offsetof(RSA_BUF_CRT_T, au32RsaP)); /* prime P */
+        crpt->RSA_SADDR[4] = RSA_BufAddr(offsetof(RSA_BUF_CRT_T, au32RsaQ)); /* prime Q */
 
-        crpt->RSA_MADDR[0] = (uint32_t) & ((RSA_BUF_CRT_T *)s_pRSABuf)->au32RsaTmpCp; /* for storing the intermediate temporary value(Cp) */
-        crpt->RSA_MADDR[1] = (uint32_t) & ((RSA_BUF_CRT_T *)s_pRSABuf)->au32RsaTmpCq; /* for storing the intermediate temporary value(Cq) */
-        crpt->RSA_MADDR[2] = (uint32_t) & ((RSA_BUF_CRT_T *)s_pRSABuf)->au32RsaTmpDp; /* for storing the intermediate temporary value(Dp) */
-        crpt->RSA_MADDR[3] = (uint32_t) & ((RSA_BUF_CRT_T *)s_pRSABuf)->au32RsaTmpDq; /* for storing the intermediate temporary value(Dq) */
-        crpt->RSA_MADDR[4] = (uint32_t) & ((RSA_BUF_CRT_T *)s_pRSABuf)->au32RsaTmpRp; /* for storing the intermediate temporary value(Rp) */
-        crpt->RSA_MADDR[5] = (uint32_t) & ((RSA_BUF_CRT_T *)s_pRSABuf)->au32RsaTmpRq; /* for storing the intermediate temporary value(Rq) */
+        crpt->RSA_MADDR[0] = RSA_BufAddr(offsetof(RSA_BUF_CRT_T, au32RsaTmpCp)); /* for storing the intermediate temporary value(Cp) */
+        crpt->RSA_MADDR[1] = RSA_BufAddr(offsetof(RSA_BUF_CRT_T, au32RsaTmpCq)); /* for storing the intermediate temporary value(Cq) */
+        crpt->RSA_MADDR[2] = RSA_BufAddr(offsetof(RSA_BUF_CRT_T, au32RsaTmpDp)); /* for storing the intermediate temporary value(Dp) */
+        crpt->RSA_MADDR[3] = RSA_BufAddr(offsetof(RSA_BUF_CRT_T, au32RsaTmpDq)); /* for storing the intermediate temporary value(Dq) */
+        crpt->RSA_MADDR[4] = RSA_BufAddr(offsetof(RSA_BUF_CRT_T, au32RsaTmpRp)); /* for storing the intermediate temporary value(Rp) */
+        crpt->RSA_MADDR[5] = RSA_BufAddr(offsetof(RSA_BUF_CRT_T, au32RsaTmpRq)); /* for storing the intermediate temporary value(Rq) */
     }
     else if(s_u32RsaOpMode & CRPT_RSA_CTL_SCAP_Msk)
     {
         /* For RSA CRT/SCAP mode, two primes of private key */
-        Hex2Reg(P, ((RSA_BUF_SCAP_T *)s_pRSABuf)->au32RsaP);
-        Hex2Reg(Q, ((RSA_BUF_SCAP_T *)s_pRSABuf)->au32RsaQ);
+        Hex2Reg(P, RSA_BufWordPtr(offsetof(RSA_BUF_SCAP_T, au32RsaP)));
+        Hex2Reg(Q, RSA_BufWordPtr(offsetof(RSA_BUF_SCAP_T, au32RsaQ)));
 
-        crpt->RSA_SADDR[3] = (uint32_t) & ((RSA_BUF_SCAP_T *)s_pRSABuf)->au32RsaP; /* prime P */
-        crpt->RSA_SADDR[4] = (uint32_t) & ((RSA_BUF_SCAP_T *)s_pRSABuf)->au32RsaQ; /* prime Q */
+        crpt->RSA_SADDR[3] = RSA_BufAddr(offsetof(RSA_BUF_SCAP_T, au32RsaP)); /* prime P */
+        crpt->RSA_SADDR[4] = RSA_BufAddr(offsetof(RSA_BUF_SCAP_T, au32RsaQ)); /* prime Q */
 
         /* For SCAP mode to store the intermediate temporary value(blind key) */
-        crpt->RSA_MADDR[6] = (uint32_t) & ((RSA_BUF_SCAP_T *)s_pRSABuf)->au32RsaTmpE;
+        crpt->RSA_MADDR[6] = RSA_BufAddr(offsetof(RSA_BUF_SCAP_T, au32RsaTmpE));
     }
     else
     {
@@ -3025,7 +3090,7 @@ int32_t RSA_Read(const CRPT_T *crpt, char *Output)
     uint32_t u32CntIdx = 0;
 
     u32CntIdx = (crpt->RSA_CTL & CRPT_RSA_CTL_KEYLENG_Msk) >> CRPT_RSA_CTL_KEYLENG_Pos;
-    Reg2Hex((int32_t)au32CntTbl[u32CntIdx], ((RSA_BUF_NORMAL_T *)s_pRSABuf)->au32RsaOutput, Output);
+    Reg2Hex((int32_t)au32CntTbl[u32CntIdx], RSA_BufWordPtr(offsetof(RSA_BUF_NORMAL_T, au32RsaOutput)), Output);
 
     return 0;
 }
@@ -3087,13 +3152,13 @@ int32_t RSA_SetDMATransfer_KS(CRPT_T *crpt, char *Src, char *n, uint32_t u32PNum
     {
         return (-1);
     }
-    Hex2Reg(Src, ((RSA_BUF_KS_T *)s_pRSABuf)->au32RsaM);
-    Hex2Reg(n, ((RSA_BUF_KS_T *)s_pRSABuf)->au32RsaN);
+    Hex2Reg(Src, RSA_BufWordPtr(offsetof(RSA_BUF_KS_T, au32RsaM)));
+    Hex2Reg(n, RSA_BufWordPtr(offsetof(RSA_BUF_KS_T, au32RsaN)));
 
     /* Assign the data to DMA */
-    crpt->RSA_SADDR[0] = (uint32_t) & ((RSA_BUF_KS_T *)s_pRSABuf)->au32RsaM; /* plaintext / encrypt data */
-    crpt->RSA_SADDR[1] = (uint32_t) & ((RSA_BUF_KS_T *)s_pRSABuf)->au32RsaN; /* the base of modulus operation */
-    crpt->RSA_DADDR    = (uint32_t) & ((RSA_BUF_KS_T *)s_pRSABuf)->au32RsaOutput; /* encrypt data / decrypt data */
+    crpt->RSA_SADDR[0] = RSA_BufAddr(offsetof(RSA_BUF_KS_T, au32RsaM)); /* plaintext / encrypt data */
+    crpt->RSA_SADDR[1] = RSA_BufAddr(offsetof(RSA_BUF_KS_T, au32RsaN)); /* the base of modulus operation */
+    crpt->RSA_DADDR    = RSA_BufAddr(offsetof(RSA_BUF_KS_T, au32RsaOutput)); /* encrypt data / decrypt data */
 
     if((s_u32RsaOpMode & CRPT_RSA_CTL_CRT_Msk) || (s_u32RsaOpMode & CRPT_RSA_CTL_SCAP_Msk))
     {

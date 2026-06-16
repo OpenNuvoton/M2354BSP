@@ -27,15 +27,17 @@ static int32_t XMD_Write(uint32_t u32Addr, uint32_t u32Data)
     uint32_t u32TimeOutCnt;
 
     FMC->ISPADDR = u32Addr;
-    if((u32Addr & (FMC_FLASH_PAGE_SIZE - 1)) == 0)
+    if((u32Addr & (FMC_FLASH_PAGE_SIZE - 1U)) == 0U)
     {
         FMC->ISPCMD = FMC_ISPCMD_PAGE_ERASE;
         FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
         u32TimeOutCnt = FMC_TIMEOUT_ERASE;
         while(FMC->ISPTRG)
         {
-            if(--u32TimeOutCnt == 0)
+            if(--u32TimeOutCnt == 0U)
+            {
                 return -1;
+            }
         }
     }
 
@@ -45,8 +47,10 @@ static int32_t XMD_Write(uint32_t u32Addr, uint32_t u32Data)
     u32TimeOutCnt = FMC_TIMEOUT_WRITE;
     while(FMC->ISPTRG)
     {
-        if(--u32TimeOutCnt == 0)
+        if(--u32TimeOutCnt == 0U)
+        {
             return -1;
+        }
     }
 
     return 0;
@@ -57,16 +61,16 @@ static void XMD_putc(uint8_t c)
 {
     UART_T* pUART = UART0;
 
-    while(pUART->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
+    while(pUART->FIFOSTS & UART_FIFOSTS_TXFULL_Msk){}
     pUART->DAT = c;
 
 }
 
-static int32_t XMD_getc()
+static int32_t XMD_getc(void)
 {
-    UART_T* pUART = UART0;
+    const UART_T* pUART = UART0;
 
-    SysTick->LOAD = 100000 * CyclesPerUs;
+    SysTick->LOAD = 100000U * CyclesPerUs;
     SysTick->VAL  = (0x00);
     SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
 
@@ -75,7 +79,7 @@ static int32_t XMD_getc()
 
     while(pUART->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk)
     {
-        if((SysTick->CTRL & (1 << 16)) != 0)
+        if((SysTick->CTRL & (1UL << 16U)) != 0U)
         {
             SysTick->CTRL = 0;
             return -1; // timeout
@@ -88,18 +92,26 @@ static int32_t XMD_getc()
 
 static uint16_t crc16_ccitt(const uint8_t *pu8buf, int32_t i32len)
 {
+    const uint8_t *pBuf = pu8buf;
+    int32_t i32LenLocal = i32len;
     uint16_t crc = 0;
 
-    while(i32len--)
+    while(i32LenLocal != 0)
     {
         int32_t i;
-        crc ^= *pu8buf++ << 8;
+        crc ^= (uint16_t)((uint16_t)(*pBuf) << 8U);
+        pBuf++;
+        i32LenLocal--;
         for(i = 0; i < 8; ++i)
         {
-            if(crc & 0x8000)
-                crc = (uint16_t)(crc << 1) ^ (uint16_t)0x1021;
+            if((crc & 0x8000U))
+            {
+                crc = (uint16_t)(crc << 1U) ^ (uint16_t)0x1021U;
+            }
             else
-                crc = (uint16_t)(crc << 1);
+            {
+                crc = (uint16_t)(crc << 1U);
+            }
         }
     }
 
@@ -111,18 +123,24 @@ static int32_t check(int32_t iscrc, const uint8_t *pu8buf, int32_t i32Size)
     if(iscrc)
     {
         uint16_t crc = crc16_ccitt(pu8buf, i32Size);
-        uint16_t tcrc = (uint16_t)(pu8buf[i32Size] << 8) + (uint16_t)pu8buf[i32Size + 1];
+        uint16_t tcrc = (uint16_t)(((uint16_t)pu8buf[i32Size] << 8U) | (uint16_t)pu8buf[i32Size + 1]);
         if(crc == tcrc)
+        {
             return 1;
+        }
     }
     else
     {
         int32_t i;
         uint8_t tsum = 0;
         for(i = 0; i < i32Size; ++i)
+        {
             tsum += pu8buf[i];
+        }
         if(tsum == pu8buf[i32Size])
+        {
             return 1;
+        }
     }
 
     return 0;
@@ -142,22 +160,28 @@ static int32_t check(int32_t iscrc, const uint8_t *pu8buf, int32_t i32Size)
 int32_t Xmodem(uint32_t u32DestAddr)
 {
     int32_t i32Err = 0;
-    uint8_t *p;
-    int32_t bufsz, crc = 0;
-    uint8_t trychar = 'C';
+    int32_t bufsz;
+    int32_t crc = 0;
+    uint8_t trychar = (uint8_t)'C';
     uint8_t packetno = 1;
-    int32_t i, j;
+    int32_t i;
+    int32_t j;
     int32_t retrans = MAXRETRANS;
     int32_t i32TransBytes = 0;
     int32_t ch;
-    uint32_t u32StarAddr, u32Data;
+    uint32_t u32StarAddr;
+    uint32_t u32Data;
 
     for(;;)
     {
+        int32_t i32StartReceive;
+        i32StartReceive = 0;
         for(i = 0; i < XMD_MAX_TIMEOUT; ++i) /* set timeout period */
         {
             if(trychar)
+            {
                 XMD_putc(trychar);
+            }
 
             ch = XMD_getc();
             if(ch >= 0)
@@ -166,11 +190,13 @@ int32_t Xmodem(uint32_t u32DestAddr)
                 {
                     case XMD_SOH:
                         bufsz = 128;
-                        goto START_RECEIVE;
+                        i32StartReceive = 1;
+                        break;
 
                     case XMD_STX:
                         bufsz = 1024;
-                        goto START_RECEIVE;
+                        i32StartReceive = 1;
+                        break;
 
                     case XMD_EOT:
                         XMD_putc(XMD_ACK);
@@ -182,34 +208,58 @@ int32_t Xmodem(uint32_t u32DestAddr)
                     default:
                         break;
                 }
+
+                if(i32StartReceive != 0)
+                {
+                    break;
+                }
             }
         }
 
-        if(trychar == 'C')
+        if(i32StartReceive == 0)
         {
+            if(trychar == (uint8_t)'C')
+            {
+                XMD_putc(XMD_CAN);
+                XMD_putc(XMD_CAN);
+                XMD_putc(XMD_CAN);
+                return XMD_STS_TIMEOUT; /* too many retry error */
+            }
             XMD_putc(XMD_CAN);
             XMD_putc(XMD_CAN);
             XMD_putc(XMD_CAN);
-            return XMD_STS_TIMEOUT; /* too many retry error */
+            return XMD_STS_NAK; /* sync error */
         }
-        XMD_putc(XMD_CAN);
-        XMD_putc(XMD_CAN);
-        XMD_putc(XMD_CAN);
-        return XMD_STS_NAK; /* sync error */
 
-START_RECEIVE:
-        if(trychar == 'C')
+        if(trychar == (uint8_t)'C')
+        {
             crc = 1;
+        }
         trychar = 0;
+        uint8_t *p;
+        int32_t i32ReadOk;
+
         p = s_au8XmdBuf;
-        *p++ = (uint8_t)ch;
+        *p = (uint8_t)ch;
+        p++;
+        i32ReadOk = 1;
         for(i = 0; i < (bufsz + (crc ? 1 : 0) + 3); ++i)
         {
             ch = XMD_getc();
 
             if(ch < 0)
-                goto REJECT_RECEIVE;
-            *p++ = (char)ch;
+            {
+                i32ReadOk = 0;
+                break;
+            }
+            *p = (uint8_t)ch;
+            p++;
+        }
+
+        if(i32ReadOk == 0)
+        {
+            XMD_putc(XMD_NAK);
+            continue;
         }
 
         if(s_au8XmdBuf[1] != packetno)
@@ -221,25 +271,29 @@ START_RECEIVE:
         }
         else
         {
-            if(((s_au8XmdBuf[1] + s_au8XmdBuf[2]) == 0xFF) && check(crc, &s_au8XmdBuf[3], bufsz))
+            if((((uint32_t)s_au8XmdBuf[1] + (uint32_t)s_au8XmdBuf[2]) == 0xFFU) && (check(crc, &s_au8XmdBuf[3], bufsz) != 0))
             {
                 if(s_au8XmdBuf[1] == packetno)
                 {
                     volatile int32_t count = XMD_MAX_TRANS_SIZE - i32TransBytes;
                     if(count > bufsz)
+                    {
                         count = bufsz;
+                    }
                     if(count > 0)
                     {
                         for(j = 0; j < (bufsz + 3) / 4; j++)
                         {
-                            memcpy((uint8_t *)&u32Data, &s_au8XmdBuf[3 + (j * 0x4)], 4);
+                            (void)memcpy((uint8_t *)&u32Data, &s_au8XmdBuf[3 + (j * 0x4)], 4);
 
                             u32StarAddr = u32DestAddr + (uint32_t)i32TransBytes;
 
-                            i32Err = XMD_Write(u32StarAddr + ((uint32_t)j * 0x4), u32Data);
+                            i32Err = XMD_Write(u32StarAddr + ((uint32_t)j * 0x4U), u32Data);
 
                             if(i32Err < 0)
+                            {
                                 continue;
+                            }
                         }
                         i32TransBytes += count;
                     }
@@ -257,8 +311,6 @@ START_RECEIVE:
                 continue;
             }
         }
-
-REJECT_RECEIVE:
         XMD_putc(XMD_NAK);
     }
 }
@@ -267,7 +319,7 @@ REJECT_RECEIVE:
 
 /**
   * @brief      Send data by UART Xmodem transfer.
-  * @param[in]  src     Address of the source data to transfer.
+  * @param[in]  pu8Src  Address of the source data to transfer.
   * @param[in]  srcsz   Size of the total size to transfer.
   * @retval     Total transfer size when successfull
   * @retval     -1  Canceled by remote
@@ -277,132 +329,167 @@ REJECT_RECEIVE:
   * @details    This function is used to send UART data through Xmodem transfer.
   *
   */
-int32_t XmodemSend(uint8_t *src, int32_t srcsz)
+int32_t XmodemSend(const uint8_t *pu8Src, int32_t srcsz)
 {
-    int bufsz, crc = -1;
+    int crc = -1;
     unsigned char packetno = 1;
-    int i, c, len = 0;
+    int i;
+    int c;
+    int len = 0;
     int retry;
+    int srcOffset = 0;
+    int syncFound = 0;
+
+    for(retry = 0; retry < 160; ++retry)
+    {
+        c = XMD_getc();
+        if(c < 0)
+        {
+            continue;
+        }
+        switch(c)
+        {
+            case 'C':
+                crc = 1;
+                syncFound = 1;
+                break;
+            case XMD_NAK:
+                crc = 0;
+                syncFound = 1;
+                break;
+            case XMD_CAN:
+                c = XMD_getc();
+                if(c == XMD_CAN)
+                {
+                    XMD_putc(XMD_ACK);
+                    return -1; /* canceled by remote */
+                }
+                break;
+            default:
+                break;
+        }
+
+        if(syncFound != 0)
+        {
+            break;
+        }
+    }
+
+    if(syncFound == 0)
+    {
+        XMD_putc(XMD_CAN);
+        XMD_putc(XMD_CAN);
+        XMD_putc(XMD_CAN);
+        return -2; /* no sync */
+    }
 
     for(;;)
     {
-        for(retry = 0; retry < 160; ++retry)
+        int bufsz;
+        s_au8XmdBuf[0] = XMD_SOH;
+        bufsz = 128;
+        s_au8XmdBuf[1] = packetno;
+        s_au8XmdBuf[2] = ~packetno;
+        c = srcsz - len;
+        if(c > bufsz)
         {
-            if((c = XMD_getc()) >= 0)
-            {
-                switch(c)
-                {
-                    case 'C':
-                        crc = 1;
-                        goto start_trans;
-                    case XMD_NAK:
-                        crc = 0;
-                        goto start_trans;
-                    case XMD_CAN:
-                        if((c = XMD_getc()) == XMD_CAN)
-                        {
-                            XMD_putc(XMD_ACK);
-
-                            return -1; /* canceled by remote */
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+            c = bufsz;
         }
-
-        if(retry >= 160)
+        if(c >= 0)
         {
-            XMD_putc(XMD_CAN);
-            XMD_putc(XMD_CAN);
-            XMD_putc(XMD_CAN);
-
-            return -2; /* no sync */
-        }
-
-        for(;;)
-        {
-start_trans:
-            s_au8XmdBuf[0] = XMD_SOH;
-            bufsz = 128;
-            s_au8XmdBuf[1] = packetno;
-            s_au8XmdBuf[2] = ~packetno;
-            c = srcsz - len;
-            if(c > bufsz) c = bufsz;
-            if(c >= 0)
+            int startTransfer;
+            startTransfer = 0;
+            (void)memset(&s_au8XmdBuf[3], 0, (uint32_t)bufsz);
+            if(c == 0)
             {
-                memset(&s_au8XmdBuf[3], 0, (uint32_t)bufsz);
-                if(c == 0)
-                {
-                    s_au8XmdBuf[3] = XMD_CTRLZ;
-                }
-                else
-                {
-
-                    memcpy(&s_au8XmdBuf[3], src, (uint32_t)c);
-                    src += c;
-
-                    if(c < bufsz) s_au8XmdBuf[3 + c] = XMD_CTRLZ;
-                }
-                if(crc)
-                {
-                    unsigned short ccrc = crc16_ccitt(&s_au8XmdBuf[3], bufsz);
-                    s_au8XmdBuf[bufsz + 3] = (ccrc >> 8) & 0xFF;
-                    s_au8XmdBuf[bufsz + 4] = ccrc & 0xFF;
-                }
-                else
-                {
-                    unsigned char ccks = 0;
-                    for(i = 3; i < bufsz + 3; ++i)
-                    {
-                        ccks += s_au8XmdBuf[i];
-                    }
-                    s_au8XmdBuf[bufsz + 3] = ccks;
-                }
-                for(retry = 0; retry < MAXRETRANS; ++retry)
-                {
-                    for(i = 0; i < bufsz + 4 + (crc ? 1 : 0); ++i)
-                    {
-                        XMD_putc(s_au8XmdBuf[i]);
-                    }
-                    if((c = XMD_getc()) >= 0)
-                    {
-                        switch(c)
-                        {
-                            case XMD_ACK:
-                                ++packetno;
-                                len += bufsz;
-                                goto start_trans;
-                            case XMD_CAN:
-                                if((c = XMD_getc()) == XMD_CAN)
-                                {
-                                    XMD_putc(XMD_ACK);
-
-                                    return -1; /* canceled by remote */
-                                }
-                                break;
-                            case XMD_NAK:
-                            default:
-                                break;
-                        }
-                    }
-                }
-                XMD_putc(XMD_CAN);
-                XMD_putc(XMD_CAN);
-                XMD_putc(XMD_CAN);
-                return -4; /* xmit error */
+                s_au8XmdBuf[3] = XMD_CTRLZ;
             }
             else
             {
-                for(retry = 0; retry < 10; ++retry)
+                (void)memcpy(&s_au8XmdBuf[3], &pu8Src[(uint32_t)srcOffset], (uint32_t)c);
+                srcOffset += c;
+
+                if(c < bufsz)
                 {
-                    XMD_putc(XMD_EOT);
-                    if((c = XMD_getc()) == XMD_ACK) break;
+                    s_au8XmdBuf[3 + c] = XMD_CTRLZ;
+                }
+            }
+            if(crc != 0)
+            {
+                unsigned short ccrc = crc16_ccitt(&s_au8XmdBuf[3], bufsz);
+                s_au8XmdBuf[bufsz + 3] = (uint8_t)((ccrc >> 8U) & 0xFFU);
+                s_au8XmdBuf[bufsz + 4] = (uint8_t)(ccrc & 0xFFU);
+            }
+            else
+            {
+                unsigned char ccks = 0;
+                for(i = 3; i < (bufsz + 3); ++i)
+                {
+                    ccks += s_au8XmdBuf[i];
+                }
+                s_au8XmdBuf[bufsz + 3] = ccks;
+            }
+            for(retry = 0; retry < MAXRETRANS; ++retry)
+            {
+                for(i = 0; i < (bufsz + 4 + ((crc != 0) ? 1 : 0)); ++i)
+                {
+                    XMD_putc(s_au8XmdBuf[i]);
+                }
+                c = XMD_getc();
+                if(c < 0)
+                {
+                    continue;
                 }
 
-                return (c == XMD_ACK) ? len : -5;
+                switch(c)
+                {
+                    case XMD_ACK:
+                        ++packetno;
+                        len += bufsz;
+                        startTransfer = 1;
+                        break;
+                    case XMD_CAN:
+                        c = XMD_getc();
+                        if(c == XMD_CAN)
+                        {
+                            XMD_putc(XMD_ACK);
+                            return -1; /* canceled by remote */
+                        }
+                        break;
+                    case XMD_NAK:
+                    default:
+                        break;
+                }
+
+                if(startTransfer != 0)
+                {
+                    break;
+                }
             }
+
+            if(startTransfer != 0)
+            {
+                continue;
+            }
+
+            XMD_putc(XMD_CAN);
+            XMD_putc(XMD_CAN);
+            XMD_putc(XMD_CAN);
+            return -4; /* xmit error */
+        }
+        else
+        {
+            for(retry = 0; retry < 10; ++retry)
+            {
+                XMD_putc(XMD_EOT);
+                c = XMD_getc();
+                if(c == XMD_ACK)
+                {
+                    break;
+                }
+            }
+
+            return (c == XMD_ACK) ? len : -5;
         }
     }
 }

@@ -15,6 +15,11 @@
 #if defined (__ICCARM__)
 #include <LowLevelIOInterface.h>
 #endif
+#if (defined(__GNUC__) && !defined(__ARMCC_VERSION))
+#if !defined(OS_USE_SEMIHOSTING)
+#include <sys/stat.h>
+#endif
+#endif
 
 
 __attribute__((weak, noreturn))
@@ -782,9 +787,6 @@ int fputc(int ch, FILE *stream)
 #if (defined(__GNUC__) && !defined(__ARMCC_VERSION))
 
 #if !defined(OS_USE_SEMIHOSTING)
-
-#include <sys/stat.h>
-
 int _write(int fd, const char *ptr, int len)
 {
     int i = len;
@@ -822,27 +824,35 @@ int _read(int fd, char *ptr, int len)
 /* Add implementations to fix linker warnings from the newlib-nano C library in VSCode-GCC14.3.1 */
 int _close(int file)
 {
+    (void)file;
     return -1;
 }
 
 int _lseek(int file, int ptr, int dir)
 {
+    (void)file;
+    (void)ptr;
+    (void)dir;
     return 0;
 }
 
 int _fstat(int file, struct stat *st)
 {
+    (void)file;
     st->st_mode = S_IFCHR;
     return 0;
 }
 
 int _isatty(int file)
 {
+    (void)file;
     return 1;
 }
 
 int _kill(int pid, int sig)
 {
+    (void)pid;
+    (void)sig;
     return -1;
 }
 
@@ -862,6 +872,7 @@ int _open(const char *path, int flags, int mode)
 
 int _unlink(const char *path)
 {
+    (void)path;
     return -1;
 }
 #endif
