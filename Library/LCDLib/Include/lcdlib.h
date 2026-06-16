@@ -29,7 +29,7 @@ extern "C"
   @{
 */
 
-void LCDLIB_Printf(uint32_t u32Zone, char *InputStr);
+void LCDLIB_Printf(uint32_t u32Zone, const char *InputStr);
 void LCDLIB_PutChar(uint32_t u32Zone, uint32_t u32Index, uint8_t u8Ch);
 void LCDLIB_PrintNumber(uint32_t u32Zone, uint32_t InputNum);
 void LCDLIB_PrintNumberEx(uint32_t u32Zone, int32_t iInputNum, uint8_t u8DigiCnt);

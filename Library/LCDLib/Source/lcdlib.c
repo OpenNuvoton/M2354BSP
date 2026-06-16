@@ -34,11 +34,14 @@
  *
  *  @return None
  */
-void LCDLIB_Printf(uint32_t u32Zone, char *InputStr)
+void LCDLIB_Printf(uint32_t u32Zone, const char *InputStr)
 {
-    uint32_t    i, index, ch, len;
-    uint16_t    DispData;
-    uint32_t    com, seg;
+    uint32_t        i;
+    uint32_t        index;
+    uint32_t        ch;
+    uint32_t        len;
+    uint16_t        DispData;
+    const char      *pStr = InputStr;
 
     len = strlen(InputStr);
 
@@ -47,7 +50,7 @@ void LCDLIB_Printf(uint32_t u32Zone, char *InputStr)
     {
         if(index < len)
         {
-            ch = *InputStr;
+            ch = (uint32_t)*pStr;
         }
         else
         {
@@ -58,43 +61,44 @@ void LCDLIB_Printf(uint32_t u32Zone, char *InputStr)
         if(u32Zone == ZONE_MAIN_DIGIT)
         {
             /* The Main Digit Table is an ASCII table beginning with "SPACE" (hex is 0x20) */
-            ch       = ch - 0x20;
-            DispData = *(g_LCDZoneInfo[u32Zone].pu16LCDDispTable + ch);
+            ch       = ch - 0x20U;
+            DispData = g_LCDZoneInfo[u32Zone].pu16LCDDispTable[ch];
         }
         /* For Other Zones (Support '0' ~ '9' only) */
-        else if((ch >= '0') && (ch <= '9'))
+        else if((ch >= (uint32_t)'0') && (ch <= (uint32_t)'9'))
         {
-            ch = ch - '0';
-            DispData = *(g_LCDZoneInfo[u32Zone].pu16LCDDispTable + ch);
+            ch = ch - (uint32_t)'0';
+            DispData = g_LCDZoneInfo[u32Zone].pu16LCDDispTable[ch];
         }
         /* Out of definition. Will show "SPACE" */
         else
         {
-            DispData = 0;
+            DispData = 0U;
         }
 
-        for(i = 0; i < g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum; i++)
+        for(i = 0U; i < (uint32_t)g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum; i++)
         {
-            com = *(g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg
-                    + (index * g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2)
-                    + (i * 2) + 0);
-            seg = *(g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg
-                    + (index * g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2)
-                    + (i * 2) + 1);
+            uint32_t u32Offset;
+            uint32_t com;
+            uint32_t seg;
 
-            if(DispData & (1 << i))
+            u32Offset = (index * (uint32_t)g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2U) + (i * 2U);
+            com = (uint32_t)g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg[u32Offset];
+            seg = (uint32_t)g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg[u32Offset + 1U];
+
+            if((DispData & (1U << i)) != 0U)
             {
                 /* Turn on display */
-                LCD_SetPixel(com, seg, 1);
+                LCD_SetPixel(com, seg, 1U);
             }
             else
             {
                 /* Turn off display */
-                LCD_SetPixel(com, seg, 0);
+                LCD_SetPixel(com, seg, 0U);
             }
         }
-        
-        InputStr++;
+
+        pStr++;
     }
 }
 
@@ -108,47 +112,53 @@ void LCDLIB_Printf(uint32_t u32Zone, char *InputStr)
  */
 void LCDLIB_PrintNumber(uint32_t u32Zone, uint32_t InputNum)
 {
-    uint32_t    i, index, val, div;
-    uint16_t    DispData;
-    uint32_t    com, seg;
+    uint32_t    i;
+    uint32_t    index;
+    uint32_t    div;
 
     /* Extract useful digits */
-    div = 1;
+    div = 1U;
 
     /* Fill out all characters on display */
     index = g_LCDZoneInfo[u32Zone].u8LCDDispTableNum;
-    while(index != 0)
+    while(index != 0U)
     {
+        uint32_t val;
+        uint16_t DispData;
+
         index--;
 
-        val = (InputNum / div) % 10;
+        val = (InputNum / div) % 10U;
         if(u32Zone == ZONE_MAIN_DIGIT)
-            val += 16; /* The Main Digit Table is an ASCII table beginning with "SPACE" */
+        {
+            val += 16U; /* The Main Digit Table is an ASCII table beginning with "SPACE" */
+        }
 
-        DispData = *(g_LCDZoneInfo[u32Zone].pu16LCDDispTable + val);
+        DispData = g_LCDZoneInfo[u32Zone].pu16LCDDispTable[val];
 
         for(i = 0; i < g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum; i++)
         {
-            com = *(g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg
-                    + (index * g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2)
-                    + (i * 2) + 0);
-            seg = *(g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg
-                    + (index * g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2)
-                    + (i * 2) + 1);
+            uint32_t u32Offset;
+            uint32_t com;
+            uint32_t seg;
 
-            if(DispData & (1 << i))
+            u32Offset = (index * (uint32_t)g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2U) + (i * 2U);
+            com = (uint32_t)g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg[u32Offset];
+            seg = (uint32_t)g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg[u32Offset + 1U];
+
+            if((DispData & (1U << i)) != 0U)
             {
                 /* Turn on display */
-                LCD_SetPixel(com, seg, 1);
+                LCD_SetPixel(com, seg, 1U);
             }
             else
             {
                 /* Turn off display */
-                LCD_SetPixel(com, seg, 0);
+                LCD_SetPixel(com, seg, 0U);
             }
         }
 
-        div = div * 10;
+        div = div * 10U;
     }
 }
 
@@ -163,62 +173,74 @@ void LCDLIB_PrintNumber(uint32_t u32Zone, uint32_t InputNum)
  */
 void LCDLIB_PrintNumberEx(uint32_t u32Zone, int32_t iInputNum, uint8_t u8DigiCnt)
 {
-    uint32_t    i, index, val, div;
-    uint16_t    DispData;
-    uint32_t    com, seg;
-    uint8_t     is_negative = 0;
+    uint32_t    i;
+    uint32_t    index;
+    uint32_t    div;
+    int32_t     iLocalNum   = iInputNum;
+    uint8_t     u8LocalDigi = u8DigiCnt;
+    uint8_t     is_negative = 0U;
 
     /* Extract useful digits */
-    div = 1;
+    div = 1U;
 
-    if(iInputNum < 0)
+    if(iLocalNum < 0)
     {
-        is_negative = 1;
-        iInputNum = 0 - iInputNum;
+        is_negative = 1U;
+        iLocalNum = -iLocalNum;
     }
 
     /* Fill out all characters on display */
     index = g_LCDZoneInfo[u32Zone].u8LCDDispTableNum;
-    while(index != 0)
+    while(index != 0U)
     {
+        uint32_t val;
+        uint16_t DispData;
+
         index--;
 
-        if(u8DigiCnt == 0)
+        if(u8LocalDigi == 0U)
+        {
             continue;
-        u8DigiCnt --;
+        }
+        u8LocalDigi--;
 
-        val = ((uint32_t)iInputNum / div) % 10;
+        val = ((uint32_t)iLocalNum / div) % 10U;
         if(u32Zone == ZONE_MAIN_DIGIT)
-            val += 16; /* The Main Digit Table is an ASCII table beginning with "SPACE" */
+        {
+            val += 16U; /* The Main Digit Table is an ASCII table beginning with "SPACE" */
+        }
 
-        DispData = *(g_LCDZoneInfo[u32Zone].pu16LCDDispTable + val);
+        DispData = g_LCDZoneInfo[u32Zone].pu16LCDDispTable[val];
 
         for(i = 0; i < g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum; i++)
         {
-            com = *(g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg
-                    + (index * g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2)
-                    + (i * 2) + 0);
-            seg = *(g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg
-                    + (index * g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2)
-                    + (i * 2) + 1);
+            uint32_t u32Offset;
+            uint32_t com;
+            uint32_t seg;
 
-            if (DispData & (1 << i))
+            u32Offset = (index * (uint32_t)g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2U) + (i * 2U);
+            com = (uint32_t)g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg[u32Offset];
+            seg = (uint32_t)g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg[u32Offset + 1U];
+
+            if((DispData & (1U << i)) != 0U)
             {
                 /* Turn on display */
-                LCD_SetPixel(com, seg, 1);
+                LCD_SetPixel(com, seg, 1U);
             }
             else
             {
                 /* Turn off display */
-                LCD_SetPixel(com, seg, 0);
+                LCD_SetPixel(com, seg, 0U);
             }
         }
 
-        div = div * 10;
+        div = div * 10U;
     }
 
     if(u32Zone == ZONE_MAIN_DIGIT)
-        LCDLIB_SetSymbol(SYMBOL_MINUS_2, is_negative);
+    {
+        LCDLIB_SetSymbol(SYMBOL_MINUS_2, (uint32_t)is_negative);
+    }
 }
 
 /**
@@ -232,24 +254,23 @@ void LCDLIB_PrintNumberEx(uint32_t u32Zone, int32_t iInputNum, uint8_t u8DigiCnt
  */
 void LCDLIB_PutChar(uint32_t u32Zone, uint32_t u32Index, uint8_t u8Ch)
 {
-    uint32_t    i, ch;
-    uint16_t    DispData;
-    uint32_t    com, seg;
-
-    if(u32Index <= g_LCDZoneInfo[u32Zone].u8LCDDispTableNum)
+    if(u32Index <= (uint32_t)g_LCDZoneInfo[u32Zone].u8LCDDispTableNum)
     {
+        uint16_t DispData;
+        uint32_t i;
+
         /* For Main Zone */
         if(u32Zone == ZONE_MAIN_DIGIT)
         {
             /* Defined letters currently starts at "SPACE" - 0x20; */
-            ch       = u8Ch - 0x20;
-            DispData = *(g_LCDZoneInfo[u32Zone].pu16LCDDispTable + ch);
+            uint32_t ch = (uint32_t)u8Ch - 0x20U;
+            DispData = g_LCDZoneInfo[u32Zone].pu16LCDDispTable[ch];
         }
         /* For Other Zones (Support '0' ~ '9' only) */
-        else if((u8Ch >= '0') && (u8Ch <= '9'))
+        else if(((uint32_t)u8Ch >= (uint32_t)'0') && ((uint32_t)u8Ch <= (uint32_t)'9'))
         {
-            u8Ch = u8Ch - '0';
-            DispData = *(g_LCDZoneInfo[u32Zone].pu16LCDDispTable + u8Ch);
+            uint32_t u32ChLocal = (uint32_t)u8Ch - (uint32_t)'0';
+            DispData = g_LCDZoneInfo[u32Zone].pu16LCDDispTable[u32ChLocal];
         }
         /* Out of definition. Will show "SPACE" */
         else
@@ -259,23 +280,23 @@ void LCDLIB_PutChar(uint32_t u32Zone, uint32_t u32Index, uint8_t u8Ch)
 
         for(i = 0; i < g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum; i++)
         {
-            com = *(g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg
-                    + (u32Index * g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2)
-                    + (i * 2) + 0);
+            uint32_t u32Offset;
+            uint32_t com;
+            uint32_t seg;
 
-            seg = *(g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg
-                    + (u32Index * g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2)
-                    + (i * 2) + 1);
+            u32Offset = (u32Index * (uint32_t)g_LCDZoneInfo[u32Zone].u8GetLCDComSegNum * 2U) + (i * 2U);
+            com = (uint32_t)g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg[u32Offset];
+            seg = (uint32_t)g_LCDZoneInfo[u32Zone].pu8GetLCDComSeg[u32Offset + 1U];
 
-            if(DispData & (1 << i))
+            if((DispData & (1U << i)) != 0U)
             {
                 /* Turn on display */
-                LCD_SetPixel(com, seg, 1);
+                LCD_SetPixel(com, seg, 1U);
             }
             else
             {
                 /* Turn off display */
-                LCD_SetPixel(com, seg, 0);
+                LCD_SetPixel(com, seg, 0U);
             }
         }
     }
@@ -292,15 +313,20 @@ void LCDLIB_PutChar(uint32_t u32Zone, uint32_t u32Index, uint8_t u8Ch)
  */
 void LCDLIB_SetSymbol(uint32_t u32Symbol, uint32_t u32OnOff)
 {
-    uint32_t com, seg;
+    uint32_t com;
+    uint32_t seg;
 
-    com = (u32Symbol & 0xF);
-    seg = ((u32Symbol & 0xFF0) >> 4);
+    com = (u32Symbol & 0xFU);
+    seg = ((u32Symbol & 0xFF0U) >> 4U);
 
     if(u32OnOff)
-        LCD_SetPixel(com, seg, 1); /* Turn on display */
+    {
+        LCD_SetPixel(com, seg, 1U); /* Turn on display */
+    }
     else
-        LCD_SetPixel(com, seg, 0); /* Turn off display */
+    {
+        LCD_SetPixel(com, seg, 0U); /* Turn off display */
+    }
 }
 
 /*@}*/ /* end of group LCDLIB_EXPORTED_FUNCTIONS */
