@@ -2,17 +2,17 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:0757888c-6de6-446f-99fb-a068bd2ecbec",
+  "serialNumber": "urn:uuid:cbdba84a-e0bd-4100-a0cc-c61cc4730cc6",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-06-15T16:16:03+08:00",
+    "timestamp": "2026-07-03T17:50:56+08:00",
     "tools": {
       "components": [
         {
           "type": "application",
           "author": "anchore",
           "name": "syft",
-          "version": "1.43.0"
+          "version": "1.45.1"
         }
       ]
     },
@@ -20,7 +20,7 @@
       "bom-ref": "04ed2dbaee1fb902",
       "type": "library",
       "name": "MCU Driver",
-      "version": "v3.00.004-105-g81d38839",
+      "version": "v3.00.006-29-gc9bb55fb",
       "licenses": [
         {
           "license": {
@@ -109,7 +109,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-cryptoaccelerator",
       "name": "m2354 CryptoAccelerator",
-      "version": "v3.00.004-105-g81d38839",
+      "version": "v3.00.006-29-gc9bb55fb",
       "licenses": [
         {
           "license": {
@@ -154,7 +154,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-device",
       "name": "m2354 Device",
-      "version": "v3.00.004-105-g81d38839",
+      "version": "v3.00.006-29-gc9bb55fb",
       "licenses": [
         {
           "license": {
@@ -199,7 +199,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-lcdlib",
       "name": "m2354 LCDLib",
-      "version": "v3.00.004-105-g81d38839",
+      "version": "v3.00.006-29-gc9bb55fb",
       "licenses": [
         {
           "license": {
@@ -244,7 +244,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-numaker",
       "name": "m2354 NuMaker",
-      "version": "v3.00.004-105-g81d38839",
+      "version": "v3.00.006-29-gc9bb55fb",
       "licenses": [
         {
           "license": {
@@ -289,7 +289,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-smartcardlib",
       "name": "m2354 SmartcardLib",
-      "version": "v3.00.004-105-g81d38839",
+      "version": "v3.00.006-29-gc9bb55fb",
       "licenses": [
         {
           "license": {
@@ -334,27 +334,27 @@
         },
         {
           "name": "bsp:static-lib:0:path",
-          "value": "Library/SmartcardLib/SmartCardLib_IAR.a"
-        },
-        {
-          "name": "bsp:static-lib:0:sha256",
-          "value": "aa1bcd76af1d1207b8aa1492623392f3ee2127895207a039254e6263761ba34d"
-        },
-        {
-          "name": "bsp:static-lib:1:path",
-          "value": "Library/SmartcardLib/SmartCardLib_Keil.lib"
-        },
-        {
-          "name": "bsp:static-lib:1:sha256",
-          "value": "4c0f8f28c5076c96f71f065c5fdc52dbde86bd63712a3276c817de32f3d41e82"
-        },
-        {
-          "name": "bsp:static-lib:2:path",
           "value": "Library/SmartcardLib/libsmartcard.a"
         },
         {
-          "name": "bsp:static-lib:2:sha256",
+          "name": "bsp:static-lib:0:sha256",
           "value": "c426c4b9402edb3a8147bcb8ce9f7dbc48a22707eefac4be8d3ce734ec9232e3"
+        },
+        {
+          "name": "bsp:static-lib:1:path",
+          "value": "Library/SmartcardLib/SmartCardLib_IAR.a"
+        },
+        {
+          "name": "bsp:static-lib:1:sha256",
+          "value": "aa1bcd76af1d1207b8aa1492623392f3ee2127895207a039254e6263761ba34d"
+        },
+        {
+          "name": "bsp:static-lib:2:path",
+          "value": "Library/SmartcardLib/SmartCardLib_Keil.lib"
+        },
+        {
+          "name": "bsp:static-lib:2:sha256",
+          "value": "4c0f8f28c5076c96f71f065c5fdc52dbde86bd63712a3276c817de32f3d41e82"
         }
       ]
     },
@@ -362,7 +362,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-stddriver",
       "name": "m2354 StdDriver",
-      "version": "v3.00.004-105-g81d38839",
+      "version": "v3.00.006-29-gc9bb55fb",
       "licenses": [
         {
           "license": {
@@ -407,7 +407,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-usbhostlib",
       "name": "m2354 UsbHostLib",
-      "version": "v3.00.004-105-g81d38839",
+      "version": "v3.00.006-29-gc9bb55fb",
       "licenses": [
         {
           "license": {
