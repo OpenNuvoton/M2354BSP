@@ -20,15 +20,15 @@ extern "C"
 
 #define CDC_DEBUG
 
-#define CDC_ERRMSG      printf
+#define CDC_ERRMSG      (void)usbh_printf
 #ifdef CDC_DEBUG
-#define CDC_DBGMSG      printf
+#define CDC_DBGMSG      (void)usbh_printf
 #else
 #define CDC_DBGMSG(...)
 #endif
 
-#define CDC_STATUS_BUFF_SIZE    64
-#define CDC_RX_BUFF_SIZE        64
+#define CDC_STATUS_BUFF_SIZE    64U
+#define CDC_RX_BUFF_SIZE        64U
 
 /* Interface Class Codes (defined in usbh.h) */
 //#define USB_CLASS_COMM        0x02
@@ -50,8 +50,8 @@ extern "C"
 #define CDC_PC_VENDOR           0xFF        /* Vendor-specific                       */
 
 /* CDC Class-specific descritpor types */
-#define CDC_CS_INTERFACE        0x24
-#define CDC_CS_ENDPOINT         0x25
+#define CDC_CS_INTERFACE        0x24U
+#define CDC_CS_ENDPOINT         0x25U
 
 /*
  * CDC class specific descritpor types
@@ -145,6 +145,8 @@ typedef struct __attribute__((__packed__)) cdc_if_header
 
 struct cdc_dev_t;
 
+extern int  cdc_config_parser(struct cdc_dev_t *cdev);
+
 /// @endcond HIDDEN_SYMBOLS
 
 
@@ -187,8 +189,8 @@ typedef struct cdc_dev_t
     EP_INFO_T           *ep_tx;
     UTR_T               *utr_sts;       /* Interrupt in URB                                   */
     UTR_T               *utr_rx;        /* Bulk in URB                                        */
-    uint32_t            sts_buff[CDC_STATUS_BUFF_SIZE/4];
-    uint32_t            rx_buff[CDC_RX_BUFF_SIZE/4];
+    uint32_t            sts_buff[CDC_STATUS_BUFF_SIZE/4U];
+    uint32_t            rx_buff[CDC_RX_BUFF_SIZE/4U];
     CDC_CB_FUNC         *sts_func;      /* Interrupt in data received callback                */
     CDC_CB_FUNC         *rx_func;       /* Bulk in data received callabck                     */
     uint8_t             rx_busy;        /* Bulk in transfer is on going                       */

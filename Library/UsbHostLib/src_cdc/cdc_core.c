@@ -30,8 +30,8 @@
 */
 
 /// @cond HIDDEN_SYMBOLS
-#define USB_XFER_TIMEOUT             100
-/// @endcond /* HIDDEN_SYMBOLS */
+#define USB_XFER_TIMEOUT             100U
+/// @endcond HIDDEN_SYMBOLS
 
 /**
  *  @brief  GET_LINE_CODING  request
@@ -48,10 +48,14 @@ int32_t  usbh_cdc_get_line_coding(CDC_DEV_T *cdev, LINE_CODING_T *line_code)
     int       ret;
 
     if(cdev == NULL)
+    {
         return USBH_ERR_INVALID_PARAM;
+    }
 
     if(cdev->iface_cdc == NULL)
+    {
         return USBH_ERR_INVALID_PARAM;
+    }
 
     ret = usbh_ctrl_xfer(cdev->udev,
                          REQ_TYPE_IN | REQ_TYPE_CLASS_DEV | REQ_TYPE_TO_IFACE,  /* bmRequestType */
@@ -62,7 +66,7 @@ int32_t  usbh_cdc_get_line_coding(CDC_DEV_T *cdev, LINE_CODING_T *line_code)
                          (uint8_t *)line_code,          /* data buffer                           */
                          &xfer_len, CDC_CMD_TIMEOUT);
 
-    if((ret < 0) || (xfer_len != 7))
+    if((ret < 0) || (xfer_len != 7U))
     {
         CDC_DBGMSG("GET_LINE_CODIN command failed. %d, %d\n", ret, xfer_len);
         return ret;
@@ -86,22 +90,32 @@ int32_t  usbh_cdc_set_line_coding(CDC_DEV_T *cdev, LINE_CODING_T *line_code)
     int       ret;
 
     if(cdev == NULL)
+    {
         return USBH_ERR_NOT_FOUND;
+    }
 
     if(cdev->iface_cdc == NULL)
+    {
         return USBH_ERR_NOT_FOUND;
+    }
 
-    if((line_code->stop_bits != 0) && (line_code->stop_bits != 1) &&
-            (line_code->stop_bits != 2))
+    if((line_code->stop_bits != 0U) && (line_code->stop_bits != 1U) &&
+            (line_code->stop_bits != 2U))
+    {
         return USBH_ERR_INVALID_PARAM;
+    }
 
-    if(line_code->parity > 4)
+    if(line_code->parity > 4U)
+    {
         return USBH_ERR_INVALID_PARAM;
+    }
 
-    if((line_code->data_bits != 5) && (line_code->data_bits != 6) &&
-            (line_code->data_bits != 7) && (line_code->data_bits != 8) &&
-            (line_code->data_bits != 16))
+    if((line_code->data_bits != 5U) && (line_code->data_bits != 6U) &&
+            (line_code->data_bits != 7U) && (line_code->data_bits != 8U) &&
+            (line_code->data_bits != 16U))
+    {
         return USBH_ERR_INVALID_PARAM;
+    }
 
     ret = usbh_ctrl_xfer(cdev->udev,
                          REQ_TYPE_OUT | REQ_TYPE_CLASS_DEV | REQ_TYPE_TO_IFACE, /* bmRequestType */
@@ -137,16 +151,24 @@ int32_t  usbh_cdc_set_control_line_state(CDC_DEV_T *cdev, int active_carrier, in
     uint16_t   ctrl_bitmap = 0;
 
     if(cdev == NULL)
+    {
         return USBH_ERR_INVALID_PARAM;
+    }
 
     if(cdev->iface_cdc == NULL)
+    {
         return USBH_ERR_INVALID_PARAM;
+    }
 
     if(active_carrier)
+    {
         ctrl_bitmap |= 0x02;
+    }
 
     if(DTE_present)
+    {
         ctrl_bitmap |= 0x01;
+    }
 
     ret = usbh_ctrl_xfer(cdev->udev,
                          REQ_TYPE_OUT | REQ_TYPE_CLASS_DEV | REQ_TYPE_TO_IFACE, /* bmRequestType */
@@ -185,7 +207,9 @@ static void  cdc_int_in_irq(UTR_T *utr)
     }
 
     if(cdev->sts_func && utr->xfer_len)
+    {
         cdev->sts_func(cdev, utr->buff, utr->xfer_len);
+    }
 
     utr->xfer_len = 0;
     ret = usbh_int_xfer(utr);
@@ -214,10 +238,14 @@ int32_t usbh_cdc_start_polling_status(CDC_DEV_T *cdev, CDC_CB_FUNC *func)
     int         ret;
 
     if((cdev == NULL) || (cdev->iface_cdc == NULL))
+    {
         return USBH_ERR_NOT_FOUND;
+    }
 
     if(!func || cdev->utr_sts)
+    {
         return USBH_ERR_INVALID_PARAM;
+    }
 
     ep = cdev->ep_sts;
     if(ep == NULL)
@@ -283,7 +311,9 @@ static void  cdc_bulk_in_irq(UTR_T *utr)
     }
 
     if(cdev->rx_func)
+    {
         cdev->rx_func(cdev, utr->buff, utr->xfer_len);
+    }
 
     free_utr(utr);
     cdev->utr_rx = NULL;
@@ -307,10 +337,14 @@ int32_t usbh_cdc_start_to_receive_data(CDC_DEV_T *cdev, CDC_CB_FUNC *func)
     int         ret;
 
     if((cdev == NULL) || (cdev->iface_data == NULL))
+    {
         return USBH_ERR_NOT_FOUND;
+    }
 
     if(!func)
+    {
         return USBH_ERR_INVALID_PARAM;
+    }
 
     ep = cdev->ep_rx;
     if(ep == NULL)
@@ -365,9 +399,10 @@ int32_t usbh_cdc_start_to_receive_data(CDC_DEV_T *cdev, CDC_CB_FUNC *func)
 static volatile int  bulk_out_done;
 static void  cdc_bulk_out_irq(UTR_T *utr)
 {
+    (void)utr;
     bulk_out_done = 1;
 }
-/// @endcond /* HIDDEN_SYMBOLS */
+/// @endcond HIDDEN_SYMBOLS
 /**
  * @brief  Send a block of data via CDC device's bulk-out transfer pipe.
  *  @param[in] cdev      CDC device
@@ -385,7 +420,9 @@ int32_t usbh_cdc_send_data(CDC_DEV_T *cdev, uint8_t *buff, int buff_len)
     int         ret;
 
     if((cdev == NULL) || (cdev->iface_data == NULL))
+    {
         return USBH_ERR_NOT_FOUND;
+    }
 
     ep = cdev->ep_tx;
     if(ep == NULL)
@@ -425,9 +462,9 @@ int32_t usbh_cdc_send_data(CDC_DEV_T *cdev, uint8_t *buff, int buff_len)
     t0 = get_ticks();
     while(bulk_out_done == 0)
     {
-        if(get_ticks() - t0 > USB_XFER_TIMEOUT)
+        if((get_ticks() - t0) > USB_XFER_TIMEOUT)
         {
-            usbh_quit_utr(utr);
+            (void)usbh_quit_utr(utr);
             free_utr(utr);
             return USBH_ERR_TIMEOUT;
         }

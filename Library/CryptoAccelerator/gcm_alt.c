@@ -230,16 +230,22 @@ static int32_t AES_GCMPacker(const uint8_t *iv, uint32_t iv_len, const uint8_t *
     if(iv_len > 0)
     {
         iv_len_aligned = iv_len;
-        if(iv_len & 0xful)
+        if(iv_len & 0xfUL)
+        {
             iv_len_aligned = ((iv_len + 16) >> 4) << 4;
+        }
 
         /* fill iv to output */
         for(i = 0; i < iv_len_aligned; i++)
         {
             if(i < iv_len)
+            {
                 pbuf[i] = iv[i];
+            }
             else
+            {
                 pbuf[i] = 0; // padding zero
+            }
         }
 
         /* fill iv len to putput */
@@ -266,15 +272,21 @@ static int32_t AES_GCMPacker(const uint8_t *iv, uint32_t iv_len, const uint8_t *
     if(A_len > 0)
     {
         A_len_aligned = A_len;
-        if(A_len & 0xful)
+        if(A_len & 0xfUL)
+        {
             A_len_aligned = ((A_len + 16) >> 4) << 4;
+        }
 
         for(i = 0; i < A_len_aligned; i++)
         {
             if(i < A_len)
+            {
                 pbuf[u32Offset + i] = A[i];
+            }
             else
+            {
                 pbuf[u32Offset + i] = 0; // padding zero
+            }
         }
 
         u32Offset += A_len_aligned;
@@ -284,15 +296,21 @@ static int32_t AES_GCMPacker(const uint8_t *iv, uint32_t iv_len, const uint8_t *
     if(P_len > 0)
     {
         P_len_aligned = P_len;
-        if(P_len & 0xful)
+        if(P_len & 0xfUL)
+        {
             P_len_aligned = ((P_len + 16) >> 4) << 4;
+        }
 
         for(i = 0; i < P_len_aligned; i++)
         {
             if(i < P_len)
+            {
                 pbuf[u32Offset + i] = P[i];
+            }
             else
+            {
                 pbuf[u32Offset + i] = 0; // padding zero
+            }
         }
         u32Offset += P_len_aligned;
     }
@@ -312,7 +330,9 @@ static int32_t AES_Run(uint32_t u32Option)
     while((CRPT->INTSTS & CRPT_INTSTS_AESIF_Msk) == 0)
     {
         if(timeout-- < 0)
+        {
             return -1;
+        }
     }
     CRPT->INTSTS = CRPT_INTSTS_AESIF_Msk;
 
@@ -417,7 +437,9 @@ static int32_t _GCMTag(mbedtls_gcm_context *ctx, const uint8_t *iv, uint32_t ivl
 
             len = plen_cur;
             if(len > GCM_PBLOCK_SIZE)
+            {
                 len = GCM_PBLOCK_SIZE;
+            }
             plen_cur -= len;
 
             if(plen_cur)
@@ -560,18 +582,18 @@ static int32_t _GCM(mbedtls_gcm_context *ctx, const uint8_t *iv, size_t ivlen, c
     u32OptBasic = ctx->basicOpt;
 
     /* Set byte count of IV */
-    CRPT->AES_GCM_IVCNT[0] = ivlen & 0xfffffffful;
+    CRPT->AES_GCM_IVCNT[0] = ivlen & 0xffffffffUL;
     CRPT->AES_GCM_IVCNT[1] = (uint64_t)ivlen >> 32;
 
     /* Set bytes count of A */
-    CRPT->AES_GCM_ACNT[0] = alen & 0xfffffffful;
+    CRPT->AES_GCM_ACNT[0] = alen & 0xffffffffUL;
     CRPT->AES_GCM_ACNT[1] = (uint64_t)alen >> 32;
 
     /* Set bytes count of P */
-    CRPT->AES_GCM_PCNT[0] = plen & 0xfffffffful;
+    CRPT->AES_GCM_PCNT[0] = plen & 0xffffffffUL;
     CRPT->AES_GCM_PCNT[1] = (uint64_t)plen >> 32;
 
-    plen_aligned = (plen & 0xful) ? ((plen + 16) / 16) * 16 : plen;
+    plen_aligned = (plen & 0xfUL) ? ((plen + 16) / 16) * 16 : plen;
     if(ivlen + alen + plen + 16 <= MAX_GCM_BUF)
     {
         /* Just one shot */
@@ -694,7 +716,9 @@ int mbedtls_gcm_starts( mbedtls_gcm_context *ctx,
     AES_ENABLE_INT(CRPT);
 
     if(mode == MBEDTLS_GCM_ENCRYPT)
+    {
         ctx->basicOpt |= CRPT_AES_CTL_ENCRPT_Msk;
+    }
 
     /* Set byte count of IV */
     pSz = (size_t *)CRPT->AES_GCM_IVCNT;
@@ -778,19 +802,25 @@ int mbedtls_gcm_update( mbedtls_gcm_context *ctx,
     GCM_VALIDATE_RET( (length & 0xf) == 0 );
 
     if( input_length > output_size )
+    {
         return( MBEDTLS_ERR_GCM_BAD_INPUT );
+    }
 
 
     len = (int32_t)input_length;
     /* Error if length too large */
     if(len != input_length)
+    {
         return( MBEDTLS_ERR_GCM_BAD_INPUT );
+    }
 
     if(len + ctx->gcm_buf_bytes > MAX_GCM_BUF)
+    {
         return (MBEDTLS_ERR_GCM_BAD_INPUT);
+    }
 
 
-    len_aligned = (len & 0xf)?(len & (~0xful))+16:len;
+    len_aligned = (len & 0xf) ? (len & (~0xfUL)) + 16 : len;
     *output_length = input_length;
 
     if(len == 0)
@@ -992,7 +1022,9 @@ int mbedtls_gcm_auth_decrypt( mbedtls_gcm_context *ctx,
 
     /* Check tag in "constant-time" */
     for( diff = 0, i = 0; i < tag_len; i++ )
+    {
         diff |= tag[i] ^ check_tag[i];
+    }
 
     if( diff != 0 )
     {
@@ -1006,7 +1038,9 @@ int mbedtls_gcm_auth_decrypt( mbedtls_gcm_context *ctx,
 void mbedtls_gcm_free( mbedtls_gcm_context *ctx )
 {
     if( ctx == NULL )
+    {
         return;
+    }
     mbedtls_cipher_free( &ctx->cipher_ctx );
     mbedtls_platform_zeroize( ctx, sizeof( mbedtls_gcm_context ) );
 }

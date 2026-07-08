@@ -45,7 +45,7 @@ static UAC_DEV_T *alloc_uac_device(void)
     {
         if(g_uac_dev[i].udev == NULL)
         {
-            memset((char *)&g_uac_dev[i], 0, sizeof(UAC_DEV_T));
+            (void)memset((char *)&g_uac_dev[i], 0, sizeof(UAC_DEV_T));
             return &g_uac_dev[i];
         }
     }
@@ -57,12 +57,14 @@ static void  free_uac_device(UAC_DEV_T *uac)
     uac->udev = NULL;
 }
 
-UAC_DEV_T *find_uac_device(UDEV_T *udev)
+static UAC_DEV_T *find_uac_device(const UDEV_T *udev)
 {
     int     i;
 
     if(udev == NULL)
+    {
         return NULL;
+    }
 
     for(i = 0; i < CONFIG_UAC_MAX_DEV; i++)
     {
@@ -80,7 +82,8 @@ static int  uac_probe(IFACE_T *iface)
     UDEV_T       *udev = iface->udev;
     ALT_IFACE_T  *aif = iface->aif;
     DESC_IF_T    *ifd;
-    UAC_DEV_T    *uac, *p;
+    UAC_DEV_T    *uac;
+    UAC_DEV_T    *p;
     uint8_t      bAlternateSetting;
     int          ret;
 
@@ -88,12 +91,14 @@ static int  uac_probe(IFACE_T *iface)
 
     /* Is this interface Audio class? */
     if(ifd->bInterfaceClass != USB_CLASS_AUDIO)
+    {
         return USBH_ERR_NOT_MATCHED;
+    }
 
     if((ifd->bInterfaceSubClass != SUBCLS_AUDIOCONTROL) &&
             (ifd->bInterfaceSubClass != SUBCLS_AUDIOSTREAMING))
     {
-        UAC_ERRMSG("Audio class interface, but sub-class %x not supported!\n", ifd->bInterfaceSubClass);
+        (void)UAC_ERRMSG("Audio class interface, but sub-class %x not supported!\n", ifd->bInterfaceSubClass);
         return USBH_ERR_NOT_MATCHED;
     }
 
@@ -107,7 +112,9 @@ static int  uac_probe(IFACE_T *iface)
         /* return 0 to make USB core adding this interface to device working interface list.  */
         uac = alloc_uac_device();
         if(uac == NULL)
+        {
             return UAC_RET_OUT_OF_MEMORY;
+        }
 
         uac->udev = udev;
         uac->state = UAC_STATE_CONNECTING;
@@ -121,7 +128,9 @@ static int  uac_probe(IFACE_T *iface)
         else
         {
             for(p = g_uac_list; p->next != NULL; p = p->next)
-                ;
+            {
+                /* find last node */
+            }
             p->next = uac;
         }
     }
@@ -136,25 +145,33 @@ static int  uac_probe(IFACE_T *iface)
             ret = usbh_set_interface(iface, bAlternateSetting);
             if(ret < 0)
             {
-                UAC_ERRMSG("Failed to set interface %d, %d! (%d)\n", iface->if_num, bAlternateSetting, ret);
+                (void)UAC_ERRMSG("Failed to set interface %d, %d! (%d)\n", iface->if_num, bAlternateSetting, ret);
                 return UAC_RET_IO_ERR;
             }
         }
         else
         {
-            UAC_ERRMSG("Cannot find audio stream endpoints!\n");
+            (void)UAC_ERRMSG("Cannot find audio stream endpoints!\n");
             return UAC_RET_DEV_NOT_FOUND;
         }
 
         ret = uac_parse_streaming_interface(uac, iface, bAlternateSetting);
         if(ret < 0)
+        {
             return ret;
+        }
     }
     else if(ifd->bInterfaceSubClass == SUBCLS_AUDIOCONTROL)
     {
         ret = uac_parse_control_interface(uac, iface);
         if(ret < 0)
+        {
             return ret;
+        }
+    }
+    else
+    {
+        /* no action required */
     }
 
     UAC_DBGMSG("UAC device 0x%x ==>\n", (int)uac);
@@ -167,7 +184,8 @@ static int  uac_probe(IFACE_T *iface)
 
 static void  uac_disconnect(IFACE_T *iface)
 {
-    UAC_DEV_T    *uac, *p;
+    UAC_DEV_T    *uac;
+    UAC_DEV_T    *p;
     //ALT_IFACE_T  *aif = iface->aif;
     int          i;
 
@@ -193,17 +211,23 @@ static void  uac_disconnect(IFACE_T *iface)
             }
             else if(uac->asif_in.iface == iface)
             {
-                usbh_uac_stop_audio_in(uac);
+                (void)usbh_uac_stop_audio_in(uac);
                 uac->asif_in.iface = NULL;
             }
             else if(uac->asif_out.iface == iface)
             {
-                usbh_uac_stop_audio_out(uac);
+                (void)usbh_uac_stop_audio_out(uac);
                 uac->asif_out.iface = NULL;
+            }
+            else
+            {
+                /* no action required */
             }
 
             if((uac->acif.iface != NULL) || (uac->asif_in.iface != NULL) || (uac->asif_out.iface != NULL))
+            {
                 continue;
+            }
 
             /*
              *  All interface of UAC device are all disconnected. Remove it from UAC device list.
@@ -231,15 +255,6 @@ static void  uac_disconnect(IFACE_T *iface)
     }
 }
 
-UDEV_DRV_T  uac_driver =
-{
-    uac_probe,
-    uac_disconnect,
-    NULL,                       /* suspend */
-    NULL,                       /* resume */
-};
-
-
 /// @endcond HIDDEN_SYMBOLS
 
 /**
@@ -248,9 +263,17 @@ UDEV_DRV_T  uac_driver =
   */
 void usbh_uac_init(void)
 {
-    memset((char *)&g_uac_dev[0], 0, sizeof(g_uac_dev));
+    static UDEV_DRV_T  uac_driver =
+    {
+        uac_probe,
+        uac_disconnect,
+        NULL,                       /* suspend */
+        NULL,                       /* resume */
+    };
+
+    (void)memset((char *)&g_uac_dev[0], 0, sizeof(g_uac_dev));
     g_uac_list = NULL;
-    usbh_register_driver(&uac_driver);
+    (void)usbh_register_driver(&uac_driver);
 }
 
 

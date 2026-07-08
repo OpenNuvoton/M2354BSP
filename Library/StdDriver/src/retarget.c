@@ -104,7 +104,7 @@ void abort(void)
 # if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
 /* cppcheck-suppress misra-c2012-17.3 */
 /**
- * @misra_deviation
+ * @static_deviation
  * <b>Rule:</b>          MISRA C:2012 Rule 17.3<br>
  * <b>Justification:</b> __asm is ARM Compiler extension keyword, not a C function call;
 __ARM_use_no_argv is an ARM C library linker-protocol symbol that must be declared via .global assembly directive.
@@ -112,7 +112,7 @@ __ARM_use_no_argv is an ARM C library linker-protocol symbol that must be declar
 __asm("  .global __ARM_use_no_argv\n");
 /* cppcheck-suppress misra-c2012-17.3 */
 /**
- * @misra_deviation
+ * @static_deviation
  * <b>Rule:</b>          MISRA C:2012 Rule 17.3<br>
  * <b>Justification:</b> __asm is ARM Compiler extension keyword, not a C function call;
 __use_no_semihosting directs the linker to use semihosting stubs instead of real semihosting SVC (SVC 0xAB), preventing HardFault in production.

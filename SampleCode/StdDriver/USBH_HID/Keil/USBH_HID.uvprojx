@@ -462,6 +462,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\Library\UsbHostLib\src_hid\hid_driver.c</FilePath>
             </File>
+            <File>
+              <FileName>hid_parser.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\Library\UsbHostLib\src_hid\hid_parser.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

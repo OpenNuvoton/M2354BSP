@@ -468,7 +468,7 @@ void AssertError(const uint8_t * file, uint32_t line)
 {
     /* cppcheck-suppress misra-c2012-21.6 */
     /**
-     * @misra_deviation
+     * @static_deviation
      * <b>Rule:</b>          MISRA C:2012 Rule 21.6<br>
      * <b>Justification:</b> `printf` is used solely for exception handling and debug output;
      *                      it is not part of the product functional data path and does not

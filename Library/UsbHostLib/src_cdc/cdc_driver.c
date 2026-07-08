@@ -19,8 +19,6 @@
 
 /// @cond HIDDEN_SYMBOLS
 
-extern int  cdc_config_parser(CDC_DEV_T *cdev);
-
 static CDC_DEV_T *g_cdev_list = NULL;
 
 static CDC_DEV_T *alloc_cdc_device(void)
@@ -29,14 +27,16 @@ static CDC_DEV_T *alloc_cdc_device(void)
 
     cdev = (CDC_DEV_T *)usbh_alloc_mem(sizeof(CDC_DEV_T));
     if(cdev == NULL)
+    {
         return NULL;
+    }
 
-    memset((char *)cdev, 0, sizeof(CDC_DEV_T));
+    (void)memset((char *)cdev, 0, sizeof(CDC_DEV_T));
     cdev->ifnum_data = -1;
     return cdev;
 }
 
-void  free_cdc_device(CDC_DEV_T *cdev)
+static void  free_cdc_device(CDC_DEV_T *cdev)
 {
     usbh_free_mem(cdev, sizeof(CDC_DEV_T));
 }
@@ -81,14 +81,14 @@ static void remove_cdc_device(CDC_DEV_T *cdev)
 /*
  *  Try to find the companion CDC interface of a DATA interface.
  */
-static CDC_DEV_T * find_cdc_com_iface(IFACE_T *iface_data)
+static CDC_DEV_T * find_cdc_com_iface(const IFACE_T *iface_data)
 {
     CDC_DEV_T  *p;
 
     p = g_cdev_list;
     while(p != NULL)
     {
-        if(p->ifnum_data == iface_data->if_num)
+        if(p->ifnum_data == (int)iface_data->if_num)
         {
             return p;
         }
@@ -120,16 +120,19 @@ static CDC_DEV_T * find_cdc_data_iface(int ifnum)
 static int  cdc_probe(IFACE_T *iface)
 {
     UDEV_T       *udev = iface->udev;
-    ALT_IFACE_T  *aif = iface->aif;
-    DESC_IF_T    *ifd;
-    CDC_DEV_T    *cdev, *d;
+    const ALT_IFACE_T  *aif = iface->aif;
+    const DESC_IF_T    *ifd;
+    CDC_DEV_T    *cdev;
+    CDC_DEV_T    *d;
     int          ret;
 
     ifd = aif->ifd;
 
     /* Is this interface CDC class? */
     if((ifd->bInterfaceClass != USB_CLASS_COMM) && (ifd->bInterfaceClass != USB_CLASS_DATA))
+    {
         return USBH_ERR_NOT_MATCHED;
+    }
 
     CDC_DBGMSG("cdc_probe %s - device (vid=0x%x, pid=0x%x), interface %d.\n",
                (ifd->bInterfaceClass == USB_CLASS_COMM) ? "COMM" : "DATA",
@@ -145,7 +148,9 @@ static int  cdc_probe(IFACE_T *iface)
             /* create a temporary CDC device holder */
             cdev = alloc_cdc_device();
             if(cdev == NULL)
+            {
                 return USBH_ERR_NOT_FOUND;
+            }
 
             cdev->udev = udev;
             add_new_cdc_device(cdev);
@@ -160,7 +165,9 @@ static int  cdc_probe(IFACE_T *iface)
 
     cdev = alloc_cdc_device();
     if(cdev == NULL)
+    {
         return USBH_ERR_NOT_FOUND;
+    }
 
     cdev->udev = udev;
     cdev->iface_cdc = iface;
@@ -191,7 +198,8 @@ static int  cdc_probe(IFACE_T *iface)
 
 static void  cdc_disconnect(IFACE_T *iface)
 {
-    IFACE_T     *if_cdc, *if_data;
+    IFACE_T     *if_cdc;
+    IFACE_T     *if_data;
     CDC_DEV_T   *cdev;
     int         i;
 
@@ -200,7 +208,9 @@ static void  cdc_disconnect(IFACE_T *iface)
     cdev = (CDC_DEV_T *)(iface->context);
 
     if(cdev == NULL)
+    {
         return;              /* should have been disconnected. */
+    }
 
     if_cdc = cdev->iface_cdc;
     if_data = cdev->iface_data;
@@ -210,7 +220,7 @@ static void  cdc_disconnect(IFACE_T *iface)
      */
     if(if_cdc)
     {
-        for(i = 0; i < if_cdc->aif->ifd->bNumEndpoints; i++)
+        for(i = 0; i < (int)if_cdc->aif->ifd->bNumEndpoints; i++)
         {
             if_cdc->udev->hc_driver->quit_xfer(NULL, &(if_cdc->aif->ep[i]));
         }
@@ -218,7 +228,7 @@ static void  cdc_disconnect(IFACE_T *iface)
 
     if(if_data)
     {
-        for(i = 0; i < if_data->aif->ifd->bNumEndpoints; i++)
+        for(i = 0; i < (int)if_data->aif->ifd->bNumEndpoints; i++)
         {
             if_data->udev->hc_driver->quit_xfer(NULL, &(if_data->aif->ep[i]));
         }
@@ -226,13 +236,13 @@ static void  cdc_disconnect(IFACE_T *iface)
 
     if(cdev->utr_sts)
     {
-        usbh_quit_utr(cdev->utr_sts);             /* Quit the UTR                               */
+        (void)usbh_quit_utr(cdev->utr_sts);             /* Quit the UTR                               */
         free_utr(cdev->utr_sts);
         cdev->utr_sts = NULL;
     }
     if(cdev->utr_rx)
     {
-        usbh_quit_utr(cdev->utr_rx);             /* Quit the UTR                               */
+        (void)usbh_quit_utr(cdev->utr_rx);             /* Quit the UTR                               */
         free_utr(cdev->utr_rx);
         cdev->utr_rx = NULL;
     }
@@ -245,16 +255,7 @@ static void  cdc_disconnect(IFACE_T *iface)
 }
 
 
-static UDEV_DRV_T  cdc_driver =
-{
-    cdc_probe,
-    cdc_disconnect,
-    NULL,
-    NULL,
-};
-
-
-/// @endcond /* HIDDEN_SYMBOLS */
+/// @endcond HIDDEN_SYMBOLS
 
 
 /**
@@ -263,8 +264,15 @@ static UDEV_DRV_T  cdc_driver =
   */
 void usbh_cdc_init(void)
 {
+    static UDEV_DRV_T  cdc_driver =
+    {
+        cdc_probe,
+        cdc_disconnect,
+        NULL,
+        NULL,
+    };
     g_cdev_list = NULL;
-    usbh_register_driver(&cdc_driver);
+    (void)usbh_register_driver(&cdc_driver);
 }
 
 
