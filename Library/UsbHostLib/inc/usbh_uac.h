@@ -28,11 +28,11 @@
 
 
 #define CONFIG_UAC_MAX_DEV           3      /*!< Maximum number of Audio Class device.                     */
-#define NUM_UTR                      2      /*!< Number of UTR used for audio in/out transfer.             */
+#define NUM_UTR                      2U     /*!< Number of UTR used for audio in/out transfer.             */
 #define UAC_REQ_TIMEOUT              50     /*!< UAC control request timeout value in tick (10ms unit)     */
 
-#define UAC_SPEAKER                  1      /*!< Control target is speaker of UAC device. \hideinitializer */
-#define UAC_MICROPHONE               2      /*!< Control target is microphone of UAC device. \hideinitializer */
+#define UAC_SPEAKER                  1U     /*!< Control target is speaker of UAC device. \hideinitializer */
+#define UAC_MICROPHONE               2U     /*!< Control target is microphone of UAC device. \hideinitializer */
 
 /*
  * Audio Class-Specific Request Codes

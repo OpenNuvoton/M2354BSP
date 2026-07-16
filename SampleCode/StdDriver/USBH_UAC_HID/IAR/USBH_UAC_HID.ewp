@@ -1083,6 +1083,9 @@
         <file>
             <name>$PROJ_DIR$\..\..\..\..\Library\UsbHostLib\src_hid\hid_driver.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\Library\UsbHostLib\src_hid\hid_parser.c</name>
+        </file>
     </group>
     <group>
         <name>UsbHostLib_UAC</name>

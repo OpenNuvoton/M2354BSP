@@ -2940,7 +2940,7 @@ static int32_t CheckRsaBufferSize(uint32_t u32OpMode, uint32_t u32BufSize, uint3
   * @return  0    Success.
   * @return  -1   The value of pointer of RSA buffer struct is null.
   *
-  * @misra_deviation
+  * @static_deviation
   * <b>Rule:</b>          Cppcheck constParameterPointer<br>
   * <b>Justification:</b> psRSA_Buf points to a writable RSA working buffer; subsequent RSA operations
   *                       write into it via s_pRSABuf. Declaring it as const void * would

@@ -23,7 +23,6 @@
 HID_MOUSE_FUNC *_mouse_callback = NULL;
 HID_KEYBOARD_FUNC  *_keyboard_callback = NULL;
 
-#include "hid_parser.c"
 
 #define USB_CTRL_TIMEOUT_MS        100
 
@@ -745,6 +744,25 @@ int32_t usbh_hid_stop_int_write(HID_DEV_T *hdev, uint8_t ep_addr)
     return ret;
 }
 
+/**
+ * @brief Get the mouse event callback function registered to HID class driver.
+ *
+ * @return HID_MOUSE_FUNC pointer to the mouse event callback function
+ */
+HID_MOUSE_FUNC *usbh_hid_get_mouse_callback(void)
+{
+    return _mouse_callback;
+}
+
+/**
+ * @brief Get the keyboard event callback function registered to HID class driver.
+ *
+ * @return HID_KEYBOARD_FUNC pointer to the keyboard event callback function
+ */
+HID_KEYBOARD_FUNC *usbh_hid_get_keyboard_callback(void)
+{
+    return _keyboard_callback;
+}
 
 /*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
 

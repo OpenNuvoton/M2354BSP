@@ -18,14 +18,14 @@
 
 /// @cond HIDDEN_SYMBOLS
 
-static int  uac_parse_ac_interface(UAC_DEV_T *uac, uint8_t *bptr)
+static int  uac_parse_ac_interface(UAC_DEV_T *uac, const uint8_t *bptr)
 {
-    AC_IT_T     *ac_itd;
-    AC_OT_T     *ac_otd;
+    const AC_IT_T     *ac_itd;
+    const AC_OT_T     *ac_otd;
 
-    UAC_DBGMSG("Parse AC - [%d] [0x%x] [0x%x]\n", ((CS_HDR_T *)bptr)->bLength, ((CS_HDR_T *)bptr)->bDescriptorType, ((CS_HDR_T *)bptr)->bDescriptorSubtype);
+    UAC_DBGMSG("Parse AC - [%d] [0x%x] [0x%x]\n", ((const CS_HDR_T *)bptr)->bLength, ((const CS_HDR_T *)bptr)->bDescriptorType, ((const CS_HDR_T *)bptr)->bDescriptorSubtype);
 
-    switch(((CS_HDR_T *)bptr)->bDescriptorSubtype)
+    switch(((const CS_HDR_T *)bptr)->bDescriptorSubtype)
     {
         case AC_DESCRIPTOR_UNDEFINED:       /* Not interested, discard it...              */
             UAC_DBGMSG("AC: AC_DESCRIPTOR_UNDEFINED\n");
@@ -37,13 +37,13 @@ static int  uac_parse_ac_interface(UAC_DEV_T *uac, uint8_t *bptr)
             break;
 
         case INPUT_TERMINAL:
-            ac_itd = (AC_IT_T *)bptr;
+            ac_itd = (const AC_IT_T *)bptr;
             UAC_DBGMSG("AC: INPUT_TERMINAL\n");
             if(ac_itd->wTerminalType == UAC_TT_USB_STREAMING)
             {
                 UAC_DBGMSG("USB streaming terminal found, ID=0x%x\n", ac_itd->bTerminalID);
             }
-            else if((ac_itd->wTerminalType & 0x200) == 0x200)
+            else if ((ac_itd->wTerminalType & 0x200U) == 0x200U)
             {
                 UAC_DBGMSG("MICROPHONE input terminal found, ID=0x%x\n", ac_itd->bTerminalID);
                 uac->acif.mic_id = ac_itd->bTerminalID;
@@ -60,13 +60,13 @@ static int  uac_parse_ac_interface(UAC_DEV_T *uac, uint8_t *bptr)
             break;
 
         case OUTPUT_TERMINAL:
-            ac_otd = (AC_OT_T *)bptr;
+            ac_otd = (const AC_OT_T *)bptr;
             UAC_DBGMSG("AC: OUTPUT_TERMINAL\n");
             if(ac_otd->wTerminalType == UAC_TT_USB_STREAMING)
             {
                 UAC_DBGMSG("USB streaming terminal found, ID=0x%x\n", ac_otd->bTerminalID);
             }
-            else if((ac_otd->wTerminalType & 0x300) == 0x300)
+            else if ((ac_otd->wTerminalType & 0x300U) == 0x300U)
             {
                 UAC_DBGMSG("SPEAKER output terminal found, ID=0x%x\n", ac_otd->bTerminalID);
                 uac->acif.speaker_id = ac_otd->bTerminalID;
@@ -122,7 +122,7 @@ static int  uac_parse_ac_interface(UAC_DEV_T *uac, uint8_t *bptr)
             break;
 
         default:
-            UAC_ERRMSG("uac_parse_ac_interface - unrecognized bDescriptorSubtype 0x%x!\n", ((CS_HDR_T *)bptr)->bDescriptorSubtype);
+            UAC_ERRMSG("uac_parse_ac_interface - unrecognized bDescriptorSubtype 0x%x!\n", ((const CS_HDR_T *)bptr)->bDescriptorSubtype);
             return UAC_RET_PARSER;
     }
     return 0;
@@ -130,25 +130,25 @@ static int  uac_parse_ac_interface(UAC_DEV_T *uac, uint8_t *bptr)
 
 static int  uac_set_microphone_feature_unit(UAC_DEV_T *uac)
 {
-    DESC_CONF_T  *config;
-    AC_FU_T      *hdr;
-    uint8_t      *bptr;
+    const DESC_CONF_T  *config;
+    const AC_FU_T      *hdr;
+    const uint8_t      *bptr;
     uint8_t      bTerminalID = uac->acif.mic_id;
     int          size;
 
     bptr = uac->udev->cfd_buff;
-    config = (DESC_CONF_T *)bptr;
+    config = (const DESC_CONF_T *)bptr;
 
     /* step over configuration descriptor */
-    bptr += config->bLength;
+    bptr = &bptr[config->bLength];
     size = config->wTotalLength - config->bLength;
 
     /*------------------------------------------------------------------------------------*/
     /*  Find the Terminal Descriptor                                                      */
     /*------------------------------------------------------------------------------------*/
-    while(size >= sizeof(DESC_IF_T))
+    while(size >= (int)sizeof(DESC_IF_T))
     {
-        hdr = (AC_FU_T *)bptr;
+        hdr = (const AC_FU_T *)bptr;
 
         if((hdr->bDescriptorType == CS_INTERFACE) && (hdr->bDescriptorSubtype == FEATURE_UNIT) &&
                 (hdr->bSourceID == bTerminalID))
@@ -157,11 +157,13 @@ static int  uac_set_microphone_feature_unit(UAC_DEV_T *uac)
             return 0;
         }
 
-        if(hdr->bLength == 0)
-            return UAC_RET_PARSER;          /* prevent infinite loop                       */
+        if(hdr->bLength == 0U)
+        {
+            return UAC_RET_PARSER;          /* prevent infinite loop                      */
+        }
 
-        bptr += hdr->bLength;
-        size -= hdr->bLength;
+        bptr = &bptr[hdr->bLength];
+        size -= (int)hdr->bLength;
     }
     return UAC_RET_PARSER;                  /* not found                                  */
 }
@@ -176,78 +178,85 @@ static int  uac_set_microphone_feature_unit(UAC_DEV_T *uac)
  */
 int uac_parse_control_interface(UAC_DEV_T *uac, IFACE_T *iface)
 {
-    DESC_CONF_T  *config;
-    DESC_IF_T    *ifd;
-    int          if_num;
+    const DESC_CONF_T  *config;
+    const DESC_IF_T    *ifd;
+    uint8_t      if_num;
     uint8_t      *bptr;
-    int          size, ret;
+    int          size;
 
     if_num = iface->if_num;                      /* interface number of AC interface      */
 
     UAC_DBGMSG("UAC parsing audio control (AC) interface %d...\n", if_num);
 
-    memset(&uac->acif, 0, sizeof(uac->acif));    /* clear AC information                  */
+    (void)memset(&uac->acif, 0, sizeof(uac->acif));    /* clear AC information                  */
     uac->acif.iface = iface;
 
     bptr = uac->udev->cfd_buff;
-    config = (DESC_CONF_T *)bptr;
+    config = (const DESC_CONF_T *)bptr;
 
     /* step over configuration descriptor */
-    bptr += config->bLength;
+    bptr = &bptr[config->bLength];
     size = config->wTotalLength - config->bLength;
 
     /*------------------------------------------------------------------------------------*/
     /*  Find the Standard AC Interface Descriptor                                         */
     /*------------------------------------------------------------------------------------*/
-    while(size >= sizeof(DESC_IF_T))
+    while(size >= (int)sizeof(DESC_IF_T))
     {
-        ifd = (DESC_IF_T *)bptr;
+        ifd = (const DESC_IF_T *)bptr;
 
         if((ifd->bDescriptorType == USB_DT_INTERFACE) && (ifd->bInterfaceNumber == if_num) &&
                 (ifd->bInterfaceClass == USB_CLASS_AUDIO) && (ifd->bInterfaceSubClass == SUBCLS_AUDIOCONTROL))
+        {
             break;
+        }
 
-        if(ifd->bLength == 0)
+        if(ifd->bLength == 0U)
+        {
             return UAC_RET_PARSER;          /* prevent infinite loop                      */
+        }
 
-        bptr += ifd->bLength;
-        size -= ifd->bLength;
+        bptr = &bptr[ifd->bLength];
+        size -= (int)ifd->bLength;
     }
 
-    if(size < sizeof(DESC_IF_T))            /* cannot find the Standard AC descriptor     */
+    if(size < (int)sizeof(DESC_IF_T))            /* cannot find the Standard AC descriptor     */
     {
         UAC_ERRMSG("UAC_RET_PARSER! - AC standard not found!\n");
         return UAC_RET_PARSER;
     }
 
-    bptr += ifd->bLength;
-    size -= ifd->bLength;
+    bptr = &bptr[ifd->bLength];
+    size -= (int)ifd->bLength;
 
     /*------------------------------------------------------------------------------------*/
     /*  Walk though all Class-Specific AC Interface Descriptor (4.3.2)                    */
     /*------------------------------------------------------------------------------------*/
-    while(size > sizeof(DESC_HDR_T))
+    while(size > (int)sizeof(DESC_HDR_T))
     {
-        ifd = (DESC_IF_T *)bptr;
+        ifd = (const DESC_IF_T *)bptr;
 
         if(ifd->bDescriptorType != CS_INTERFACE)
+        {
             break;
-
-        ret = uac_parse_ac_interface(uac, bptr);
+        }
+        int ret = uac_parse_ac_interface(uac, bptr);
         if(ret < 0)
         {
             UAC_ERRMSG("UAC_RET_PARSER! - parsing CS\n");
             return UAC_RET_PARSER;
         }
 
-        if(ifd->bLength == 0)
+        if(ifd->bLength == 0U)
+        {
             return UAC_RET_PARSER;          /* prevent infinite loop                      */
+        }
 
-        bptr += ifd->bLength;
-        size -= ifd->bLength;
+        bptr = &bptr[ifd->bLength];
+        size -= (int)ifd->bLength;
     }
 
-    uac_set_microphone_feature_unit(uac);
+    (void)uac_set_microphone_feature_unit(uac);
 
     UAC_DBGMSG("    Microphone Input Terminal ID: 0x%x\n", uac->acif.mic_id);
     UAC_DBGMSG("    Microphone Feature Unit ID: 0x%x\n", uac->acif.mic_fuid);
@@ -259,34 +268,34 @@ int uac_parse_control_interface(UAC_DEV_T *uac, IFACE_T *iface)
 
 static int  uac_parse_as_interface(AS_IF_T *asif, uint8_t *bptr)
 {
-    ALT_IFACE_T  *aif = asif->iface->aif;
-    int   i;
+    const ALT_IFACE_T  *aif = asif->iface->aif;
 
-    if(((CS_HDR_T *)bptr)->bDescriptorType == USB_DT_ENDPOINT)
+    if(((const CS_HDR_T *)bptr)->bDescriptorType == USB_DT_ENDPOINT)
     {
-        for(i = 0; i < aif->ifd->bNumEndpoints; i++)
+        int i;
+        for(i = 0; i < (int)aif->ifd->bNumEndpoints; i++)
         {
-            if(aif->ep[i].bEndpointAddress == ((DESC_EP_T *)bptr)->bEndpointAddress)
+            if(aif->ep[i].bEndpointAddress == ((const DESC_EP_T *)bptr)->bEndpointAddress)
             {
                 asif->ep = &(asif->iface->aif->ep[i]);
                 break;
             }
         }
-        if(i >= aif->ifd->bNumEndpoints)
+        if(i >= (int)aif->ifd->bNumEndpoints)
         {
-            UAC_ERRMSG("Endpoint 0x%x parsing error!\n", ((DESC_EP_T *)bptr)->bEndpointAddress);
+            UAC_ERRMSG("Endpoint 0x%x parsing error!\n", ((const DESC_EP_T *)bptr)->bEndpointAddress);
             return UAC_RET_PARSER;
         }
         return 0;
     }
 
-    if(((CS_HDR_T *)bptr)->bDescriptorType == CS_ENDPOINT)
+    if(((const CS_HDR_T *)bptr)->bDescriptorType == CS_ENDPOINT)
     {
         asif->cs_epd = (CS_EP_T *)bptr;
         return 0;
     }
 
-    switch(((CS_HDR_T *)bptr)->bDescriptorSubtype)
+    switch(((const CS_HDR_T *)bptr)->bDescriptorSubtype)
     {
         case AS_DESCRIPTOR_UNDEFINED:
             UAC_DBGMSG("AS: AS_DESCRIPTOR_UNDEFINED\n");
@@ -309,49 +318,51 @@ static int  uac_parse_as_interface(AS_IF_T *asif, uint8_t *bptr)
             break;
 
         default:
-            UAC_ERRMSG("uac_parse_as_interface - unrecognized bDescriptorSubtype 0x%x!\n", ((CS_HDR_T *)bptr)->bDescriptorSubtype);
+            UAC_ERRMSG("uac_parse_as_interface - unrecognized bDescriptorSubtype 0x%x!\n", ((const CS_HDR_T *)bptr)->bDescriptorSubtype);
             return UAC_RET_PARSER;
     }
 
     return 0;
 }
 
-static int  iface_have_iso_in_ep(IFACE_T *iface)
+static int  iface_have_iso_in_ep(const IFACE_T *iface)
 {
-    int         i, j;
-    EP_INFO_T   *ep;
+    int         i;
+    int         j;
 
-    for(i = 0; i < iface->num_alt; i++)
+    for(i = 0; i < (int)iface->num_alt; i++)
     {
-        for(j = 0; j < iface->alt[i].ifd->bNumEndpoints; j++)
+        for(j = 0; j < (int)iface->alt[i].ifd->bNumEndpoints; j++)
         {
+            const EP_INFO_T   *ep;
             ep = &(iface->alt[i].ep[j]);
-            if(ep != NULL)
+
+            if(((ep->bmAttributes & EP_ATTR_TT_MASK) == EP_ATTR_TT_ISO) &&
+                    ((ep->bEndpointAddress & EP_ADDR_DIR_MASK) == EP_ADDR_DIR_IN))
             {
-                if(((ep->bmAttributes & EP_ATTR_TT_MASK) == EP_ATTR_TT_ISO) &&
-                        ((ep->bEndpointAddress & EP_ADDR_DIR_MASK) == EP_ADDR_DIR_IN))
-                    return 1;
+                return 1;
             }
         }
     }
     return 0;
 }
 
-static int  iface_have_iso_out_ep(IFACE_T *iface)
+static int  iface_have_iso_out_ep(const IFACE_T *iface)
 {
-    int         i, j;
-    EP_INFO_T   *ep;
+    int         i;
+    int         j;
 
-    for(i = 0; i < iface->num_alt; i++)
+    for(i = 0; i < (int)iface->num_alt; i++)
     {
-        for(j = 0; j < iface->alt[i].ifd->bNumEndpoints; j++)
+        for(j = 0; j < (int)iface->alt[i].ifd->bNumEndpoints; j++)
         {
+            const EP_INFO_T   *ep;
             ep = &(iface->alt[i].ep[j]);
-            if(ep != NULL)
+
+            if(((ep->bmAttributes & EP_ATTR_TT_MASK) == EP_ATTR_TT_ISO) &&
+                    ((ep->bEndpointAddress & EP_ADDR_DIR_MASK) == EP_ADDR_DIR_OUT))
             {
-                if(((ep->bmAttributes & EP_ATTR_TT_MASK) == EP_ATTR_TT_ISO) &&
-                        ((ep->bEndpointAddress & EP_ADDR_DIR_MASK) == EP_ADDR_DIR_OUT))
-                    return 1;
+                return 1;
             }
         }
     }
@@ -360,35 +371,38 @@ static int  iface_have_iso_out_ep(IFACE_T *iface)
 
 static void * uac_find_terminal(UAC_DEV_T *uac, uint8_t bTerminalID)
 {
-    DESC_CONF_T  *config;
-    AC_OT_T      *hdr;
+    const DESC_CONF_T  *config;
     uint8_t      *bptr;
     int          size;
 
     bptr = uac->udev->cfd_buff;
-    config = (DESC_CONF_T *)bptr;
+    config = (const DESC_CONF_T *)bptr;
 
     /* step over configuration descriptor */
-    bptr += config->bLength;
+    bptr = &bptr[config->bLength];
     size = config->wTotalLength - config->bLength;
 
     /*------------------------------------------------------------------------------------*/
     /*  Find the Terminal Descriptor                                                      */
     /*------------------------------------------------------------------------------------*/
-    while(size >= sizeof(DESC_IF_T))
+    while(size >= (int)sizeof(DESC_IF_T))
     {
-        hdr = (AC_OT_T *)bptr;
+        AC_OT_T *hdr = (AC_OT_T *)bptr;
 
         if((hdr->bDescriptorType == CS_INTERFACE) &&
                 ((hdr->bDescriptorSubtype == INPUT_TERMINAL) || (hdr->bDescriptorSubtype == OUTPUT_TERMINAL)) &&
                 (hdr->bTerminalID == bTerminalID))
+        {
             return (void *)hdr;
+        }
 
-        if(hdr->bLength == 0)
-            return NULL;                    /* prevent infinite loop                       */
+        if(hdr->bLength == 0U)
+        {
+            return NULL;                    /* prevent infinite loop                      */
+        }
 
-        bptr += hdr->bLength;
-        size -= hdr->bLength;
+        bptr = &bptr[hdr->bLength];
+        size -= (int)hdr->bLength;
     }
     return NULL;                            /* not found                                  */
 }
@@ -405,7 +419,7 @@ static void * uac_find_feature_unit(UAC_DEV_T *uac, uint8_t bUnitID)
     config = (DESC_CONF_T *)bptr;
 
     /* step over configuration descriptor */
-    bptr += config->bLength;
+    bptr = &bptr[config->bLength];
     size = config->wTotalLength - config->bLength;
 
     /*------------------------------------------------------------------------------------*/
@@ -417,12 +431,16 @@ static void * uac_find_feature_unit(UAC_DEV_T *uac, uint8_t bUnitID)
 
         if((hdr->bDescriptorType == CS_INTERFACE) && (hdr->bDescriptorSubtype == FEATURE_UNIT) &&
                 (hdr->bUnitID == bUnitID))
+        {
             return (void *)hdr;
+        }
 
         if(hdr->bLength == 0)
-            return NULL;                    /* prevent infinite loop                       */
+        {
+            return NULL;                    /* prevent infinite loop                      */
+        }
 
-        bptr += hdr->bLength;
+        bptr = &bptr[hdr->bLength];
         size -= hdr->bLength;
     }
     return NULL;                            /* not found                                  */
@@ -440,88 +458,96 @@ static void * uac_find_feature_unit(UAC_DEV_T *uac, uint8_t bUnitID)
  */
 int uac_parse_streaming_interface(UAC_DEV_T *uac, IFACE_T *iface, uint8_t bAlternateSetting)
 {
-    DESC_CONF_T  *config;
-    DESC_IF_T    *ifd;
+    const DESC_CONF_T  *config;
+    const DESC_IF_T    *ifd;
     AS_IF_T      asif;
-    int          if_num;
+    uint8_t      if_num;
     uint8_t      *bptr;
-    int          size, ret;
+    int          size;
 
     if_num = iface->if_num;                      /* interface number of AC interface      */
 
     UAC_DBGMSG("UAC parsing audio stream (AS) interface %d, alt %d...\n", if_num, bAlternateSetting);
 
-    memset(&asif, 0, sizeof(asif));              /* clear AS information                  */
+    (void)memset(&asif, 0, sizeof(asif));              /* clear AS information                  */
     asif.iface = iface;
 
     bptr = uac->udev->cfd_buff;
-    config = (DESC_CONF_T *)bptr;
+    config = (const DESC_CONF_T *)bptr;
 
     /* step over configuration descriptor */
-    bptr += config->bLength;
+    bptr = &bptr[config->bLength];
     size = config->wTotalLength - config->bLength;
 
     /*------------------------------------------------------------------------------------*/
     /*  Find the Standard AS Interface Descriptor                                         */
     /*------------------------------------------------------------------------------------*/
-    while(size >= sizeof(DESC_IF_T))
+    while(size >= (int)sizeof(DESC_IF_T))
     {
-        ifd = (DESC_IF_T *)bptr;
+        ifd = (const DESC_IF_T *)bptr;
 
         if((ifd->bDescriptorType == USB_DT_INTERFACE) &&
                 (ifd->bInterfaceNumber == if_num) && (ifd->bAlternateSetting == bAlternateSetting) &&
                 (ifd->bInterfaceClass == USB_CLASS_AUDIO) && (ifd->bInterfaceSubClass == SUBCLS_AUDIOSTREAMING))
+        {
             break;
+        }
 
-        if(ifd->bLength == 0)
+        if(ifd->bLength == 0U)
+        {
             return UAC_RET_PARSER;          /* prevent infinite loop                      */
+        }
 
-        bptr += ifd->bLength;
-        size -= ifd->bLength;
+        bptr = &bptr[ifd->bLength];
+        size -= (int)ifd->bLength;
     }
 
-    if(size < sizeof(DESC_IF_T))            /* cannot find the Standard AC descriptor     */
+    if(size < (int)sizeof(DESC_IF_T))            /* cannot find the Standard AC descriptor     */
     {
         UAC_ERRMSG("UAC_RET_PARSER! - AC standard not found!\n");
         return UAC_RET_PARSER;
     }
 
-    if(ifd->bNumEndpoints == 0)
+    if(ifd->bNumEndpoints == 0U)
     {
         UAC_DBGMSG("This alternative interface is an idle interface.\n");
         return 0;
     }
 
-    bptr += ifd->bLength;
-    size -= ifd->bLength;
+    bptr = &bptr[ifd->bLength];
+    size -= (int)ifd->bLength;
 
     /*------------------------------------------------------------------------------------*/
     /*  Walk though all Class-Specific AS Interface Descriptor (4.5.2)                    */
     /*------------------------------------------------------------------------------------*/
-    while(size > sizeof(DESC_HDR_T))
+    while(size > (int)sizeof(DESC_HDR_T))
     {
-        ifd = (DESC_IF_T *)bptr;
+        ifd = (const DESC_IF_T *)bptr;
 
         //UAC_DBGMSG("Parse AS - [%d] [0x%x] [0x%x]\n", ((CS_HDR_T *)bptr)->bLength, ((CS_HDR_T *)bptr)->bDescriptorType, ((CS_HDR_T *)bptr)->bDescriptorSubtype);
 
         if((ifd->bDescriptorType != CS_INTERFACE) &&
                 (ifd->bDescriptorType != USB_DT_ENDPOINT) &&
                 (ifd->bDescriptorType != CS_ENDPOINT))
+        {
             break;
+        }
 
 
-        ret = uac_parse_as_interface(&asif, bptr);
+        int ret = uac_parse_as_interface(&asif, bptr);
         if(ret < 0)
         {
             UAC_ERRMSG("UAC_RET_PARSER! - parsing CS\n");
             return UAC_RET_PARSER;
         }
 
-        if(ifd->bLength == 0)
-            return UAC_RET_PARSER;          /* prevent infinite loop                       */
+        if(ifd->bLength == 0U)
+        {
+            return UAC_RET_PARSER;          /* prevent infinite loop                      */
+        }
 
-        bptr += ifd->bLength;
-        size -= ifd->bLength;
+        bptr = &bptr[ifd->bLength];
+        size -= (int)ifd->bLength;
     }
 
     if(asif.as_gen == NULL)
@@ -546,7 +572,7 @@ int uac_parse_streaming_interface(UAC_DEV_T *uac, IFACE_T *iface, uint8_t bAlter
         {
             UAC_ERRMSG("Cannot find audio in Output Terminal %d!\n", asif.as_gen->bTerminalLink);
         }
-        memcpy(&uac->asif_in, &asif, sizeof(asif));
+        (void)memcpy(&uac->asif_in, &asif, sizeof(asif));
     }
     else if(iface_have_iso_out_ep(iface))
     {
@@ -562,7 +588,7 @@ int uac_parse_streaming_interface(UAC_DEV_T *uac, IFACE_T *iface, uint8_t bAlter
         {
             UAC_ERRMSG("Cannot find audio in Output Terminal %d!\n", asif.as_gen->bTerminalLink);
         }
-        memcpy(&uac->asif_out, &asif, sizeof(asif));
+       (void)memcpy(&uac->asif_out, &asif, sizeof(asif));
     }
     else
     {
@@ -573,7 +599,9 @@ int uac_parse_streaming_interface(UAC_DEV_T *uac, IFACE_T *iface, uint8_t bAlter
     UAC_DBGMSG("\n\nAudio stream interface parsing done =>\n");
     UAC_DBGMSG("    Interface: %d, Alt: %d (iface = 0x%x)\n", if_num, bAlternateSetting, asif.iface);
     if(asif.ep)
+    {
         UAC_DBGMSG("    Endpoint: 0x%x, wMaxPacketSize: %d\n", asif.ep->bEndpointAddress, asif.ep->wMaxPacketSize);
+    }
     UAC_DBGMSG("    as_gen: %s\n", (asif.as_gen == NULL) ? "Not Found" : "OK");
     UAC_DBGMSG("    it: %s\n", (asif.it == NULL) ? "Not Found" : "OK");
     UAC_DBGMSG("    ot: %s\n", (asif.ot == NULL) ? "Not Found" : "OK");

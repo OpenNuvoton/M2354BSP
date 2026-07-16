@@ -56,3 +56,4 @@ project:
       files:
         - file: ../../../../Library/UsbHostLib/src_hid/hid_core.c
         - file: ../../../../Library/UsbHostLib/src_hid/hid_driver.c
+        - file: ../../../../Library/UsbHostLib/src_hid/hid_parser.c

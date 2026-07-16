@@ -253,9 +253,9 @@ typedef struct _ESP_CONN_t
     {
         struct
         {
-            int Active: 1;                              /*!< Status if connection is active */
-            int Client: 1;                              /*!< Set to 1 if connection was made as client */
-            int SSL: 1;                                 /*!< Connection has been made as SSL */
+            unsigned int Active: 1;                     /*!< Status if connection is active */
+            unsigned int Client: 1;                     /*!< Set to 1 if connection was made as client */
+            unsigned int SSL: 1;                        /*!< Connection has been made as SSL */
         } F;
         uint8_t Value;                                  /*!< Value of entire union */
     } Flags;                                            /*!< Connection flags management */
@@ -263,11 +263,11 @@ typedef struct _ESP_CONN_t
     {
         struct
         {
-            int Connect: 1;                             /*!< Connection was just connected, client or server */
-            int Closed: 1;                              /*!< Connection was just disconnected, client or server */
-            int DataSent: 1;                            /*!< Data were sent successfully */
-            int DataError: 1;                           /*!< Error trying to send data */
-            int CallLastPartOfPacketReceived: 1;        /*!< Data are processed synchronously. When there is last part of packet received and command is not idle, we must save notification for callback */
+            unsigned int Connect: 1;                    /*!< Connection was just connected, client or server */
+            unsigned int Closed: 1;                     /*!< Connection was just disconnected, client or server */
+            unsigned int DataSent: 1;                   /*!< Data were sent successfully */
+            unsigned int DataError: 1;                  /*!< Error trying to send data */
+            unsigned int CallLastPartOfPacketReceived: 1; /*!< Data are processed synchronously. When there is last part of packet received and command is not idle, we must save notification for callback */
         } F;
         int Value;
     } Callback;                                         /*!< Flags for callback management */
@@ -478,10 +478,10 @@ typedef struct _ESP_t
     {
         struct
         {
-            int IsBlocking: 1;                          /*!< Status whether action was called as blocking */
-            int Call_Idle: 1;                           /*!< Status whether idle status event should be called before we can proceed with another action */
-            int InTransparentMode: 1;                   /*!< Status whether we are currently in transparent mode and transfer is active */
-            int RTSForced: 1;                           /*!< Status whether RTS pin was forced by user */
+            unsigned int IsBlocking: 1;                 /*!< Status whether action was called as blocking */
+            unsigned int Call_Idle: 1;                  /*!< Status whether idle status event should be called before we can proceed with another action */
+            unsigned int InTransparentMode: 1;           /*!< Status whether we are currently in transparent mode and transfer is active */
+            unsigned int RTSForced: 1;                   /*!< Status whether RTS pin was forced by user */
         } F;
         int Value;
     } Flags;                                            /*!< Flags for library purpose */
@@ -491,9 +491,9 @@ typedef struct _ESP_t
     {
         struct
         {
-            int WifiConnected: 1;                       /*!< Wifi just got connected */
-            int WifiDisconnected: 1;                    /*!< Wifi just got disconnected */
-            int WifiGotIP: 1;                           /*!< Wifi station just got IP address */
+            unsigned int WifiConnected: 1;              /*!< Wifi just got connected */
+            unsigned int WifiDisconnected: 1;            /*!< Wifi just got disconnected */
+            unsigned int WifiGotIP: 1;                  /*!< Wifi station just got IP address */
         } F;
         int Value;
     } CallbackFlags;                                    /*!< List of global flags for callback events */
@@ -505,21 +505,21 @@ typedef struct _ESP_t
     {
         struct
         {
-            int RespOk: 1;                              /*!< OK message response */
-            int RespError: 1;                           /*!< Error message response */
-            int RespBracket: 1;                         /*!< Bracket received (SMS messages) */
-            int RespReady: 1;                           /*!< Ready statement was received */
+            unsigned int RespOk: 1;                     /*!< OK message response */
+            unsigned int RespError: 1;                  /*!< Error message response */
+            unsigned int RespBracket: 1;                /*!< Bracket received (SMS messages) */
+            unsigned int RespReady: 1;                  /*!< Ready statement was received */
 
-            int RespConnectOk: 1;                       /*!< n, CONNECT OK was returned from device */
-            int RespConnectFail: 1;                     /*!< n, CONNECT FAIL was returned from device */
-            int RespConnectAlready: 1;                  /*!< n, ALREADY CONNECTED was returned from device */
-            int RespCloseOk: 1;                         /*!< n, CLOSE OK was returned from device */
-            int RespSendOk: 1;                          /*!< n, SEND OK was returned from device */
-            int RespSendFail: 1;                        /*!< n, SEND FAIL was returned from device */
+            unsigned int RespConnectOk: 1;               /*!< n, CONNECT OK was returned from device */
+            unsigned int RespConnectFail: 1;             /*!< n, CONNECT FAIL was returned from device */
+            unsigned int RespConnectAlready: 1;          /*!< n, ALREADY CONNECTED was returned from device */
+            unsigned int RespCloseOk: 1;                 /*!< n, CLOSE OK was returned from device */
+            unsigned int RespSendOk: 1;                  /*!< n, SEND OK was returned from device */
+            unsigned int RespSendFail: 1;                /*!< n, SEND FAIL was returned from device */
 
-            int RespWifiConnected: 1;
-            int RespWifiDisconnected: 1;
-            int RespWifiGotIp: 1;
+            unsigned int RespWifiConnected: 1;
+            unsigned int RespWifiDisconnected: 1;
+            unsigned int RespWifiGotIp: 1;
         } F;
         int Value;                                      /*!< Value containing all the flags in single memory */
     } Events;                                           /*!< Union holding all the required events for library internal processing */

@@ -16,9 +16,9 @@
 /*
  * Debug message
  */
-#define UAC_ERRMSG     printf
+#define UAC_ERRMSG     (void)usbh_printf
 #ifdef UAC_DEBUG
-#define UAC_DBGMSG      printf
+#define UAC_DBGMSG     (void)usbh_printf
 #else
 #define UAC_DBGMSG(...)
 #endif
@@ -33,135 +33,135 @@ typedef enum
 
 
 /* Audio Interface Subclass Codes (A.2)               */
-#define SUBCLS_UNDEFINED              0x00
-#define SUBCLS_AUDIOCONTROL           0x01
-#define SUBCLS_AUDIOSTREAMING         0x02
-#define SUBCLS_MIDISTREAMING          0x03
+#define SUBCLS_UNDEFINED              0x00U
+#define SUBCLS_AUDIOCONTROL           0x01U
+#define SUBCLS_AUDIOSTREAMING         0x02U
+#define SUBCLS_MIDISTREAMING          0x03U
 
 /* Audio Interface Protocol Code (A.3)                */
 #define PR_PROTOCOL_UNDEFINED         0x00
 
 /* Audio Class-specific descritpor types (A.4)        */
-#define CS_UNDEFINED                  0x20
-#define CS_DEVICE                     0x21
-#define CS_CONFIGURATION              0x22
-#define CS_STRING                     0x23
-#define CS_INTERFACE                  0x24
-#define CS_ENDPOINT                   0x25
+#define CS_UNDEFINED                  0x20U
+#define CS_DEVICE                     0x21U
+#define CS_CONFIGURATION              0x22U
+#define CS_STRING                     0x23U
+#define CS_INTERFACE                  0x24U
+#define CS_ENDPOINT                   0x25U
 
 /* Audio Class-Specific AC Interface Descriptor Subtypes (A.5) */
-#define AC_DESCRIPTOR_UNDEFINED       0x00
-#define HEADER                        0x01
-#define INPUT_TERMINAL                0x02
-#define OUTPUT_TERMINAL               0x03
-#define MIXER_UNIT                    0x04
-#define SELECTOR_UNIT                 0x05
-#define FEATURE_UNIT                  0x06
-#define PROCESSING_UNIT               0x07
-#define EXTENSION_UNIT                0x08
+#define AC_DESCRIPTOR_UNDEFINED       0x00U
+#define HEADER                        0x01U
+#define INPUT_TERMINAL                0x02U
+#define OUTPUT_TERMINAL               0x03U
+#define MIXER_UNIT                    0x04U
+#define SELECTOR_UNIT                 0x05U
+#define FEATURE_UNIT                  0x06U
+#define PROCESSING_UNIT               0x07U
+#define EXTENSION_UNIT                0x08U
 
 /* Audio Class-Specific AS Interface Descriptor Subtypes (A.6) */
-#define AS_DESCRIPTOR_UNDEFINED       0x00
-#define AS_GENERAL                    0x01
-#define FORMAT_TYPE                   0x02
-#define FORMAT_SPECIFIC               0x03
+#define AS_DESCRIPTOR_UNDEFINED       0x00U
+#define AS_GENERAL                    0x01U
+#define FORMAT_TYPE                   0x02U
+#define FORMAT_SPECIFIC               0x03U
 
 /* Processing Unit Process Types (A.7)                */
-#define PROCESS_UNDEFINED             0x00
-#define UP_DOWNMIX_PROCESS            0x01
-#define DOLBY_PROLOGIC_PROCESS        0x02
-#define _3D_STEREO_EXTENDER_PROCESS   0x03
-#define REVERBERATION_PROCESS         0x04
-#define CHORUS_PROCESS                0x05
-#define DYN_RANGE_COMP_PROCESS        0x06
+#define PROCESS_UNDEFINED             0x00U
+#define UP_DOWNMIX_PROCESS            0x01U
+#define DOLBY_PROLOGIC_PROCESS        0x02U
+#define _3D_STEREO_EXTENDER_PROCESS   0x03U
+#define REVERBERATION_PROCESS         0x04U
+#define CHORUS_PROCESS                0x05U
+#define DYN_RANGE_COMP_PROCESS        0x06U
 
 /* Audio Class-Specific Endpoint Descriptor Subtypes (A.8) */
-#define DESCRIPTOR_UNDEFINED          0x00
-#define EP_GENERAL                    0x01
+#define DESCRIPTOR_UNDEFINED          0x00U
+#define EP_GENERAL                    0x01U
 
 /* Audio Class-Specific Request Codes (A.9)           */
-#define REQUEST_CODE_UNDEFINED        0x00
-#define SET_CUR                       0x01
-#define GET_CUR                       0x81
-#define SET_MIN                       0x02
-#define GET_MIN                       0x82
-#define SET_MAX                       0x03
-#define GET_MAX                       0x83
-#define SET_RES                       0x04
-#define GET_RES                       0x84
-#define SET_MEM                       0x05
-#define GET_MEM                       0x85
-#define GET_STAT                      0xFF
+#define REQUEST_CODE_UNDEFINED        0x00U
+#define SET_CUR                       0x01U
+#define GET_CUR                       0x81U
+#define SET_MIN                       0x02U
+#define GET_MIN                       0x82U
+#define SET_MAX                       0x03U
+#define GET_MAX                       0x83U
+#define SET_RES                       0x04U
+#define GET_RES                       0x84U
+#define SET_MEM                       0x05U
+#define GET_MEM                       0x85U
+#define GET_STAT                      0xFFU
 
 /* Terminal Control Selectors (A.10.1)                */
-#define TE_CONTROL_UNDEFINED          0x00
-#define COPY_PROTECT_CONTROL          0x01
+#define TE_CONTROL_UNDEFINED          0x00U
+#define COPY_PROTECT_CONTROL          0x01U
 
 /* Feature Unit Control Selectors (A.10.2)            */
-#define FU_CONTROL_UNDEFINED          0x00
-#define MUTE_CONTROL                  0x01
-#define VOLUME_CONTROL                0x02
-#define BASS_CONTROL                  0x03
-#define MID_CONTROL                   0x04
-#define TREBLE_CONTROL                0x05
-#define GRAPHIC_EQUALIZER_CONTROL     0x06
-#define AUTOMATIC_GAIN_CONTROL        0x07
-#define DELAY_CONTROL                 0x08
-#define BASS_BOOST_CONTROL            0x09
-#define LOUDNESS_CONTROL              0x0A
+#define FU_CONTROL_UNDEFINED          0x00U
+#define MUTE_CONTROL                  0x01U
+#define VOLUME_CONTROL                0x02U
+#define BASS_CONTROL                  0x03U
+#define MID_CONTROL                   0x04U
+#define TREBLE_CONTROL                0x05U
+#define GRAPHIC_EQUALIZER_CONTROL     0x06U
+#define AUTOMATIC_GAIN_CONTROL        0x07U
+#define DELAY_CONTROL                 0x08U
+#define BASS_BOOST_CONTROL            0x09U
+#define LOUDNESS_CONTROL              0x0AU
 
 /* Up/Down-mix Processing Unit Control Selectors (A.10.3.1) */
-#define UD_CONTROL_UNDEFINED          0x00
-#define UD_ENABLE_CONTROL             0x01
-#define UD_MODE_SELECT_CONTROL        0x02
+#define UD_CONTROL_UNDEFINED          0x00U
+#define UD_ENABLE_CONTROL             0x01U
+#define UD_MODE_SELECT_CONTROL        0x02U
 
 /* Dolby Prologic Processing Unit Control Selectors (A.10.3.2) */
-#define DP_CONTROL_UNDEFINED          0x00
-#define DP_ENABLE_CONTROL             0x01
-#define DP_MODE_SELECT_CONTROL        0x02
+#define DP_CONTROL_UNDEFINED          0x00U
+#define DP_ENABLE_CONTROL             0x01U
+#define DP_MODE_SELECT_CONTROL        0x02U
 
 /* 3D Stereo Extender Processing Unit Control Selectors (A.10.3.3) */
-#define _3D_CONTROL_UNDEFINED         0x00
-#define _3D_ENABLE_CONTROL            0x01
-#define SPACIOUSNESS_CONTROL          0x03
+#define _3D_CONTROL_UNDEFINED         0x00U
+#define _3D_ENABLE_CONTROL            0x01U
+#define SPACIOUSNESS_CONTROL          0x03U
 
 /* Reverberation Processing Unit Control Selectors (A.10.3.4) */
-#define RV_CONTROL_UNDEFINED          0x00
-#define RV_ENABLE_CONTROL             0x01
-#define REVERB_LEVEL_CONTROL          0x02
-#define REVERB_TIME_CONTROL           0x03
-#define REVERB_FEEDBACK_CONTROL       0x04
+#define RV_CONTROL_UNDEFINED          0x00U
+#define RV_ENABLE_CONTROL             0x01U
+#define REVERB_LEVEL_CONTROL          0x02U
+#define REVERB_TIME_CONTROL           0x03U
+#define REVERB_FEEDBACK_CONTROL       0x04U
 
 /* Chorus Processing Unit Control Selectors (A.10.3.5) */
-#define CH_CONTROL_UNDEFINED          0x00
-#define CH_ENABLE_CONTROL             0x01
-#define CHORUS_LEVEL_CONTROL          0x02
-#define CHORUS_RATE_CONTROL           0x03
-#define CHORUS_DEPTH_CONTROL          0x04
+#define CH_CONTROL_UNDEFINED          0x00U
+#define CH_ENABLE_CONTROL             0x01U
+#define CHORUS_LEVEL_CONTROL          0x02U
+#define CHORUS_RATE_CONTROL           0x03U
+#define CHORUS_DEPTH_CONTROL          0x04U
 
 /* Dynamic Range Compressor Processing Unit Control Selectors (A.10.3.6) */
-#define DR_CONTROL_UNDEFINED          0x00
-#define DR_ENABLE_CONTROL             0x01
-#define COMPRESSION_RATE_CONTROL      0x02
-#define MAXAMPL_CONTROL               0x03
-#define THRESHOLD_CONTROL             0x04
-#define ATTACK_TIME                   0x05
-#define RELEASE_TIME                  0x06
+#define DR_CONTROL_UNDEFINED          0x00U
+#define DR_ENABLE_CONTROL             0x01U
+#define COMPRESSION_RATE_CONTROL      0x02U
+#define MAXAMPL_CONTROL               0x03U
+#define THRESHOLD_CONTROL             0x04U
+#define ATTACK_TIME                   0x05U
+#define RELEASE_TIME                  0x06U
 
 /* Extension Unit Control Selectors (A.10.4)  */
-#define XU_CONTROL_UNDEFINED          0x00
-#define XU_ENABLE_CONTROL             0x01
+#define XU_CONTROL_UNDEFINED          0x00U
+#define XU_ENABLE_CONTROL             0x01U
 
 /* Endpoint Control Selectors  (A.10.5) */
-#define EP_CONTROL_UNDEFINED          0x00
-#define SAMPLING_FREQ_CONTROL         0x01
-#define PITCH_CONTROL                 0x02
+#define EP_CONTROL_UNDEFINED          0x00U
+#define SAMPLING_FREQ_CONTROL         0x01U
+#define PITCH_CONTROL                 0x02U
 
 /* Format Type Codes of Format Type Descriptor bFormatType field */
-#define FORMAT_TYPE_UNDEFINED         0x00
-#define FORMAT_TYPE_I                 0x01
-#define FORMAT_TYPE_II                0x02
-#define FORMAT_TYPE_III               0x03
+#define FORMAT_TYPE_UNDEFINED         0x00U
+#define FORMAT_TYPE_I                 0x01U
+#define FORMAT_TYPE_II                0x02U
+#define FORMAT_TYPE_III               0x03U
 
 
 /*-----------------------------------------------------------------------------------
@@ -280,32 +280,32 @@ typedef struct __attribute__((__packed__)) ac_otd_t
 /*  Terminal Types                 */
 /*---------------------------------*/
 /* USB Terminal Types     */
-#define UAC_TT_USB_UNDEFINED        0x0100  /* USB Terminal, undefined Type.              */
-#define UAC_TT_USB_STREAMING        0x0101  /* A Terminal dealing with a signal carried
+#define UAC_TT_USB_UNDEFINED        0x0100U  /* USB Terminal, undefined Type.              */
+#define UAC_TT_USB_STREAMING        0x0101U  /* A Terminal dealing with a signal carried
                                                over an endpoint in an AudioStreaming
                                                interface. The AudioStreaming interface.   */
-#define UAC_TT_USB_VENDOR           0x01FF  /* A Terminal dealing with a signal carried
+#define UAC_TT_USB_VENDOR           0x01FFU  /* A Terminal dealing with a signal carried
                                                over a vendor-specific interface.          */
 /* Input Terminal Types   */
-#define UAC_TT_INPUT_UNDEFINED      0x0200  /* Input Terminal, undefined Type.            */
-#define UAC_TT_MICROPHONE           0x0201  /* A generic microphone that does not fit
+#define UAC_TT_INPUT_UNDEFINED      0x0200U  /* Input Terminal, undefined Type.            */
+#define UAC_TT_MICROPHONE           0x0201U  /* A generic microphone that does not fit
                                                under any of the other classifications.    */
-#define UAC_TT_DESKTOP_MICROPHONE   0x0202  /* A microphone normally placed on the desktop
+#define UAC_TT_DESKTOP_MICROPHONE   0x0202U  /* A microphone normally placed on the desktop
                                                or integrated into the monitor.            */
-#define UAC_TT_PERSONAL_MICROPHONE  0x0203  /* A head-mounted or clip-on microphone.      */
-#define UAC_TT_OMNI_MICROPHONE      0x0204  /* A microphone designed to pick up voice from
+#define UAC_TT_PERSONAL_MICROPHONE  0x0203U  /* A head-mounted or clip-on microphone.      */
+#define UAC_TT_OMNI_MICROPHONE      0x0204U  /* A microphone designed to pick up voice from
                                                more than one speaker at relatively long
                                                ranges.                                    */
-#define UAC_TT_MICROPHONE_ARRAY     0x0205  /* An array of microphones designed for
+#define UAC_TT_MICROPHONE_ARRAY     0x0205U  /* An array of microphones designed for
                                                directional processing using host-based
                                                signal processing algorithms.              */
 /* Output Terminal Types  */
-#define UAC_TT_OUTPUT_UNDEFINED     0x0300  /* Output Terminal, undefined Type.           */
-#define UAC_TT_SPEAKER              0x0301  /* A generic speaker or set of speakers that
+#define UAC_TT_OUTPUT_UNDEFINED     0x0300U  /* Output Terminal, undefined Type.           */
+#define UAC_TT_SPEAKER              0x0301U  /* A generic speaker or set of speakers that
                                                doe not fit under any of the other
                                                classifications.                           */
-#define UAC_TT_HEADPHONES           0x0302  /* A head-mounted audio output device.        */
-#define UAC_TT_HEAD_MOUNTED         0x0303  /* The audio part of a VR head mounted display.
+#define UAC_TT_HEADPHONES           0x0302U  /* A head-mounted audio output device.        */
+#define UAC_TT_HEAD_MOUNTED         0x0303U  /* The audio part of a VR head mounted display.
                                                The Associated Interfaces descriptor can
                                                be used to reference the HID interface used
                                                to report the position and orientation of
@@ -393,19 +393,6 @@ typedef struct __attribute__((__packed__)) ac_fu_t
     uint8_t  bControlSize;                  /* Size in bytes of an element of the bmaControls() array: n */
 } AC_FU_T;
 #endif
-
-/* Feature Unit Control Selectors */
-#define FU_CONTROL_UNDEFINED          0x00
-#define MUTE_CONTROL                  0x01  /* Feature Unit Descriptor bmaControls bit 0  */
-#define VOLUME_CONTROL                0x02  /* Feature Unit Descriptor bmaControls bit 1  */
-#define BASS_CONTROL                  0x03  /* Feature Unit Descriptor bmaControls bit 2  */
-#define MID_CONTROL                   0x04
-#define TREBLE_CONTROL                0x05
-#define GRAPHIC_EQUALIZER_CONTROL     0x06
-#define AUTOMATIC_GAIN_CONTROL        0x07
-#define DELAY_CONTROL                 0x08
-#define BASS_BOOST_CONTROL            0x09
-#define LOUDNESS_CONTROL              0x0A
 
 /*-----------------------------------------------------------------------------------
  *  UAC AS Isochronous Audio Data Endpoint Descriptor

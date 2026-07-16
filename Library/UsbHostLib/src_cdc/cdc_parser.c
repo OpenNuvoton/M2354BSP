@@ -21,24 +21,28 @@
 
 static int  cdc_parse_cs_interface(CDC_DEV_T *cdev, uint8_t *buffer, int size)
 {
-    DESC_HDR_T      *header;
     CDC_IF_HDR_T    *cifd;
     int             parsed = 0;
+    int             size_tmp = size;
 
-    while(size > 0)
+    while (size_tmp > 0)
     {
-        while(size >= sizeof(DESC_HDR_T))
-        {
-            header = (DESC_HDR_T *)buffer;
 
-            if(header->bLength < 2)
+        while (size_tmp >= (int)sizeof(DESC_HDR_T))
+        {
+            DESC_HDR_T      *header;
+            header = (DESC_HDR_T *)&buffer[parsed];
+
+            if (header->bLength < 2U)
             {
                 CDC_DBGMSG("Invalid descriptor length of %d\n", header->bLength);
                 return -1;
             }
 
-            if(header->bDescriptorType != CDC_CS_INTERFACE)
+            if (header->bDescriptorType != CDC_CS_INTERFACE)
+            {
                 return parsed;
+            }
 
             cifd = (CDC_IF_HDR_T *)header;
 
@@ -69,9 +73,13 @@ static int  cdc_parse_cs_interface(CDC_DEV_T *cdev, uint8_t *buffer, int size)
                     break;
                 case CDC_DT_UNION:
                     CDC_DBGMSG("Union Functional\n");
-                    if(cifd->bLength >= 5)
+
+                    if (cifd->bLength >= 5U)
+                    {
                         cdev->ifnum_data = cifd->payload[1];
-                    if(cifd->bLength >= 6)
+                    }
+
+                    if (cifd->bLength >= 6U)
                     {
                         CDC_DBGMSG("Union Functional length %d, not supported!\n", cifd->bLength);
                     }
@@ -103,11 +111,14 @@ static int  cdc_parse_cs_interface(CDC_DEV_T *cdev, uint8_t *buffer, int size)
                 case CDC_DT_ATM_FUNC:
                     CDC_DBGMSG("ATM Networking Functional\n");
                     break;
+
+                default:
+                    CDC_DBGMSG("Unknown Functional Descriptor: 0x%x\n", cifd->bDescriptorSubtype);
+                    break;
             }
 
-            buffer += header->bLength;
-            parsed += header->bLength;
-            size -= header->bLength;
+            parsed += (int)header->bLength;
+            size_tmp -= (int)header->bLength;
         }
 
     }   /* end of while */
@@ -120,20 +131,19 @@ int  cdc_config_parser(CDC_DEV_T *cdev)
     UDEV_T          *udev = cdev->udev;
     DESC_CONF_T     *config;
     DESC_HDR_T      *header;
-    DESC_IF_T       *ifd;
     uint8_t         *bptr;
-    int             size, result;
+    int             size;
 
     config = (DESC_CONF_T *)udev->cfd_buff;
     bptr = (uint8_t *)config;
-    bptr += config->bLength;
+    bptr = &bptr[config->bLength];
     size = config->wTotalLength - config->bLength;
 
-    while(size >= sizeof(DESC_HDR_T))
+    while(size >= (int)sizeof(DESC_HDR_T))
     {
         header = (DESC_HDR_T *)bptr;
 
-        if((header->bLength > size) || (header->bLength < 2))
+        if(((int)header->bLength > size) || (header->bLength < 2U))
         {
             CDC_DBGMSG("Error - invalid descriptor length of %d\n", header->bLength);
             return USBH_ERR_NOT_SUPPORTED;
@@ -144,27 +154,27 @@ int  cdc_config_parser(CDC_DEV_T *cdev)
          */
         if(header->bDescriptorType == USB_DT_INTERFACE)
         {
-            ifd = (DESC_IF_T *)header;
+            const DESC_IF_T *ifd = (const DESC_IF_T *)header;
             if(ifd->bInterfaceNumber == cdev->iface_cdc->if_num)
             {
-                bptr += header->bLength;
-                size -= header->bLength;
+                bptr = &bptr[header->bLength];
+                size -= (int)header->bLength;
                 break;
             }
         }
-        bptr += header->bLength;
-        size -= header->bLength;
+        bptr = &bptr[header->bLength];
+        size -= (int)header->bLength;
     }   /* end of while */
 
     /*------------------------------------------------------------------*/
     /*  Parsing all follwoing CDC class interface descriptors           */
     /*------------------------------------------------------------------*/
 
-    while(size >= sizeof(DESC_HDR_T))
+    while(size >= (int)sizeof(DESC_HDR_T))
     {
         header = (DESC_HDR_T *)bptr;
 
-        if((header->bLength > size) || (header->bLength < 2))
+        if(((int)header->bLength > size) || (header->bLength < 2U))
         {
             CDC_DBGMSG("Error - invalid descriptor length of %d\n", header->bLength);
             return USBH_ERR_NOT_SUPPORTED;
@@ -174,12 +184,16 @@ int  cdc_config_parser(CDC_DEV_T *cdev)
          *  Is a class interface descriptor?
          */
         if(header->bDescriptorType != CDC_CS_INTERFACE)
+        {
             break;
+        }
 
-        result = cdc_parse_cs_interface(cdev, bptr, size);
+        int result = cdc_parse_cs_interface(cdev, bptr, size);
         if(result < 0)
+        {
             return result;
-        bptr += result;
+        }
+        bptr = &bptr[result];
         size -= result;
     }   /* end of while */
 

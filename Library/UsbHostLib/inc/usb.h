@@ -48,46 +48,46 @@ DEV_REQ_T;
 /*
  *  bmRequestType[7]    - Data transfer direction
  */
-#define REQ_TYPE_OUT                   0x00
-#define REQ_TYPE_IN                    0x80
+#define REQ_TYPE_OUT                   0x00U
+#define REQ_TYPE_IN                    0x80U
 /*
  *  bmRequestType[6:5]  - Type
  */
-#define REQ_TYPE_STD_DEV               0x00
-#define REQ_TYPE_CLASS_DEV             0x20
-#define REQ_TYPE_VENDOR_DEV            0x40
+#define REQ_TYPE_STD_DEV               0x00U
+#define REQ_TYPE_CLASS_DEV             0x20U
+#define REQ_TYPE_VENDOR_DEV            0x40U
 /*
  *  bmRequestType[4:0]  - Recipient
  */
-#define REQ_TYPE_TO_DEV                0x00
-#define REQ_TYPE_TO_IFACE              0x01
-#define REQ_TYPE_TO_EP                 0x02
-#define REQ_TYPE_TO_OTHER              0x03
+#define REQ_TYPE_TO_DEV                0x00U
+#define REQ_TYPE_TO_IFACE              0x01U
+#define REQ_TYPE_TO_EP                 0x02U
+#define REQ_TYPE_TO_OTHER              0x03U
 /*
  *  Standard Requests
  */
-#define USB_REQ_GET_STATUS             0x00
-#define USB_REQ_CLEAR_FEATURE          0x01
-#define USB_REQ_SET_FEATURE            0x03
-#define USB_REQ_SET_ADDRESS            0x05
-#define USB_REQ_GET_DESCRIPTOR         0x06
-#define USB_REQ_SET_CONFIGURATION      0x09
-#define USB_REQ_SET_INTERFACE          0x0B
+#define USB_REQ_GET_STATUS             0x00U
+#define USB_REQ_CLEAR_FEATURE          0x01U
+#define USB_REQ_SET_FEATURE            0x03U
+#define USB_REQ_SET_ADDRESS            0x05U
+#define USB_REQ_GET_DESCRIPTOR         0x06U
+#define USB_REQ_SET_CONFIGURATION      0x09U
+#define USB_REQ_SET_INTERFACE          0x0BU
 /*
  *  Descriptor Types
  */
-#define USB_DT_STANDARD                0x00
-#define USB_DT_CLASS                   0x20
-#define USB_DT_VENDOR                  0x40
+#define USB_DT_STANDARD                0x00U
+#define USB_DT_CLASS                   0x20U
+#define USB_DT_VENDOR                  0x40U
 
-#define USB_DT_DEVICE                  0x01
-#define USB_DT_CONFIGURATION           0x02
-#define USB_DT_STRING                  0x03
-#define USB_DT_INTERFACE               0x04
-#define USB_DT_ENDPOINT                0x05
-#define USB_DT_DEVICE_QUALIFIER        0x06
-#define USB_DT_OTHER_SPEED_CONF        0x07
-#define USB_DT_IFACE_POWER             0x08
+#define USB_DT_DEVICE                  0x01U
+#define USB_DT_CONFIGURATION           0x02U
+#define USB_DT_STRING                  0x03U
+#define USB_DT_INTERFACE               0x04U
+#define USB_DT_ENDPOINT                0x05U
+#define USB_DT_DEVICE_QUALIFIER        0x06U
+#define USB_DT_OTHER_SPEED_CONF        0x07U
+#define USB_DT_IFACE_POWER             0x08U
 
 
 
@@ -219,14 +219,14 @@ typedef struct __attribute__((__packed__)) usb_interface_descriptor     /*!< Int
 /*
  *  Interface descriptor bInterfaceClass[7:0]
  */
-#define USB_CLASS_AUDIO                0x01
-#define USB_CLASS_COMM                 0x02
-#define USB_CLASS_HID                  0x03
-#define USB_CLASS_PRINTER              0x07
-#define USB_CLASS_MASS_STORAGE         0x08
-#define USB_CLASS_HUB                  0x09
-#define USB_CLASS_DATA                 0x0A
-#define USB_CLASS_VIDEO                0x0E
+#define USB_CLASS_AUDIO                0x01U
+#define USB_CLASS_COMM                 0x02U
+#define USB_CLASS_HID                  0x03U
+#define USB_CLASS_PRINTER              0x07U
+#define USB_CLASS_MASS_STORAGE         0x08U
+#define USB_CLASS_HUB                  0x09U
+#define USB_CLASS_DATA                 0x0AU
+#define USB_CLASS_VIDEO                0x0EU
 
 /*
  *  Endpoint Descriptor
@@ -260,18 +260,18 @@ typedef struct __attribute__((__packed__)) usb_endpoint_descriptor    /*!< Endpo
 /*
  *  Endpoint descriptor bEndpointAddress[7] - direction
  */
-#define EP_ADDR_DIR_MASK               0x80
-#define EP_ADDR_DIR_IN                 0x80
-#define EP_ADDR_DIR_OUT                0x00
+#define EP_ADDR_DIR_MASK               0x80U
+#define EP_ADDR_DIR_IN                 0x80U
+#define EP_ADDR_DIR_OUT                0x00U
 
 /*
  *  Endpoint descriptor bmAttributes[1:0] - transfer type
  */
-#define EP_ATTR_TT_MASK                0x03
-#define EP_ATTR_TT_CTRL                0x00
-#define EP_ATTR_TT_ISO                 0x01
-#define EP_ATTR_TT_BULK                0x02
-#define EP_ATTR_TT_INT                 0x03
+#define EP_ATTR_TT_MASK                0x03U
+#define EP_ATTR_TT_CTRL                0x00U
+#define EP_ATTR_TT_ISO                 0x01U
+#define EP_ATTR_TT_BULK                0x02U
+#define EP_ATTR_TT_INT                 0x03U
 
 
 /*----------------------------------------------------------------------------------*/
@@ -433,17 +433,17 @@ extern void free_device(UDEV_T *udev);
 extern UTR_T * alloc_utr(UDEV_T *udev);
 extern void free_utr(UTR_T *utr);
 extern ED_T * alloc_ohci_ED(void);
-extern void free_ohci_ED(ED_T *ed);
+extern void free_ohci_ED(const ED_T *ed);
 extern TD_T * alloc_ohci_TD(UTR_T *utr);
-extern void free_ohci_TD(TD_T *td);
+extern void free_ohci_TD(const TD_T *td);
 
 
 extern void usbh_hub_init(void);
-extern int  connect_device(UDEV_T *);
-extern void disconnect_device(UDEV_T *);
+extern int  connect_device(UDEV_T *udev);
+extern void disconnect_device(UDEV_T *udev);
 extern int  usbh_register_driver(UDEV_DRV_T *driver);
 extern EP_INFO_T * usbh_iface_find_ep(IFACE_T *iface, uint8_t ep_addr, uint8_t dir_type);
-extern int  usbh_reset_device(UDEV_T *);
+extern int  usbh_reset_device(UDEV_T *udev);
 
 /*
  *  USB Standard Request functions

@@ -29,18 +29,18 @@
 
 
 /* Mass Storage Class Sub-class */
-#define MSC_SCLASS_RBC            0x01   /* Typically, flash devices      */
-#define MSC_SCLASS_8020           0x02   /* CD-ROM                        */
-#define MSC_SCLASS_QIC            0x03   /* QIC-157 Tapes                 */
-#define MSC_SCLASS_UFI            0x04   /* Floppy                        */
-#define MSC_SCLASS_8070           0x05   /* Removable media               */
-#define MSC_SCLASS_SCSI           0x06   /* Transparent                   */
+#define MSC_SCLASS_RBC            0x01U   /* Typically, flash devices      */
+#define MSC_SCLASS_8020           0x02U   /* CD-ROM                        */
+#define MSC_SCLASS_QIC            0x03U   /* QIC-157 Tapes                 */
+#define MSC_SCLASS_UFI            0x04U   /* Floppy                        */
+#define MSC_SCLASS_8070           0x05U   /* Removable media               */
+#define MSC_SCLASS_SCSI           0x06U   /* Transparent                   */
 
 /* Mass Storage Class Sub-protocol */
-#define MSC_SPROTO_CBI            0x00   /* Control/Bulk/Interrupt        */
-#define MSC_SPROTO_CB             0x01   /* Control/Bulk w/o interrupt    */
-#define MSC_SPROTO_BULK           0x50   /* Bulk only                     */
-#define MSC_SPROTO_DPCM_USB       0xf0   /* Combination CB/SDDR09         */
+#define MSC_SPROTO_CBI            0x00U   /* Control/Bulk/Interrupt        */
+#define MSC_SPROTO_CB             0x01U   /* Control/Bulk w/o interrupt    */
+#define MSC_SPROTO_BULK           0x50U   /* Bulk only                     */
+#define MSC_SPROTO_DPCM_USB       0xf0U   /* Combination CB/SDDR09         */
 
 
 /* Command Block Wrapper */

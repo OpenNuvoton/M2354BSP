@@ -9,6 +9,8 @@
 #ifndef  _USBH_CONFIG_H_
 #define  _USBH_CONFIG_H_
 
+#include <stdarg.h>
+
 /// @cond HIDDEN_SYMBOLS
 
 /*----------------------------------------------------------------------------------------*/
@@ -66,16 +68,18 @@
 //#define ENABLE_VERBOSE_DEBUG              /* verbos debug messages                      */
 //#define DUMP_DESCRIPTOR                     /* dump descriptors                           */
 
+extern int usbh_printf(const char *fmt, ...); ///< For USB Library Usage: debug print function
+
 #ifdef ENABLE_ERROR_MSG
-#define USB_error            printf
+#define USB_error            (void)usbh_printf
 #else
 #define USB_error(...)
 #endif
 
 #ifdef ENABLE_DEBUG_MSG
-#define USB_debug            printf
+#define USB_debug            (void)usbh_printf
 #ifdef ENABLE_VERBOSE_DEBUG
-#define USB_vdebug         printf
+#define USB_vdebug         (void)usbh_printf
 #else
 #define USB_vdebug(...)
 #endif
