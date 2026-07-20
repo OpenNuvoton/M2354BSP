@@ -69,7 +69,7 @@ int32_t  usbh_hid_get_report_descriptor(HID_DEV_T *hdev, uint8_t *desc_buf, int 
         return USBH_ERR_NOT_FOUND;
     }
 
-    iface = (IFACE_T *)hdev->iface;
+    iface = hdev->iface;
 
     ret = usbh_ctrl_xfer(iface->udev,
                          REQ_TYPE_IN | REQ_TYPE_STD_DEV | REQ_TYPE_TO_IFACE,    /* bmRequestType */
@@ -115,7 +115,7 @@ int32_t  usbh_hid_get_report(HID_DEV_T *hdev, int rtp_typ, int rtp_id,
         return USBH_ERR_NOT_FOUND;
     }
 
-    iface = (IFACE_T *)hdev->iface;
+    iface = hdev->iface;
 
     ret = usbh_ctrl_xfer(iface->udev,
                          REQ_TYPE_IN | REQ_TYPE_CLASS_DEV | REQ_TYPE_TO_IFACE,  /* bmRequestType */
@@ -162,7 +162,7 @@ int32_t  usbh_hid_set_report(HID_DEV_T *hdev, int rtp_typ, int rtp_id,
         return USBH_ERR_NOT_FOUND;
     }
 
-    iface = (IFACE_T *)hdev->iface;
+    iface = hdev->iface;
 
     ret = usbh_ctrl_xfer(iface->udev,
                          REQ_TYPE_OUT | REQ_TYPE_CLASS_DEV | REQ_TYPE_TO_IFACE, /* bmRequestType */
@@ -200,7 +200,7 @@ int32_t  usbh_hid_set_report_non_blocking(HID_DEV_T *hdev, int rtp_typ, int rtp_
         return USBH_ERR_NOT_FOUND;
     }
 
-    iface = (IFACE_T *)hdev->iface;
+    iface = hdev->iface;
 
     utr = hdev->rpd.utr_led;
     if(utr == NULL)
@@ -265,7 +265,7 @@ int32_t  usbh_hid_get_idle(HID_DEV_T *hdev, int rtp_id, uint8_t *idle_rate)
         return USBH_ERR_NOT_FOUND;
     }
 
-    iface = (IFACE_T *)hdev->iface;
+    iface = hdev->iface;
 
     ret = usbh_ctrl_xfer(iface->udev,
                          REQ_TYPE_IN | REQ_TYPE_CLASS_DEV | REQ_TYPE_TO_IFACE,  /* bmRequestType */
@@ -308,7 +308,7 @@ int32_t  usbh_hid_set_idle(HID_DEV_T *hdev, int rtp_id, uint8_t idle_rate)
         return USBH_ERR_NOT_FOUND;
     }
 
-    iface = (IFACE_T *)hdev->iface;
+    iface = hdev->iface;
 
     ret = usbh_ctrl_xfer(iface->udev,
                          REQ_TYPE_OUT | REQ_TYPE_CLASS_DEV | REQ_TYPE_TO_IFACE, /* bmRequestType */
@@ -349,7 +349,7 @@ int32_t  usbh_hid_get_protocol(HID_DEV_T *hdev, uint8_t *protocol)
         return USBH_ERR_NOT_FOUND;
     }
 
-    iface = (IFACE_T *)hdev->iface;
+    iface = hdev->iface;
 
     ret = usbh_ctrl_xfer(iface->udev,
                          REQ_TYPE_IN | REQ_TYPE_CLASS_DEV | REQ_TYPE_TO_IFACE,  /* bmRequestType */
@@ -390,7 +390,7 @@ int32_t  usbh_hid_set_protocol(HID_DEV_T *hdev, uint8_t protocol)
         return USBH_ERR_NOT_FOUND;
     }
 
-    iface = (IFACE_T *)hdev->iface;
+    iface = hdev->iface;
 
     ret = usbh_ctrl_xfer(iface->udev,
                          REQ_TYPE_OUT | REQ_TYPE_CLASS_DEV | REQ_TYPE_TO_IFACE, /* bmRequestType */
@@ -409,12 +409,32 @@ int32_t  usbh_hid_set_protocol(HID_DEV_T *hdev, uint8_t protocol)
 }
 
 
-/// @cond HIDDEN_SYMBOLS
-
-
 /*
  * HID int-in complete function
  */
+/**
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> utr->context stores a generic void * set by usbhid_probe() to the
+ *                       owning HID_DEV_T. This accessor centralizes what was previously
+ *                       an inline `(HID_DEV_T *)utr->context` cast duplicated at each
+ *                       transfer completion callback into a single conversion point.
+ *                       UTR_T->context is a shared framework field reused as-is by every
+ *                       USB class driver (cdc/hid/uac/hub), so giving it a distinct type
+ *                       per class is not a practical alternative; usbhid_probe() is the
+ *                       only place that assigns utr->context for HID transfers and it
+ *                       always stores a HID_DEV_T* address, so this accessor only
+ *                       documents that existing guarantee and does not change
+ *                       behavior.<br>
+ */
+static HID_DEV_T *hid_dev_from_context(UTR_T *utr)
+{
+    /* cppcheck-suppress misra-c2012-11.5 */
+    return (HID_DEV_T *)utr->context;
+}
+
+/// @cond HIDDEN_SYMBOLS
+
 static void  hid_read_irq(UTR_T *utr)
 {
     HID_DEV_T   *hdev;
@@ -422,7 +442,7 @@ static void  hid_read_irq(UTR_T *utr)
 
     //HID_DBGMSG("hid_read_irq. %d\n", utr->xfer_len);
 
-    hdev = (HID_DEV_T *)utr->context;
+    hdev = hid_dev_from_context(utr);
 
     if(utr->status != 0)
     {
@@ -477,7 +497,7 @@ static void  hid_write_irq(UTR_T *utr)
 
     //HID_DBGMSG("hid_write_irq. %d\n", urb->actual_length);
 
-    hdev = (HID_DEV_T *)utr->context;
+    hdev = hid_dev_from_context(utr);
 
     if(utr->status)
     {
@@ -517,7 +537,7 @@ static void  hid_write_irq(UTR_T *utr)
  */
 int32_t usbh_hid_start_int_read(HID_DEV_T *hdev, uint8_t ep_addr, HID_IR_FUNC *func)
 {
-    IFACE_T    *iface = (IFACE_T *)hdev->iface;
+    IFACE_T    *iface = hdev->iface;
     UTR_T      *utr;
     EP_INFO_T  *ep;
     int         i;
@@ -553,7 +573,7 @@ int32_t usbh_hid_start_int_read(HID_DEV_T *hdev, uint8_t ep_addr, HID_IR_FUNC *f
         return USBH_ERR_MEMORY_OUT;
     }
 
-    utr->buff = (uint8_t *)usbh_alloc_mem(ep->wMaxPacketSize);
+    utr->buff = usbh_alloc_buff(ep->wMaxPacketSize);
     if(utr->buff == NULL)
     {
         free_utr(utr);
@@ -604,7 +624,7 @@ int32_t usbh_hid_start_int_read(HID_DEV_T *hdev, uint8_t ep_addr, HID_IR_FUNC *f
  */
 int32_t usbh_hid_stop_int_read(HID_DEV_T *hdev, uint8_t ep_addr)
 {
-    const IFACE_T    *iface = (const IFACE_T *)hdev->iface;
+    const IFACE_T    *iface = hdev->iface;
     UTR_T      *utr;
     int        i;
     int        ret;
@@ -672,7 +692,7 @@ int32_t usbh_hid_stop_int_read(HID_DEV_T *hdev, uint8_t ep_addr)
  */
 int32_t usbh_hid_start_int_write(HID_DEV_T *hdev, uint8_t ep_addr, HID_IW_FUNC *func)
 {
-    IFACE_T    *iface = (IFACE_T *)hdev->iface;
+    IFACE_T    *iface = hdev->iface;
     UTR_T      *utr;
     EP_INFO_T  *ep;
     int        i;
@@ -708,7 +728,7 @@ int32_t usbh_hid_start_int_write(HID_DEV_T *hdev, uint8_t ep_addr, HID_IW_FUNC *
         return USBH_ERR_MEMORY_OUT;
     }
 
-    utr->buff = (uint8_t *)usbh_alloc_mem(ep->wMaxPacketSize);
+    utr->buff = usbh_alloc_buff(ep->wMaxPacketSize);
     if(utr->buff == NULL)
     {
         free_utr(utr);
@@ -762,7 +782,7 @@ int32_t usbh_hid_start_int_write(HID_DEV_T *hdev, uint8_t ep_addr, HID_IW_FUNC *
  */
 int32_t usbh_hid_stop_int_write(HID_DEV_T *hdev, uint8_t ep_addr)
 {
-    const IFACE_T    *iface = (const IFACE_T *)hdev->iface;
+    const IFACE_T    *iface = hdev->iface;
     UTR_T      *utr;
     int        i;
     int        ret;

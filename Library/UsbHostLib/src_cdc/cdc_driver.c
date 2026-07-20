@@ -21,10 +21,25 @@
 
 static CDC_DEV_T *g_cdev_list = NULL;
 
+/// @endcond HIDDEN_SYMBOLS
+
 static CDC_DEV_T *alloc_cdc_device(void)
 {
     CDC_DEV_T  *cdev;
 
+    /**
+     * @static_deviation
+     * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+     * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This is
+     *                       the single conversion point where the raw block becomes a
+     *                       typed CDC_DEV_T object. usbh_alloc_mem() is the library's one
+     *                       generic heap allocator shared by every device/interface/buffer
+     *                       type, so a per-type allocator is not a practical alternative;
+     *                       the requested size always matches sizeof(CDC_DEV_T), so this
+     *                       cast only names an already-correct binary layout and changes
+     *                       no data or control flow versus the previous unnamed cast.<br>
+     */
+    /* cppcheck-suppress misra-c2012-11.5 */
     cdev = (CDC_DEV_T *)usbh_alloc_mem(sizeof(CDC_DEV_T));
     if(cdev == NULL)
     {
@@ -35,6 +50,8 @@ static CDC_DEV_T *alloc_cdc_device(void)
     cdev->ifnum_data = -1;
     return cdev;
 }
+
+/// @cond HIDDEN_SYMBOLS
 
 static void  free_cdc_device(CDC_DEV_T *cdev)
 {
@@ -196,6 +213,31 @@ static int  cdc_probe(IFACE_T *iface)
     return 0;
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
+/**
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> iface->context stores a generic void * set by cdc_probe() to the
+ *                       owning CDC_DEV_T. This accessor centralizes what was previously
+ *                       an inline `(CDC_DEV_T *)iface->context` cast duplicated at each
+ *                       call site into the single conversion point used when tearing down
+ *                       the CDC device on interface disconnect. IFACE_T->context is a
+ *                       shared framework field reused as-is by every USB class driver
+ *                       (cdc/hid/uac/hub), so giving it a distinct type per class is not a
+ *                       practical alternative; cdc_probe() is the only place that assigns
+ *                       iface->context and it always stores a CDC_DEV_T* address, so this
+ *                       accessor only documents that existing guarantee and does not
+ *                       change behavior.<br>
+ */
+static CDC_DEV_T *cdc_dev_from_iface(IFACE_T *iface)
+{
+    /* cppcheck-suppress misra-c2012-11.5 */
+    return (CDC_DEV_T *)iface->context;
+}
+
+/// @cond HIDDEN_SYMBOLS
+
 static void  cdc_disconnect(IFACE_T *iface)
 {
     IFACE_T     *if_cdc;
@@ -205,7 +247,7 @@ static void  cdc_disconnect(IFACE_T *iface)
 
     CDC_DBGMSG("CDC device interface %d disconnected!\n", iface->if_num);
 
-    cdev = (CDC_DEV_T *)(iface->context);
+    cdev = cdc_dev_from_iface(iface);
 
     if(cdev == NULL)
     {

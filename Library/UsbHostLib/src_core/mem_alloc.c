@@ -43,7 +43,13 @@ UDEV_T * g_udev_list;
 static uint8_t  _dev_addr_pool[128];
 static volatile int  _device_addr;
 
+/// @endcond HIDDEN_SYMBOLS
+
 /**
+ * @brief     Allocate a raw block of memory from the C heap.
+ * @param[in] size  Number of bytes to allocate.
+ * @return    Pointer to the allocated block, or NULL if allocation failed.
+ *
  * @static_deviation
  * <b>Rule:</b>          MISRA C:2012 Rule 21.3<br>
  * <b>Justification:</b> The USB Host library requires dynamic memory for its system allocator.
@@ -58,6 +64,10 @@ static void *usbh_sys_malloc(size_t size)
 }
 
 /**
+ * @brief     Release a block of memory previously obtained from usbh_sys_malloc().
+ * @param[in] ptr  Pointer to the memory block to free. NULL is safely ignored by free().
+ * @return    None.
+ *
  * @static_deviation
  * <b>Rule:</b>          MISRA C:2012 Rule 21.3<br>
  * <b>Justification:</b> Pairs with usbh_sys_malloc(). free() is intentionally used here as the
@@ -74,6 +84,8 @@ static void usbh_sys_free(void *ptr)
 /*--------------------------------------------------------------------------*/
 /*   Memory alloc/free recording                                            */
 /*--------------------------------------------------------------------------*/
+
+/// @cond HIDDEN_SYMBOLS
 
 void usbh_memory_init(void)
 {
@@ -116,6 +128,8 @@ static void  memory_counter(int size)
     }
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
 /**
  * @brief     Allocate a zero-initialized block from the USB Host heap.
  * @param[in] size  Number of bytes to allocate.
@@ -139,6 +153,29 @@ void * usbh_alloc_mem(int size)
 }
 
 /**
+ * @brief     Allocate a zero-initialized byte buffer from the USB Host heap.
+ * @param[in] size  Number of bytes to allocate.
+ * @return    Pointer to the allocated byte buffer, or NULL if allocation failed.
+ *
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This wrapper
+ *                       is the single conversion point for USB transfer and descriptor
+ *                       byte buffers, centralizing the Rule 11.5 cast instead of
+ *                       duplicating it at every `(uint8_t *)usbh_alloc_mem(...)` call
+ *                       site. usbh_alloc_mem() is the library's one generic heap
+ *                       allocator shared by every buffer type, so a per-type allocator is
+ *                       not a practical alternative; the requested size is caller-supplied
+ *                       and unchanged by this wrapper, so no data or control-flow change
+ *                       results.<br>
+ */
+uint8_t * usbh_alloc_buff(int size)
+{
+    /* cppcheck-suppress misra-c2012-11.5 */
+    return (uint8_t *)usbh_alloc_mem(size);
+}
+
+/**
  * @brief     Free a memory block previously allocated by usbh_alloc_mem().
  * @param[in] p     Pointer to the memory block to free.
  * @param[in] size  Size of the block in bytes, used to update the usage counter.
@@ -158,11 +195,23 @@ void usbh_free_mem(void *p, int size)
 /**
  * @brief     Allocate and initialize a new USB device (UDEV_T) object.
  * @return    Pointer to the newly allocated USB device, or NULL if allocation failed.
+ *
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> usbh_sys_malloc() provides generic storage as void *. This is the
+ *                       single conversion point where the raw block becomes a typed
+ *                       UDEV_T object for the global device list. usbh_sys_malloc() is
+ *                       the library's one generic heap allocator shared by every object
+ *                       type, so a per-type allocator is not a practical alternative; the
+ *                       allocated block size always matches sizeof(*udev), so this cast
+ *                       only names an already-correct binary layout and changes no data
+ *                       or control flow.<br>
  */
 UDEV_T * alloc_device(void)
 {
     UDEV_T  *udev;
 
+    /* cppcheck-suppress misra-c2012-11.5 */
     udev = usbh_sys_malloc(sizeof(*udev));
 
     if(udev == NULL)
@@ -222,6 +271,8 @@ void free_device(UDEV_T *udev)
     memory_counter(-sizeof(*udev));
 }
 
+/// @cond HIDDEN_SYMBOLS
+
 int  alloc_dev_address(void)
 {
     _device_addr++;
@@ -254,6 +305,8 @@ void  free_dev_address(int dev_addr)
     }
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
 /*--------------------------------------------------------------------------*/
 /*   UTR (USB Transfer Request) allocate/free                               */
 /*--------------------------------------------------------------------------*/
@@ -262,11 +315,23 @@ void  free_dev_address(int dev_addr)
  * @brief     Allocate and initialize a new USB transfer request (UTR_T) object.
  * @param[in] udev  The USB device that owns this transfer request.
  * @return    Pointer to the newly allocated UTR, or NULL if allocation failed.
+ *
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> usbh_sys_malloc() provides generic storage as void *. This is the
+ *                       single conversion point where the raw block becomes a typed
+ *                       UTR_T transfer request object. usbh_sys_malloc() is the library's
+ *                       one generic heap allocator shared by every object type, so a
+ *                       per-type allocator is not a practical alternative; the allocated
+ *                       block size always matches sizeof(*utr), so this cast only names
+ *                       an already-correct binary layout and changes no data or control
+ *                       flow.<br>
  */
 UTR_T * alloc_utr(UDEV_T *udev)
 {
     UTR_T  *utr;
 
+    /* cppcheck-suppress misra-c2012-11.5 */
     utr = usbh_sys_malloc(sizeof(*utr));
 
     if(utr == NULL)
@@ -297,6 +362,8 @@ void free_utr(UTR_T *utr)
     usbh_sys_free(utr);
     memory_counter(-(int)sizeof(*utr));
 }
+
+/// @cond HIDDEN_SYMBOLS
 
 /*--------------------------------------------------------------------------*/
 /*   OHCI ED allocate/free                                                  */

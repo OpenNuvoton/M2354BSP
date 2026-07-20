@@ -36,6 +36,35 @@ static ED_T  * _Ied[6];
 
 static ED_T  *ed_remove_list;
 
+/// @endcond HIDDEN_SYMBOLS
+
+/**
+ * @brief     Get the OHCI endpoint descriptor from generic endpoint storage.
+ * @param[in] hw_pipe  Hardware-pipe pointer stored by the host-controller abstraction.
+ * @return    OHCI endpoint descriptor pointer, or NULL if hw_pipe is NULL.
+ *
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> EP_INFO_T.hw_pipe is a polymorphic void * shared by host
+ *                       controller implementations. This OHCI-only helper centralizes
+ *                       what was previously an inline `(ED_T *)hw_pipe` cast duplicated
+ *                       at each call site into the single conversion point for its ED_T
+ *                       allocation. EP_INFO_T.hw_pipe is declared void * so the same
+ *                       EP_INFO_T struct can be shared across different host-controller
+ *                       back-ends, so giving it a concrete ED_T* type is not a practical
+ *                       alternative in this OHCI-only file; hw_pipe is only ever
+ *                       assigned an ED_T* by this OHCI driver's own allocation code, so
+ *                       the cast simply names an already-correct value and changes no
+ *                       behavior.<br>
+ */
+static ED_T *ohci_ed_from_hw_pipe(void *hw_pipe)
+{
+    /* cppcheck-suppress misra-c2012-11.5 */
+    return (ED_T *)hw_pipe;
+}
+
+/// @cond HIDDEN_SYMBOLS
+
 static void add_to_ED_remove_list(ED_T *ed)
 {
     const ED_T  *p;
@@ -280,7 +309,7 @@ static int ohci_quit_xfer(UTR_T *utr, EP_INFO_T *ep)
             return USBH_ERR_NOT_FOUND;
         }
 
-        ed = (ED_T *)(utr->ep->hw_pipe);
+        ed = ohci_ed_from_hw_pipe(utr->ep->hw_pipe);
 
         if (!ed)
         {
@@ -292,7 +321,7 @@ static int ohci_quit_xfer(UTR_T *utr, EP_INFO_T *ep)
 
     if((ep != NULL) && (ep->hw_pipe != NULL))
     {
-        ed = (ED_T *)(ep->hw_pipe);
+        ed = ohci_ed_from_hw_pipe(ep->hw_pipe);
         /* add the endpoint to remove list, it will be removed on the next start of frame */
         add_to_ED_remove_list(ed);
         ep->hw_pipe = NULL;
@@ -418,7 +447,7 @@ static int ohci_ctrl_xfer(UTR_T *utr)
     }
     else
     {
-        ed = (ED_T *)udev->ep0.hw_pipe;
+        ed = ohci_ed_from_hw_pipe(udev->ep0.hw_pipe);
     }
 
     /*------------------------------------------------------------------------------------*/

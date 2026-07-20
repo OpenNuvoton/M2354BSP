@@ -182,6 +182,26 @@ static int  uac_probe(IFACE_T *iface)
     return ret;
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
+/* cppcheck-suppress constParameterCallback */
+/**
+  * @brief     Disconnect handler for a USB Audio Class interface; tears down the owning UAC device.
+  * @param[in] iface  The UAC interface being disconnected.
+  * @return    None.
+  *
+  * @static_deviation
+  * <b>Rule:</b> constParameterCallback (cppcheck native check)<br>
+  * <b>Location:</b> `uac_disconnect()` parameter `iface`<br>
+  * <b>Justification:</b> `iface` is only read here, but this function is assigned to the
+  * `disconnect` member of `UDEV_DRV_T` (see @ref usb.h "usb.h", a fixed `void (*)(struct iface_t *)`
+  * callback signature shared by every USB class driver: hub/hid/cdc/uac). Adding `const`
+  * would make `uac_driver.disconnect = uac_disconnect;` an incompatible-pointer-type
+  * assignment and would require synchronized changes to the shared `UDEV_DRV_T` typedef
+  * and every sibling `*_disconnect()` implementation, which is out of this file's blast
+  * radius; the `iface` parameter itself is unaffected either way (read-only), so leaving
+  * it non-const changes nothing.<br>
+  */
 static void  uac_disconnect(IFACE_T *iface)
 {
     UAC_DEV_T    *uac;
@@ -189,7 +209,11 @@ static void  uac_disconnect(IFACE_T *iface)
     //ALT_IFACE_T  *aif = iface->aif;
     int          i;
 
-    uac = (UAC_DEV_T *)iface->context;
+    uac = find_uac_device(iface->udev);
+    if(uac == NULL)
+    {
+        return;
+    }
 
     uac->state = UAC_STATE_DISCONNECTING;
 

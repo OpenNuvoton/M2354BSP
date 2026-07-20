@@ -187,6 +187,26 @@ int32_t  usbh_cdc_set_control_line_state(CDC_DEV_T *cdev, int active_carrier, in
     return ret;
 }
 
+/**
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> utr->context stores a generic void * set by cdc_probe() to the
+ *                       owning CDC_DEV_T. This accessor centralizes what was previously
+ *                       an inline `(CDC_DEV_T *)utr->context` cast duplicated at each
+ *                       transfer completion callback into a single conversion point.
+ *                       UTR_T->context is a shared framework field reused as-is by every
+ *                       USB class driver (cdc/hid/uac/hub), so giving it a distinct type
+ *                       per class is not a practical alternative; cdc_probe() is the only
+ *                       place that assigns utr->context for CDC transfers and it always
+ *                       stores a CDC_DEV_T* address, so this accessor only documents that
+ *                       existing guarantee and does not change behavior.<br>
+ */
+static CDC_DEV_T *cdc_dev_from_context(UTR_T *utr)
+{
+    /* cppcheck-suppress misra-c2012-11.5 */
+    return (CDC_DEV_T *)utr->context;
+}
+
 /// @cond HIDDEN_SYMBOLS
 /*
  * CDC INT-in complete function
@@ -198,7 +218,7 @@ static void  cdc_int_in_irq(UTR_T *utr)
 
     //CDC_DBGMSG("cdc_int_in_irq. %d\n", utr->xfer_len);
 
-    cdev = (CDC_DEV_T *)utr->context;
+    cdev = cdc_dev_from_context(utr);
 
     if(utr->status)
     {
@@ -302,7 +322,7 @@ static void  cdc_bulk_in_irq(UTR_T *utr)
 
     //CDC_DBGMSG("cdc_bulk_in_irq. %d\n", utr->xfer_len);
 
-    cdev = (CDC_DEV_T *)utr->context;
+    cdev = cdc_dev_from_context(utr);
 
     if(utr->status)
     {

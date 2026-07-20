@@ -267,7 +267,7 @@ typedef struct usbhid_dev
     HID_IW_FUNC   *write_func;          /*!< Interrupt-out callback function                   */
     UTR_T         *utr_list[CONFIG_HID_DEV_MAX_PIPE];  /*!< UTR list of all INT in and out pipes in running  */
     UTR_T         *out_utr_list;        /*!< UTR list of INT out endpoints                     */
-    void          *iface;               /*!< This HID interface                                */
+    IFACE_T       *iface;               /*!< This HID interface                                */
     uint32_t      uid;                  /*!< The unique ID to identify a HID device.           */
     RPD_T         rpd;                  /*!< Information of Report Descriptor                  */
     struct usbhid_dev   *next;          /*!< Point to the next HID device                      */
