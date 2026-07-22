@@ -1,13 +1,13 @@
 {
   "manifestFormat": "MCU-BSP-SBOM-Manifest",
   "manifestVersion": "1.0",
-  "serialNumber": "urn:uuid:54707b76-3862-4db9-b6c6-dfcf88772dba",
-  "createdAt": "2026-07-03T09:52:13.616683Z",
+  "serialNumber": "urn:uuid:3bfd1a6d-5481-4e90-b2e5-d7c783a370fa",
+  "createdAt": "2026-07-22T05:43:00.598202Z",
   "bsp": {
     "name": "m2354bsp",
-    "version": "v3.00.006-29-gc9bb55fb",
+    "version": "v3.00.006-32-g686ef9d3-dirty",
     "releaseIdentifierSource": "SBOM file name",
-    "gitDescribe": "v3.00.006-29-gc9bb55fb"
+    "gitDescribe": "v3.00.006-32-g686ef9d3-dirty"
   },
   "sbomPackage": {
     "name": "MCU BSP SBOM Package",
@@ -24,14 +24,14 @@
       "sbomType": "Product SBOM",
       "bomFormat": "CycloneDX",
       "specVersion": "1.6",
-      "serialNumber": "urn:uuid:cbdba84a-e0bd-4100-a0cc-c61cc4730cc6",
+      "serialNumber": "urn:uuid:5732d914-dbc1-4f7d-be6f-2f1f4843f030",
       "sbomVersion": 1,
-      "generatedTimestamp": "2026-07-03T17:50:56+08:00",
+      "generatedTimestamp": "2026-07-22T13:42:53+08:00",
       "metadataComponent": {
         "bomRef": "04ed2dbaee1fb902",
         "type": "library",
         "name": "MCU Driver",
-        "version": "v3.00.006-29-gc9bb55fb",
+        "version": "v3.00.006-32-g686ef9d3-dirty",
         "properties": [
           {
             "name": "bsp:sbom-category",
@@ -120,7 +120,7 @@
       },
       "hash": {
         "algorithm": "SHA-256",
-        "value": "a0c193afcf795a7003819dad3d766fbc2aa1938e72b86020959304d6339937bf"
+        "value": "b2b807e20ea3f93a45cd33b36978adefa86b1a6ca40103c1b9f96e6bf6614b61"
       }
     },
     {
@@ -128,14 +128,14 @@
       "sbomType": "Test Sample SBOM",
       "bomFormat": "CycloneDX",
       "specVersion": "1.6",
-      "serialNumber": "urn:uuid:b3c25a81-752a-4d73-a038-93aca7d45c09",
+      "serialNumber": "urn:uuid:fd1272be-8a4d-4bc4-9490-f3f6c16ce1e5",
       "sbomVersion": 1,
-      "generatedTimestamp": "2026-07-03T17:51:43+08:00",
+      "generatedTimestamp": "2026-07-22T13:42:58+08:00",
       "metadataComponent": {
         "bomRef": "85fd158bf2db4a01",
         "type": "application",
         "name": "MCU Test Sample",
-        "version": "v3.00.006-29-gc9bb55fb",
+        "version": "v3.00.006-32-g686ef9d3-dirty",
         "properties": [
           {
             "name": "bsp:sbom-category",
@@ -184,9 +184,9 @@
       "componentSummary": {
         "componentCount": 31,
         "componentCountByType": {
-          "application": 14,
+          "application": 15,
           "device-driver": 3,
-          "library": 14
+          "library": 13
         },
         "applicationNames": [
           "/SampleCode/XOM/XOMLib/XOMAddr",
@@ -194,6 +194,7 @@
           "/Utilities/FwSign/FwSignCheck",
           "HID Transfer Test Tool",
           "NuvPos58 Driver",
+          "OTAServerDemo Android App",
           "TouchView",
           "TouchView_MP",
           "WDF Coinstaller",
@@ -207,7 +208,7 @@
       },
       "hash": {
         "algorithm": "SHA-256",
-        "value": "bcd73aa41e330f7f98b02580d7cc61ab4e3082d91c1c7325958a8144d6541a1a"
+        "value": "a3ed8df8ffe040a989a24b0a210a8235205fcda2a4c022ef2fa3036b9784e8f8"
       },
       "relationshipToProductSbom": {
         "usesProductComponents": true,

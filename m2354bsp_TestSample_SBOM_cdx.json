@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:b3c25a81-752a-4d73-a038-93aca7d45c09",
+  "serialNumber": "urn:uuid:fd1272be-8a4d-4bc4-9490-f3f6c16ce1e5",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-03T17:51:43+08:00",
+    "timestamp": "2026-07-22T13:42:58+08:00",
     "tools": {
       "components": [
         {
@@ -20,7 +20,7 @@
       "bom-ref": "85fd158bf2db4a01",
       "type": "application",
       "name": "MCU Test Sample",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -985,6 +985,57 @@
         {
           "name": "syft:metadata:virtualPath",
           "value": "/Utilities/androidApp/OTAServerDemo_2.1.2_release.zip:OTAServerDemo/gradle/wrapper/gradle-wrapper.jar"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:license-status",
+          "value": "identified"
+        },
+        {
+          "name": "bsp:license-source",
+          "value": "manual-binary-license-mapping"
+        },
+        {
+          "name": "bsp:license-match-method",
+          "value": "sha1-metadata-fallback"
+        },
+        {
+          "name": "bsp:license-evidence-id",
+          "value": "gradle-wrapper-jar.md-977bbd78d6cdc3e1b64b4e240d2af5f081ca40be3a15dcfdc02731985911f3c1"
+        },
+        {
+          "name": "bsp:license-reference",
+          "value": "https://docs.gradle.org/current/userguide/licenses.html"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "false"
+        },
+        {
+          "name": "bsp:runtime-dependency",
+          "value": "false"
+        },
+        {
+          "name": "bsp:usage",
+          "value": "Gradle build bootstrap wrapper JAR"
+        },
+        {
+          "name": "bsp:review-required",
+          "value": "true"
+        },
+        {
+          "name": "bsp:review-reason",
+          "value": "License applied via metadata fallback (sha1-metadata-fallback); SHA-256 match was not available \u2014 manual review required."
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
         }
       ]
     },
@@ -1835,84 +1886,10 @@
       ]
     },
     {
-      "bom-ref": "pkg:pypi/pylint@2.4.4?package-id=c08da8de1f8110ca",
-      "type": "library",
-      "name": "pylint",
-      "version": "2.4.4",
-      "cpe": "cpe:2.3:a:python-pylint:python-pylint:2.4.4:*:*:*:*:*:*:*",
-      "purl": "pkg:pypi/pylint@2.4.4",
-      "properties": [
-        {
-          "name": "syft:package:foundBy",
-          "value": "python-package-cataloger"
-        },
-        {
-          "name": "syft:package:language",
-          "value": "python"
-        },
-        {
-          "name": "syft:package:type",
-          "value": "python"
-        },
-        {
-          "name": "syft:package:metadataType",
-          "value": "python-pip-requirements-entry"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:python-pylint:python_pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:python_pylint:python-pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:python_pylint:python_pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:pylint:python-pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:pylint:python_pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:python-pylint:pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:python:python-pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:python:python_pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:python_pylint:pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:pylint:pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:cpe23",
-          "value": "cpe:2.3:a:python:pylint:2.4.4:*:*:*:*:*:*:*"
-        },
-        {
-          "name": "syft:location:0:path",
-          "value": "/ThirdParty/mbedtls-3.1.0/scripts/ci.requirements.txt"
-        }
-      ]
-    },
-    {
       "type": "application",
       "bom-ref": "m2354bsp:test-sample-component:samplecode",
       "name": "m2354 SampleCode",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -1957,7 +1934,7 @@
       "type": "application",
       "bom-ref": "m2354bsp:test-sample-component:thirdparty",
       "name": "m2354 ThirdParty",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -2002,7 +1979,7 @@
       "type": "application",
       "bom-ref": "m2354bsp:test-sample-component:utilities",
       "name": "m2354 Utilities",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -2044,6 +2021,229 @@
       ]
     },
     {
+      "type": "application",
+      "bom-ref": "pkg:generic/otaserverdemo-android@2.1.2?source=vendored&path=Utilities/androidApp",
+      "name": "OTAServerDemo Android App",
+      "version": "2.1.2",
+      "scope": "required",
+      "author": "Nuvoton Technology Corporation",
+      "purl": "pkg:generic/otaserverdemo-android@2.1.2",
+      "description": "Nuvoton OTAServerDemo Android application and related pre-built APK/AAR artifacts under Utilities/androidApp.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "src_path",
+          "value": "Utilities/androidApp"
+        },
+        {
+          "name": "bsp:file-path",
+          "value": "Utilities/androidApp"
+        },
+        {
+          "name": "integration",
+          "value": "vendored_source_and_binary"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "bsp:component-source",
+          "value": "Nuvoton Technology Corporation"
+        },
+        {
+          "name": "bsp:evidence-file",
+          "value": "Document/SBOM/components/sca_androidapp.json"
+        },
+        {
+          "name": "bsp:evidence-path",
+          "value": "Utilities/androidApp"
+        },
+        {
+          "name": "bsp:license-file",
+          "value": "Utilities/androidApp/LICENSE.md"
+        },
+        {
+          "name": "bsp:application-id",
+          "value": "com.nuvoton.otaserverdemo"
+        },
+        {
+          "name": "bsp:version-code",
+          "value": "1"
+        },
+        {
+          "name": "bsp:version-evidence",
+          "value": "Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/build.gradle (versionName 2.1.2)"
+        },
+        {
+          "name": "bsp:compile-sdk-version",
+          "value": "28"
+        },
+        {
+          "name": "bsp:min-sdk-version",
+          "value": "21"
+        },
+        {
+          "name": "bsp:target-sdk-version",
+          "value": "28"
+        },
+        {
+          "name": "bsp:gradle-distribution",
+          "value": "gradle-6.5-all"
+        },
+        {
+          "name": "bsp:build-tool",
+          "value": "Android Gradle Plugin 4.1.1"
+        },
+        {
+          "name": "bsp:kotlin-version",
+          "value": "1.3.61"
+        },
+        {
+          "name": "bsp:binary-file",
+          "value": "Utilities/androidApp/OTA_Update_App.apk"
+        },
+        {
+          "name": "bsp:binary-file",
+          "value": "Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/debug/app-debug.apk"
+        },
+        {
+          "name": "bsp:binary-file",
+          "value": "Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/libs/otaserver-debug.aar"
+        },
+        {
+          "name": "bsp:binary-file",
+          "value": "Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/libs/otaserver-release.aar"
+        },
+        {
+          "name": "bsp:binary-file",
+          "value": "Utilities/androidApp/OTAServerDemo/OTAServerDemo/otaserver-debug/otaserver-debug2.aar"
+        },
+        {
+          "name": "bsp:binary-file",
+          "value": "Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/otaserver-libs.zip"
+        },
+        {
+          "name": "bsp:bundled-third-party-component",
+          "value": "Gradle Wrapper"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "Android Gradle Plugin 4.1.1"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "Kotlin 1.3.61"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "AndroidX AppCompat 1.1.0"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "AndroidX Core KTX 1.2.0"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "AndroidX ConstraintLayout 1.1.3"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "Material Dialogs 2.8.1"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "ACRA 4.9.2"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "OkHttp MockWebServer 3.9.0"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "com.snatik:storage:2.1.0"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "com.orhanobut:logger:2.1.1"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "com.nabinbhandari.android:permissions:3.8"
+        },
+        {
+          "name": "bsp:third-party-dependency",
+          "value": "Spongy Castle core/prov 1.58.0.0"
+        },
+        {
+          "name": "bsp:version-note",
+          "value": "app/debug/output.json records versionName 1.0, while app/build.gradle records versionName 2.1.2."
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/LICENSE.md",
+          "value": "782b920914870fa3f01b09b842f4c847b3bdb3c9bf08773dc51bdc6cfd8d0d11"
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/OTA_Update_App.apk",
+          "value": "eb76dee752cc6441a5426b9b51f32588cfc6e3a57a7a11a57cf66c2d4af89d97"
+        },
+        {
+          "name": "bsp:sha1:Utilities/androidApp/OTA_Update_App.apk",
+          "value": "1cb6d32f34c82f2d576b0d6df48cb1f770b15631"
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/debug/app-debug.apk",
+          "value": "94ff0fe849a47b96ee44d42a3c787e62e60d68515b15d25adefc503f12dbffc2"
+        },
+        {
+          "name": "bsp:sha1:Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/debug/app-debug.apk",
+          "value": "0afe8d96fee093394f9cd291ebfbbdbaac1defa8"
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/libs/otaserver-debug.aar",
+          "value": "12a5eca514e692241eaab2ed65704f1a5b114246ef4644a6e14b5a9dbb3a187c"
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/libs/otaserver-release.aar",
+          "value": "b445989fa1dd14212bedc95e0b0c3218bf0abd6ed30c8221a0d134eef778ff12"
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/OTAServerDemo/OTAServerDemo/otaserver-debug/otaserver-debug2.aar",
+          "value": "cfb909222c8d6d9376e1a9da591d3e16a5382b2992006c4994bac3bbcfc70654"
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/otaserver-libs.zip",
+          "value": "e22076e81bbad680d6b7197bc9ad9009cb48f891fb0fb3c84820f19f5b965153"
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/OTAServerDemo/OTAServerDemo/gradle/wrapper/gradle-wrapper.jar",
+          "value": "381dff8aa434499aa93bc25572b049c8c586a67faff2c02f375e4f23e17e49de"
+        },
+        {
+          "name": "bsp:sha1:Utilities/androidApp/OTAServerDemo/OTAServerDemo/gradle/wrapper/gradle-wrapper.jar",
+          "value": "636cf935a0fd1451657a4112974b3500cce3ab84"
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/src/main/java/com/nuvoton/otaserverdemo/MainActivityWifi.kt",
+          "value": "652d181f7871d05036fe992289ae477960d1c56ce4cc7f4e23b186e62cebd8b9"
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/build.gradle",
+          "value": "83d17a226cba467deaaca5581776ff04627bb419e66588da62698145bc6c0719"
+        },
+        {
+          "name": "bsp:sha256:Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/src/main/AndroidManifest.xml",
+          "value": "4623cd26157174b04ddcafb436f7f16f2b25a4912781b71e575bcd316a6e4ea0"
+        }
+      ]
+    },
+    {
       "type": "library",
       "bom-ref": "pkg:generic/fatfs@R0.12?source=vendored&path=ThirdParty/FatFs",
       "name": "FatFs",
@@ -2051,6 +2251,7 @@
       "scope": "required",
       "author": "ChaN",
       "purl": "pkg:generic/fatfs@R0.12",
+      "cpe": "cpe:2.3:a:elm-chan:fatfs:r0.12:*:*:*:*:*:*:*",
       "description": "FatFs - Generic FAT file system module for embedded systems (ANSI C/C89), integrated as vendored source code.",
       "licenses": [
         {
@@ -2083,6 +2284,10 @@
         {
           "name": "bsp:evidence-file",
           "value": "Document/SBOM/components/sca_fatfs.json"
+        },
+        {
+          "name": "bsp:cpe-evidence",
+          "value": "NVD CPE dictionary: cpe:2.3:a:elm-chan:fatfs:r0.12:*:*:*:*:*:*:*"
         }
       ]
     },
@@ -2094,6 +2299,7 @@
       "scope": "required",
       "author": "Amazon.com, Inc. (FreeRTOS project)",
       "purl": "pkg:generic/freertos-kernel@10.4.6",
+      "cpe": "cpe:2.3:o:amazon:freertos:10.4.6:*:*:*:*:*:*:*",
       "description": "FreeRTOS Kernel vendored in ThirdParty/FreeRTOS, including kernel source, public headers, ARM_CM0 GCC/IAR portable layers, memory managers, and demo/common example files.",
       "licenses": [
         {
@@ -2134,6 +2340,10 @@
         {
           "name": "bsp:version-evidence",
           "value": "ThirdParty/FreeRTOS/Source/include/FreeRTOS.h; ThirdParty/FreeRTOS/Source/tasks.c; ThirdParty/FreeRTOS/Source/queue.c; ThirdParty/FreeRTOS/Source/list.c; ThirdParty/FreeRTOS/Source/timers.c"
+        },
+        {
+          "name": "bsp:cpe-evidence",
+          "value": "NVD CPE dictionary: cpe:2.3:o:freertos:freertos-kernel:10.4.6:*:*:*:*:*:*:* (matches CVE-2024-28115 and related FreeRTOS-Kernel advisories)"
         }
       ]
     },

@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:cbdba84a-e0bd-4100-a0cc-c61cc4730cc6",
+  "serialNumber": "urn:uuid:5732d914-dbc1-4f7d-be6f-2f1f4843f030",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-03T17:50:56+08:00",
+    "timestamp": "2026-07-22T13:42:53+08:00",
     "tools": {
       "components": [
         {
@@ -20,7 +20,7 @@
       "bom-ref": "04ed2dbaee1fb902",
       "type": "library",
       "name": "MCU Driver",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -109,7 +109,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-cryptoaccelerator",
       "name": "m2354 CryptoAccelerator",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -154,7 +154,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-device",
       "name": "m2354 Device",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -199,7 +199,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-lcdlib",
       "name": "m2354 LCDLib",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -244,7 +244,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-numaker",
       "name": "m2354 NuMaker",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -289,7 +289,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-smartcardlib",
       "name": "m2354 SmartcardLib",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -362,7 +362,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-stddriver",
       "name": "m2354 StdDriver",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
@@ -407,7 +407,7 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-usbhostlib",
       "name": "m2354 UsbHostLib",
-      "version": "v3.00.006-29-gc9bb55fb",
+      "version": "v3.00.006-32-g686ef9d3-dirty",
       "licenses": [
         {
           "license": {
