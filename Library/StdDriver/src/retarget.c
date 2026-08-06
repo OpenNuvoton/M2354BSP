@@ -1,4 +1,4 @@
-/**************************************************************************//**
+﻿/**************************************************************************//**
  * @file     retarget.c
  * @version  V3.00
  * @brief    Debug Port and Semihost Setting Source File
@@ -21,6 +21,17 @@
 #endif
 #endif
 
+// *** <<< Use Configuration Wizard in Context Menu >>> ***
+// <h> HardFault / Assert Debug Message Configuration
+// <e> RETARGET_HARDFAULT_DEBUG
+// <i> Enable HardFault/assert diagnostic printf/fputs output.
+// <i> Keep disabled (0) for production builds.
+#ifndef RETARGET_HARDFAULT_DEBUG
+#define RETARGET_HARDFAULT_DEBUG 0
+#endif
+// </e>
+// </h>
+// <<< end of configuration section >>>
 
 __attribute__((weak, noreturn))
 void __aeabi_assert(const char* expr, const char* file, int line);
@@ -67,6 +78,7 @@ void abort(void);
 __attribute__((weak, noreturn))
 void __aeabi_assert(const char* expr, const char* file, int line)
 {
+#if (defined(RETARGET_HARDFAULT_DEBUG) && (RETARGET_HARDFAULT_DEBUG == 1))
     char str[12];
     char * p;
     int linelocal = line;
@@ -89,6 +101,11 @@ void __aeabi_assert(const char* expr, const char* file, int line)
         linelocal /= 10;
     }
     fputs(p, stderr);
+#else
+    (void)expr; /* silence MISRA 2.7 unused parameter */
+    (void)file;
+    (void)line;
+#endif
 
     abort();
 }
@@ -120,6 +137,10 @@ __use_no_semihosting directs the linker to use semihosting stubs instead of real
 __asm("  .global __use_no_semihosting\n");
 
 
+extern FILE __stdout;
+extern FILE __stdin;
+extern FILE __stderr;
+
 FILE __stdout;
 FILE __stdin;
 FILE __stderr;
@@ -140,6 +161,7 @@ void _sys_exit(int return_code)
 
 #if (defined(__ARMCC_VERSION) || defined(__ICCARM__))
 extern int32_t SH_DoCommand(int32_t n32In_R0, int32_t n32In_R1, int32_t *pn32Out_R0);
+#endif
 
 #if defined( __ICCARM__ )
 __WEAK
@@ -148,15 +170,27 @@ __attribute__((weak))
 #endif
 uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp);
 
-#endif
-
 int kbhit(void);
 int IsDebugFifoEmpty(void);
 void _ttywrch(int ch);
-int fputc(int ch, FILE *stream);
 
+/**
+  * @static_deviation
+  * <b>Rule:</b> MISRA C:2012 Rule 21.2<br>
+  * <b>Location:</b> `fputc`/`fgetc`/`ferror` forward declarations<br>
+  * <b>Justification:</b> These reserved C-library names MUST be declared under their
+  * exact standard names to retarget stdio (printf/getchar/etc.) to the UART debug port
+  * or semihosting; renaming would break the retarget ABI expected by the C runtime.
+  * Declared unconditionally (not gated by toolchain macros) so the prototype stays
+  * visible to every build configuration compiled from this file, satisfying Rule 8.4
+  * at each function's definition further below.
+  */
+/* cppcheck-suppress misra-c2012-21.2 */
+int fputc(int ch, FILE *stream);
 #if (defined(__ARMCC_VERSION) || defined(__ICCARM__))
+/* cppcheck-suppress misra-c2012-21.2 */
 int fgetc(FILE *stream);
+/* cppcheck-suppress misra-c2012-21.2 */
 int ferror(FILE *stream);
 #endif
 
@@ -296,6 +330,7 @@ __attribute__((weak))
 #endif
 uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
 {
+#if (defined(RETARGET_HARDFAULT_DEBUG) && (RETARGET_HARDFAULT_DEBUG == 1))
     const uint32_t *sp = NULL;
     uint32_t i;
     uint32_t u32Reg;
@@ -456,7 +491,11 @@ uint32_t ProcessHardFault(uint32_t lr, uint32_t msp, uint32_t psp)
             }
         }
     }
-
+#else
+    (void)lr; /* silence MISRA 2.7 unused parameter */
+    (void)msp;
+    (void)psp;
+#endif
 
     while(1U) {}
 }
@@ -755,6 +794,7 @@ int fputc(int ch, FILE *stream)
     return ch;
 }
 #if defined (__ICCARM__)
+    size_t __write(int handle, const unsigned char *buf, size_t bufSize);
     size_t __write(int handle, const unsigned char *buf, size_t bufSize)
     {
         size_t nChars = 0;
@@ -787,6 +827,17 @@ int fputc(int ch, FILE *stream)
 #if (defined(__GNUC__) && !defined(__ARMCC_VERSION))
 
 #if !defined(OS_USE_SEMIHOSTING)
+int _write(int fd, const char *ptr, int len);
+int _read(int fd, char *ptr, int len);
+int _close(int file);
+int _lseek(int file, int ptr, int dir);
+int _fstat(int file, struct stat *st);
+int _isatty(int file);
+int _kill(int pid, int sig);
+int _getpid(void);
+int _open(const char *path, int flags, int mode);
+int _unlink(const char *path);
+
 int _write(int fd, const char *ptr, int len)
 {
     int i = len;
@@ -889,6 +940,17 @@ int _unlink(const char *path)
  *
  */
 
+/**
+  * @static_deviation
+  * <b>Rule:</b> MISRA C:2012 Rule 8.4 / Rule 21.2<br>
+  * <b>Justification:</b> In this toolchain branch (neither `__ARMCC_VERSION` nor
+  * `__ICCARM__` defined), the `fgetc` forward declaration above is compiled out, so
+  * this definition is the first declaration of the reserved C-library name in the
+  * translation unit. Same C-runtime stdio retarget requirement as `fputc`/`ferror`
+  * above; the reserved name must be used verbatim to be picked up by the linker.
+  */
+/* cppcheck-suppress misra-c2012-8.4 */
+/* cppcheck-suppress misra-c2012-21.2 */
 int fgetc(FILE *stream)
 {
     (void)stream;
@@ -910,6 +972,17 @@ int fgetc(FILE *stream)
  *
  */
 
+/**
+  * @static_deviation
+  * <b>Rule:</b> MISRA C:2012 Rule 8.4 / Rule 21.2<br>
+  * <b>Justification:</b> In this toolchain branch (neither `__ARMCC_VERSION` nor
+  * `__ICCARM__` defined), the `ferror` forward declaration above is compiled out, so
+  * this definition is the first declaration of the reserved C-library name in the
+  * translation unit. Same C-runtime stdio retarget requirement as `fputc`/`fgetc`
+  * above; the reserved name must be used verbatim to be picked up by the linker.
+  */
+/* cppcheck-suppress misra-c2012-8.4 */
+/* cppcheck-suppress misra-c2012-21.2 */
 int ferror(FILE *stream)
 {
     (void)stream;
@@ -919,6 +992,7 @@ int ferror(FILE *stream)
 
 #ifdef DEBUG_ENABLE_SEMIHOST
 # ifdef __ICCARM__
+void __exit(int return_code);
 void __exit(int return_code)
 {
     (void)return_code;

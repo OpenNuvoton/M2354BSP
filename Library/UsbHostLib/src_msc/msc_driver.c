@@ -376,15 +376,15 @@ int  usbh_umas_ioctl(int drv_no, int cmd, void *buff)
             return RES_OK;
 
         case GET_SECTOR_COUNT:
-            *(uint32_t *)buff = msc->uTotalSectorN;
+            (void)memcpy(buff, &msc->uTotalSectorN, sizeof(msc->uTotalSectorN));
             return RES_OK;
 
         case GET_SECTOR_SIZE:
-            *(uint32_t *)buff = msc->nSectorSize;
+            (void)memcpy(buff, &msc->nSectorSize, sizeof(msc->nSectorSize));
             return RES_OK;
 
         case GET_BLOCK_SIZE:
-            *(uint32_t *)buff = msc->nSectorSize;
+            (void)memcpy(buff, &msc->nSectorSize, sizeof(msc->nSectorSize));
             return RES_OK;
 
         default:
@@ -438,6 +438,29 @@ int  usbh_umas_reset_disk(int drv_no)
 
     return 0;
 }
+
+/// @endcond HIDDEN_SYMBOLS
+
+/**
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This is the
+ *                       single conversion point where the raw block becomes a typed
+ *                       MSC_T mass-storage device object, replacing the previously
+ *                       duplicated `(MSC_T *)usbh_alloc_mem(...)` cast at each call site.
+ *                       usbh_alloc_mem() is the library's one generic heap allocator
+ *                       shared by every object type, so a per-type allocator is not a
+ *                       practical alternative; the allocated block size always matches
+ *                       sizeof(MSC_T), so this cast only names an already-correct binary
+ *                       layout and changes no data or control flow.<br>
+ */
+static MSC_T *msc_alloc(void)
+{
+    /* cppcheck-suppress misra-c2012-11.5 */
+    return (MSC_T *)usbh_alloc_mem(sizeof(MSC_T));
+}
+
+/// @cond HIDDEN_SYMBOLS
 
 static int  umass_init_device(MSC_T *msc)
 {
@@ -560,7 +583,7 @@ static int  umass_init_device(MSC_T *msc)
             /*
              *  duplicate another MSC for next try
              */
-            try_msc = (MSC_T *)usbh_alloc_mem(sizeof(*try_msc));
+            try_msc = msc_alloc();
             if(try_msc == NULL)
             {
                 ret = USBH_ERR_MEMORY_OUT;
@@ -617,7 +640,7 @@ static int msc_probe(IFACE_T *iface)
         return USBH_ERR_NOT_SUPPORTED;
     }
 
-    msc = (MSC_T *)usbh_alloc_mem(sizeof(*msc));
+    msc = msc_alloc();
     if(msc == NULL)
     {
         return USBH_ERR_MEMORY_OUT;

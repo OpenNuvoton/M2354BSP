@@ -273,6 +273,7 @@ typedef struct __attribute__((__packed__)) usb_endpoint_descriptor    /*!< Endpo
 #define EP_ATTR_TT_BULK                0x02U
 #define EP_ATTR_TT_INT                 0x03U
 
+#define USB_EP_DESC_MANDATORY_LEN      0x07U    /* Mandatory prefix length of a USB endpoint descriptor */
 
 /*----------------------------------------------------------------------------------*/
 /*  USB Host controller driver                                                      */
@@ -425,6 +426,7 @@ extern void usbh_dump_ep_info(EP_INFO_T *ep);
 extern void usbh_memory_init(void);
 extern uint32_t  usbh_memory_used(void);
 extern void * usbh_alloc_mem(int size);
+extern uint8_t * usbh_alloc_buff(int size);
 extern void usbh_free_mem(void *p, int size);
 extern int  alloc_dev_address(void);
 extern void free_dev_address(int dev_addr);

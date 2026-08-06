@@ -114,7 +114,8 @@ extern "C"
 #define CDC_SET_ATM_DEFAULT_VC              0x52
 #define CDC_GET_ATM_VC_STATISTICS           0x53
 
-#define CDC_CMD_TIMEOUT         100
+#define CDC_CMD_TIMEOUT                     100
+#define CDC_IF_HDR_MANDATORY_LEN            3U      /* Mandatory prefix length of a CDC class-specific interface descriptor header */
 
 
 /*-----------------------------------------------------------------------------------

@@ -157,6 +157,14 @@ int32_t TIMER_Delay(TIMER_T *timer, uint32_t u32Usec)
     */
     for(u32Delay = (SystemCoreClock / u32ClkFreq) + 1UL; u32Delay > 0UL; u32Delay--)
     {
+        /* cppcheck-suppress misra-c2012-17.3 */
+        /**
+         * @static_deviation
+         * <b>Rule:</b>          MISRA C:2012 Rule 17.3<br>
+         * <b>Justification:</b> __NOP is a CMSIS macro (e.g. `#define __NOP __builtin_arm_nop`
+         * under Arm Compiler) that expands to a compiler builtin, not a user-declared C function;
+         * no conforming prototype is visible to the static analyzer.
+         */
         __NOP();
     }
 
@@ -453,6 +461,14 @@ int32_t TIMER_ResetCounter(TIMER_T *timer)
     u32Delay = (SystemCoreClock / TIMER_GetModuleClock(timer)) * 3UL;
     while(((timer->CNT&TIMER_CNT_RSTACT_Msk) == TIMER_CNT_RSTACT_Msk) && (--u32Delay))
     {
+        /* cppcheck-suppress misra-c2012-17.3 */
+        /**
+         * @static_deviation
+         * <b>Rule:</b>          MISRA C:2012 Rule 17.3<br>
+         * <b>Justification:</b> __NOP is a CMSIS macro (e.g. `#define __NOP __builtin_arm_nop`
+         * under Arm Compiler) that expands to a compiler builtin, not a user-declared C function;
+         * no conforming prototype is visible to the static analyzer.
+         */
         __NOP();
     }
     return (u32Delay > 0UL) ? TIMER_OK : TIMER_ERR_TIMEOUT;

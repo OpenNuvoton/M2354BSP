@@ -89,6 +89,14 @@ void CLK_PowerDown(void)
     SysTick->CTRL &= ~SysTick_CTRL_TICKINT_Msk;
 
     /* Chip enter Power-down mode after CPU run WFI instruction */
+    /* cppcheck-suppress misra-c2012-17.3 */
+    /**
+     * @static_deviation
+     * <b>Rule:</b>          MISRA C:2012 Rule 17.3<br>
+     * <b>Justification:</b> __WFI is a CMSIS macro (e.g. `#define __WFI __builtin_arm_wfi` under
+     * Arm Compiler) that expands to a compiler builtin, not a user-declared C function; no
+     * conforming prototype is visible to the static analyzer.
+     */
     __WFI();
 
     /* Restore SysTick interrupt setting */
@@ -115,6 +123,14 @@ void CLK_Idle(void)
     CLK->PWRCTL &= ~CLK_PWRCTL_PDEN_Msk;
 
     /* Chip enter idle mode after CPU run WFI instruction */
+    /* cppcheck-suppress misra-c2012-17.3 */
+    /**
+     * @static_deviation
+     * <b>Rule:</b>          MISRA C:2012 Rule 17.3<br>
+     * <b>Justification:</b> __WFI is a CMSIS macro (e.g. `#define __WFI __builtin_arm_wfi` under
+     * Arm Compiler) that expands to a compiler builtin, not a user-declared C function; no
+     * conforming prototype is visible to the static analyzer.
+     */
     __WFI();
 }
 

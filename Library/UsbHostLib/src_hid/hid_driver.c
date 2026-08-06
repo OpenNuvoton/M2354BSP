@@ -121,6 +121,30 @@ static int hid_probe(IFACE_T *iface)
     return 0;
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
+/**
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> iface->context stores a generic void * set by usbhid_probe() to
+ *                       the owning HID_DEV_T. This accessor centralizes what was
+ *                       previously an inline `(HID_DEV_T *)(iface->context)` cast into
+ *                       the single conversion point used when tearing down the HID
+ *                       device on interface disconnect. IFACE_T->context is a shared
+ *                       framework field reused as-is by every USB class driver
+ *                       (cdc/hid/uac/hub), so giving it a distinct type per class is not
+ *                       a practical alternative; usbhid_probe() is the only place that
+ *                       assigns iface->context and it always stores a HID_DEV_T*
+ *                       address, so this accessor only documents that existing
+ *                       guarantee and does not change behavior.<br>
+ */
+static HID_DEV_T *hid_dev_from_iface(IFACE_T *iface)
+{
+    /* cppcheck-suppress misra-c2012-11.5 */
+    return (HID_DEV_T *)iface->context;
+}
+
+/// @cond HIDDEN_SYMBOLS
 
 static void  hid_disconnect(IFACE_T *iface)
 {
@@ -130,7 +154,7 @@ static void  hid_disconnect(IFACE_T *iface)
     RP_INFO_T   *next_rp;
     int         i;
 
-    hdev = (HID_DEV_T *)(iface->context);
+    hdev = hid_dev_from_iface(iface);
 
     for(i = 0; i < (int)iface->aif->ifd->bNumEndpoints; i++)
     {

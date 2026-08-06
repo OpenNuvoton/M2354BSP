@@ -178,11 +178,32 @@ static int  get_port_status(HUB_DEV_T *hub, int port, uint16_t *wPortStatus, uin
     return 0;
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
+/**
+ * @brief     Interrupt-IN transfer completion callback for hub status-change notification.
+ * @param[in] utr  The completed transfer request; its context field carries the owning HUB_DEV_T.
+ * @return    None.
+ *
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> utr->context stores a generic void * set by hub_probe() to
+ *                       the owning HUB_DEV_T. This is the single conversion point
+ *                       used by the hub status-change completion callback.
+ *                       UTR_T->context is a shared framework field reused as-is by
+ *                       every USB class driver (cdc/hid/uac/hub), so giving it a
+ *                       distinct type per class is not a practical alternative;
+ *                       hub_probe() is the only place that assigns utr->context for
+ *                       the hub status-change transfer and it always stores a
+ *                       HUB_DEV_T* address, so this documents that existing
+ *                       guarantee and does not change behavior.<br>
+ */
 static void hub_status_irq(UTR_T *utr)
 {
     HUB_DEV_T   *hub;
     // HUB_DBGMSG("hub_read_irq - %d\n", utr->xfer_len);
 
+    /* cppcheck-suppress misra-c2012-11.5 */
     hub = (HUB_DEV_T *)utr->context;
 
     if(utr->status != 0)
@@ -200,6 +221,8 @@ static void hub_status_irq(UTR_T *utr)
         // HUB_DBGMSG("hub_status_irq - status bitmap: 0x%x\n", hub->sc_bitmap);
     }
 }
+
+/// @cond HIDDEN_SYMBOLS
 
 static int hub_probe(IFACE_T *iface)
 {
@@ -324,8 +347,14 @@ static int hub_probe(IFACE_T *iface)
     return 0;
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
 /* cppcheck-suppress constParameterCallback */
 /**
+  * @brief     Disconnect handler for a USB hub interface; tears down all downstream devices.
+  * @param[in] iface  The hub interface being disconnected.
+  * @return    None.
+  *
   * @static_deviation
   * <b>Rule:</b> constParameterCallback (cppcheck native check)<br>
   * <b>Location:</b> `hub_disconnect()` parameter `iface`<br>
@@ -371,6 +400,7 @@ static void hub_disconnect(IFACE_T *iface)
     free_hub_device(hub);
 }
 
+/// @cond HIDDEN_SYMBOLS
 
 static int  hub_status_change(HUB_DEV_T *hub)
 {

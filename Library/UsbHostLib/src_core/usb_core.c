@@ -17,8 +17,6 @@
 #include "hub.h"
 
 
-/// @cond HIDDEN_SYMBOLS
-
 /**
  * @brief  Default debug output function for USB Host Library.
  *         Routes output through standard printf (retargeted to UART by application).
@@ -56,6 +54,8 @@ int usbh_printf(const char *fmt, ...)
     return ret;
 }
 
+/// @cond HIDDEN_SYMBOLS
+
 USBH_T     *_ohci;
 
 static int    _IsInUsbInterrupt = 0;
@@ -64,6 +64,58 @@ static UDEV_DRV_T *  _drivers[MAX_UDEV_DRIVER];
 
 static CONN_FUNC  *g_conn_func;
 static CONN_FUNC  *g_disconn_func;
+
+static void usb_read_descriptor_header(const uint8_t *buffer, DESC_HDR_T *header)
+{
+    header->bLength = buffer[0];
+    header->bDescriptorType = buffer[1];
+}
+
+static void usb_read_config_descriptor(const uint8_t *buffer, DESC_CONF_T *config)
+{
+    config->bLength = buffer[0];
+    config->bDescriptorType = buffer[1];
+    config->wTotalLength = (uint16_t)(((uint16_t)buffer[2]) | ((uint16_t)buffer[3] << 8U));
+    config->bNumInterfaces = buffer[4];
+    config->bConfigurationValue = buffer[5];
+    config->iConfiguration = buffer[6];
+    config->bmAttributes = buffer[7];
+    config->MaxPower = buffer[8];
+}
+
+static void usb_read_interface_descriptor(const uint8_t *buffer, DESC_IF_T *if_desc)
+{
+    if_desc->bLength = buffer[0];
+    if_desc->bDescriptorType = buffer[1];
+    if_desc->bInterfaceNumber = buffer[2];
+    if_desc->bAlternateSetting = buffer[3];
+    if_desc->bNumEndpoints = buffer[4];
+    if_desc->bInterfaceClass = buffer[5];
+    if_desc->bInterfaceSubClass = buffer[6];
+    if_desc->bInterfaceProtocol = buffer[7];
+    if_desc->iInterface = buffer[8];
+}
+
+static void usb_read_endpoint_descriptor(const uint8_t *buffer, DESC_EP_T *ep_desc)
+{
+    (void)memset(ep_desc, 0, sizeof(*ep_desc));
+    ep_desc->bLength = buffer[0];
+    ep_desc->bDescriptorType = buffer[1];
+    ep_desc->bEndpointAddress = buffer[2];
+    ep_desc->bmAttributes = buffer[3];
+    ep_desc->wMaxPacketSize = (uint16_t)(((uint16_t)buffer[4]) | ((uint16_t)buffer[5] << 8U));
+    ep_desc->bInterval = buffer[6];
+
+    if(ep_desc->bLength > 7U)
+    {
+        ep_desc->bRefresh = buffer[7];
+    }
+
+    if(ep_desc->bLength > 8U)
+    {
+        ep_desc->bSynchAddress = buffer[8];
+    }
+}
 
 /// @endcond HIDDEN_SYMBOLS
 
@@ -427,6 +479,7 @@ void usbh_dump_endpoint_descriptor(DESC_EP_T *ep_desc)
     USB_debug("          bSynchAddress       = %d\n", ep_desc->bSynchAddress);
 }
 
+#if defined(DUMP_DESCRIPTOR) && defined(ENABLE_DEBUG_MSG)
 static void  dump_config_descriptor(DESC_CONF_T *desc)
 {
     uint8_t     *bptr = (uint8_t *)desc;
@@ -474,6 +527,7 @@ static void  dump_config_descriptor(DESC_CONF_T *desc)
         bptr = &bptr[(int)bptr[0]];
     }
 }
+#endif
 
 /**
  *  @brief  Execute USB standard request SET ADDRESS.
@@ -626,7 +680,7 @@ int usbh_get_device_descriptor(UDEV_T *udev, DESC_DEV_T *desc_buff)
 int usbh_get_config_descriptor(UDEV_T *udev, uint8_t *desc_buff, int buff_len)
 {
     uint32_t  read_len;
-    DESC_CONF_T  *conf = (DESC_CONF_T *)desc_buff;
+    DESC_CONF_T  conf;
     int       ret;
 
     /*------------------------------------------------------------------------------------*/
@@ -641,13 +695,15 @@ int usbh_get_config_descriptor(UDEV_T *udev, uint8_t *desc_buff, int buff_len)
         return ret;
     }
 
-    if((int)conf->wTotalLength > buff_len)
+    usb_read_config_descriptor(desc_buff, &conf);
+
+    if((int)conf.wTotalLength > buff_len)
     {
-        USB_error("Device configuration %d length > %d!\n", conf->wTotalLength, buff_len);
+        USB_error("Device configuration %d length > %d!\n", conf.wTotalLength, buff_len);
         return USBH_ERR_DATA_OVERRUN;
     }
 
-    read_len = conf->wTotalLength;
+    read_len = conf.wTotalLength;
 
     ret = usbh_ctrl_xfer(udev, REQ_TYPE_IN | REQ_TYPE_STD_DEV | REQ_TYPE_TO_DEV,
                          USB_REQ_GET_DESCRIPTOR,
@@ -705,45 +761,61 @@ int usbh_clear_halt(UDEV_T *udev, uint16_t ep_addr)
 
 static int  usbh_parse_endpoint(ALT_IFACE_T *alt, int ep_idx, uint8_t *desc_buff, int len)
 {
-    DESC_EP_T    *ep_desc = (DESC_EP_T *)desc_buff;
+    DESC_HDR_T   header;
+    DESC_EP_T    ep_desc;
     int          parsed_len = 0;
     uint32_t     pksz;
     uint8_t      *p = desc_buff;
     int          remaining = len;
 
+    (void)memset(&ep_desc, 0, sizeof(ep_desc));
+
     while(remaining > 0)
     {
-        ep_desc = (DESC_EP_T *)p;
-
-        if((remaining < (int)ep_desc->bLength) || ((int)ep_desc->bLength < 2))
+        if(remaining < (int)sizeof(DESC_HDR_T))
         {
-            USB_error("ERR DESCRIPTOR EP LEN [0x%X %d]\n", ep_desc->bDescriptorType, ep_desc->bLength);
+            USB_error("ERR DESCRIPTOR EP LEN [remaining %d]\n", remaining);
             return USBH_ERR_DESCRIPTOR;
         }
 
-        if(ep_desc->bDescriptorType == USB_DT_ENDPOINT)
+        usb_read_descriptor_header(p, &header);
+
+        if((remaining < (int)header.bLength) || ((int)header.bLength < 2))
         {
+            USB_error("ERR DESCRIPTOR EP LEN [0x%X %d]\n", header.bDescriptorType, header.bLength);
+            return USBH_ERR_DESCRIPTOR;
+        }
+
+        if(header.bDescriptorType == USB_DT_ENDPOINT)
+        {
+            if((int)header.bLength < (int)USB_EP_DESC_MANDATORY_LEN)
+            {
+                USB_error("ERR DESCRIPTOR EP LEN [0x%X %d]\n", header.bDescriptorType, header.bLength);
+                return USBH_ERR_DESCRIPTOR;
+            }
+
+            usb_read_endpoint_descriptor(p, &ep_desc);
             break;     /* endpoint descriptor found */
         }
 
         /* unrecognized descriptor */
-        USB_vdebug("ignore descriptor 0x%X %d\n", ep_desc->bDescriptorType, ep_desc->bLength);
-        p = &p[(int)ep_desc->bLength];
-        parsed_len += (int)ep_desc->bLength;
-        remaining -= (int)ep_desc->bLength;
+        USB_vdebug("ignore descriptor 0x%X %d\n", header.bDescriptorType, header.bLength);
+        p = &p[(int)header.bLength];
+        parsed_len += (int)header.bLength;
+        remaining -= (int)header.bLength;
     }
 
-    USB_vdebug("Descriptor Found - Alt: %d, Endpoint 0x%x, remaining len: %d\n", alt->ifd->bAlternateSetting, ep_desc->bEndpointAddress, remaining);
+    USB_vdebug("Descriptor Found - Alt: %d, Endpoint 0x%x, remaining len: %d\n", alt->ifd->bAlternateSetting, ep_desc.bEndpointAddress, remaining);
 
-    alt->ep[ep_idx].bEndpointAddress = ep_desc->bEndpointAddress;
-    alt->ep[ep_idx].bmAttributes     = ep_desc->bmAttributes;
-    alt->ep[ep_idx].bInterval        = ep_desc->bInterval;
-    pksz = (uint32_t)ep_desc->wMaxPacketSize;
+    alt->ep[ep_idx].bEndpointAddress = ep_desc.bEndpointAddress;
+    alt->ep[ep_idx].bmAttributes     = ep_desc.bmAttributes;
+    alt->ep[ep_idx].bInterval        = ep_desc.bInterval;
+    pksz = (uint32_t)ep_desc.wMaxPacketSize;
     pksz = (pksz & 0x07ffU) * (1U + ((pksz >> 11U) & 3U));
     alt->ep[ep_idx].wMaxPacketSize   = (uint16_t)pksz;
     alt->ep[ep_idx].hw_pipe          = NULL;
 
-    return parsed_len + (int)ep_desc->bLength;
+    return parsed_len + (int)ep_desc.bLength;
 }
 
 /**
@@ -767,15 +839,29 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
     int         i;
     int         matched_idx;
     int         parsed_len = 0;
-    DESC_HDR_T  *hdr = NULL;
-    DESC_IF_T   *if_desc;
+    DESC_HDR_T  hdr;
+    DESC_IF_T   if_desc;
     IFACE_T     *iface = NULL;
     int         ret = 0;
     int         hdr_found;
+    uint8_t     *if_desc_buff;
     uint8_t     *p = desc_buff;
     int         remaining = len;
     enum { PARSE_RUNNING, PARSE_DONE, PARSE_ERROR } state = PARSE_RUNNING;
 
+    /**
+     * @static_deviation
+     * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+     * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This is
+     *                       the single conversion point where the raw block becomes a
+     *                       typed IFACE_T interface object. usbh_alloc_mem() is the
+     *                       library's one generic heap allocator shared by every object
+     *                       type, so a per-type allocator is not a practical alternative;
+     *                       the allocated block size always matches sizeof(*iface), so
+     *                       this cast only names an already-correct binary layout and
+     *                       changes no data or control flow.<br>
+     */
+    /* cppcheck-suppress misra-c2012-11.5 */
     iface = usbh_alloc_mem(sizeof(*iface)); /* create an interface                        */
     if(iface == NULL)
     {
@@ -784,42 +870,77 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
     iface->udev = udev;
     iface->aif = &iface->alt[0];            /* Default active interface should be the
                                                first found alternative interface          */
-    iface->if_num = ((DESC_IF_T *)p)->bInterfaceNumber;
+    if(len < (int)sizeof(DESC_IF_T))
+    {
+        USB_error("ERR DESCRIPTOR IF LEN [len %d]\n", len);
+        usbh_free_mem(iface, sizeof(*iface));
+        return USBH_ERR_DESCRIPTOR;
+    }
+
+    usb_read_interface_descriptor(p, &if_desc);
+    iface->if_num = if_desc.bInterfaceNumber;
 
     while((remaining > 0) && (state == PARSE_RUNNING))
     {
         /*--------------------------------------------------------------------------------*/
         /* Find the first/next interface descriptor                                       */
         /*--------------------------------------------------------------------------------*/
-        if_desc = (DESC_IF_T *)p;
-
-        if(if_desc->bDescriptorType != USB_DT_INTERFACE)
+        if(remaining < (int)sizeof(DESC_HDR_T))
         {
-            p = &p[(int)if_desc->bLength];
-            parsed_len += (int)if_desc->bLength;
-            remaining -= (int)if_desc->bLength;
+            USB_error("ERR DESCRIPTOR IF LEN [remaining %d]\n", remaining);
+            ret = USBH_ERR_DESCRIPTOR;
+            state = PARSE_ERROR;
             continue;
         }
 
-        if(if_desc->bInterfaceNumber != iface->if_num)
+        usb_read_descriptor_header(p, &hdr);
+
+        if((remaining < (int)hdr.bLength) || ((int)hdr.bLength < 2))
+        {
+            USB_error("ERR DESCRIPTOR IF LEN [0x%X %d]\n", hdr.bDescriptorType, hdr.bLength);
+            ret = USBH_ERR_DESCRIPTOR;
+            state = PARSE_ERROR;
+            continue;
+        }
+
+        if(hdr.bDescriptorType != USB_DT_INTERFACE)
+        {
+            p = &p[(int)hdr.bLength];
+            parsed_len += (int)hdr.bLength;
+            remaining -= (int)hdr.bLength;
+            continue;
+        }
+
+        if((remaining < (int)sizeof(DESC_IF_T)) || ((int)hdr.bLength < (int)sizeof(DESC_IF_T)))
+        {
+            USB_error("ERR DESCRIPTOR IF LEN [0x%X %d]\n", hdr.bDescriptorType, hdr.bLength);
+            ret = USBH_ERR_DESCRIPTOR;
+            state = PARSE_ERROR;
+            continue;
+        }
+
+        if_desc_buff = p;
+        usb_read_interface_descriptor(p, &if_desc);
+
+        if(if_desc.bInterfaceNumber != iface->if_num)
         {
             state = PARSE_DONE;
             continue;
         }
 
-        if((int)if_desc->bNumEndpoints > MAX_EP_PER_IFACE)
+        if((int)if_desc.bNumEndpoints > MAX_EP_PER_IFACE)
         {
-            USB_error("IF EP LIMITE %d\n", if_desc->bNumEndpoints);
+            USB_error("IF EP LIMITE %d\n", if_desc.bNumEndpoints);
             ret = USBH_ERR_IF_EP_LIMIT;
             state = PARSE_ERROR;
             continue;
         }
 
         /* Step over the interface descriptor */
-        p = &p[(int)if_desc->bLength];
-        parsed_len += (int)if_desc->bLength;
-        remaining -= (int)if_desc->bLength;
-        USB_vdebug("Descriptor Found - Interface %d, Alt: %d, num_alt:%d, remaining len: %d\n", if_desc->bInterfaceNumber, if_desc->bAlternateSetting, iface->num_alt, remaining);
+        p = &p[(int)if_desc.bLength];
+        parsed_len += (int)if_desc.bLength;
+        remaining -= (int)if_desc.bLength;
+        USB_vdebug("Descriptor Found - Interface %d, Alt: %d, num_alt:%d, remaining len: %d\n", if_desc.bInterfaceNumber, if_desc.bAlternateSetting, iface->num_alt, remaining);
 
         /*--------------------------------------------------------------------------------*/
         /* Add to alternative interface list                                              */
@@ -838,29 +959,29 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
 
         while((remaining > 0) && (state == PARSE_RUNNING) && (hdr_found == 0))
         {
-            hdr = (DESC_HDR_T *)p;
+            usb_read_descriptor_header(p, &hdr);
 
-            if((remaining < (int)hdr->bLength) || ((int)hdr->bLength < 2))
+            if((remaining < (int)hdr.bLength) || ((int)hdr.bLength < 2))
             {
-                USB_error("ERR DESCRIPTOR IF LEN [0x%X %d]\n", hdr->bDescriptorType, hdr->bLength);
+                USB_error("ERR DESCRIPTOR IF LEN [0x%X %d]\n", hdr.bDescriptorType, hdr.bLength);
                 ret = USBH_ERR_DESCRIPTOR;
                 state = PARSE_ERROR;
             }
-            else if(hdr->bDescriptorType == USB_DT_CONFIGURATION)
+            else if(hdr.bDescriptorType == USB_DT_CONFIGURATION)
             {
                 state = PARSE_DONE;         /* is other configuration, parsing completed  */
             }
-            else if((hdr->bDescriptorType == USB_DT_INTERFACE) || (hdr->bDescriptorType == USB_DT_ENDPOINT))
+            else if((hdr.bDescriptorType == USB_DT_INTERFACE) || (hdr.bDescriptorType == USB_DT_ENDPOINT))
             {
                 hdr_found = 1;               /* the first endpoint descriptor found        */
             }
             else
             {
                 /* unrecognized descriptor */
-                USB_vdebug("ignore descriptor 0x%X %d\n", hdr->bDescriptorType, hdr->bLength);
-                p = &p[(int)hdr->bLength];
-                parsed_len += (int)hdr->bLength;
-                remaining -= (int)hdr->bLength;
+                USB_vdebug("ignore descriptor 0x%X %d\n", hdr.bDescriptorType, hdr.bLength);
+                p = &p[(int)hdr.bLength];
+                parsed_len += (int)hdr.bLength;
+                remaining -= (int)hdr.bLength;
             }
         }
 
@@ -869,7 +990,24 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
             continue;                       /* other configuration or error encountered   */
         }
 
-        iface->alt[iface->num_alt].ifd = if_desc;
+        /**
+         * @static_deviation
+         * <b>Rule:</b>          MISRA C:2012 Rule 11.3<br>
+         * <b>Justification:</b> if_desc_buff identifies a validated Interface Descriptor
+         *                       in UDEV_T->cfd_buff. ALT_IFACE_T stores this typed view
+         *                       for use throughout the USB device lifetime. The
+         *                       descriptor buffer (UDEV_T->cfd_buff) must stay valid for
+         *                       the device's entire lifetime and ALT_IFACE_T.ifd is read
+         *                       by field name from several other functions, so copying it
+         *                       into a local struct here would drop the pointer those
+         *                       later accesses need; if_desc_buff only ever points inside
+         *                       the validated, length-checked configuration-descriptor
+         *                       buffer allocated once per device and freed only at
+         *                       disconnect, so the retained pointer's lifetime is safe
+         *                       and no behavior changes.<br>
+         */
+        /* cppcheck-suppress misra-c2012-11.3 */
+        iface->alt[iface->num_alt].ifd = (DESC_IF_T *)if_desc_buff;
         iface->num_alt++;
 
         if(remaining == 0)
@@ -878,15 +1016,15 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
             continue;
         }
 
-        if(hdr->bDescriptorType == USB_DT_INTERFACE)
+        if(hdr.bDescriptorType == USB_DT_INTERFACE)
         {
             continue;                       /* is the next interface descriptor           */
         }
 
-        USB_vdebug("Finding %d endpoints of interface %d, alt %d...\n", if_desc->bNumEndpoints, if_desc->bInterfaceNumber, if_desc->bAlternateSetting);
+        USB_vdebug("Finding %d endpoints of interface %d, alt %d...\n", if_desc.bNumEndpoints, if_desc.bInterfaceNumber, if_desc.bAlternateSetting);
 
         /* parsign all endpoint descriptors */
-        for(i = 0; (i < (int)if_desc->bNumEndpoints) && (state == PARSE_RUNNING); i++)
+        for(i = 0; (i < (int)if_desc.bNumEndpoints) && (state == PARSE_RUNNING); i++)
         {
             ret = usbh_parse_endpoint(&iface->alt[(int)iface->num_alt - 1], i, p, remaining);
             if(ret < 0)
@@ -949,41 +1087,43 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
 
 static int  usbh_parse_configuration(UDEV_T *udev, uint8_t *desc_buff)
 {
-    const DESC_CONF_T  *config = (const DESC_CONF_T *)desc_buff;
-    int    i;
-    int    len;
-    uint8_t     *p;
+    DESC_CONF_T  config;
+    int          i;
+    int          len;
+    uint8_t      *p;
 
-    len = config->wTotalLength;
-    p = &desc_buff[(int)config->bLength];
-    len -= (int)config->bLength;
+    usb_read_config_descriptor(desc_buff, &config);
+    len = (int)config.wTotalLength;
+    p = &desc_buff[(int)config.bLength];
+    len -= (int)config.bLength;
 
     USB_vdebug("Parsing CONFIG =>\n");
 
-    for(i = 0; i < (int)config->bNumInterfaces; i++)
+    for(i = 0; i < (int)config.bNumInterfaces; i++)
     {
         /*
          *  find the next interface descriptor
          */
         while(len >= (int)sizeof(DESC_HDR_T))
         {
-            DESC_HDR_T *hdr = (DESC_HDR_T *)p;
+            DESC_HDR_T   hdr;
+            usb_read_descriptor_header(p, &hdr);
 
-            if(((int)hdr->bLength > len) || ((int)hdr->bLength < 2))
+            if(((int)hdr.bLength > len) || ((int)hdr.bLength < 2))
             {
-                USB_error("ERR DESCRIPTOR CONFIG [%d]\n", hdr->bLength);
+                USB_error("ERR DESCRIPTOR CONFIG [%d]\n", hdr.bLength);
                 return USBH_ERR_DESCRIPTOR;
             }
 
-            if(hdr->bDescriptorType == USB_DT_INTERFACE)
+            if(hdr.bDescriptorType == USB_DT_INTERFACE)
             {
                 break;
             }
 
-            USB_debug("ignore descriptor 0x%X %d\n", hdr->bDescriptorType, hdr->bLength);
+            USB_debug("ignore descriptor 0x%X %d\n", hdr.bDescriptorType, hdr.bLength);
 
-            p = &p[(int)hdr->bLength];
-            len -= (int)hdr->bLength;
+            p = &p[(int)hdr.bLength];
+            len -= (int)hdr.bLength;
         }
 
         int ret = usbh_parse_interface(udev, p, len);
@@ -1064,6 +1204,20 @@ int  connect_device(UDEV_T *udev)
         USB_debug("Warning! This device has multiple configurations [%d]. \n", udev->descriptor.bNumConfigurations);
     }
 
+    /**
+     * @static_deviation
+     * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+     * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This is
+     *                       the single conversion point where the raw block becomes a
+     *                       typed DESC_CONF_T configuration-descriptor buffer.
+     *                       usbh_alloc_mem() is the library's one generic heap allocator
+     *                       shared by every buffer type, so a per-type allocator is not a
+     *                       practical alternative; MAX_DESC_BUFF_SIZE is always large
+     *                       enough to hold a DESC_CONF_T, so this cast only names an
+     *                       already-correct byte-buffer layout and changes no data or
+     *                       control flow.<br>
+     */
+    /* cppcheck-suppress misra-c2012-11.5 */
     conf = (DESC_CONF_T *)usbh_alloc_mem(MAX_DESC_BUFF_SIZE);
     if(conf == NULL)
     {
@@ -1145,7 +1299,8 @@ int  connect_device(UDEV_T *udev)
 int  usbh_reset_device(UDEV_T *udev)
 {
     IFACE_T      *iface;
-    DESC_CONF_T  *conf;
+    DESC_CONF_T  config;
+    uint8_t       *conf;
     uint32_t     read_len;
     int          dev_num;
     int          ret;
@@ -1216,14 +1371,16 @@ int  usbh_reset_device(UDEV_T *udev)
     /*  Get configuration descriptor                                                      */
     /*------------------------------------------------------------------------------------*/
 
-    conf = (DESC_CONF_T *)udev->cfd_buff;   /* using the previously allocated buffer      */
+    conf = udev->cfd_buff;                  /* using the previously allocated buffer      */
 
     /* Get configuration descriptor again with new device address */
-    ret = usbh_get_config_descriptor(udev, (uint8_t *)conf, MAX_DESC_BUFF_SIZE);
+    ret = usbh_get_config_descriptor(udev, conf, MAX_DESC_BUFF_SIZE);
     if(ret < 0)
     {
         return ret;
     }
+
+    usb_read_config_descriptor(conf, &config);
 
     /* Always select the first configuration */
     ret = usbh_set_configuration(udev, udev->cur_conf);
@@ -1234,10 +1391,10 @@ int  usbh_reset_device(UDEV_T *udev)
     }
 
     /* Parse the configuration/interface/endpoint descriptors and find corresponding drivers. */
-    ret = usbh_parse_configuration(udev, (uint8_t *)conf);
+    ret = usbh_parse_configuration(udev, conf);
     if(ret < 0)
     {
-        USB_debug("Parse configuration %d failed!\n", conf->bConfigurationValue);
+        USB_debug("Parse configuration %d failed!\n", config.bConfigurationValue);
         return ret;
     }
 

@@ -18,10 +18,44 @@
 
 /// @cond HIDDEN_SYMBOLS
 
+static void cdc_read_descriptor_header(const uint8_t *buffer, DESC_HDR_T *header)
+{
+    header->bLength = buffer[0];
+    header->bDescriptorType = buffer[1];
+}
+
+static void cdc_read_config_descriptor(const uint8_t *buffer, DESC_CONF_T *config)
+{
+    config->bLength = buffer[0];
+    config->bDescriptorType = buffer[1];
+    config->wTotalLength = (uint16_t)(((uint16_t)buffer[2]) | ((uint16_t)buffer[3] << 8U));
+}
+
+static void cdc_read_cs_interface_header(const uint8_t *buffer, CDC_IF_HDR_T *cifd)
+{
+    cifd->bLength = buffer[0];
+    cifd->bDescriptorType = buffer[1];
+    cifd->bDescriptorSubtype = buffer[2];
+
+    if (cifd->bLength > 3U)
+    {
+        uint8_t payload_length = cifd->bLength - 3U;
+
+        if (payload_length > (uint8_t)sizeof(cifd->payload))
+        {
+            payload_length = (uint8_t)sizeof(cifd->payload);
+        }
+        (void)memcpy(&cifd->payload[0], &buffer[3], (size_t)payload_length);
+    }
+}
+
+static uint8_t cdc_read_interface_number(const uint8_t *buffer)
+{
+    return buffer[2];
+}
 
 static int  cdc_parse_cs_interface(CDC_DEV_T *cdev, uint8_t *buffer, int size)
 {
-    CDC_IF_HDR_T    *cifd;
     int             parsed = 0;
     int             size_tmp = size;
 
@@ -30,25 +64,33 @@ static int  cdc_parse_cs_interface(CDC_DEV_T *cdev, uint8_t *buffer, int size)
 
         while (size_tmp >= (int)sizeof(DESC_HDR_T))
         {
-            DESC_HDR_T      *header;
-            header = (DESC_HDR_T *)&buffer[parsed];
+            DESC_HDR_T      header;
+            CDC_IF_HDR_T    cifd;
 
-            if (header->bLength < 2U)
+            cdc_read_descriptor_header(&buffer[parsed], &header);
+
+            if (header.bLength < 2U)
             {
-                CDC_DBGMSG("Invalid descriptor length of %d\n", header->bLength);
+                CDC_DBGMSG("Invalid descriptor length of %d\n", header.bLength);
                 return -1;
             }
 
-            if (header->bDescriptorType != CDC_CS_INTERFACE)
+            if (header.bDescriptorType != CDC_CS_INTERFACE)
             {
                 return parsed;
             }
 
-            cifd = (CDC_IF_HDR_T *)header;
+            if ((size_tmp < (int)header.bLength) || ((int)header.bLength < (int)CDC_IF_HDR_MANDATORY_LEN))
+            {
+                CDC_DBGMSG("Invalid CS_INTERFACE descriptor length of %d\n", header.bLength);
+                return -1;
+            }
 
-            CDC_DBGMSG("CS_INTERFACE: 0x%x, ", cifd->bDescriptorSubtype);
+            cdc_read_cs_interface_header(&buffer[parsed], &cifd);
 
-            switch(cifd->bDescriptorSubtype)
+            CDC_DBGMSG("CS_INTERFACE: 0x%x, ", cifd.bDescriptorSubtype);
+
+            switch(cifd.bDescriptorSubtype)
             {
                 case CDC_DT_HDR_FUNC:
                     CDC_DBGMSG("Header Functional\n");
@@ -74,14 +116,14 @@ static int  cdc_parse_cs_interface(CDC_DEV_T *cdev, uint8_t *buffer, int size)
                 case CDC_DT_UNION:
                     CDC_DBGMSG("Union Functional\n");
 
-                    if (cifd->bLength >= 5U)
+                    if (cifd.bLength >= 5U)
                     {
-                        cdev->ifnum_data = cifd->payload[1];
+                        cdev->ifnum_data = cifd.payload[1];
                     }
 
-                    if (cifd->bLength >= 6U)
+                    if (cifd.bLength >= 6U)
                     {
-                        CDC_DBGMSG("Union Functional length %d, not supported!\n", cifd->bLength);
+                        CDC_DBGMSG("Union Functional length %d, not supported!\n", cifd.bLength);
                     }
                     break;
                 case CDC_DT_COUNTRY_SEL:
@@ -113,12 +155,12 @@ static int  cdc_parse_cs_interface(CDC_DEV_T *cdev, uint8_t *buffer, int size)
                     break;
 
                 default:
-                    CDC_DBGMSG("Unknown Functional Descriptor: 0x%x\n", cifd->bDescriptorSubtype);
+                    CDC_DBGMSG("Unknown Functional Descriptor: 0x%x\n", cifd.bDescriptorSubtype);
                     break;
             }
 
-            parsed += (int)header->bLength;
-            size_tmp -= (int)header->bLength;
+            parsed += (int)header.bLength;
+            size_tmp -= (int)header.bLength;
         }
 
     }   /* end of while */
@@ -129,41 +171,40 @@ static int  cdc_parse_cs_interface(CDC_DEV_T *cdev, uint8_t *buffer, int size)
 int  cdc_config_parser(CDC_DEV_T *cdev)
 {
     UDEV_T          *udev = cdev->udev;
-    DESC_CONF_T     *config;
-    DESC_HDR_T      *header;
+    DESC_CONF_T     config;
+    DESC_HDR_T      header;
     uint8_t         *bptr;
     int             size;
 
-    config = (DESC_CONF_T *)udev->cfd_buff;
-    bptr = (uint8_t *)config;
-    bptr = &bptr[config->bLength];
-    size = config->wTotalLength - config->bLength;
+    cdc_read_config_descriptor(udev->cfd_buff, &config);
+    bptr = udev->cfd_buff;
+    bptr = &bptr[config.bLength];
+    size = (int)config.wTotalLength - (int)config.bLength;
 
     while(size >= (int)sizeof(DESC_HDR_T))
     {
-        header = (DESC_HDR_T *)bptr;
+        cdc_read_descriptor_header(bptr, &header);
 
-        if(((int)header->bLength > size) || (header->bLength < 2U))
+        if(((int)header.bLength > size) || (header.bLength < 2U))
         {
-            CDC_DBGMSG("Error - invalid descriptor length of %d\n", header->bLength);
+            CDC_DBGMSG("Error - invalid descriptor length of %d\n", header.bLength);
             return USBH_ERR_NOT_SUPPORTED;
         }
 
         /*
          *  Is the interface descriptor of this CDC device?
          */
-        if(header->bDescriptorType == USB_DT_INTERFACE)
+        if(header.bDescriptorType == USB_DT_INTERFACE)
         {
-            const DESC_IF_T *ifd = (const DESC_IF_T *)header;
-            if(ifd->bInterfaceNumber == cdev->iface_cdc->if_num)
+            if((header.bLength >= 3U) && (cdc_read_interface_number(bptr) == cdev->iface_cdc->if_num))
             {
-                bptr = &bptr[header->bLength];
-                size -= (int)header->bLength;
+                bptr = &bptr[header.bLength];
+                size -= (int)header.bLength;
                 break;
             }
         }
-        bptr = &bptr[header->bLength];
-        size -= (int)header->bLength;
+        bptr = &bptr[header.bLength];
+        size -= (int)header.bLength;
     }   /* end of while */
 
     /*------------------------------------------------------------------*/
@@ -172,18 +213,18 @@ int  cdc_config_parser(CDC_DEV_T *cdev)
 
     while(size >= (int)sizeof(DESC_HDR_T))
     {
-        header = (DESC_HDR_T *)bptr;
+        cdc_read_descriptor_header(bptr, &header);
 
-        if(((int)header->bLength > size) || (header->bLength < 2U))
+        if(((int)header.bLength > size) || (header.bLength < 2U))
         {
-            CDC_DBGMSG("Error - invalid descriptor length of %d\n", header->bLength);
+            CDC_DBGMSG("Error - invalid descriptor length of %d\n", header.bLength);
             return USBH_ERR_NOT_SUPPORTED;
         }
 
         /*
          *  Is a class interface descriptor?
          */
-        if(header->bDescriptorType != CDC_CS_INTERFACE)
+        if(header.bDescriptorType != CDC_CS_INTERFACE)
         {
             break;
         }

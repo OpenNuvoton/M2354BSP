@@ -581,10 +581,34 @@ int  usbh_uac_find_best_alt(IFACE_T *iface, uint8_t dir, uint8_t attr, int pkt_s
     return 0;
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
+/**
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> utr->context stores a generic void * set by uac_probe() to the
+ *                       owning UAC_DEV_T. This accessor centralizes what was previously
+ *                       an inline `(UAC_DEV_T *)utr->context` cast duplicated at each ISO
+ *                       transfer completion callback into a single conversion point.
+ *                       UTR_T->context is a shared framework field reused as-is by every
+ *                       USB class driver (cdc/hid/uac/hub), so giving it a distinct type
+ *                       per class is not a practical alternative; uac_probe() is the only
+ *                       place that assigns utr->context for UAC ISO transfers and it
+ *                       always stores a UAC_DEV_T* address, so this accessor only
+ *                       documents that existing guarantee and does not change
+ *                       behavior.<br>
+ */
+static UAC_DEV_T *uac_dev_from_context(UTR_T *utr)
+{
+    /* cppcheck-suppress misra-c2012-11.5 */
+    return (UAC_DEV_T *)utr->context;
+}
+
+/// @cond HIDDEN_SYMBOLS
 
 static void iso_in_irq(UTR_T *utr)
 {
-    UAC_DEV_T   *uac = (UAC_DEV_T *)utr->context;
+    UAC_DEV_T   *uac = uac_dev_from_context(utr);
     int         i;
     int         ret;
 
@@ -744,7 +768,7 @@ int usbh_uac_start_audio_in(UAC_DEV_T *uac, UAC_CB_FUNC *func)
 
     if(err == 0)
     {
-        buff = (uint8_t *)usbh_alloc_mem((uint32_t)ep->wMaxPacketSize * (uint32_t)IF_PER_UTR * NUM_UTR);
+        buff = usbh_alloc_buff((uint32_t)ep->wMaxPacketSize * (uint32_t)IF_PER_UTR * NUM_UTR);
         if(buff == NULL)
         {
             ret = USBH_ERR_MEMORY_OUT;      /* memory allocate failed                     */
@@ -891,7 +915,7 @@ int usbh_uac_stop_audio_in(UAC_DEV_T *uac)
 
 static void iso_out_irq(UTR_T *utr)
 {
-    UAC_DEV_T   *uac = (UAC_DEV_T *)utr->context;
+    UAC_DEV_T   *uac = uac_dev_from_context(utr);
     int         i;
     int          ret;
 
@@ -1044,7 +1068,7 @@ int usbh_uac_start_audio_out(UAC_DEV_T *uac, UAC_CB_FUNC *func)
 
     if(err == 0)
     {
-        buff = (uint8_t *)usbh_alloc_mem((uint32_t)ep->wMaxPacketSize * (uint32_t)IF_PER_UTR * NUM_UTR);
+        buff = usbh_alloc_buff((uint32_t)ep->wMaxPacketSize * (uint32_t)IF_PER_UTR * NUM_UTR);
         if(buff == NULL)
         {
             ret = USBH_ERR_MEMORY_OUT;      /* memory allocate failed                     */

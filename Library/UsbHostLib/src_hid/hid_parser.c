@@ -21,6 +21,42 @@
 
 static int hid_parse_item(HID_DEV_T *hdev, uint8_t *buff);
 
+static void hid_read_config_descriptor(const uint8_t *bptr, DESC_CONF_T *config)
+{
+    config->bLength = bptr[0];
+    config->bDescriptorType = bptr[1];
+    config->wTotalLength = (uint16_t)((uint16_t)bptr[2] | ((uint16_t)bptr[3] << 8U));
+    config->bNumInterfaces = bptr[4];
+    config->bConfigurationValue = bptr[5];
+    config->iConfiguration = bptr[6];
+    config->bmAttributes = bptr[7];
+    config->MaxPower = bptr[8];
+}
+
+static void hid_read_interface_descriptor(const uint8_t *bptr, DESC_IF_T *interface)
+{
+    interface->bLength = bptr[0];
+    interface->bDescriptorType = bptr[1];
+    interface->bInterfaceNumber = bptr[2];
+    interface->bAlternateSetting = bptr[3];
+    interface->bNumEndpoints = bptr[4];
+    interface->bInterfaceClass = bptr[5];
+    interface->bInterfaceSubClass = bptr[6];
+    interface->bInterfaceProtocol = bptr[7];
+    interface->iInterface = bptr[8];
+}
+
+static void hid_read_hid_descriptor(const uint8_t *bptr, DESC_HID_T *hidd)
+{
+    hidd->bLength = bptr[0];
+    hidd->bDescriptorType = bptr[1];
+    hidd->bcdHID = (uint16_t)((uint16_t)bptr[2] | ((uint16_t)bptr[3] << 8U));
+    hidd->bCountryCode = bptr[4];
+    hidd->bNumDescriptors = bptr[5];
+    hidd->bRPDescType = bptr[6];
+    hidd->wDescriptorLength = (uint16_t)((uint16_t)bptr[7] | ((uint16_t)bptr[8] << 8U));
+}
+
 #if ENABLE_DBG_MSG
 struct string_table
 {
@@ -182,9 +218,9 @@ static void read_main_item_status(const uint8_t *buff)
 int hid_parse_report_descriptor(HID_DEV_T *hdev, IFACE_T *iface)
 {
     UDEV_T         *udev = iface->udev;
-    const DESC_CONF_T    *config;
-    const DESC_IF_T      *ifd;
-    const DESC_HID_T     *hidd;
+    DESC_CONF_T    config;
+    DESC_IF_T      ifd;
+    DESC_HID_T     hidd;
     uint8_t        *bptr;
     uint8_t        *desc_buff;
     int desc_buff_len;
@@ -199,32 +235,32 @@ int hid_parse_report_descriptor(HID_DEV_T *hdev, IFACE_T *iface)
     hdev->rpd.has_report_id = 0;
 
     bptr = udev->cfd_buff;
-    config = (const DESC_CONF_T *)bptr;
+    hid_read_config_descriptor(bptr, &config);
 
     /* step over configuration descritpor */
-    bptr = &bptr[config->bLength];
-    size = config->wTotalLength - config->bLength;
+    bptr = &bptr[config.bLength];
+    size = (int)config.wTotalLength - (int)config.bLength;
 
     /*------------------------------------------------------------------------------------*/
     /*  Find the Interface Descriptor of this HID interface                               */
     /*------------------------------------------------------------------------------------*/
     while(size >= (int)sizeof(DESC_IF_T))
     {
-        ifd = (const DESC_IF_T *)bptr;
+        hid_read_interface_descriptor(bptr, &ifd);
 
-        if((ifd->bDescriptorType == USB_DT_INTERFACE) && (ifd->bInterfaceNumber == iface->if_num) &&
-                (ifd->bInterfaceClass == USB_CLASS_HID))
+        if((ifd.bDescriptorType == USB_DT_INTERFACE) && (ifd.bInterfaceNumber == iface->if_num) &&
+                (ifd.bInterfaceClass == USB_CLASS_HID))
         {
             break;
         }
 
-        if(ifd->bLength == 0U)
+        if(ifd.bLength == 0U)
         {
             return -1;
         }
 
-        bptr = &bptr[ifd->bLength];
-        size -= (int)ifd->bLength;
+        bptr = &bptr[ifd.bLength];
+        size -= (int)ifd.bLength;
     }
 
     if(size < (int)sizeof(DESC_IF_T))
@@ -233,29 +269,29 @@ int hid_parse_report_descriptor(HID_DEV_T *hdev, IFACE_T *iface)
         return HID_RET_PARSING;
     }
 
-    bptr = &bptr[ifd->bLength];
-    size -= (int)ifd->bLength;
+    bptr = &bptr[ifd.bLength];
+    size -= (int)ifd.bLength;
 
     /*------------------------------------------------------------------------------------*/
     /*  Continue to find the subsequent HID Descriptor                                    */
     /*------------------------------------------------------------------------------------*/
     while(size >= (int)sizeof(DESC_HID_T))
     {
-        hidd = (const DESC_HID_T *)bptr;
+        hid_read_hid_descriptor(bptr, &hidd);
 
-        if((hidd->bDescriptorType == HID_DESCRIPTOR_TYPE) &&
-                (hidd->bRPDescType == REPORT_DESCRIPTOR_TYPE))
+        if((hidd.bDescriptorType == HID_DESCRIPTOR_TYPE) &&
+                (hidd.bRPDescType == REPORT_DESCRIPTOR_TYPE))
         {
             break;
         }
 
-        if(hidd->bLength == 0U)
+        if(hidd.bLength == 0U)
         {
             return HID_RET_PARSING;
         }
 
-        bptr = &bptr[ifd->bLength];
-        size -= (int)ifd->bLength;
+        bptr = &bptr[hidd.bLength];
+        size -= (int)hidd.bLength;
     }
 
     if(size < (int)sizeof(DESC_HID_T))
@@ -264,21 +300,21 @@ int hid_parse_report_descriptor(HID_DEV_T *hdev, IFACE_T *iface)
         return HID_RET_PARSING;
     }
 
-    hidd = (const DESC_HID_T *)bptr;
+    hid_read_hid_descriptor(bptr, &hidd);
 
     HID_DBGMSG("[HID Descriptor]\n");
-    HID_DBGMSG("bLength = %d\n", hidd->bLength);
-    HID_DBGMSG("bDescriptorType = 0x%x\n", hidd->bDescriptorType);
-    HID_DBGMSG("bcdHID = 0x%x\n", hidd->bcdHID);
-    HID_DBGMSG("bCountryCode = 0x%x\n", hidd->bCountryCode);
-    HID_DBGMSG("bNumDescriptors = %d\n", hidd->bNumDescriptors);
-    HID_DBGMSG("bRPDescType = 0x%x\n", hidd->bRPDescType);
-    HID_DBGMSG("wDescriptorLength = %d\n", hidd->wDescriptorLength);
+    HID_DBGMSG("bLength = %d\n", hidd.bLength);
+    HID_DBGMSG("bDescriptorType = 0x%x\n", hidd.bDescriptorType);
+    HID_DBGMSG("bcdHID = 0x%x\n", hidd.bcdHID);
+    HID_DBGMSG("bCountryCode = 0x%x\n", hidd.bCountryCode);
+    HID_DBGMSG("bNumDescriptors = %d\n", hidd.bNumDescriptors);
+    HID_DBGMSG("bRPDescType = 0x%x\n", hidd.bRPDescType);
+    HID_DBGMSG("wDescriptorLength = %d\n", hidd.wDescriptorLength);
 
-    HID_DBGMSG("Report descriptor found, length=%d. %d\n", hidd->wDescriptorLength, hidd->bLength);
+    HID_DBGMSG("Report descriptor found, length=%d. %d\n", hidd.wDescriptorLength, hidd.bLength);
 
-    desc_buff_len = hidd->wDescriptorLength + 8U;
-    desc_buff = (uint8_t *)usbh_alloc_mem(desc_buff_len);
+    desc_buff_len = hidd.wDescriptorLength + 8U;
+    desc_buff = usbh_alloc_buff(desc_buff_len);
 
     remain_len = usbh_hid_get_report_descriptor(hdev, desc_buff, desc_buff_len);
     if(remain_len <= 0)
@@ -355,11 +391,31 @@ int hid_parse_report_descriptor(HID_DEV_T *hdev, IFACE_T *iface)
     return 0;
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
+/**
+ * @brief     Allocate and append a new HID report-info node to a HID device's report list.
+ * @param[in] hdev  The HID device that owns the report descriptor list.
+ * @param[in] type  Report type to assign to the newly created report-info node.
+ * @return    0 on success, or a negative USBH_ERR_xxx / HID error code on failure.
+ *
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
+ * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This is
+ *                       the single conversion point where the raw block becomes a
+ *                       typed RP_INFO_T report-info object. usbh_alloc_mem() is the
+ *                       library's one generic heap allocator shared by every object
+ *                       type, so a per-type allocator is not a practical alternative;
+ *                       the allocated block size always matches sizeof(RP_INFO_T), so
+ *                       this cast only names an already-correct binary layout and
+ *                       changes no data or control flow.<br>
+ */
 static int hid_add_report(HID_DEV_T *hdev, uint8_t type)
 {
     RP_INFO_T   *report;
     RP_INFO_T   *p;
 
+    /* cppcheck-suppress misra-c2012-11.5 */
     report = (RP_INFO_T *)usbh_alloc_mem(sizeof(RP_INFO_T));
     if(report == NULL)
     {
@@ -386,6 +442,8 @@ static int hid_add_report(HID_DEV_T *hdev, uint8_t type)
     }
     return 0;
 }
+
+/// @cond HIDDEN_SYMBOLS
 
 static signed int hid_read_item_value(uint8_t bSize, const uint8_t *buff)
 {
