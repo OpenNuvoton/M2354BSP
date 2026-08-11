@@ -21,13 +21,13 @@ extern "C"
 #define ENABLE_ERR_MSG          1
 #define ENABLE_DBG_MSG          0
 
-#if ENABLE_ERR_MSG
+#if ENABLE_ERR_MSG && (defined(ENABLE_ERROR_MSG) || defined(ENABLE_DEBUG_MSG))
 #define HID_ERRMSG   (void)usbh_printf
 #else
 #define HID_ERRMSG(...)
 #endif
 
-#if ENABLE_DBG_MSG
+#if ENABLE_DBG_MSG && (defined(ENABLE_ERROR_MSG) || defined(ENABLE_DEBUG_MSG))
 #define HID_DBGMSG   (void)usbh_printf
 #else
 #define HID_DBGMSG(...)
@@ -326,6 +326,9 @@ int hid_parse_report_descriptor(HID_DEV_T *hdev, IFACE_T *iface);
 int hid_parse_keyboard_reports(HID_DEV_T *hdev, const uint8_t *data, int data_len);
 int hid_parse_mouse_reports(HID_DEV_T *hdev, const uint8_t *data, int data_len);
 int32_t  usbh_hid_set_report_non_blocking(HID_DEV_T *hdev, int rtp_typ, int rtp_id, uint8_t *data, int len);
+extern RP_INFO_T * usbh_alloc_rpinfo(void);
+extern void usbh_free_rpinfo(const RP_INFO_T *rp);
+extern void usbh_hid_rpinfo_pool_reset(void);
 /// @endcond HIDDEN_SYMBOLS
 
 /**@}*/ /* end of group USBH_EXPORTED_FUNCTIONS */

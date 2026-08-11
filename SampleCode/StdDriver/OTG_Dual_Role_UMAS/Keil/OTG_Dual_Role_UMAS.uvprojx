@@ -336,7 +336,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>ENABLE_ERROR_MSG,ENABLE_DEBUG_MSG</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\..\Library\CMSIS\Include;..\..\..\..\Library\Device\Nuvoton\M2354\Include;..\..\..\..\Library\StdDriver\inc;..\..\..\..\Library\UsbHostLib\inc;..\..\..\..\ThirdParty\FatFs\src</IncludePath>
             </VariousControls>

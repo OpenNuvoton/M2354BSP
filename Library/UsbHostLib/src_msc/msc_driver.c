@@ -27,6 +27,9 @@ static MSC_T  *g_msc_list;       /* Global list of Mass Storage Class device. A 
 static volatile uint8_t  g_fat_drv_used[USBDRV_CNT];
 static TCHAR    _path[3] = { '3', ':', 0 };
 
+static MSC_T    _msc_pool[USBH_MSC_POOL_NUM];
+static uint8_t  _msc_used[USBH_MSC_POOL_NUM];
+
 static void  fatfs_drive_int(void)
 {
     (void)memset((uint8_t *)g_fat_drv_used, 0, sizeof(g_fat_drv_used));
@@ -439,28 +442,69 @@ int  usbh_umas_reset_disk(int drv_no)
     return 0;
 }
 
-/// @endcond HIDDEN_SYMBOLS
-
-/**
- * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
- * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This is the
- *                       single conversion point where the raw block becomes a typed
- *                       MSC_T mass-storage device object, replacing the previously
- *                       duplicated `(MSC_T *)usbh_alloc_mem(...)` cast at each call site.
- *                       usbh_alloc_mem() is the library's one generic heap allocator
- *                       shared by every object type, so a per-type allocator is not a
- *                       practical alternative; the allocated block size always matches
- *                       sizeof(MSC_T), so this cast only names an already-correct binary
- *                       layout and changes no data or control flow.<br>
- */
 static MSC_T *msc_alloc(void)
 {
-    /* cppcheck-suppress misra-c2012-11.5 */
-    return (MSC_T *)usbh_alloc_mem(sizeof(MSC_T));
+    MSC_T    *msc = NULL;
+    uint32_t  primask;
+    int       i;
+
+    primask = usbh_enter_critical();
+    for(i = 0; i < USBH_MSC_POOL_NUM; i++)
+    {
+        if(_msc_used[i] == 0U)
+        {
+            _msc_used[i] = 1U;
+            msc = &_msc_pool[i];
+            break;
+        }
+    }
+    usbh_exit_critical(primask);
+
+    if(msc == NULL)
+    {
+        USB_error("msc_alloc failed! All %d MSC_T slots are in use. Raise USBH_MAX_FUNC_DEV in config.h to support more mass storage devices.\n", USBH_MSC_POOL_NUM);
+        return NULL;
+    }
+    (void)memset(msc, 0, sizeof(*msc));
+    return msc;
 }
 
-/// @cond HIDDEN_SYMBOLS
+static void msc_free(const MSC_T *msc)
+{
+    uint32_t  primask;
+    uint8_t   was_used = 0U;
+    int       i;
+
+    if(msc == NULL)
+    {
+        return;
+    }
+
+    primask = usbh_enter_critical();
+    for(i = 0; i < USBH_MSC_POOL_NUM; i++)
+    {
+        if(&_msc_pool[i] == msc)
+        {
+            was_used = _msc_used[i];
+            _msc_used[i] = 0U;
+            break;
+        }
+    }
+    usbh_exit_critical(primask);
+
+    if(i >= USBH_MSC_POOL_NUM)
+    {
+        USB_error("msc_free: device does not belong to _msc_pool! Ignored.\n");
+    }
+    else if(was_used == 0U)
+    {
+        USB_error("msc_free: slot %d released twice! It may still be in use by another owner.\n", i);
+    }
+    else
+    {
+        /* no action required */
+    }
+}
 
 static int  umass_init_device(MSC_T *msc)
 {
@@ -604,7 +648,7 @@ static int  umass_init_device(MSC_T *msc)
     {
         if(try_msc)
         {
-            usbh_free_mem(try_msc, sizeof(*try_msc));
+            msc_free(try_msc);
         }
         return 0;
     }
@@ -665,7 +709,7 @@ static int msc_probe(IFACE_T *iface)
 
     if((msc->ep_bulk_in == NULL) || (msc->ep_bulk_out == NULL))
     {
-        usbh_free_mem(msc, sizeof(*msc));
+        msc_free(msc);
         return USBH_ERR_NOT_EXPECTED;
     }
 
@@ -678,7 +722,7 @@ static int msc_probe(IFACE_T *iface)
     return umass_init_device(msc);
 }
 
-static void msc_disconnect(IFACE_T *iface)
+static void msc_disconnect(const IFACE_T *iface)
 {
     int    i;
     MSC_T  *msc_p;
@@ -704,7 +748,7 @@ static void msc_disconnect(IFACE_T *iface)
         {
             fatfs_drive_free(msc->drv_no);
             msc_list_remove(msc);
-            (void)usbh_free_mem(msc, sizeof(*msc));
+            msc_free(msc);
         }
         msc = msc_p;
     }
@@ -731,6 +775,7 @@ int  usbh_umas_init(void)
     };
 
     fatfs_drive_int();
+    (void)memset(_msc_used, 0, sizeof(_msc_used));
     g_msc_list = NULL;
     return usbh_register_driver(&msc_driver);
 }

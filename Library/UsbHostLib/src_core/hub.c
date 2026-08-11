@@ -19,9 +19,11 @@
 
 /// @cond HIDDEN_SYMBOLS
 
-
+#if defined(ENABLE_ERROR_MSG) || defined(ENABLE_DEBUG_MSG)
 #define HUB_DBGMSG     (void)usbh_printf
-//#define HUB_DBGMSG(...)
+#else
+#define HUB_DBGMSG(...)
+#endif
 
 static HUB_DEV_T  g_hub_dev[MAX_HUB_DEVICE];
 
@@ -186,17 +188,17 @@ static int  get_port_status(HUB_DEV_T *hub, int port, uint16_t *wPortStatus, uin
  * @return    None.
  *
  * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
- * <b>Justification:</b> utr->context stores a generic void * set by hub_probe() to
- *                       the owning HUB_DEV_T. This is the single conversion point
- *                       used by the hub status-change completion callback.
- *                       UTR_T->context is a shared framework field reused as-is by
- *                       every USB class driver (cdc/hid/uac/hub), so giving it a
- *                       distinct type per class is not a practical alternative;
- *                       hub_probe() is the only place that assigns utr->context for
- *                       the hub status-change transfer and it always stores a
- *                       HUB_DEV_T* address, so this documents that existing
- *                       guarantee and does not change behavior.<br>
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5 (Advisory)<br>
+ * <b>Justification:</b> UTR_T->context is a shared framework field of type void * reused
+ *                       as-is by every USB class driver (cdc/hid/uac/hub), so giving it
+ *                       a distinct type per class is not a practical alternative. This
+ *                       is the single conversion point used by the hub status-change
+ *                       completion callback. hub_probe() is the only place that assigns
+ *                       utr->context for the hub status-change transfer and it always
+ *                       stores a HUB_DEV_T* address, and a void * round trip is
+ *                       guaranteed to yield the original pointer (ISO/IEC 9899:2011
+ *                       6.3.2.3p1), so the effective type and the alignment are
+ *                       preserved and no behavior changes.<br>
  */
 static void hub_status_irq(UTR_T *utr)
 {
@@ -308,6 +310,7 @@ static int hub_probe(IFACE_T *iface)
     /*------------------------------------------------------------------------------------*/
     for(i = 1; i <= (int)hub->bNbrPorts; i++)
     {
+#if defined(ENABLE_ERROR_MSG) || defined(ENABLE_DEBUG_MSG)
         ret = set_port_feature(hub, FS_PORT_POWER, i);
         if(ret == 0)
         {
@@ -317,6 +320,9 @@ static int hub_probe(IFACE_T *iface)
         {
             HUB_DBGMSG("Hub [%s] port %d power enabling failed!\n", hub->pos_id, i);
         }
+#else
+        (void)set_port_feature(hub, FS_PORT_POWER, i);
+#endif
     }
 
     delay_us((((uint32_t)hub->bPwrOn2PwrGood * 1000U) + 100000U));   /* delay to wait hub power ready     */
@@ -349,23 +355,12 @@ static int hub_probe(IFACE_T *iface)
 
 /// @endcond HIDDEN_SYMBOLS
 
-/* cppcheck-suppress constParameterCallback */
 /**
   * @brief     Disconnect handler for a USB hub interface; tears down all downstream devices.
   * @param[in] iface  The hub interface being disconnected.
   * @return    None.
-  *
-  * @static_deviation
-  * <b>Rule:</b> constParameterCallback (cppcheck native check)<br>
-  * <b>Location:</b> `hub_disconnect()` parameter `iface`<br>
-  * <b>Justification:</b> `iface` is only read here, but this function is assigned to the
-  * `disconnect` member of `UDEV_DRV_T` (see @ref usb.h "usb.h", a fixed `void (*)(struct iface_t *)`
-  * callback signature shared by every USB class driver: hub/hid/cdc/uac). Adding `const`
-  * would make `hub_driver.disconnect = hub_disconnect;` an incompatible-pointer-type
-  * assignment and would require synchronized changes to the shared `UDEV_DRV_T` typedef
-  * and every sibling `*_disconnect()` implementation — out of this file's blast radius.
   */
-static void hub_disconnect(IFACE_T *iface)
+static void hub_disconnect(const IFACE_T *iface)
 {
     HUB_DEV_T   *hub;
     int         port;
@@ -417,7 +412,7 @@ static int  hub_status_change(HUB_DEV_T *hub)
         return ret;
     }
 
-    (void)usbh_printf("Hub [%s] status: 0x%x, change: 0x%x\n", hub->pos_id, wHubStatus, wHubChange);
+    HUB_DBGMSG("Hub [%s] status: 0x%x, change: 0x%x\n", hub->pos_id, wHubStatus, wHubChange);
 
     if(wHubChange & HUB_C_LOCAL_POWER)      /* has local power change?                    */
     {
@@ -520,7 +515,7 @@ static int  port_connect_change(HUB_DEV_T *hub, int port, uint16_t wPortStatus)
             USB_error("Failed to get Hub [%s] port %d status! (%d)\n", hub->pos_id, port, ret);
             return ret;
         }
-        (void)usbh_printf("Hub [%s] port %d, status: 0x%x, change: 0x%x\n", hub->pos_id, port, wPortStatus, wPortChange);
+        HUB_DBGMSG("Hub [%s] port %d, status: 0x%x, change: 0x%x\n", hub->pos_id, port, wPortStatus, wPortChange);
 
         /*
          *  Port reset success. Create and enumerate this device.
@@ -582,7 +577,7 @@ static int  port_status_change(HUB_DEV_T *hub, int port)
         USB_error("Failed to get Hub [%s] port %d status! (%d)\n", hub->pos_id, port, ret);
         return ret;
     }
-    (void)usbh_printf("Hub [%s] port %d, status: 0x%x, change: 0x%x\n", hub->pos_id, port, wPortStatus, wPortChange);
+    HUB_DBGMSG("Hub [%s] port %d, status: 0x%x, change: 0x%x\n", hub->pos_id, port, wPortStatus, wPortChange);
 
     if(wPortChange & PORT_C_CONNECTION)     /* have port connection change?               */
     {

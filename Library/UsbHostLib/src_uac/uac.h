@@ -16,8 +16,12 @@
 /*
  * Debug message
  */
+#if defined(ENABLE_ERROR_MSG) || defined(ENABLE_DEBUG_MSG)
 #define UAC_ERRMSG     (void)usbh_printf
-#ifdef UAC_DEBUG
+#else
+#define UAC_ERRMSG(...)
+#endif
+#if defined(UAC_DEBUG) && (defined(ENABLE_ERROR_MSG) || defined(ENABLE_DEBUG_MSG))
 #define UAC_DBGMSG     (void)usbh_printf
 #else
 #define UAC_DBGMSG(...)

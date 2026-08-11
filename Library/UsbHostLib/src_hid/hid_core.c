@@ -40,6 +40,27 @@ static int get_free_utr_slot(const HID_DEV_T *hdev)
 }
 
 
+/*
+ *  Detach a UTR from the HID device UTR list. Must be called before the UTR is
+ *  released, otherwise utr_list[] keeps a dangling reference and a later
+ *  hid_disconnect() or usbh_hid_stop_int_read() would release the same object
+ *  a second time.
+ */
+static void hid_remove_utr_slot(HID_DEV_T *hdev, const UTR_T *utr)
+{
+    int    i;
+
+    for(i = 0; i < CONFIG_HID_DEV_MAX_PIPE; i++)
+    {
+        if(hdev->utr_list[i] == utr)
+        {
+            hdev->utr_list[i] = NULL;
+            break;
+        }
+    }
+}
+
+
 /// @endcond
 
 
@@ -414,18 +435,18 @@ int32_t  usbh_hid_set_protocol(HID_DEV_T *hdev, uint8_t protocol)
  */
 /**
  * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
- * <b>Justification:</b> utr->context stores a generic void * set by usbhid_probe() to the
- *                       owning HID_DEV_T. This accessor centralizes what was previously
- *                       an inline `(HID_DEV_T *)utr->context` cast duplicated at each
- *                       transfer completion callback into a single conversion point.
- *                       UTR_T->context is a shared framework field reused as-is by every
- *                       USB class driver (cdc/hid/uac/hub), so giving it a distinct type
- *                       per class is not a practical alternative; usbhid_probe() is the
- *                       only place that assigns utr->context for HID transfers and it
- *                       always stores a HID_DEV_T* address, so this accessor only
- *                       documents that existing guarantee and does not change
- *                       behavior.<br>
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5 (Advisory)<br>
+ * <b>Justification:</b> UTR_T->context is a shared framework field of type void * reused
+ *                       as-is by every USB class driver (cdc/hid/uac/hub), so giving it a
+ *                       distinct type per class is not a practical alternative. This
+ *                       accessor centralizes what was previously an inline
+ *                       `(HID_DEV_T *)utr->context` cast duplicated at each transfer
+ *                       completion callback into a single conversion point. Every
+ *                       assignment of utr->context for HID transfers is made in this file
+ *                       and always stores a HID_DEV_T* address, and a void * round trip is
+ *                       guaranteed to yield the original pointer (ISO/IEC 9899:2011
+ *                       6.3.2.3p1), so the effective type and the alignment are preserved
+ *                       and no behavior changes.<br>
  */
 static HID_DEV_T *hid_dev_from_context(UTR_T *utr)
 {
@@ -482,7 +503,8 @@ static void  hid_read_irq(UTR_T *utr)
             hdev->read_func(hdev, utr->ep->bEndpointAddress, ret, utr->buff, 0);
         }
 
-        (void)usbh_free_mem(utr->buff, utr->data_len);
+        hid_remove_utr_slot(hdev, utr);
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
     }
 }
@@ -518,6 +540,8 @@ static void  hid_write_irq(UTR_T *utr)
     {
         HID_DBGMSG("hid_write_irq - failed to submit interrupt-out request (%d)", ret);
         hdev->write_func(hdev, utr->ep->bEndpointAddress, ret, utr->buff, &(utr->data_len));
+        hid_remove_utr_slot(hdev, utr);
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
     }
 }
@@ -573,7 +597,7 @@ int32_t usbh_hid_start_int_read(HID_DEV_T *hdev, uint8_t ep_addr, HID_IR_FUNC *f
         return USBH_ERR_MEMORY_OUT;
     }
 
-    utr->buff = usbh_alloc_buff(ep->wMaxPacketSize);
+    utr->buff = usbh_alloc_xfer_buff(ep->wMaxPacketSize);
     if(utr->buff == NULL)
     {
         free_utr(utr);
@@ -591,7 +615,7 @@ int32_t usbh_hid_start_int_read(HID_DEV_T *hdev, uint8_t ep_addr, HID_IR_FUNC *f
     if(ret < 0)
     {
         HID_DBGMSG("Error - failed to submit interrupt read request (%d)", ret);
-        (void)usbh_free_mem(utr->buff, utr->data_len);
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
         return HID_RET_IO_ERR;
     }
@@ -601,7 +625,7 @@ int32_t usbh_hid_start_int_read(HID_DEV_T *hdev, uint8_t ep_addr, HID_IR_FUNC *f
     {
         HID_DBGMSG("Error - No free HID slot!\n");
         (void)usbh_quit_utr(utr);
-        (void)usbh_free_mem(utr->buff, utr->data_len);
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
         return USBH_ERR_MEMORY_OUT;         /* no free UTR slot.                          */
     }
@@ -674,7 +698,7 @@ int32_t usbh_hid_stop_int_read(HID_DEV_T *hdev, uint8_t ep_addr)
 
     ret = usbh_quit_utr(utr);               /* force to stop the transfer                 */
 
-    (void)usbh_free_mem(utr->buff, utr->ep->wMaxPacketSize);
+    usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
     free_utr(utr);
 
     return ret;
@@ -728,7 +752,7 @@ int32_t usbh_hid_start_int_write(HID_DEV_T *hdev, uint8_t ep_addr, HID_IW_FUNC *
         return USBH_ERR_MEMORY_OUT;
     }
 
-    utr->buff = usbh_alloc_buff(ep->wMaxPacketSize);
+    utr->buff = usbh_alloc_xfer_buff(ep->wMaxPacketSize);
     if(utr->buff == NULL)
     {
         free_utr(utr);
@@ -750,6 +774,7 @@ int32_t usbh_hid_start_int_write(HID_DEV_T *hdev, uint8_t ep_addr, HID_IW_FUNC *
     if(ret < 0)
     {
         HID_DBGMSG("Error - failed to submit interrupt read request (%d)", ret);
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
         return HID_RET_IO_ERR;
     }
@@ -759,7 +784,7 @@ int32_t usbh_hid_start_int_write(HID_DEV_T *hdev, uint8_t ep_addr, HID_IW_FUNC *
     {
         HID_DBGMSG("Error - No free HID slot!\n");
         (void)usbh_quit_utr(utr);
-        (void)usbh_free_mem(utr->buff, utr->data_len);
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
         return USBH_ERR_MEMORY_OUT;         /* no free UTR slot.                          */
     }
@@ -832,7 +857,7 @@ int32_t usbh_hid_stop_int_write(HID_DEV_T *hdev, uint8_t ep_addr)
 
     ret = usbh_quit_utr(utr);
 
-    (void)usbh_free_mem(utr->buff, utr->ep->wMaxPacketSize);
+    usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
     free_utr(utr);
 
     return ret;

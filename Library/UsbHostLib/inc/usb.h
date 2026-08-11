@@ -302,7 +302,7 @@ typedef struct
 typedef struct
 {
     int   (*probe) (struct iface_t *iface);
-    void  (*disconnect) (struct iface_t *iface);
+    void  (*disconnect) (const struct iface_t *iface);
     void  (*suspend) (struct iface_t *iface);
     void  (*resume) (struct iface_t *iface);
 } UDEV_DRV_T;
@@ -423,17 +423,26 @@ extern void usbh_dump_ep_info(EP_INFO_T *ep);
 /*
  *  Memory management functions
  */
+extern uint32_t usbh_enter_critical(void);
+extern void usbh_exit_critical(uint32_t primask);
 extern void usbh_memory_init(void);
 extern uint32_t  usbh_memory_used(void);
-extern void * usbh_alloc_mem(int size);
-extern uint8_t * usbh_alloc_buff(int size);
-extern void usbh_free_mem(void *p, int size);
+extern DESC_CONF_T * usbh_alloc_cfd_buff(void);
+extern void usbh_free_cfd_buff(UDEV_T *udev);
+extern uint8_t * usbh_alloc_rpd_buff(int size);
+extern void usbh_free_rpd_buff(const uint8_t *buff, int size);
+extern uint8_t * usbh_alloc_xfer_buff(int size);
+extern void usbh_free_xfer_buff(const uint8_t *buff, int size);
+extern uint8_t * usbh_alloc_iso_buff(int size);
+extern void usbh_free_iso_buff(const uint8_t *buff, int size);
 extern int  alloc_dev_address(void);
 extern void free_dev_address(int dev_addr);
 extern UDEV_T * alloc_device(void);
 extern void free_device(UDEV_T *udev);
 extern UTR_T * alloc_utr(UDEV_T *udev);
-extern void free_utr(UTR_T *utr);
+extern void free_utr(const UTR_T *utr);
+extern IFACE_T * usbh_alloc_iface(void);
+extern void usbh_free_iface(const IFACE_T *iface);
 extern ED_T * alloc_ohci_ED(void);
 extern void free_ohci_ED(const ED_T *ed);
 extern TD_T * alloc_ohci_TD(UTR_T *utr);

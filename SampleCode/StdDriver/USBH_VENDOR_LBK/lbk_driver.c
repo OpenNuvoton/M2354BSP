@@ -1,4 +1,4 @@
-/**************************************************************************//**
+﻿/**************************************************************************//**
  * @file     lbk_driver.c
  * @version  V1.00
  * @brief    M2354 MCU USB Host Vendor LBK driver
@@ -454,7 +454,7 @@ int lbk_isochronous_in_start(ISO_CB_FUNC *func)
         }
     }
 
-    buff = (uint8_t *)usbh_alloc_mem(ep->wMaxPacketSize * IF_PER_UTR * ISO_UTR_NUM);
+    buff = usbh_alloc_iso_buff(ep->wMaxPacketSize * IF_PER_UTR * ISO_UTR_NUM);
     if(buff == NULL)
     {
         printf("Memory not enough! Please increase the heap size.\n");
@@ -505,7 +505,7 @@ err_out:
     /* free USB transfer buffer                   */
     if((s_lbk_dev.utr_iso_in[0] != NULL) &&
             (s_lbk_dev.utr_iso_in[0]->buff != NULL))
-        usbh_free_mem(s_lbk_dev.utr_iso_in[0]->buff, (int)(s_lbk_dev.utr_iso_in[0]->data_len * ISO_UTR_NUM));
+        usbh_free_iso_buff(s_lbk_dev.utr_iso_in[0]->buff, (int)(s_lbk_dev.utr_iso_in[0]->data_len * ISO_UTR_NUM));
 
     for(i = 0; i < ISO_UTR_NUM; i++)            /* free all UTRs                              */
     {
@@ -531,7 +531,7 @@ void lbk_isochronous_in_stop(void)
 
     if((s_lbk_dev.utr_iso_in[0] != NULL) &&
             (s_lbk_dev.utr_iso_in[0]->buff != NULL))       /* free audio buffer                */
-        usbh_free_mem(s_lbk_dev.utr_iso_in[0]->buff, (int)(s_lbk_dev.utr_iso_in[0]->data_len * ISO_UTR_NUM));
+        usbh_free_iso_buff(s_lbk_dev.utr_iso_in[0]->buff, (int)(s_lbk_dev.utr_iso_in[0]->data_len * ISO_UTR_NUM));
 
     for(i = 0; i < ISO_UTR_NUM; i++)        /* free all UTRs                              */
     {
@@ -599,7 +599,7 @@ int lbk_isochronous_out_start(ISO_CB_FUNC *func)
         }
     }
 
-    buff = (uint8_t *)usbh_alloc_mem(ep->wMaxPacketSize * IF_PER_UTR * ISO_UTR_NUM);
+    buff = usbh_alloc_iso_buff(ep->wMaxPacketSize * IF_PER_UTR * ISO_UTR_NUM);
     if(buff == NULL)
     {
         printf("Memory not enough! Please increase the heap size.\n");
@@ -651,7 +651,7 @@ err_out:
 
     if((s_lbk_dev.utr_iso_out[0] != NULL) &&            /* free USB transfer buffer                   */
             (s_lbk_dev.utr_iso_out[0]->buff != NULL))
-        usbh_free_mem(s_lbk_dev.utr_iso_out[0]->buff, (int)(s_lbk_dev.utr_iso_out[0]->data_len * ISO_UTR_NUM));
+        usbh_free_iso_buff(s_lbk_dev.utr_iso_out[0]->buff, (int)(s_lbk_dev.utr_iso_out[0]->data_len * ISO_UTR_NUM));
 
     for(i = 0; i < ISO_UTR_NUM; i++)            /* free all UTRs                              */
     {
@@ -677,7 +677,7 @@ void lbk_isochronous_out_stop(void)
 
     if((s_lbk_dev.utr_iso_out[0] != NULL) &&
             (s_lbk_dev.utr_iso_out[0]->buff != NULL))       /* free transfer buffer           */
-        usbh_free_mem(s_lbk_dev.utr_iso_out[0]->buff, (int)(s_lbk_dev.utr_iso_out[0]->data_len * ISO_UTR_NUM));
+        usbh_free_iso_buff(s_lbk_dev.utr_iso_out[0]->buff, (int)(s_lbk_dev.utr_iso_out[0]->data_len * ISO_UTR_NUM));
 
     for(i = 0; i < ISO_UTR_NUM; i++)            /* free all UTRs                              */
     {
@@ -753,7 +753,7 @@ static int lbk_probe(IFACE_T *iface)
     return 0;
 }
 
-static void lbk_disconnect(IFACE_T *iface)
+static void lbk_disconnect(const IFACE_T *iface)
 {
     int i;
 

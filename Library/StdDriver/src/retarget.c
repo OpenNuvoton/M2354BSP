@@ -119,21 +119,7 @@ void abort(void)
 
 #else
 # if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-/* cppcheck-suppress misra-c2012-17.3 */
-/**
- * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 17.3<br>
- * <b>Justification:</b> __asm is ARM Compiler extension keyword, not a C function call;
-__ARM_use_no_argv is an ARM C library linker-protocol symbol that must be declared via .global assembly directive.
- */
 __asm("  .global __ARM_use_no_argv\n");
-/* cppcheck-suppress misra-c2012-17.3 */
-/**
- * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 17.3<br>
- * <b>Justification:</b> __asm is ARM Compiler extension keyword, not a C function call;
-__use_no_semihosting directs the linker to use semihosting stubs instead of real semihosting SVC (SVC 0xAB), preventing HardFault in production.
- */
 __asm("  .global __use_no_semihosting\n");
 
 
@@ -175,16 +161,20 @@ int IsDebugFifoEmpty(void);
 void _ttywrch(int ch);
 
 /**
-  * @static_deviation
-  * <b>Rule:</b> MISRA C:2012 Rule 21.2<br>
-  * <b>Location:</b> `fputc`/`fgetc`/`ferror` forward declarations<br>
-  * <b>Justification:</b> These reserved C-library names MUST be declared under their
-  * exact standard names to retarget stdio (printf/getchar/etc.) to the UART debug port
-  * or semihosting; renaming would break the retarget ABI expected by the C runtime.
-  * Declared unconditionally (not gated by toolchain macros) so the prototype stays
-  * visible to every build configuration compiled from this file, satisfying Rule 8.4
-  * at each function's definition further below.
-  */
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 21.2 (Required)<br>
+ * <b>Justification:</b> fputc, fgetc and ferror are the stdio retarget hook points the ARM
+ *                       and IAR C libraries document, so the reserved names must be used
+ *                       verbatim to redirect stdio to the UART debug port; renaming would
+ *                       break the retarget ABI. The prototypes are byte-for-byte the ones
+ *                       declared by <stdio.h>, so no conflicting declaration is possible,
+ *                       and the C library supplies its own versions as separate library
+ *                       members that the linker selects only while the symbol is still
+ *                       unresolved, so the definitions in this file are the ones that
+ *                       reach the image. They are declared unconditionally so the
+ *                       prototype stays visible in every build configuration, which also
+ *                       satisfies Rule 8.4 at the definitions below.<br>
+ */
 /* cppcheck-suppress misra-c2012-21.2 */
 int fputc(int ch, FILE *stream);
 #if (defined(__ARMCC_VERSION) || defined(__ICCARM__))
@@ -941,14 +931,20 @@ int _unlink(const char *path)
  */
 
 /**
-  * @static_deviation
-  * <b>Rule:</b> MISRA C:2012 Rule 8.4 / Rule 21.2<br>
-  * <b>Justification:</b> In this toolchain branch (neither `__ARMCC_VERSION` nor
-  * `__ICCARM__` defined), the `fgetc` forward declaration above is compiled out, so
-  * this definition is the first declaration of the reserved C-library name in the
-  * translation unit. Same C-runtime stdio retarget requirement as `fputc`/`ferror`
-  * above; the reserved name must be used verbatim to be picked up by the linker.
-  */
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 8.4 (Required) / Rule 21.2 (Required)<br>
+ * <b>Justification:</b> In this toolchain branch (neither __ARMCC_VERSION nor __ICCARM__
+ *                       defined) the forward declaration above is compiled out, so this
+ *                       definition is the first declaration of the reserved name. The name
+ *                       must be used verbatim for the C runtime to pick up the stdio
+ *                       retarget. The signature is byte-for-byte the standard
+ *                       int fgetc(FILE *) that every caller obtains from <stdio.h>, so no
+ *                       mismatch between definition and declaration is representable, and
+ *                       the C library supplies its own version as a separate library
+ *                       member that the linker selects only while the symbol is still
+ *                       unresolved, so this definition is the one that reaches the
+ *                       image.<br>
+ */
 /* cppcheck-suppress misra-c2012-8.4 */
 /* cppcheck-suppress misra-c2012-21.2 */
 int fgetc(FILE *stream)
@@ -973,14 +969,20 @@ int fgetc(FILE *stream)
  */
 
 /**
-  * @static_deviation
-  * <b>Rule:</b> MISRA C:2012 Rule 8.4 / Rule 21.2<br>
-  * <b>Justification:</b> In this toolchain branch (neither `__ARMCC_VERSION` nor
-  * `__ICCARM__` defined), the `ferror` forward declaration above is compiled out, so
-  * this definition is the first declaration of the reserved C-library name in the
-  * translation unit. Same C-runtime stdio retarget requirement as `fputc`/`fgetc`
-  * above; the reserved name must be used verbatim to be picked up by the linker.
-  */
+ * @static_deviation
+ * <b>Rule:</b>          MISRA C:2012 Rule 8.4 (Required) / Rule 21.2 (Required)<br>
+ * <b>Justification:</b> In this toolchain branch (neither __ARMCC_VERSION nor __ICCARM__
+ *                       defined) the forward declaration above is compiled out, so this
+ *                       definition is the first declaration of the reserved name. The name
+ *                       must be used verbatim for the C runtime to pick up the stdio
+ *                       retarget. The signature is byte-for-byte the standard
+ *                       int ferror(FILE *) that every caller obtains from <stdio.h>, so no
+ *                       mismatch between definition and declaration is representable, and
+ *                       the C library supplies its own version as a separate library
+ *                       member that the linker selects only while the symbol is still
+ *                       unresolved, so this definition is the one that reaches the
+ *                       image.<br>
+ */
 /* cppcheck-suppress misra-c2012-8.4 */
 /* cppcheck-suppress misra-c2012-21.2 */
 int ferror(FILE *stream)

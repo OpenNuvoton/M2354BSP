@@ -44,6 +44,20 @@ static void  free_hid_device(HID_DEV_T *hid_dev)
     (void)memset((char *)hid_dev, 0, sizeof(HID_DEV_T));
 }
 
+static HID_DEV_T *find_hid_device_by_iface(const IFACE_T *iface)
+{
+    int     i;
+
+    for(i = 0; i < CONFIG_HID_MAX_DEV; i++)
+    {
+        if(g_hid_dev[i].iface == iface)
+        {
+            return &g_hid_dev[i];
+        }
+    }
+    return NULL;
+}
+
 
 static int hid_probe(IFACE_T *iface)
 {
@@ -121,32 +135,7 @@ static int hid_probe(IFACE_T *iface)
     return 0;
 }
 
-/// @endcond HIDDEN_SYMBOLS
-
-/**
- * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
- * <b>Justification:</b> iface->context stores a generic void * set by usbhid_probe() to
- *                       the owning HID_DEV_T. This accessor centralizes what was
- *                       previously an inline `(HID_DEV_T *)(iface->context)` cast into
- *                       the single conversion point used when tearing down the HID
- *                       device on interface disconnect. IFACE_T->context is a shared
- *                       framework field reused as-is by every USB class driver
- *                       (cdc/hid/uac/hub), so giving it a distinct type per class is not
- *                       a practical alternative; usbhid_probe() is the only place that
- *                       assigns iface->context and it always stores a HID_DEV_T*
- *                       address, so this accessor only documents that existing
- *                       guarantee and does not change behavior.<br>
- */
-static HID_DEV_T *hid_dev_from_iface(IFACE_T *iface)
-{
-    /* cppcheck-suppress misra-c2012-11.5 */
-    return (HID_DEV_T *)iface->context;
-}
-
-/// @cond HIDDEN_SYMBOLS
-
-static void  hid_disconnect(IFACE_T *iface)
+static void  hid_disconnect(const IFACE_T *iface)
 {
     HID_DEV_T   *hdev;
     HID_DEV_T   *p;
@@ -154,7 +143,11 @@ static void  hid_disconnect(IFACE_T *iface)
     RP_INFO_T   *next_rp;
     int         i;
 
-    hdev = hid_dev_from_iface(iface);
+    hdev = find_hid_device_by_iface(iface);
+    if(hdev == NULL)
+    {
+        return;
+    }
 
     for(i = 0; i < (int)iface->aif->ifd->bNumEndpoints; i++)
     {
@@ -171,7 +164,7 @@ static void  hid_disconnect(IFACE_T *iface)
         if(utr != NULL)
         {
             (void)usbh_quit_utr(utr);       /* Quit the UTR */
-            usbh_free_mem(utr->buff, utr->ep->wMaxPacketSize);
+            usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
             free_utr(utr);
         }
     }
@@ -188,7 +181,7 @@ static void  hid_disconnect(IFACE_T *iface)
         while(rp != NULL)
         {
             next_rp = rp->next;
-            usbh_free_mem(rp, sizeof(RP_INFO_T));
+            usbh_free_rpinfo(rp);
             rp = next_rp;
         }
     }
@@ -243,6 +236,7 @@ void usbh_hid_init(void)
     };
 
     (void)memset((char *)&g_hid_dev[0], 0, sizeof(g_hid_dev));
+    usbh_hid_rpinfo_pool_reset();
     g_hdev_list = NULL;
     (void)usbh_register_driver(&hid_driver);
 }

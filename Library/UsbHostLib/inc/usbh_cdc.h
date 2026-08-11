@@ -20,8 +20,12 @@ extern "C"
 
 #define CDC_DEBUG
 
+#if defined(ENABLE_ERROR_MSG) || defined(ENABLE_DEBUG_MSG)
 #define CDC_ERRMSG      (void)usbh_printf
-#ifdef CDC_DEBUG
+#else
+#define CDC_ERRMSG(...)
+#endif
+#if defined(CDC_DEBUG) && (defined(ENABLE_ERROR_MSG) || defined(ENABLE_DEBUG_MSG))
 #define CDC_DBGMSG      (void)usbh_printf
 #else
 #define CDC_DBGMSG(...)
