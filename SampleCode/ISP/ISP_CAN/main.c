@@ -179,7 +179,7 @@ void CAN_Init(void)
 {
     /* Enable CAN module clock */
     CLK->APBCLK0 |= CLK_APBCLK0_CAN0CKEN_Msk;
-    /* Set PC multi-function pins for CAN RXD(PC.9) and TXD(PC.10) */
+    /* Set PB multi-function pins for CAN RXD(PB.10) and TXD(PB.11) */
     SYS->GPB_MFPH = (SYS->GPB_MFPH & (~(CAN0_RXD_PB10_Msk | CAN0_TXD_PB11_Msk))) | CAN0_RXD_PB10 | CAN0_TXD_PB11;
 
     /* Set CAN transceiver to high speed mode */
