@@ -1,4 +1,4 @@
-/**************************************************************************//**
+﻿/**************************************************************************//**
  * @file     uac_core.c
  * @version  V1.00
  * @brief    M2354 MCU USB Host Audio Class driver
@@ -585,18 +585,18 @@ int  usbh_uac_find_best_alt(IFACE_T *iface, uint8_t dir, uint8_t attr, int pkt_s
 
 /**
  * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
- * <b>Justification:</b> utr->context stores a generic void * set by uac_probe() to the
- *                       owning UAC_DEV_T. This accessor centralizes what was previously
- *                       an inline `(UAC_DEV_T *)utr->context` cast duplicated at each ISO
- *                       transfer completion callback into a single conversion point.
- *                       UTR_T->context is a shared framework field reused as-is by every
- *                       USB class driver (cdc/hid/uac/hub), so giving it a distinct type
- *                       per class is not a practical alternative; uac_probe() is the only
- *                       place that assigns utr->context for UAC ISO transfers and it
- *                       always stores a UAC_DEV_T* address, so this accessor only
- *                       documents that existing guarantee and does not change
- *                       behavior.<br>
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5 (Advisory)<br>
+ * <b>Justification:</b> UTR_T->context is a shared framework field of type void * reused
+ *                       as-is by every USB class driver (cdc/hid/uac/hub), so giving it a
+ *                       distinct type per class is not a practical alternative. This
+ *                       accessor centralizes what was previously an inline
+ *                       `(UAC_DEV_T *)utr->context` cast duplicated at each ISO transfer
+ *                       completion callback into a single conversion point. Every
+ *                       assignment of utr->context for UAC ISO transfers is made in this
+ *                       file and always stores a UAC_DEV_T* address, and a void * round
+ *                       trip is guaranteed to yield the original pointer (ISO/IEC
+ *                       9899:2011 6.3.2.3p1), so the effective type and the alignment are
+ *                       preserved and no behavior changes.<br>
  */
 static UAC_DEV_T *uac_dev_from_context(UTR_T *utr)
 {
@@ -768,7 +768,7 @@ int usbh_uac_start_audio_in(UAC_DEV_T *uac, UAC_CB_FUNC *func)
 
     if(err == 0)
     {
-        buff = usbh_alloc_buff((uint32_t)ep->wMaxPacketSize * (uint32_t)IF_PER_UTR * NUM_UTR);
+        buff = usbh_alloc_iso_buff((uint32_t)ep->wMaxPacketSize * (uint32_t)IF_PER_UTR * NUM_UTR);
         if(buff == NULL)
         {
             ret = USBH_ERR_MEMORY_OUT;      /* memory allocate failed                     */
@@ -836,7 +836,7 @@ int usbh_uac_start_audio_in(UAC_DEV_T *uac, UAC_CB_FUNC *func)
     if((asif->utr[0] != NULL) &&
             (asif->utr[0]->buff != NULL))
     {
-        usbh_free_mem(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
+        usbh_free_iso_buff(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
     }
 
     for(i = 0; i < NUM_UTR; i++)            /* free all UTRs                              */
@@ -887,7 +887,7 @@ int usbh_uac_stop_audio_in(UAC_DEV_T *uac)
     if((asif->utr[0] != NULL) &&
             (asif->utr[0]->buff != NULL))   /* free audio buffer                          */
     {
-        usbh_free_mem(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
+        usbh_free_iso_buff(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
     }
 
     for(i = 0; i < NUM_UTR; i++)            /* free all UTRs                              */
@@ -1068,7 +1068,7 @@ int usbh_uac_start_audio_out(UAC_DEV_T *uac, UAC_CB_FUNC *func)
 
     if(err == 0)
     {
-        buff = usbh_alloc_buff((uint32_t)ep->wMaxPacketSize * (uint32_t)IF_PER_UTR * NUM_UTR);
+        buff = usbh_alloc_iso_buff((uint32_t)ep->wMaxPacketSize * (uint32_t)IF_PER_UTR * NUM_UTR);
         if(buff == NULL)
         {
             ret = USBH_ERR_MEMORY_OUT;      /* memory allocate failed                     */
@@ -1137,7 +1137,7 @@ int usbh_uac_start_audio_out(UAC_DEV_T *uac, UAC_CB_FUNC *func)
     if((asif->utr[0] != NULL) &&            /* free USB transfer buffer                   */
             (asif->utr[0]->buff != NULL))
     {
-        usbh_free_mem(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
+        usbh_free_iso_buff(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
     }
 
     for(i = 0; i < NUM_UTR; i++)            /* free all UTRs                              */
@@ -1163,6 +1163,8 @@ int usbh_uac_stop_audio_out(UAC_DEV_T *uac)
     AS_IF_T      *asif = &uac->asif_out;
     unsigned int i;
 
+    asif->flag_streaming = 0;
+
     /* Set interface alternative settings */
     if(uac->state != UAC_STATE_DISCONNECTING)
     {
@@ -1185,7 +1187,7 @@ int usbh_uac_stop_audio_out(UAC_DEV_T *uac)
     if((asif->utr[0] != NULL) &&
             (asif->utr[0]->buff != NULL))   /* free audio buffer                          */
     {
-        usbh_free_mem(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
+        usbh_free_iso_buff(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
     }
 
     for(i = 0; i < NUM_UTR; i++)            /* free all UTRs                              */
@@ -1204,7 +1206,6 @@ int usbh_uac_stop_audio_out(UAC_DEV_T *uac)
             uac->state = UAC_STATE_READY;
         }
     }
-    asif->flag_streaming = 0;
 
     return UAC_RET_OK;
 }

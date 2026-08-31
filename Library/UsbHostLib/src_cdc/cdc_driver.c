@@ -21,28 +21,30 @@
 
 static CDC_DEV_T *g_cdev_list = NULL;
 
-/// @endcond HIDDEN_SYMBOLS
+static CDC_DEV_T  _cdc_pool[USBH_CDC_POOL_NUM];
+static uint8_t    _cdc_used[USBH_CDC_POOL_NUM];
 
 static CDC_DEV_T *alloc_cdc_device(void)
 {
-    CDC_DEV_T  *cdev;
+    CDC_DEV_T  *cdev = NULL;
+    uint32_t    primask;
+    int         i;
 
-    /**
-     * @static_deviation
-     * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
-     * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This is
-     *                       the single conversion point where the raw block becomes a
-     *                       typed CDC_DEV_T object. usbh_alloc_mem() is the library's one
-     *                       generic heap allocator shared by every device/interface/buffer
-     *                       type, so a per-type allocator is not a practical alternative;
-     *                       the requested size always matches sizeof(CDC_DEV_T), so this
-     *                       cast only names an already-correct binary layout and changes
-     *                       no data or control flow versus the previous unnamed cast.<br>
-     */
-    /* cppcheck-suppress misra-c2012-11.5 */
-    cdev = (CDC_DEV_T *)usbh_alloc_mem(sizeof(CDC_DEV_T));
+    primask = usbh_enter_critical();
+    for(i = 0; i < USBH_CDC_POOL_NUM; i++)
+    {
+        if(_cdc_used[i] == 0U)
+        {
+            _cdc_used[i] = 1U;
+            cdev = &_cdc_pool[i];
+            break;
+        }
+    }
+    usbh_exit_critical(primask);
+
     if(cdev == NULL)
     {
+        USB_error("alloc_cdc_device failed! All %d CDC_DEV_T slots are in use. Raise USBH_MAX_FUNC_DEV in config.h to support more CDC devices.\n", USBH_CDC_POOL_NUM);
         return NULL;
     }
 
@@ -51,11 +53,41 @@ static CDC_DEV_T *alloc_cdc_device(void)
     return cdev;
 }
 
-/// @cond HIDDEN_SYMBOLS
-
-static void  free_cdc_device(CDC_DEV_T *cdev)
+static void  free_cdc_device(const CDC_DEV_T *cdev)
 {
-    usbh_free_mem(cdev, sizeof(CDC_DEV_T));
+    uint32_t  primask;
+    uint8_t   was_used = 0U;
+    int       i;
+
+    if(cdev == NULL)
+    {
+        return;
+    }
+
+    primask = usbh_enter_critical();
+    for(i = 0; i < USBH_CDC_POOL_NUM; i++)
+    {
+        if(&_cdc_pool[i] == cdev)
+        {
+            was_used = _cdc_used[i];
+            _cdc_used[i] = 0U;
+            break;
+        }
+    }
+    usbh_exit_critical(primask);
+
+    if(i >= USBH_CDC_POOL_NUM)
+    {
+        USB_error("free_cdc_device: device does not belong to _cdc_pool! Ignored.\n");
+    }
+    else if(was_used == 0U)
+    {
+        USB_error("free_cdc_device: slot %d released twice! It may still be in use by another owner.\n", i);
+    }
+    else
+    {
+        /* no action required */
+    }
 }
 
 static void add_new_cdc_device(CDC_DEV_T *cdev)
@@ -126,6 +158,25 @@ static CDC_DEV_T * find_cdc_data_iface(int ifnum)
     {
         if((p->iface_cdc == NULL) && (p->iface_data != NULL) &&
                 (p->ifnum_data == ifnum))
+        {
+            return p;
+        }
+        p = p->next;
+    }
+    return NULL;
+}
+
+/*
+ *  Try to find the CDC device that owns an interface, either its COMM or DATA interface.
+ */
+static CDC_DEV_T * find_cdc_device_by_iface(const IFACE_T *iface)
+{
+    CDC_DEV_T  *p;
+
+    p = g_cdev_list;
+    while(p != NULL)
+    {
+        if((p->iface_cdc == iface) || (p->iface_data == iface))
         {
             return p;
         }
@@ -213,32 +264,7 @@ static int  cdc_probe(IFACE_T *iface)
     return 0;
 }
 
-/// @endcond HIDDEN_SYMBOLS
-
-/**
- * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
- * <b>Justification:</b> iface->context stores a generic void * set by cdc_probe() to the
- *                       owning CDC_DEV_T. This accessor centralizes what was previously
- *                       an inline `(CDC_DEV_T *)iface->context` cast duplicated at each
- *                       call site into the single conversion point used when tearing down
- *                       the CDC device on interface disconnect. IFACE_T->context is a
- *                       shared framework field reused as-is by every USB class driver
- *                       (cdc/hid/uac/hub), so giving it a distinct type per class is not a
- *                       practical alternative; cdc_probe() is the only place that assigns
- *                       iface->context and it always stores a CDC_DEV_T* address, so this
- *                       accessor only documents that existing guarantee and does not
- *                       change behavior.<br>
- */
-static CDC_DEV_T *cdc_dev_from_iface(IFACE_T *iface)
-{
-    /* cppcheck-suppress misra-c2012-11.5 */
-    return (CDC_DEV_T *)iface->context;
-}
-
-/// @cond HIDDEN_SYMBOLS
-
-static void  cdc_disconnect(IFACE_T *iface)
+static void  cdc_disconnect(const IFACE_T *iface)
 {
     IFACE_T     *if_cdc;
     IFACE_T     *if_data;
@@ -247,7 +273,7 @@ static void  cdc_disconnect(IFACE_T *iface)
 
     CDC_DBGMSG("CDC device interface %d disconnected!\n", iface->if_num);
 
-    cdev = cdc_dev_from_iface(iface);
+    cdev = find_cdc_device_by_iface(iface);
 
     if(cdev == NULL)
     {
@@ -314,6 +340,7 @@ void usbh_cdc_init(void)
         NULL,
     };
     g_cdev_list = NULL;
+    (void)memset(_cdc_used, 0, sizeof(_cdc_used));
     (void)usbh_register_driver(&cdc_driver);
 }
 

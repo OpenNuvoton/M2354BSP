@@ -16,49 +16,30 @@
 #include "usb.h"
 #include "hub.h"
 
-
+#if defined(ENABLE_DEBUG_MSG) || defined(ENABLE_ERROR_MSG)
 /**
  * @brief  Default debug output function for USB Host Library.
  *         Routes output through standard printf (retargeted to UART by application).
- *         This wrapper isolates the library from direct stdio dependency (MISRA C:2012 Rule 21.6).
+ *         This wrapper isolates the library from direct stdio dependency.
  * @param[in] fmt  Format string (printf-compatible)
  * @return  Number of characters printed
- *
- * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 17.1<br>
- * <b>Justification:</b> This is the single, contained variadic debug-print wrapper for the USB
- *                       Host library. The features of <stdarg.h> (va_list, va_start, va_end) are
- *                       required to forward a variable argument list to vprintf() and are
- *                       intentionally confined to this one function.
- *
- * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 21.6<br>
- * <b>Justification:</b> vprintf() is used here solely for low-level USB Host diagnostic tracing on
- *                       the debug console. This is the library's single I/O entry point; the
- *                       retarget layer maps it to the UART debug port, so its use is intentional
- *                       and contained.
  */
 int usbh_printf(const char *fmt, ...)
 {
-    /* cppcheck-suppress misra-c2012-17.1 */
     va_list args;
     int     ret;
 
-    /* cppcheck-suppress misra-c2012-17.1 */
     va_start(args, fmt);
-    /* cppcheck-suppress misra-c2012-21.6 */
     ret = vprintf(fmt, args);
-    /* cppcheck-suppress misra-c2012-17.1 */
     va_end(args);
 
     return ret;
 }
+#endif
 
 /// @cond HIDDEN_SYMBOLS
 
 USBH_T     *_ohci;
-
-static int    _IsInUsbInterrupt = 0;
 
 static UDEV_DRV_T *  _drivers[MAX_UDEV_DRIVER];
 
@@ -431,7 +412,7 @@ int usbh_quit_xfer(UDEV_T *udev, EP_INFO_T *ep)
     return udev->hc_driver->quit_xfer(NULL, ep);
 }
 
-
+#if defined(DUMP_DESCRIPTOR) && defined(ENABLE_DEBUG_MSG)
 static void  dump_device_descriptor(DESC_DEV_T *desc)
 {
     USB_debug("\n[Device Descriptor]\n");
@@ -478,6 +459,7 @@ void usbh_dump_endpoint_descriptor(DESC_EP_T *ep_desc)
     USB_debug("          bRefresh            = %d\n", ep_desc->bRefresh);
     USB_debug("          bSynchAddress       = %d\n", ep_desc->bSynchAddress);
 }
+#endif
 
 #if defined(DUMP_DESCRIPTOR) && defined(ENABLE_DEBUG_MSG)
 static void  dump_config_descriptor(DESC_CONF_T *desc)
@@ -717,6 +699,7 @@ int usbh_get_config_descriptor(UDEV_T *udev, uint8_t *desc_buff, int buff_len)
     return 0;
 }
 
+#if 0  /* printf string descriptors, for debug only */
 /**
  *  @brief  Get string descriptor from the USB device.
   * @param[in]  udev       The target USB device.
@@ -741,6 +724,7 @@ static int usbh_get_string_descriptor(UDEV_T *udev, int index, uint8_t *desc_buf
                          desc_buff, &read_len, 200);
     return ret;
 }
+#endif
 
 /**
  *  @brief  Issue a standard request SET_FEATURE to clear USB device endpoint halt state.
@@ -818,6 +802,8 @@ static int  usbh_parse_endpoint(ALT_IFACE_T *alt, int ep_idx, uint8_t *desc_buff
     return parsed_len + (int)ep_desc.bLength;
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
 /**
   * @brief    Parse interface descriptor.
   * @param[in]  udev       The USB device.
@@ -849,20 +835,7 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
     int         remaining = len;
     enum { PARSE_RUNNING, PARSE_DONE, PARSE_ERROR } state = PARSE_RUNNING;
 
-    /**
-     * @static_deviation
-     * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
-     * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This is
-     *                       the single conversion point where the raw block becomes a
-     *                       typed IFACE_T interface object. usbh_alloc_mem() is the
-     *                       library's one generic heap allocator shared by every object
-     *                       type, so a per-type allocator is not a practical alternative;
-     *                       the allocated block size always matches sizeof(*iface), so
-     *                       this cast only names an already-correct binary layout and
-     *                       changes no data or control flow.<br>
-     */
-    /* cppcheck-suppress misra-c2012-11.5 */
-    iface = usbh_alloc_mem(sizeof(*iface)); /* create an interface                        */
+    iface = usbh_alloc_iface();             /* create an interface                        */
     if(iface == NULL)
     {
         return USBH_ERR_MEMORY_OUT;
@@ -873,7 +846,7 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
     if(len < (int)sizeof(DESC_IF_T))
     {
         USB_error("ERR DESCRIPTOR IF LEN [len %d]\n", len);
-        usbh_free_mem(iface, sizeof(*iface));
+        usbh_free_iface(iface);
         return USBH_ERR_DESCRIPTOR;
     }
 
@@ -992,19 +965,18 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
 
         /**
          * @static_deviation
-         * <b>Rule:</b>          MISRA C:2012 Rule 11.3<br>
-         * <b>Justification:</b> if_desc_buff identifies a validated Interface Descriptor
-         *                       in UDEV_T->cfd_buff. ALT_IFACE_T stores this typed view
-         *                       for use throughout the USB device lifetime. The
-         *                       descriptor buffer (UDEV_T->cfd_buff) must stay valid for
-         *                       the device's entire lifetime and ALT_IFACE_T.ifd is read
-         *                       by field name from several other functions, so copying it
-         *                       into a local struct here would drop the pointer those
-         *                       later accesses need; if_desc_buff only ever points inside
-         *                       the validated, length-checked configuration-descriptor
-         *                       buffer allocated once per device and freed only at
-         *                       disconnect, so the retained pointer's lifetime is safe
-         *                       and no behavior changes.<br>
+         * <b>Rule:</b>          MISRA C:2012 Rule 11.3 (Required)<br>
+         * <b>Justification:</b> ALT_IFACE_T.ifd retains a typed view of a validated
+         *                       Interface Descriptor inside UDEV_T->cfd_buff, which other
+         *                       functions read by field name, so copying into a local
+         *                       struct would drop the pointer those later reads need.
+         *                       DESC_IF_T is packed, so no offset in that buffer can be
+         *                       misaligned, and before if_desc_buff was taken the parse
+         *                       loop already required bDescriptorType == USB_DT_INTERFACE
+         *                       with both bLength and the remaining length not less than
+         *                       sizeof(DESC_IF_T), so the typed view maps onto a complete,
+         *                       in-bounds descriptor. The buffer is allocated once per
+         *                       device and freed only at disconnect.<br>
          */
         /* cppcheck-suppress misra-c2012-11.3 */
         iface->alt[iface->num_alt].ifd = (DESC_IF_T *)if_desc_buff;
@@ -1042,7 +1014,7 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
 
     if(state == PARSE_ERROR)
     {
-        usbh_free_mem(iface, sizeof(*iface));
+        usbh_free_iface(iface);
         return ret;
     }
 
@@ -1077,13 +1049,14 @@ static int  usbh_parse_interface(UDEV_T *udev, uint8_t *desc_buff, int len)
     }
     else
     {
-        usbh_free_mem(iface, sizeof(*iface));
+        usbh_free_iface(iface);
         iface = NULL;
     }
 
     return parsed_len;
 }
 
+/// @cond HIDDEN_SYMBOLS
 
 static int  usbh_parse_configuration(UDEV_T *udev, uint8_t *desc_buff)
 {
@@ -1145,6 +1118,7 @@ static int  usbh_parse_configuration(UDEV_T *udev, uint8_t *desc_buff)
     return len;
 }
 
+#if 0  /* printf string descriptors, for debug only */
 static void print_usb_string(char *lead, uint8_t *str)
 {
     int  len;
@@ -1159,6 +1133,7 @@ static void print_usb_string(char *lead, uint8_t *str)
     }
     USB_debug("\n");
 }
+#endif
 
 int  connect_device(UDEV_T *udev)
 {
@@ -1204,21 +1179,7 @@ int  connect_device(UDEV_T *udev)
         USB_debug("Warning! This device has multiple configurations [%d]. \n", udev->descriptor.bNumConfigurations);
     }
 
-    /**
-     * @static_deviation
-     * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
-     * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This is
-     *                       the single conversion point where the raw block becomes a
-     *                       typed DESC_CONF_T configuration-descriptor buffer.
-     *                       usbh_alloc_mem() is the library's one generic heap allocator
-     *                       shared by every buffer type, so a per-type allocator is not a
-     *                       practical alternative; MAX_DESC_BUFF_SIZE is always large
-     *                       enough to hold a DESC_CONF_T, so this cast only names an
-     *                       already-correct byte-buffer layout and changes no data or
-     *                       control flow.<br>
-     */
-    /* cppcheck-suppress misra-c2012-11.5 */
-    conf = (DESC_CONF_T *)usbh_alloc_mem(MAX_DESC_BUFF_SIZE);
+    conf = usbh_alloc_cfd_buff();
     if(conf == NULL)
     {
         free_dev_address(udev->dev_num);
@@ -1326,7 +1287,7 @@ int  usbh_reset_device(UDEV_T *udev)
     {
         udev->iface_list = iface->next;
         iface->driver->disconnect(iface);
-        (void)usbh_free_mem(iface, sizeof(*iface));
+        usbh_free_iface(iface);
         iface = udev->iface_list;
     }
 
@@ -1433,7 +1394,7 @@ void disconnect_device(UDEV_T *udev)
     {
         udev->iface_list = iface->next;
         iface->driver->disconnect(iface);
-        (void)usbh_free_mem(iface, sizeof(*iface));
+        usbh_free_iface(iface);
         iface = udev->iface_list;
     }
 
@@ -1499,6 +1460,7 @@ EP_INFO_T * usbh_iface_find_ep(IFACE_T *iface, uint8_t ep_addr, uint8_t dir_type
     return NULL;
 }
 
+#ifdef ENABLE_DEBUG_MSG
 void  usbh_dump_buff_bytes(uint8_t *buff, int nSize)
 {
     int     nIdx;
@@ -1532,6 +1494,7 @@ void  usbh_dump_buff_bytes(uint8_t *buff, int nSize)
     USB_debug("\n");
 }
 
+#if defined(DUMP_DESCRIPTOR) && defined(ENABLE_DEBUG_MSG)
 void usbh_dump_iface(IFACE_T *iface)
 {
     USB_debug("\n  [IFACE info] (0x%x)\n", (int)iface);
@@ -1542,6 +1505,7 @@ void usbh_dump_iface(IFACE_T *iface)
     USB_debug("  next       = 0x%x\n", (int)iface->next);
     (void)usbh_dump_interface_descriptor(iface->aif->ifd);
 }
+#endif
 
 void usbh_dump_ep_info(EP_INFO_T *ep)
 {
@@ -1553,7 +1517,7 @@ void usbh_dump_ep_info(EP_INFO_T *ep)
     USB_debug("  wMaxPacketSize      = %d\n",     ep->wMaxPacketSize);
     USB_debug("  hw_pipe             = 0x%x\n",   (int)ep->hw_pipe);
 }
-
+#endif
 /// @endcond HIDDEN_SYMBOLS
 
 

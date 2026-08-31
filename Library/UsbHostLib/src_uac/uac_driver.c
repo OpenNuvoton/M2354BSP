@@ -80,8 +80,8 @@ static UAC_DEV_T *find_uac_device(const UDEV_T *udev)
 static int  uac_probe(IFACE_T *iface)
 {
     UDEV_T       *udev = iface->udev;
-    ALT_IFACE_T  *aif = iface->aif;
-    DESC_IF_T    *ifd;
+    const ALT_IFACE_T  *aif = iface->aif;
+    const DESC_IF_T *ifd;
     UAC_DEV_T    *uac;
     UAC_DEV_T    *p;
     uint8_t      bAlternateSetting;
@@ -98,7 +98,7 @@ static int  uac_probe(IFACE_T *iface)
     if((ifd->bInterfaceSubClass != SUBCLS_AUDIOCONTROL) &&
             (ifd->bInterfaceSubClass != SUBCLS_AUDIOSTREAMING))
     {
-        (void)UAC_ERRMSG("Audio class interface, but sub-class %x not supported!\n", ifd->bInterfaceSubClass);
+        UAC_ERRMSG("Audio class interface, but sub-class %x not supported!\n", ifd->bInterfaceSubClass);
         return USBH_ERR_NOT_MATCHED;
     }
 
@@ -145,13 +145,13 @@ static int  uac_probe(IFACE_T *iface)
             ret = usbh_set_interface(iface, bAlternateSetting);
             if(ret < 0)
             {
-                (void)UAC_ERRMSG("Failed to set interface %d, %d! (%d)\n", iface->if_num, bAlternateSetting, ret);
+                UAC_ERRMSG("Failed to set interface %d, %d! (%d)\n", iface->if_num, bAlternateSetting, ret);
                 return UAC_RET_IO_ERR;
             }
         }
         else
         {
-            (void)UAC_ERRMSG("Cannot find audio stream endpoints!\n");
+            UAC_ERRMSG("Cannot find audio stream endpoints!\n");
             return UAC_RET_DEV_NOT_FOUND;
         }
 
@@ -184,25 +184,12 @@ static int  uac_probe(IFACE_T *iface)
 
 /// @endcond HIDDEN_SYMBOLS
 
-/* cppcheck-suppress constParameterCallback */
 /**
   * @brief     Disconnect handler for a USB Audio Class interface; tears down the owning UAC device.
   * @param[in] iface  The UAC interface being disconnected.
   * @return    None.
-  *
-  * @static_deviation
-  * <b>Rule:</b> constParameterCallback (cppcheck native check)<br>
-  * <b>Location:</b> `uac_disconnect()` parameter `iface`<br>
-  * <b>Justification:</b> `iface` is only read here, but this function is assigned to the
-  * `disconnect` member of `UDEV_DRV_T` (see @ref usb.h "usb.h", a fixed `void (*)(struct iface_t *)`
-  * callback signature shared by every USB class driver: hub/hid/cdc/uac). Adding `const`
-  * would make `uac_driver.disconnect = uac_disconnect;` an incompatible-pointer-type
-  * assignment and would require synchronized changes to the shared `UDEV_DRV_T` typedef
-  * and every sibling `*_disconnect()` implementation, which is out of this file's blast
-  * radius; the `iface` parameter itself is unaffected either way (read-only), so leaving
-  * it non-const changes nothing.<br>
   */
-static void  uac_disconnect(IFACE_T *iface)
+static void  uac_disconnect(const IFACE_T *iface)
 {
     UAC_DEV_T    *uac;
     UAC_DEV_T    *p;
@@ -278,8 +265,6 @@ static void  uac_disconnect(IFACE_T *iface)
         }
     }
 }
-
-/// @endcond HIDDEN_SYMBOLS
 
 /**
   * @brief    Initialize USB Audio Class driver.

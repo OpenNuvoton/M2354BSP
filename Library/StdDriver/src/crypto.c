@@ -2911,7 +2911,6 @@ static int32_t CheckRsaBufferSize(uint32_t u32OpMode, uint32_t u32BufSize, uint3
     return 0;
 }
 
-/* cppcheck-suppress constParameterPointer */
 /**
   * @brief  Open RSA encrypt/decrypt function.
   * @param[in]  crpt         The pointer of CRYPTO module
@@ -2941,11 +2940,12 @@ static int32_t CheckRsaBufferSize(uint32_t u32OpMode, uint32_t u32BufSize, uint3
   * @return  -1   The value of pointer of RSA buffer struct is null.
   *
   * @static_deviation
-  * <b>Rule:</b>          Cppcheck constParameterPointer<br>
+  * <b>Rule:</b>          Cppcheck constParameterPointer (cppcheck native check)<br>
   * <b>Justification:</b> psRSA_Buf points to a writable RSA working buffer; subsequent RSA operations
   *                       write into it via s_pRSABuf. Declaring it as const void * would
   *                       misrepresent the buffer's writability.
   */
+/* cppcheck-suppress constParameterPointer */
 int32_t RSA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32KeySize, \
                  void *psRSA_Buf, uint32_t u32BufSize, uint32_t u32UseKS)
 {
@@ -2974,7 +2974,7 @@ int32_t RSA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32KeySize, \
   */
 int32_t RSA_SetKey(CRPT_T *crpt, char *Key)
 {
-    if(s_pRSABuf == NULL)
+    if(s_pRSABuf == 0U)
     {
         return (-1);
     }
@@ -2996,7 +2996,7 @@ int32_t RSA_SetKey(CRPT_T *crpt, char *Key)
   */
 int32_t RSA_SetDMATransfer(CRPT_T *crpt, char *Src, char *n, char *P, char *Q)
 {
-    if(s_pRSABuf == NULL)
+    if(s_pRSABuf == 0U)
     {
         return (-1);
     }
@@ -3082,7 +3082,7 @@ void RSA_Start(CRPT_T *crpt)
   */
 int32_t RSA_Read(const CRPT_T *crpt, char *Output)
 {
-    if(s_pRSABuf == NULL)
+    if(s_pRSABuf == 0U)
     {
         return (-1);
     }
@@ -3148,7 +3148,7 @@ int32_t RSA_SetDMATransfer_KS(CRPT_T *crpt, char *Src, char *n, uint32_t u32PNum
                               uint32_t u32QNum, uint32_t u32CpNum, uint32_t u32CqNum, uint32_t u32DpNum,
                               uint32_t u32DqNum, uint32_t u32RpNum, uint32_t u32RqNum)
 {
-    if(s_pRSABuf == NULL)
+    if(s_pRSABuf == 0U)
     {
         return (-1);
     }

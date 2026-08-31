@@ -358,6 +358,23 @@ int uac_parse_control_interface(UAC_DEV_T *uac, IFACE_T *iface)
     return 0;
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
+/**
+ *  @brief  Parse one descriptor of an audio streaming (AS) interface.
+ *  @param[in,out]  asif  Audio streaming interface information to be updated
+ *  @param[in]  bptr  The descriptor to be parsed
+ *  @return   Success or failed.
+ *  @retval   0        Success
+ *  @retval   Otherwise  Error occurred
+ *  @details  Dispatches on the descriptor type and records what the audio
+ *            streaming interface needs: a Standard Endpoint Descriptor is
+ *            matched against the endpoints of the alternative interface and
+ *            stored as AS_IF_T.ep, while a Class-Specific Endpoint, AS_GENERAL
+ *            or FORMAT_TYPE descriptor is kept as a typed view into the
+ *            device's configuration descriptor buffer. Descriptors that carry
+ *            no information required by this driver are skipped.
+ */
 static int  uac_parse_as_interface(AS_IF_T *asif, uint8_t *bptr)
 {
     const ALT_IFACE_T  *aif = asif->iface->aif;
@@ -391,19 +408,16 @@ static int  uac_parse_as_interface(AS_IF_T *asif, uint8_t *bptr)
     {
         /**
          * @static_deviation
-         * <b>Rule:</b>          MISRA C:2012 Rule 11.3<br>
-         * <b>Justification:</b> bptr identifies a validated Class-Specific Endpoint
-         *                       Descriptor in the USB configuration buffer. AS_IF_T
-         *                       retains this typed view as part of its public model.
-         *                       The descriptor buffer (UDEV_T->cfd_buff) must stay
-         *                       valid for the device's entire lifetime and
-         *                       AS_IF_T.cs_epd is read by field name elsewhere, so
-         *                       copying it into a local struct here would drop the
-         *                       pointer those later reads need; bptr only ever points
-         *                       inside the validated, length-checked configuration-
-         *                       descriptor buffer allocated once per device and freed
-         *                       only at disconnect, so the retained pointer's lifetime
-         *                       is safe and no behavior changes.<br>
+         * <b>Rule:</b>          MISRA C:2012 Rule 11.3 (Required)<br>
+         * <b>Justification:</b> AS_IF_T.cs_epd retains a typed view of a validated
+         *                       Class-Specific Endpoint Descriptor inside
+         *                       UDEV_T->cfd_buff, which is read by field name elsewhere,
+         *                       so copying into a local struct is not an option. CS_EP_T
+         *                       is packed, so no offset in that buffer can be misaligned,
+         *                       and bptr has already been checked as
+         *                       bDescriptorType == CS_ENDPOINT in the length-checked
+         *                       descriptor walk. The buffer is allocated once per device
+         *                       and freed only at disconnect.<br>
          */
         /* cppcheck-suppress misra-c2012-11.3 */
         asif->cs_epd = (CS_EP_T *)bptr;
@@ -424,20 +438,17 @@ static int  uac_parse_as_interface(AS_IF_T *asif, uint8_t *bptr)
             case AS_GENERAL:
                 /**
                  * @static_deviation
-                 * <b>Rule:</b>          MISRA C:2012 Rule 11.3<br>
-                 * <b>Justification:</b> bptr identifies a validated AS_GENERAL descriptor
-                 *                       in the USB configuration buffer. AS_IF_T retains
-                 *                       this typed view for terminal-link processing. The
-                 *                       descriptor buffer (UDEV_T->cfd_buff) must stay
-                 *                       valid for the device's entire lifetime and
-                 *                       AS_IF_T.as_gen is read by field name elsewhere, so
-                 *                       copying it into a local struct here would drop the
-                 *                       pointer those later reads need; bptr only ever
-                 *                       points inside the validated, length-checked
-                 *                       configuration-descriptor buffer allocated once
-                 *                       per device and freed only at disconnect, so the
-                 *                       retained pointer's lifetime is safe and no
-                 *                       behavior changes.<br>
+                 * <b>Rule:</b>          MISRA C:2012 Rule 11.3 (Required)<br>
+                 * <b>Justification:</b> AS_IF_T.as_gen retains a typed view of a validated
+                 *                       AS_GENERAL descriptor inside UDEV_T->cfd_buff,
+                 *                       which is read by field name elsewhere, so copying
+                 *                       into a local struct is not an option. AS_GEN_T is
+                 *                       packed, so no offset in that buffer can be
+                 *                       misaligned, and this branch is reached only after
+                 *                       bDescriptorSubtype has been matched against
+                 *                       AS_GENERAL in the length-checked descriptor walk.
+                 *                       The buffer is allocated once per device and freed
+                 *                       only at disconnect.<br>
                  */
                 /* cppcheck-suppress misra-c2012-11.3 */
                 asif->as_gen = (AS_GEN_T *)bptr;
@@ -449,20 +460,17 @@ static int  uac_parse_as_interface(AS_IF_T *asif, uint8_t *bptr)
             case FORMAT_TYPE:
                 /**
                  * @static_deviation
-                 * <b>Rule:</b>          MISRA C:2012 Rule 11.3<br>
-                 * <b>Justification:</b> bptr identifies a validated Type-I Format
-                 *                       descriptor in the USB configuration buffer.
-                 *                       AS_IF_T retains this typed view for UAC queries.
-                 *                       The descriptor buffer (UDEV_T->cfd_buff) must
-                 *                       stay valid for the device's entire lifetime and
-                 *                       AS_IF_T.ft is read by field name elsewhere, so
-                 *                       copying it into a local struct here would drop
-                 *                       the pointer those later reads need; bptr only
-                 *                       ever points inside the validated, length-checked
-                 *                       configuration-descriptor buffer allocated once
-                 *                       per device and freed only at disconnect, so the
-                 *                       retained pointer's lifetime is safe and no
-                 *                       behavior changes.<br>
+                 * <b>Rule:</b>          MISRA C:2012 Rule 11.3 (Required)<br>
+                 * <b>Justification:</b> AS_IF_T.ft retains a typed view of a validated
+                 *                       Type-I Format descriptor inside UDEV_T->cfd_buff,
+                 *                       which is read by field name elsewhere, so copying
+                 *                       into a local struct is not an option. AS_FT1_T is
+                 *                       packed, so no offset in that buffer can be
+                 *                       misaligned, and this branch is reached only after
+                 *                       bDescriptorSubtype has been matched against
+                 *                       FORMAT_TYPE in the length-checked descriptor walk.
+                 *                       The buffer is allocated once per device and freed
+                 *                       only at disconnect.<br>
                  */
                 /* cppcheck-suppress misra-c2012-11.3 */
                 asif->ft = (AS_FT1_T *)bptr;
@@ -481,6 +489,8 @@ static int  uac_parse_as_interface(AS_IF_T *asif, uint8_t *bptr)
 
     return 0;
 }
+
+/// @cond HIDDEN_SYMBOLS
 
 static int  iface_have_iso_in_ep(const IFACE_T *iface)
 {
@@ -605,6 +615,8 @@ static void * uac_find_feature_unit(UAC_DEV_T *uac, uint8_t bUnitID)
 }
 #endif
 
+/// @endcond HIDDEN_SYMBOLS
+
 /**
  *  @brief  Parse and get audio streaming (AS) interface information from descriptors.
  *  @param[in]  uac    UAC device
@@ -720,22 +732,24 @@ int uac_parse_streaming_interface(UAC_DEV_T *uac, IFACE_T *iface, uint8_t bAlter
         /* Find microphone's output terminal by AS_GEN's bTerminalLink */
         /**
          * @static_deviation
-         * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
-         * <b>Justification:</b> uac_find_terminal() returns the matching Output Terminal
-         *                       address in the persistent USB configuration buffer. The
-         *                       ISO IN interface selects AC_OT_T and retains its address.
-         *                       uac_find_terminal() returns void* because it searches the
-         *                       same configuration buffer for either Input or Output
-         *                       Terminal descriptors from a single shared implementation;
-         *                       splitting it into separate typed IT/OT search functions
-         *                       would duplicate the whole scan loop for no behavior
-         *                       change. The returned address only ever points inside the
-         *                       validated, length-checked configuration-descriptor buffer
-         *                       allocated once per device and freed only at disconnect,
-         *                       so the retained pointer's lifetime is safe.
+         * <b>Rule:</b>          MISRA C:2012 Rule 11.5 (Advisory)<br>
+         * <b>Justification:</b> uac_find_terminal() returns void * because a single scan
+         *                       loop searches the configuration buffer for either an Input
+         *                       or an Output Terminal descriptor; splitting it into two
+         *                       typed search functions would duplicate the whole loop for
+         *                       no behavior change. AC_OT_T is packed, so no offset in that
+         *                       buffer can be misaligned. The returned address always lies
+         *                       inside the validated, length-checked configuration
+         *                       descriptor buffer, which is allocated once per device and
+         *                       freed only at disconnect, so the retained pointer stays
+         *                       valid. The lookup also matches INPUT_TERMINAL, whose
+         *                       descriptor shares only bytes 0..6 with AC_OT_T, but the
+         *                       reads below are UAC_DBGMSG-only, so no behavior depends on
+         *                       which subtype was matched.<br>
          */
         /* cppcheck-suppress misra-c2012-11.5 */
         asif.ot = (AC_OT_T *)uac_find_terminal(uac, asif.as_gen->bTerminalLink);
+#if defined(ENABLE_ERROR_MSG) || defined(ENABLE_DEBUG_MSG)
         if(asif.ot)
         {
             UAC_DBGMSG("Audio in Terminal ID: 0%x\n", asif.ot->bTerminalID);
@@ -748,28 +762,31 @@ int uac_parse_streaming_interface(UAC_DEV_T *uac, IFACE_T *iface, uint8_t bAlter
         {
             UAC_ERRMSG("Cannot find audio in Output Terminal %d!\n", asif.as_gen->bTerminalLink);
         }
+#endif
         (void)memcpy(&uac->asif_in, &asif, sizeof(asif));
     }
     else if(iface_have_iso_out_ep(iface))
     {
         /**
          * @static_deviation
-         * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
-         * <b>Justification:</b> uac_find_terminal() returns the matching Input Terminal
-         *                       address in the persistent USB configuration buffer. The
-         *                       ISO OUT interface selects AC_IT_T and retains its address.
-         *                       uac_find_terminal() returns void* because it searches the
-         *                       same configuration buffer for either Input or Output
-         *                       Terminal descriptors from a single shared implementation;
-         *                       splitting it into separate typed IT/OT search functions
-         *                       would duplicate the whole scan loop for no behavior
-         *                       change. The returned address only ever points inside the
-         *                       validated, length-checked configuration-descriptor buffer
-         *                       allocated once per device and freed only at disconnect,
-         *                       so the retained pointer's lifetime is safe.
+         * <b>Rule:</b>          MISRA C:2012 Rule 11.5 (Advisory)<br>
+         * <b>Justification:</b> uac_find_terminal() returns void * because a single scan
+         *                       loop searches the configuration buffer for either an Input
+         *                       or an Output Terminal descriptor; splitting it into two
+         *                       typed search functions would duplicate the whole loop for
+         *                       no behavior change. AC_IT_T is packed, so no offset in that
+         *                       buffer can be misaligned. The returned address always lies
+         *                       inside the validated, length-checked configuration
+         *                       descriptor buffer, which is allocated once per device and
+         *                       freed only at disconnect, so the retained pointer stays
+         *                       valid. The lookup also matches OUTPUT_TERMINAL, but the two
+         *                       descriptors share bytes 0..6, every read below lies within
+         *                       that range and is UAC_DBGMSG-only, so no behavior depends
+         *                       on which subtype was matched.<br>
          */
         /* cppcheck-suppress misra-c2012-11.5 */
         asif.it = (AC_IT_T *)uac_find_terminal(uac, asif.as_gen->bTerminalLink);
+#if defined(ENABLE_ERROR_MSG) || defined(ENABLE_DEBUG_MSG)
         if(asif.it)
         {
             UAC_DBGMSG("Audio out Terminal ID: 0%x\n", asif.it->bTerminalID);
@@ -781,6 +798,7 @@ int uac_parse_streaming_interface(UAC_DEV_T *uac, IFACE_T *iface, uint8_t bAlter
         {
             UAC_ERRMSG("Cannot find audio in Output Terminal %d!\n", asif.as_gen->bTerminalLink);
         }
+#endif
        (void)memcpy(&uac->asif_out, &asif, sizeof(asif));
     }
     else
@@ -804,8 +822,6 @@ int uac_parse_streaming_interface(UAC_DEV_T *uac, IFACE_T *iface, uint8_t bAlter
     return 0;
 }
 
-
-/// @endcond HIDDEN_SYMBOLS
 
 /*** (C) COPYRIGHT 2020 Nuvoton Technology Corp. ***/
 

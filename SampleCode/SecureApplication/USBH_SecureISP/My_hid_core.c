@@ -40,6 +40,27 @@ static int get_free_utr_slot(HID_DEV_T *hdev)
 }
 
 
+/*
+ *  Detach a UTR from the HID device UTR list. Must be called before the UTR is
+ *  released, otherwise utr_list[] keeps a dangling reference and a later
+ *  hid_disconnect() or usbh_hid_stop_int_read() would release the same object
+ *  a second time.
+ */
+static void hid_remove_utr_slot(HID_DEV_T *hdev, const UTR_T *utr)
+{
+    int    i;
+
+    for(i = 0; i < CONFIG_HID_DEV_MAX_PIPE; i++)
+    {
+        if(hdev->utr_list[i] == utr)
+        {
+            hdev->utr_list[i] = NULL;
+            break;
+        }
+    }
+}
+
+
 /// @endcond
 
 
@@ -417,7 +438,8 @@ static void  hid_read_irq(UTR_T *utr)
     {
         HID_DBGMSG("hid_read_irq - failed to submit interrupt-in request (%d)", ret);
         hdev->read_func(hdev, utr->ep->bEndpointAddress, ret, utr->buff, 0);
-        usbh_free_mem(utr->buff, utr->data_len);
+        hid_remove_utr_slot(hdev, utr);
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
     }
 }
@@ -505,7 +527,7 @@ int32_t usbh_hid_start_int_read(HID_DEV_T *hdev, uint8_t ep_addr, HID_IR_FUNC *f
     if(!utr)
         return USBH_ERR_MEMORY_OUT;
 
-    utr->buff = usbh_alloc_mem(ep->wMaxPacketSize);
+    utr->buff = usbh_alloc_xfer_buff(ep->wMaxPacketSize);
     if(utr->buff == NULL)
     {
         free_utr(utr);
@@ -524,7 +546,7 @@ int32_t usbh_hid_start_int_read(HID_DEV_T *hdev, uint8_t ep_addr, HID_IR_FUNC *f
     if(ret < 0)
     {
         HID_DBGMSG("Error - failed to submit interrupt read request (%d)", ret);
-        usbh_free_mem(utr->buff, utr->data_len);
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
         return HID_RET_IO_ERR;
     }
@@ -534,7 +556,7 @@ int32_t usbh_hid_start_int_read(HID_DEV_T *hdev, uint8_t ep_addr, HID_IR_FUNC *f
     {
         HID_DBGMSG("Error - No free HID slot!\n");
         usbh_quit_utr(utr);
-        usbh_free_mem(utr->buff, utr->data_len);
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
         return USBH_ERR_MEMORY_OUT;         /* no free UTR slot.                          */
     }
@@ -594,7 +616,7 @@ int32_t usbh_hid_stop_int_read(HID_DEV_T *hdev, uint8_t ep_addr)
 
     ret = usbh_quit_utr(utr);               /* force to stop the transfer                 */
 
-    usbh_free_mem(utr->buff, utr->ep->wMaxPacketSize);
+    usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
     free_utr(utr);
 
     return ret;
@@ -645,7 +667,7 @@ int32_t usbh_hid_start_int_write(HID_DEV_T *hdev, uint8_t ep_addr, HID_IW_FUNC *
     if(!utr)
         return USBH_ERR_MEMORY_OUT;
 
-    utr->buff = usbh_alloc_mem(ep->wMaxPacketSize);
+    utr->buff = usbh_alloc_xfer_buff(ep->wMaxPacketSize);
     if(utr->buff == NULL)
     {
         free_utr(utr);
@@ -667,6 +689,9 @@ int32_t usbh_hid_start_int_write(HID_DEV_T *hdev, uint8_t ep_addr, HID_IW_FUNC *
     if(ret < 0)
     {
         HID_DBGMSG("Error - failed to submit interrupt read request (%d)", ret);
+        /* Release the transfer buffer allocated above. Use the endpoint packet
+           size because func() may have shrunk utr->data_len.                  */
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
         return HID_RET_IO_ERR;
     }
@@ -676,7 +701,7 @@ int32_t usbh_hid_start_int_write(HID_DEV_T *hdev, uint8_t ep_addr, HID_IW_FUNC *
     {
         HID_DBGMSG("Error - No free HID slot!\n");
         usbh_quit_utr(utr);
-        usbh_free_mem(utr->buff, utr->data_len);
+        usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
         free_utr(utr);
         return USBH_ERR_MEMORY_OUT;         /* no free UTR slot.                          */
     }
@@ -738,7 +763,7 @@ int32_t usbh_hid_stop_int_write(HID_DEV_T *hdev, uint8_t ep_addr)
     ret = usbh_quit_utr(utr);
 #endif
 
-    usbh_free_mem(utr->buff, utr->ep->wMaxPacketSize);
+    usbh_free_xfer_buff(utr->buff, utr->ep->wMaxPacketSize);
     free_utr(utr);
 
     return ret;

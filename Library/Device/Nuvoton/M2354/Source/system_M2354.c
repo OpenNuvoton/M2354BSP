@@ -466,15 +466,7 @@ void SystemInit(void)
  */
 void AssertError(const uint8_t * file, uint32_t line)
 {
-    /* cppcheck-suppress misra-c2012-21.6 */
-    /**
-     * @static_deviation
-     * <b>Rule:</b>          MISRA C:2012 Rule 21.6<br>
-     * <b>Justification:</b> `printf` is used solely for exception handling and debug output;
-     *                      it is not part of the product functional data path and does not
-     *                      affect normal control flow.
-     */
-    (void)printf("[%s] line %u : wrong parameters.\r\n", file, line);
+    printf("[%s] line %u : wrong parameters.\r\n", file, line);
 
     /* Infinite loop */
     while(1) {}

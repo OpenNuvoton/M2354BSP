@@ -221,6 +221,8 @@
                 <option>
                     <name>CCDefines</name>
                     <state>NDEBUG</state>
+                    <state>ENABLE_ERROR_MSG</state>
+                    <state>ENABLE_DEBUG_MSG</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>

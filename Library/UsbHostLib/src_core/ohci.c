@@ -44,18 +44,18 @@ static ED_T  *ed_remove_list;
  * @return    OHCI endpoint descriptor pointer, or NULL if hw_pipe is NULL.
  *
  * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
- * <b>Justification:</b> EP_INFO_T.hw_pipe is a polymorphic void * shared by host
- *                       controller implementations. This OHCI-only helper centralizes
- *                       what was previously an inline `(ED_T *)hw_pipe` cast duplicated
- *                       at each call site into the single conversion point for its ED_T
- *                       allocation. EP_INFO_T.hw_pipe is declared void * so the same
- *                       EP_INFO_T struct can be shared across different host-controller
- *                       back-ends, so giving it a concrete ED_T* type is not a practical
- *                       alternative in this OHCI-only file; hw_pipe is only ever
- *                       assigned an ED_T* by this OHCI driver's own allocation code, so
- *                       the cast simply names an already-correct value and changes no
- *                       behavior.<br>
+ * <b>Rule:</b>          MISRA C:2012 Rule 11.5 (Advisory)<br>
+ * <b>Justification:</b> EP_INFO_T.hw_pipe is declared void * so the same EP_INFO_T struct
+ *                       can be shared across different host-controller back-ends, so
+ *                       giving it a concrete ED_T* type is not a practical alternative in
+ *                       this OHCI-only file. This helper centralizes what was previously
+ *                       an inline `(ED_T *)hw_pipe` cast duplicated at each call site into
+ *                       a single conversion point. Every value stored here is an ED_T*
+ *                       returned by alloc_ohci_ED(), which allocates from the 32-byte
+ *                       aligned _mem_pool, and a void * round trip is guaranteed to yield
+ *                       the original pointer (ISO/IEC 9899:2011 6.3.2.3p1), so the
+ *                       effective type and the alignment OHCI requires are both preserved
+ *                       and no behavior changes.<br>
  */
 static ED_T *ohci_ed_from_hw_pipe(void *hw_pipe)
 {

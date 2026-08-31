@@ -1,4 +1,4 @@
-/**************************************************************************//**
+﻿/**************************************************************************//**
  * @file     hid_parser.c
  * @version  V1.00
  * @brief    M2354 MCU USB Host HID report descriptor parser
@@ -106,6 +106,78 @@ static const struct string_table desktop_page_list[] =
 static RP_INFO_T   _rp_info;      /* describing the current report */
 
 static int _data_usage_cnt;
+
+static RP_INFO_T   _rpinfo_pool[USBH_RPINFO_POOL_NUM];
+static uint8_t     _rpinfo_used[USBH_RPINFO_POOL_NUM];
+
+RP_INFO_T * usbh_alloc_rpinfo(void)
+{
+    RP_INFO_T  *rp = NULL;
+    uint32_t    primask;
+    int         i;
+
+    primask = usbh_enter_critical();
+    for(i = 0; i < USBH_RPINFO_POOL_NUM; i++)
+    {
+        if(_rpinfo_used[i] == 0U)
+        {
+            _rpinfo_used[i] = 1U;
+            rp = &_rpinfo_pool[i];
+            break;
+        }
+    }
+    usbh_exit_critical(primask);
+
+    if(rp == NULL)
+    {
+        USB_error("usbh_alloc_rpinfo failed! All %d RP_INFO_T slots are in use. Raise USBH_MAX_REPORT_PER_HID or USBH_MAX_HID_IFACE in config.h to support more HID reports.\n", USBH_RPINFO_POOL_NUM);
+        return NULL;
+    }
+    (void)memset(rp, 0, sizeof(*rp));
+    return rp;
+}
+
+void usbh_free_rpinfo(const RP_INFO_T *rp)
+{
+    uint32_t  primask;
+    uint8_t   was_used = 0U;
+    int       i;
+
+    if(rp == NULL)
+    {
+        return;
+    }
+
+    primask = usbh_enter_critical();
+    for(i = 0; i < USBH_RPINFO_POOL_NUM; i++)
+    {
+        if(&_rpinfo_pool[i] == rp)
+        {
+            was_used = _rpinfo_used[i];
+            _rpinfo_used[i] = 0U;
+            break;
+        }
+    }
+    usbh_exit_critical(primask);
+
+    if(i >= USBH_RPINFO_POOL_NUM)
+    {
+        USB_error("usbh_free_rpinfo: report does not belong to _rpinfo_pool! Ignored.\n");
+    }
+    else if(was_used == 0U)
+    {
+        USB_error("usbh_free_rpinfo: slot %d released twice! It may still be in use by another owner.\n", i);
+    }
+    else
+    {
+        /* no action required */
+    }
+}
+
+void usbh_hid_rpinfo_pool_reset(void)
+{
+    (void)memset(_rpinfo_used, 0, sizeof(_rpinfo_used));
+}
 
 static void print_usage_page(void)
 {
@@ -314,12 +386,16 @@ int hid_parse_report_descriptor(HID_DEV_T *hdev, IFACE_T *iface)
     HID_DBGMSG("Report descriptor found, length=%d. %d\n", hidd.wDescriptorLength, hidd.bLength);
 
     desc_buff_len = hidd.wDescriptorLength + 8U;
-    desc_buff = usbh_alloc_buff(desc_buff_len);
+    desc_buff = usbh_alloc_rpd_buff(desc_buff_len);
+    if(desc_buff == NULL)
+    {
+        return USBH_ERR_MEMORY_OUT;
+    }
 
     remain_len = usbh_hid_get_report_descriptor(hdev, desc_buff, desc_buff_len);
     if(remain_len <= 0)
     {
-        (void)usbh_free_mem(desc_buff, desc_buff_len);
+        usbh_free_rpd_buff(desc_buff, desc_buff_len);
         return remain_len;
     }
 
@@ -336,7 +412,7 @@ int hid_parse_report_descriptor(HID_DEV_T *hdev, IFACE_T *iface)
         //printf("size = %d/%d\n", size, remain_len);
         if(size <= 0)
         {
-            (void)usbh_free_mem(desc_buff, desc_buff_len);
+            usbh_free_rpd_buff(desc_buff, desc_buff_len);
             return HID_RET_PARSING;
         }
 
@@ -344,7 +420,7 @@ int hid_parse_report_descriptor(HID_DEV_T *hdev, IFACE_T *iface)
         remain_len -= size;
     }
 
-    (void)usbh_free_mem(desc_buff, desc_buff_len);
+    usbh_free_rpd_buff(desc_buff, desc_buff_len);
 
     /*------------------------------------------------------------------------------------*/
     /*  For keyboard device, turn on all LEDs for 0.5 seconds and then turn off.          */
@@ -399,24 +475,13 @@ int hid_parse_report_descriptor(HID_DEV_T *hdev, IFACE_T *iface)
  * @param[in] type  Report type to assign to the newly created report-info node.
  * @return    0 on success, or a negative USBH_ERR_xxx / HID error code on failure.
  *
- * @static_deviation
- * <b>Rule:</b>          MISRA C:2012 Rule 11.5<br>
- * <b>Justification:</b> usbh_alloc_mem() provides generic storage as void *. This is
- *                       the single conversion point where the raw block becomes a
- *                       typed RP_INFO_T report-info object. usbh_alloc_mem() is the
- *                       library's one generic heap allocator shared by every object
- *                       type, so a per-type allocator is not a practical alternative;
- *                       the allocated block size always matches sizeof(RP_INFO_T), so
- *                       this cast only names an already-correct binary layout and
- *                       changes no data or control flow.<br>
  */
 static int hid_add_report(HID_DEV_T *hdev, uint8_t type)
 {
     RP_INFO_T   *report;
     RP_INFO_T   *p;
 
-    /* cppcheck-suppress misra-c2012-11.5 */
-    report = (RP_INFO_T *)usbh_alloc_mem(sizeof(RP_INFO_T));
+    report = usbh_alloc_rpinfo();
     if(report == NULL)
     {
         HID_ERRMSG("hid_add_report allocate memory failed!!\n");
@@ -718,7 +783,7 @@ static int hid_parse_item(HID_DEV_T *hdev, uint8_t *buff)
 
 int hid_parse_keyboard_reports(HID_DEV_T *hdev, const uint8_t *data, int data_len)
 {
-    RP_INFO_T   *report;
+    const RP_INFO_T   *report;
     int i;
     int bit;
     int byte_idx = 0;
