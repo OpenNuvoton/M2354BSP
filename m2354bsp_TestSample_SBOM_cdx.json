@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:fd1272be-8a4d-4bc4-9490-f3f6c16ce1e5",
+  "serialNumber": "urn:uuid:2ab54d77-742a-4eb0-b238-afd432b6a3e9",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-22T13:42:58+08:00",
+    "timestamp": "2026-10-07T11:52:35+08:00",
     "tools": {
       "components": [
         {
@@ -17,10 +17,17 @@
       ]
     },
     "component": {
-      "bom-ref": "85fd158bf2db4a01",
+      "bom-ref": "245049fe9e4deb38",
       "type": "application",
       "name": "MCU Test Sample",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
+      "version": "3.00.006-41-gabb3c58e",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/mcu-test-sample@3.00.006-41-gabb3c58e",
       "licenses": [
         {
           "license": {
@@ -70,7 +77,23 @@
           "value": "Library/"
         }
       ]
-    }
+    },
+    "lifecycles": [
+      {
+        "phase": "pre-build"
+      }
+    ],
+    "supplier": {
+      "name": "Nuvoton Technology Corp.",
+      "url": [
+        "https://www.nuvoton.com"
+      ]
+    },
+    "authors": [
+      {
+        "name": "Nuvoton Technology Corp."
+      }
+    ]
   },
   "components": [
     {
@@ -137,10 +160,6 @@
         {
           "alg": "SHA-256",
           "content": "574f697b673b96f472321fce24cedbd5a7b3d8711067e23c7b065ae6ab074e1a"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "38f4ea3e6731367e28b6ad0eb4be8757d510a09d"
         }
       ],
       "licenses": [
@@ -149,7 +168,14 @@
             "id": "Apache-2.0"
           }
         }
-      ]
+      ],
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "purl": "pkg:generic/hid-transfer-test-tool@1.1.0.0"
     },
     {
       "bom-ref": "4469a6b94ddb29ec",
@@ -235,10 +261,6 @@
         {
           "alg": "SHA-256",
           "content": "26384c6ee7d50863e3fb65fdc1bad452d9311f34d782390401de9bb130eecc4a"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "91d52c619c561db7f678b43456a2bd500064bfb1"
         }
       ],
       "licenses": [
@@ -247,7 +269,14 @@
             "id": "MIT"
           }
         }
-      ]
+      ],
+      "supplier": {
+        "name": "Lua.org, PUC-Rio"
+      },
+      "manufacturer": {
+        "name": "Lua.org, PUC-Rio"
+      },
+      "purl": "pkg:generic/lua---the-programming-language@5.1.4"
     },
     {
       "bom-ref": "3fd87dffff71a8c3",
@@ -313,19 +342,20 @@
         {
           "alg": "SHA-256",
           "content": "911e4c166fe9b06c8e2e31ab46b56ef662c43cba208d2088ca1d41c6d584e183"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "ba09b88a8ffa9b06bcd30ad7b45f6acb880b4cb9"
         }
       ],
       "licenses": [
         {
-          "license": {
-            "name": "Nuvoton Software License Agreement"
-          }
+          "expression": "LicenseRef-Nuvoton-Software-License-Agreement"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "purl": "pkg:generic/nuvpos58-driver@1.0"
     },
     {
       "bom-ref": "23951a4ce02cbc86",
@@ -391,19 +421,20 @@
         {
           "alg": "SHA-256",
           "content": "911e4c166fe9b06c8e2e31ab46b56ef662c43cba208d2088ca1d41c6d584e183"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "ba09b88a8ffa9b06bcd30ad7b45f6acb880b4cb9"
         }
       ],
       "licenses": [
         {
-          "license": {
-            "name": "Nuvoton Software License Agreement"
-          }
+          "expression": "LicenseRef-Nuvoton-Software-License-Agreement"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "purl": "pkg:generic/nuvpos58-driver@1.0"
     },
     {
       "bom-ref": "5569440e5357172b",
@@ -469,19 +500,20 @@
         {
           "alg": "SHA-256",
           "content": "c7649879a10c9332fc0f9744c7e3224647aee9e7e62c7e21cf9e987462e3dd06"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "dee0ddc820cd0da546dff8bcf2bc490326da90a2"
         }
       ],
       "licenses": [
         {
-          "license": {
-            "name": "Microsoft Software License Terms"
-          }
+          "expression": "LicenseRef-Microsoft-Software-License-Terms"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "Microsoft Corporation"
+      },
+      "manufacturer": {
+        "name": "Microsoft Corporation"
+      },
+      "purl": "pkg:generic/wdf-coinstaller@1.11.9200.16384"
     },
     {
       "bom-ref": "d8995f12c25081c1",
@@ -547,19 +579,20 @@
         {
           "alg": "SHA-256",
           "content": "c7649879a10c9332fc0f9744c7e3224647aee9e7e62c7e21cf9e987462e3dd06"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "dee0ddc820cd0da546dff8bcf2bc490326da90a2"
         }
       ],
       "licenses": [
         {
-          "license": {
-            "name": "Microsoft Software License Terms"
-          }
+          "expression": "LicenseRef-Microsoft-Software-License-Terms"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "Microsoft Corporation"
+      },
+      "manufacturer": {
+        "name": "Microsoft Corporation"
+      },
+      "purl": "pkg:generic/wdf-coinstaller@1.11.9200.16384"
     },
     {
       "bom-ref": "4bf0dac8cacd6698",
@@ -677,19 +710,20 @@
         {
           "alg": "SHA-256",
           "content": "ebe3b7708dd974ee87efed3113028d266af87ca8dbae77c47c6f7612824d3d6c"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "1633b3715014c90d1c552cd757ef5de33c161dee"
         }
       ],
       "licenses": [
         {
-          "license": {
-            "name": "Microsoft Software License Terms"
-          }
+          "expression": "LicenseRef-Microsoft-Software-License-Terms"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "Microsoft Corporation"
+      },
+      "manufacturer": {
+        "name": "Microsoft Corporation"
+      },
+      "purl": "pkg:generic/windows-driver-foundation---user-mode-platform-device-update-co-installer@6.1.7600.16385"
     },
     {
       "bom-ref": "17aa5837af702890",
@@ -754,19 +788,20 @@
         {
           "alg": "SHA-256",
           "content": "10d3cf6d50b65b6adc13efd4c782ec7b09fd5894381e437c63517ccf7d7dfb6a"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "0367ea0b955ac74dfb957d91c75b3fa81889c7b5"
         }
       ],
       "licenses": [
         {
-          "license": {
-            "name": "Nuvoton Software License Agreement"
-          }
+          "expression": "LicenseRef-Nuvoton-Software-License-Agreement"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "purl": "pkg:generic/samplecode-xom-xomlib-xomaddr@1.0"
     },
     {
       "bom-ref": "6a6102706906a4cd",
@@ -831,19 +866,20 @@
         {
           "alg": "SHA-256",
           "content": "a486f4b137d876c235a45f5c65e3f3ace74e4fc82453c727ab51a0885b6a23be"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "5da1e43c67ec0c26932384dc178732b2254aae24"
         }
       ],
       "licenses": [
         {
-          "license": {
-            "name": "Nuvoton Software License Agreement"
-          }
+          "expression": "LicenseRef-Nuvoton-Software-License-Agreement"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "purl": "pkg:generic/utilities-fwsign-fwsign@2.0"
     },
     {
       "bom-ref": "b1d6ecceab17c913",
@@ -908,19 +944,20 @@
         {
           "alg": "SHA-256",
           "content": "9c0360bc539d190eb4d506bc8174898ec9d5ba247a3cc3ebf1f5802a49050459"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "14eec72a3d8af5cecf8c06672473504cfe93d7d1"
         }
       ],
       "licenses": [
         {
-          "license": {
-            "name": "Nuvoton Software License Agreement"
-          }
+          "expression": "LicenseRef-Nuvoton-Software-License-Agreement"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "purl": "pkg:generic/utilities-fwsign-fwsigncheck@1.0"
     },
     {
       "bom-ref": "pkg:maven/gradle-wrapper/gradle-wrapper@4.6?package-id=70a7c646ce00a210",
@@ -1037,6 +1074,18 @@
             "id": "Apache-2.0"
           }
         }
+      ],
+      "supplier": {
+        "name": "Gradle, Inc."
+      },
+      "manufacturer": {
+        "name": "Gradle, Inc."
+      },
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f7a7cf9a0f075ed90f17633b1cf392f3d398e5263830bacb4d4f7df01d51c21f"
+        }
       ]
     },
     {
@@ -1139,10 +1188,6 @@
         {
           "alg": "SHA-256",
           "content": "4f18b5d2c28aa66b648c8683c6d09b52b92cbbee85984bbefad5f38a64bc2a14"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "bab236f840f1521c43bcbaa2a7b92f14f329bc70"
         }
       ],
       "licenses": [
@@ -1151,7 +1196,14 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusb-win32 project"
+      },
+      "manufacturer": {
+        "name": "libusb-win32 project"
+      },
+      "purl": "pkg:generic/libusb-win32---dll@1.2.6.0"
     },
     {
       "bom-ref": "b775bc2a35788071",
@@ -1253,10 +1305,6 @@
         {
           "alg": "SHA-256",
           "content": "00caca07869b19d10b370552ac7cc2f6f2ee246fc15db11650f6cd3f4ef9b666"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "3a238468009a6dea3e4f70821339185e56ea3b69"
         }
       ],
       "licenses": [
@@ -1265,7 +1313,14 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusb-win32 project"
+      },
+      "manufacturer": {
+        "name": "libusb-win32 project"
+      },
+      "purl": "pkg:generic/libusb-win32---dll@1.2.6.0"
     },
     {
       "bom-ref": "dd54509e3b51ed27",
@@ -1383,10 +1438,6 @@
         {
           "alg": "SHA-256",
           "content": "5e84d13636fbce7869cddc8b20c7d83fa0063e98c319e8e5ab751edc9ee1da76"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "7dd82b6d52a840c4979a7515fc7a9ca3725363c4"
         }
       ],
       "licenses": [
@@ -1395,7 +1446,14 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusb-win32 project"
+      },
+      "manufacturer": {
+        "name": "libusb-win32 project"
+      },
+      "purl": "pkg:generic/libusb-win32---install-filter@1.2.6.0"
     },
     {
       "bom-ref": "74cae8393dbbcd4b",
@@ -1513,10 +1571,6 @@
         {
           "alg": "SHA-256",
           "content": "5e84d13636fbce7869cddc8b20c7d83fa0063e98c319e8e5ab751edc9ee1da76"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "7dd82b6d52a840c4979a7515fc7a9ca3725363c4"
         }
       ],
       "licenses": [
@@ -1525,7 +1579,14 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusb-win32 project"
+      },
+      "manufacturer": {
+        "name": "libusb-win32 project"
+      },
+      "purl": "pkg:generic/libusb-win32---install-filter@1.2.6.0"
     },
     {
       "bom-ref": "92903767fdf8f934",
@@ -1643,10 +1704,6 @@
         {
           "alg": "SHA-256",
           "content": "5e84d13636fbce7869cddc8b20c7d83fa0063e98c319e8e5ab751edc9ee1da76"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "7dd82b6d52a840c4979a7515fc7a9ca3725363c4"
         }
       ],
       "licenses": [
@@ -1655,7 +1712,14 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusb-win32 project"
+      },
+      "manufacturer": {
+        "name": "libusb-win32 project"
+      },
+      "purl": "pkg:generic/libusb-win32---install-filter@1.2.6.0"
     },
     {
       "bom-ref": "5d9b5d81b237b8ce",
@@ -1721,17 +1785,20 @@
         {
           "alg": "SHA-256",
           "content": "592cd24bae321f1cb6cbe2f6e1bc5c05e279328e1c86814eb64ea1e89fdea188"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "fa8489441ac82d22567b5c3d5b494576df54f37d"
         }
       ],
       "licenses": [
         {
           "expression": "BSD-3-Clause OR GPL-3.0-only"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusbK project"
+      },
+      "manufacturer": {
+        "name": "libusbK project"
+      },
+      "purl": "pkg:generic/libusbk.dll@3.0.7.0"
     },
     {
       "bom-ref": "54c0b73d615c0171",
@@ -1797,17 +1864,20 @@
         {
           "alg": "SHA-256",
           "content": "22803c719494f193d22519bfaff9484fecdcf1fadd6f082efd024fcee0b97ba4"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "fc2350e45b0c7bdac7ac35f42b65f5fdfd622464"
         }
       ],
       "licenses": [
         {
           "expression": "BSD-3-Clause OR GPL-3.0-only"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusbK project"
+      },
+      "manufacturer": {
+        "name": "libusbK project"
+      },
+      "purl": "pkg:generic/libusbk.dll@3.0.7.0"
     },
     {
       "bom-ref": "d842a3083b0024ce",
@@ -1873,23 +1943,39 @@
         {
           "alg": "SHA-256",
           "content": "22803c719494f193d22519bfaff9484fecdcf1fadd6f082efd024fcee0b97ba4"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "fc2350e45b0c7bdac7ac35f42b65f5fdfd622464"
         }
       ],
       "licenses": [
         {
           "expression": "BSD-3-Clause OR GPL-3.0-only"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusbK project"
+      },
+      "manufacturer": {
+        "name": "libusbK project"
+      },
+      "purl": "pkg:generic/libusbk.dll@3.0.7.0"
     },
     {
       "type": "application",
       "bom-ref": "m2354bsp:test-sample-component:samplecode",
       "name": "m2354 SampleCode",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
+      "version": "3.00.006-41-gabb3c58e",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/samplecode@3.00.006-41-gabb3c58e",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "15fa4cd876b3bbce5340d59e42fb6cbd35f03552bc44264358086a5a7c3b79f3"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -1932,101 +2018,17 @@
     },
     {
       "type": "application",
-      "bom-ref": "m2354bsp:test-sample-component:thirdparty",
-      "name": "m2354 ThirdParty",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ],
-      "scope": "required",
-      "description": "Directory-level first-party BSP test-sample component included from test-sample scope path ThirdParty/",
-      "properties": [
-        {
-          "name": "bsp:sbom-category",
-          "value": "test-sample"
-        },
-        {
-          "name": "bsp:path",
-          "value": "ThirdParty/"
-        },
-        {
-          "name": "bsp:component-origin",
-          "value": "first-party"
-        },
-        {
-          "name": "bsp:component-granularity",
-          "value": "directory"
-        },
-        {
-          "name": "bsp:scope-policy-file",
-          "value": "test-sample-scope.yaml"
-        },
-        {
-          "name": "bsp:runtime-scope",
-          "value": "false"
-        },
-        {
-          "name": "bsp:included-in-product-firmware",
-          "value": "false"
-        }
-      ]
-    },
-    {
-      "type": "application",
-      "bom-ref": "m2354bsp:test-sample-component:utilities",
-      "name": "m2354 Utilities",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ],
-      "scope": "required",
-      "description": "Directory-level first-party BSP test-sample component included from test-sample scope path Utilities/",
-      "properties": [
-        {
-          "name": "bsp:sbom-category",
-          "value": "test-sample"
-        },
-        {
-          "name": "bsp:path",
-          "value": "Utilities/"
-        },
-        {
-          "name": "bsp:component-origin",
-          "value": "first-party"
-        },
-        {
-          "name": "bsp:component-granularity",
-          "value": "directory"
-        },
-        {
-          "name": "bsp:scope-policy-file",
-          "value": "test-sample-scope.yaml"
-        },
-        {
-          "name": "bsp:runtime-scope",
-          "value": "false"
-        },
-        {
-          "name": "bsp:included-in-product-firmware",
-          "value": "false"
-        }
-      ]
-    },
-    {
-      "type": "application",
       "bom-ref": "pkg:generic/otaserverdemo-android@2.1.2?source=vendored&path=Utilities/androidApp",
       "name": "OTAServerDemo Android App",
       "version": "2.1.2",
       "scope": "required",
       "author": "Nuvoton Technology Corporation",
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
       "purl": "pkg:generic/otaserverdemo-android@2.1.2",
       "description": "Nuvoton OTAServerDemo Android application and related pre-built APK/AAR artifacts under Utilities/androidApp.",
       "licenses": [
@@ -2059,7 +2061,7 @@
         },
         {
           "name": "bsp:evidence-file",
-          "value": "Document/SBOM/components/sca_androidapp.json"
+          "value": "Document/SBOM/components/TestSampleView/sca_androidapp.json"
         },
         {
           "name": "bsp:evidence-path",
@@ -2241,6 +2243,78 @@
           "name": "bsp:sha256:Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/src/main/AndroidManifest.xml",
           "value": "4623cd26157174b04ddcafb436f7f16f2b25a4912781b71e575bcd316a6e4ea0"
         }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "45a7f7ec3131e1507b5568f884cd3aba1438d3fdf9eeba17604b0cff04bcc1ef"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/boschsensortec/bme680_driver@3.5.10?source=vendored&path=ThirdParty/BME680",
+      "name": "BME680 Sensor API",
+      "version": "3.5.10",
+      "scope": "required",
+      "author": "Bosch Sensortec GmbH",
+      "manufacturer": {
+        "name": "Bosch Sensortec GmbH"
+      },
+      "supplier": {
+        "name": "Bosch Sensortec GmbH",
+        "url": [
+          "https://github.com/BoschSensortec/BME680_driver"
+        ]
+      },
+      "purl": "pkg:github/boschsensortec/bme680_driver@3.5.10",
+      "description": "Bosch Sensortec BME680 gas sensor driver API vendored in ThirdParty/BME680.",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "src_path",
+          "value": "ThirdParty/BME680"
+        },
+        {
+          "name": "integration",
+          "value": "vendored_source"
+        },
+        {
+          "name": "bsp:version-evidence",
+          "value": "ThirdParty/BME680/bme680.h (@version 3.5.10, @date 23 Jan 2020); ThirdParty/BME680/README.md"
+        },
+        {
+          "name": "bsp:license-evidence",
+          "value": "ThirdParty/BME680/LICENSE"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:component-source",
+          "value": "Bosch Sensortec BME680 sensor API"
+        },
+        {
+          "name": "bsp:evidence-file",
+          "value": "Document/SBOM/components/TestSampleView/sca_bme680.json"
+        },
+        {
+          "name": "bsp:evidence-path",
+          "value": "ThirdParty/BME680"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "cb503b81f7cecedf8e13377a46b878e3509a8bec47c4d89608beba23aba7b4ac"
+        }
       ]
     },
     {
@@ -2250,14 +2324,21 @@
       "version": "R0.12",
       "scope": "required",
       "author": "ChaN",
+      "manufacturer": {
+        "name": "ChaN"
+      },
+      "supplier": {
+        "name": "ChaN",
+        "url": [
+          "http://elm-chan.org/fsw/ff/"
+        ]
+      },
       "purl": "pkg:generic/fatfs@R0.12",
       "cpe": "cpe:2.3:a:elm-chan:fatfs:r0.12:*:*:*:*:*:*:*",
       "description": "FatFs - Generic FAT file system module for embedded systems (ANSI C/C89), integrated as vendored source code.",
       "licenses": [
         {
-          "license": {
-            "name": "FatFs license (BSD-like, as declared by ChaN in source header)"
-          }
+          "expression": "LicenseRef-FatFs-license--BSD-like--as-declared-by-ChaN-in-source-header-"
         }
       ],
       "properties": [
@@ -2283,11 +2364,17 @@
         },
         {
           "name": "bsp:evidence-file",
-          "value": "Document/SBOM/components/sca_fatfs.json"
+          "value": "Document/SBOM/components/TestSampleView/sca_fatfs.json"
         },
         {
           "name": "bsp:cpe-evidence",
           "value": "NVD CPE dictionary: cpe:2.3:a:elm-chan:fatfs:r0.12:*:*:*:*:*:*:*"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f75868ad44d43d965c931826cb05a70d736378d86f9b8c21e1572ef57fa7fa6d"
         }
       ]
     },
@@ -2298,6 +2385,15 @@
       "version": "10.4.6",
       "scope": "required",
       "author": "Amazon.com, Inc. (FreeRTOS project)",
+      "manufacturer": {
+        "name": "Amazon.com, Inc."
+      },
+      "supplier": {
+        "name": "Amazon.com, Inc.",
+        "url": [
+          "https://www.freertos.org"
+        ]
+      },
       "purl": "pkg:generic/freertos-kernel@10.4.6",
       "cpe": "cpe:2.3:o:amazon:freertos:10.4.6:*:*:*:*:*:*:*",
       "description": "FreeRTOS Kernel vendored in ThirdParty/FreeRTOS, including kernel source, public headers, ARM_CM0 GCC/IAR portable layers, memory managers, and demo/common example files.",
@@ -2331,7 +2427,7 @@
         },
         {
           "name": "bsp:evidence-file",
-          "value": "Document/SBOM/components/sca_freertos.json"
+          "value": "Document/SBOM/components/TestSampleView/sca_freertos.json"
         },
         {
           "name": "bsp:evidence-path",
@@ -2345,6 +2441,154 @@
           "name": "bsp:cpe-evidence",
           "value": "NVD CPE dictionary: cpe:2.3:o:freertos:freertos-kernel:10.4.6:*:*:*:*:*:*:* (matches CVE-2024-28115 and related FreeRTOS-Kernel advisories)"
         }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8525a959eaf6877ff1cd03f3994b6523014faa07c8b98d0d51977e857a2b5c2c"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:generic/mbedtls@2.17.0?source=vendored&path=ThirdParty/mbedTLS",
+      "name": "Mbed TLS",
+      "version": "2.17.0",
+      "scope": "required",
+      "author": "Mbed TLS Contributors",
+      "manufacturer": {
+        "name": "Arm Limited"
+      },
+      "supplier": {
+        "name": "Arm Limited",
+        "url": [
+          "https://www.trustedfirmware.org/projects/mbed-tls/"
+        ]
+      },
+      "purl": "pkg:generic/mbedtls@2.17.0",
+      "cpe": "cpe:2.3:a:arm:mbed_tls:2.17.0:*:*:*:*:*:*:*",
+      "description": "Mbed TLS cryptographic and TLS library (CMSIS pack ARM.mbedTLS 1.6.0) vendored in ThirdParty/mbedTLS.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "src_path",
+          "value": "ThirdParty/mbedTLS"
+        },
+        {
+          "name": "integration",
+          "value": "vendored_source"
+        },
+        {
+          "name": "mbedtls_version_number",
+          "value": "0x02110000"
+        },
+        {
+          "name": "bsp:version-evidence",
+          "value": "ThirdParty/mbedTLS/include/mbedtls/version.h; ThirdParty/mbedTLS/ChangeLog; ThirdParty/mbedTLS/ARM.mbedTLS.pdsc"
+        },
+        {
+          "name": "bsp:license-evidence",
+          "value": "ThirdParty/mbedTLS/LICENSE"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:component-source",
+          "value": "Mbed TLS"
+        },
+        {
+          "name": "bsp:evidence-file",
+          "value": "Document/SBOM/components/TestSampleView/sca_mbedtls.json"
+        },
+        {
+          "name": "bsp:evidence-path",
+          "value": "ThirdParty/mbedTLS"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7769e5e91994595047e3c14f56daa1b77a55d2568a738e827a97a9aca0468fff"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:generic/mbedtls@3.1.0?source=vendored&path=ThirdParty/mbedtls-3.1.0",
+      "name": "Mbed TLS",
+      "version": "3.1.0",
+      "scope": "required",
+      "author": "Mbed TLS Contributors",
+      "manufacturer": {
+        "name": "Arm Limited"
+      },
+      "supplier": {
+        "name": "Arm Limited",
+        "url": [
+          "https://www.trustedfirmware.org/projects/mbed-tls/"
+        ]
+      },
+      "purl": "pkg:generic/mbedtls@3.1.0",
+      "cpe": "cpe:2.3:a:arm:mbed_tls:3.1.0:*:*:*:*:*:*:*",
+      "description": "Mbed TLS cryptographic and TLS library vendored in ThirdParty/mbedtls-3.1.0.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "src_path",
+          "value": "ThirdParty/mbedtls-3.1.0"
+        },
+        {
+          "name": "integration",
+          "value": "vendored_source"
+        },
+        {
+          "name": "mbedtls_version_number",
+          "value": "0x03010000"
+        },
+        {
+          "name": "bsp:version-evidence",
+          "value": "ThirdParty/mbedtls-3.1.0/include/mbedtls/build_info.h; ThirdParty/mbedtls-3.1.0/ChangeLog"
+        },
+        {
+          "name": "bsp:license-evidence",
+          "value": "ThirdParty/mbedtls-3.1.0/LICENSE"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:component-source",
+          "value": "Mbed TLS"
+        },
+        {
+          "name": "bsp:evidence-file",
+          "value": "Document/SBOM/components/TestSampleView/sca_mbedtls.json"
+        },
+        {
+          "name": "bsp:evidence-path",
+          "value": "ThirdParty/mbedtls-3.1.0"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "cb9d24a394b9be8e7101f71c8de692fe3bb5bc929c5575a80ab697d15b7ace13"
+        }
       ]
     },
     {
@@ -2354,13 +2598,17 @@
       "version": "V3.00",
       "scope": "required",
       "author": "Nuvoton Technology Corporation",
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
       "purl": "pkg:generic/smartcardlib@V3.00",
       "description": "SmartcardLib is a first-party pre-built smartcard protocol library for supported NuMicro MCUs. The library provides ISO-7816 smartcard activation, reset, card information, and T=0/T=1 transmission APIs through the SCLIB interface.",
       "licenses": [
         {
-          "license": {
-            "name": "Nuvoton Proprietary"
-          }
+          "expression": "LicenseRef-Nuvoton-Proprietary"
         }
       ],
       "properties": [
@@ -2402,7 +2650,7 @@
         },
         {
           "name": "bsp:evidence-file",
-          "value": "Document/SBOM/components/sca_smartcardlib.json"
+          "value": "Document/SBOM/components/TestSampleView/sca_smartcardlib.json"
         },
         {
           "name": "bsp:evidence-path",
@@ -2432,137 +2680,77 @@
           "name": "bsp:sha256:Library/SmartcardLib/LICENSE.md",
           "value": "ee61ebfcdb1c0f17b01f83d7e928711840b62cd58172276cb1a873ea2a13664d"
         }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b035b70b51b9cf23f4605d4770ca5780c0d067710f53063e6a9e7d10b12717b7"
+        }
       ]
     },
     {
-      "type": "application",
-      "bom-ref": "TouchView.exe-38d449b6",
-      "name": "TouchView",
-      "version": "1.0.0.1",
+      "type": "library",
+      "bom-ref": "pkg:github/lora-net/loramac-node@2017?source=vendored&path=ThirdParty/SX1276",
+      "name": "Semtech SX1276 LoRa radio driver (LoRaMac-node subset)",
+      "version": "2017",
       "scope": "required",
-      "author": "Nuvoton Technology Corporation",
-      "purl": "pkg:generic/touchview@1.0.0.1",
-      "description": "TouchView is a GUI tool for developing and tuning touch key functions on supported NuMicro MCUs. The tool is included in the corresponding BSP as a pre-built executable.",
+      "author": "Semtech Corporation",
+      "manufacturer": {
+        "name": "Semtech Corporation"
+      },
+      "supplier": {
+        "name": "Semtech Corporation",
+        "url": [
+          "https://github.com/Lora-net/LoRaMac-node"
+        ]
+      },
+      "purl": "pkg:github/lora-net/loramac-node@2017",
+      "description": "Subset of Semtech LoRaMac-node (SX1276 radio driver, board and system utilities) vendored in ThirdParty/SX1276. No release tag is recorded in the sources; version reflects the '(C)2013-2017 Semtech' source headers.",
       "licenses": [
         {
           "license": {
-            "name": "Nuvoton Proprietary"
+            "id": "BSD-3-Clause"
           }
         }
       ],
       "properties": [
         {
-          "name": "bsp:file-path",
-          "value": "Tool/TK/TouchView.exe"
+          "name": "src_path",
+          "value": "ThirdParty/SX1276"
         },
         {
           "name": "integration",
-          "value": "vendored_binary"
-        },
-        {
-          "name": "bsp:component-origin",
-          "value": "first-party"
-        },
-        {
-          "name": "bsp:component-source",
-          "value": "Nuvoton Technology Corporation"
-        },
-        {
-          "name": "bsp:evidence-file",
-          "value": "Document/SBOM/components/sca_tk.json"
-        },
-        {
-          "name": "bsp:evidence-path",
-          "value": "Tool/TK"
+          "value": "vendored_source"
         },
         {
           "name": "bsp:version-evidence",
-          "value": "Tool/TK/TouchView.exe (PE version resource: FileVersion 1.0.0.1)"
-        }
-      ]
-    },
-    {
-      "type": "application",
-      "bom-ref": "pkg:generic/touchview-mp@1.0.0.1?source=vendored&path=Tool/TK/TouchView_MP.exe",
-      "name": "TouchView_MP",
-      "version": "1.0.0.1",
-      "scope": "required",
-      "author": "Nuvoton Technology Corporation",
-      "purl": "pkg:generic/touchview-mp@1.0.0.1",
-      "description": "TouchView_MP is a GUI mass production tool for touch key functions on supported NuMicro MCUs. The tool is included in the corresponding BSP as a pre-built executable.",
-      "licenses": [
+          "value": "ThirdParty/SX1276/radio/sx1276/sx1276.c header '(C)2013-2017 Semtech'; no explicit release version in sources"
+        },
         {
-          "license": {
-            "name": "Nuvoton Software License Agreement"
-          }
+          "name": "bsp:license-evidence",
+          "value": "ThirdParty/SX1276/LICENSE; ThirdParty/SX1276/radio/LICENSE (Revised BSD License)"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:component-source",
+          "value": "Semtech LoRaMac-node"
+        },
+        {
+          "name": "bsp:evidence-file",
+          "value": "Document/SBOM/components/TestSampleView/sca_sx1276.json"
+        },
+        {
+          "name": "bsp:evidence-path",
+          "value": "ThirdParty/SX1276"
         }
       ],
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "798717b616ae59f81bb7cb4428a653f424838ac305bdfccc75623e69cce53cac"
-        }
-      ],
-      "properties": [
-        {
-          "name": "bsp:file-path",
-          "value": "Tool/TK/TouchView_MP.exe"
-        },
-        {
-          "name": "integration",
-          "value": "vendored_binary"
-        },
-        {
-          "name": "bsp:component-origin",
-          "value": "first-party"
-        },
-        {
-          "name": "bsp:component-source",
-          "value": "Nuvoton Technology Corporation"
-        },
-        {
-          "name": "bsp:license-file",
-          "value": "Tool/TK/LICENSE.md"
-        },
-        {
-          "name": "bsp:evidence-file",
-          "value": "Document/SBOM/components/sca_tk_m.json"
-        },
-        {
-          "name": "bsp:evidence-path",
-          "value": "Tool/TK"
-        },
-        {
-          "name": "bsp:version-evidence",
-          "value": "Tool/TK/TouchView_MP.exe (PE version resource: FileVersion 1.0.0.1; ProductVersion 1.0.0.1)"
-        },
-        {
-          "name": "bsp:license-status",
-          "value": "proprietary"
-        },
-        {
-          "name": "bsp:license-source",
-          "value": "manual-binary-license-mapping"
-        },
-        {
-          "name": "bsp:license-match-method",
-          "value": "sha256"
-        },
-        {
-          "name": "bsp:license-evidence-id",
-          "value": "tool-tk-touchview-mp-exe.md-ca74085876a56c927c0134a62fbb7d09498bfb7e468a8081bd1dbeeb9cc5660d"
-        },
-        {
-          "name": "bsp:included-in-product-firmware",
-          "value": "false"
-        },
-        {
-          "name": "bsp:runtime-dependency",
-          "value": "false"
-        },
-        {
-          "name": "bsp:usage",
-          "value": "host-side Windows touch panel mass production utility"
+          "content": "a18a0cbc7893788a55f4b0a8b65c80edcd5752cb1195e06a2e698d349c4b367c"
         }
       ]
     },
@@ -2571,17 +2759,10 @@
       "bom-ref": "binary-db:windowsdriver-amd64-libusbk-sys-sha256-1df66ff2",
       "name": "libusbK",
       "version": "3.0.7.0 built by: WinDDK",
-      "supplier": {
-        "name": "libusbK project"
-      },
       "hashes": [
         {
           "alg": "SHA-256",
           "content": "1df66ff22e2eaec27180756d90926ca5b07e8bcf6b0e4e3c56471e63a3a05fa6"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "b966ad29d209c64b3f0d879703086df1f6121e6b"
         }
       ],
       "licenses": [
@@ -2627,24 +2808,152 @@
           "name": "bsp:file-path",
           "value": "SampleCode/ISP/ISP_DFU/WindowsDriver/amd64/libusbK.sys"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusbK project"
+      },
+      "manufacturer": {
+        "name": "libusbK project"
+      },
+      "purl": "pkg:generic/libusbk@3.0.7.0 built by: WinDDK"
+    },
+    {
+      "type": "file",
+      "bom-ref": "binary-db:windowsdriver-nu-dfu-cat-sha256-5f9ae7e9",
+      "name": "Nu_DFU driver catalog",
+      "version": "3.0.8.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5f9ae7e9ac3d3d0645c701f3be886d9cb4ea2c5090f40c6831879b7fbb2998c1"
+        }
+      ],
+      "licenses": [
+        {
+          "expression": "LicenseRef-Nuvoton-Software-License-Agreement"
+        }
+      ],
+      "description": "host-side Windows USB driver package catalog/signature file",
+      "properties": [
+        {
+          "name": "bsp:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "bsp:license-status",
+          "value": "proprietary"
+        },
+        {
+          "name": "bsp:license-source",
+          "value": "manual-binary-license-mapping"
+        },
+        {
+          "name": "bsp:license-match-method",
+          "value": "sha256"
+        },
+        {
+          "name": "bsp:license-evidence-id",
+          "value": "windowsdriver-nu-dfu-cat.md-bc8c116ab15768144351c1f702b8ca665c57ccaa099262342d373968d99aa182"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "false"
+        },
+        {
+          "name": "bsp:runtime-dependency",
+          "value": "false"
+        },
+        {
+          "name": "bsp:usage",
+          "value": "host-side Windows USB driver package catalog/signature file"
+        },
+        {
+          "name": "bsp:file-path",
+          "value": "SampleCode/ISP/ISP_DFU/WindowsDriver/Nu_DFU.cat"
+        }
+      ],
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "purl": "pkg:generic/nu_dfu-driver-catalog@3.0.8.0"
+    },
+    {
+      "type": "file",
+      "bom-ref": "binary-db:windowsdriver-nu-dfu-inf-sha256-b432a5cc",
+      "name": "Nu_DFU libusbK driver INF",
+      "version": "3.0.8.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b432a5cc7275d15d3fd05050642b6184fff94a8b9140ccc80ca15aa375cdd869"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-2.1-or-later"
+          }
+        }
+      ],
+      "description": "host-side Windows USB driver installation metadata",
+      "properties": [
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:license-status",
+          "value": "identified"
+        },
+        {
+          "name": "bsp:license-source",
+          "value": "manual-binary-license-mapping"
+        },
+        {
+          "name": "bsp:license-match-method",
+          "value": "sha256"
+        },
+        {
+          "name": "bsp:license-evidence-id",
+          "value": "windowsdriver-nu-dfu-inf.md-deae0defba8d8bf6fc3323953dca65edf951b79e17b2564a640be8b4fea91754"
+        },
+        {
+          "name": "bsp:included-in-product-firmware",
+          "value": "false"
+        },
+        {
+          "name": "bsp:runtime-dependency",
+          "value": "false"
+        },
+        {
+          "name": "bsp:usage",
+          "value": "host-side Windows USB driver installation metadata"
+        },
+        {
+          "name": "bsp:file-path",
+          "value": "SampleCode/ISP/ISP_DFU/WindowsDriver/Nu_DFU.inf"
+        }
+      ],
+      "supplier": {
+        "name": "libusbK project"
+      },
+      "manufacturer": {
+        "name": "libusbK project"
+      },
+      "purl": "pkg:generic/nu_dfu-libusbk-driver-inf@3.0.8.0"
     },
     {
       "type": "device-driver",
       "bom-ref": "binary-db:windowsdriver-x86-libusb0-sys-sha256-aa7d75a4",
       "name": "libusb-win32 kernel driver",
       "version": "1.2.6.0",
-      "supplier": {
-        "name": "libusb-win32 project"
-      },
       "hashes": [
         {
           "alg": "SHA-256",
           "content": "aa7d75a4d01b405aab7c848674bbed392b64c6e374e20fd72adc3c96294e2f00"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "9438573aee178c68f49bfa5ad71132d06c4dfa9b"
         }
       ],
       "licenses": [
@@ -2692,24 +3001,24 @@
           "name": "bsp:file-path",
           "value": "SampleCode/ISP/ISP_DFU/WindowsDriver/x86/libusb0.sys"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusb-win32 project"
+      },
+      "manufacturer": {
+        "name": "libusb-win32 project"
+      },
+      "purl": "pkg:generic/libusb-win32-kernel-driver@1.2.6.0"
     },
     {
       "type": "device-driver",
       "bom-ref": "binary-db:windowsdriver-x86-libusbk-sys-sha256-6265ae9a",
       "name": "libusbK",
       "version": "3.0.7.0 built by: WinDDK",
-      "supplier": {
-        "name": "libusbK project"
-      },
       "hashes": [
         {
           "alg": "SHA-256",
           "content": "6265ae9ae5c49f515613f0b749ad8390a1b34ca326203318bffeb6c2c281d2d0"
-        },
-        {
-          "alg": "SHA-1",
-          "content": "4ca41a2dc9cb5679c917035b64616333f09e1be4"
         }
       ],
       "licenses": [
@@ -2755,17 +3064,32 @@
           "name": "bsp:file-path",
           "value": "SampleCode/ISP/ISP_DFU/WindowsDriver/x86/libusbK.sys"
         }
-      ]
+      ],
+      "supplier": {
+        "name": "libusbK project"
+      },
+      "manufacturer": {
+        "name": "libusbK project"
+      },
+      "purl": "pkg:generic/libusbk@3.0.7.0 built by: WinDDK"
     }
   ],
   "dependencies": [
     {
-      "ref": "85fd158bf2db4a01",
+      "ref": "245049fe9e4deb38",
       "dependsOn": [
-        "m2354bsp:test-sample-component:samplecode",
-        "m2354bsp:test-sample-component:thirdparty",
-        "m2354bsp:test-sample-component:utilities"
+        "m2354bsp:test-sample-component:samplecode"
       ]
     }
-  ]
+  ],
+  "signature": {
+    "algorithm": "Ed25519",
+    "keyId": "wschang0@nuvoton.com",
+    "publicKey": {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "TgbfwoVHePVjOGkBXjwGXZ8R9W6uukRP7UOt3Sr52QM"
+    },
+    "value": "-lmb1YIe4nYTAspcbhmRomefylgkT_8kETc-Lm7cJEJJer_67us3ayEEOGsaXKiXG0bIOOmqLkkyrFhos_FCBA"
+  }
 }

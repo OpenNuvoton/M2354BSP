@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:5732d914-dbc1-4f7d-be6f-2f1f4843f030",
+  "serialNumber": "urn:uuid:b9718b9f-4379-4d94-b8cd-fbd460233a92",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-22T13:42:53+08:00",
+    "timestamp": "2026-10-07T11:52:27+08:00",
     "tools": {
       "components": [
         {
@@ -17,10 +17,17 @@
       ]
     },
     "component": {
-      "bom-ref": "04ed2dbaee1fb902",
+      "bom-ref": "21024b7e1dbb77d1",
       "type": "library",
       "name": "MCU Driver",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
+      "version": "3.00.006-41-gabb3c58e",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/mcu-driver@3.00.006-41-gabb3c58e",
       "licenses": [
         {
           "license": {
@@ -102,14 +109,43 @@
           "value": "Utilities/"
         }
       ]
-    }
+    },
+    "lifecycles": [
+      {
+        "phase": "pre-build"
+      }
+    ],
+    "supplier": {
+      "name": "Nuvoton Technology Corp.",
+      "url": [
+        "https://www.nuvoton.com"
+      ]
+    },
+    "authors": [
+      {
+        "name": "Nuvoton Technology Corp."
+      }
+    ]
   },
   "components": [
     {
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-cryptoaccelerator",
       "name": "m2354 CryptoAccelerator",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
+      "version": "3.00.006-41-gabb3c58e",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-cryptoaccelerator@3.00.006-41-gabb3c58e",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "20a812ccd2f65b831282280acbf98506e6331a3970a7ffa4d5ac41205dadb4e0"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -154,7 +190,20 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-device",
       "name": "m2354 Device",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
+      "version": "3.00.006-41-gabb3c58e",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-device@3.00.006-41-gabb3c58e",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "40ce6eaaf4e68dc20a20c7fd95fa0147694ba97dc5ed5c40655b07b76995c4e8"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -199,7 +248,20 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-lcdlib",
       "name": "m2354 LCDLib",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
+      "version": "3.00.006-41-gabb3c58e",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-lcdlib@3.00.006-41-gabb3c58e",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "17693d782a738773eb6bbcbc87503488d619509d4ceb945dfa35c3a8500f90d1"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -244,7 +306,20 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-numaker",
       "name": "m2354 NuMaker",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
+      "version": "3.00.006-41-gabb3c58e",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-numaker@3.00.006-41-gabb3c58e",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1aa16a2295fb370ca2317e6c1e9b358aa67a1331143b4d162f4630be644b2472"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -289,12 +364,23 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-smartcardlib",
       "name": "m2354 SmartcardLib",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
+      "version": "3.00.006-41-gabb3c58e",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-smartcardlib@3.00.006-41-gabb3c58e",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d27d60d45a9070bc52a4d201d468618956fc5160a42393ecd62e4e2e48053ba0"
+        }
+      ],
       "licenses": [
         {
-          "license": {
-            "name": "Nuvoton Proprietary"
-          }
+          "expression": "LicenseRef-Nuvoton-Proprietary"
         }
       ],
       "scope": "required",
@@ -362,7 +448,20 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-stddriver",
       "name": "m2354 StdDriver",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
+      "version": "3.00.006-41-gabb3c58e",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-stddriver@3.00.006-41-gabb3c58e",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1c7617d5a815e685eac63b938be8c3b01312d2ea9b1f14070a7aeb67cddb8d2a"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -407,7 +506,20 @@
       "type": "library",
       "bom-ref": "m2354bsp:product-component:library-usbhostlib",
       "name": "m2354 UsbHostLib",
-      "version": "v3.00.006-32-g686ef9d3-dirty",
+      "version": "3.00.006-41-gabb3c58e",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-usbhostlib@3.00.006-41-gabb3c58e",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "82658a4d84ced9687ca30b526384c2d36094cff50f6aec8fd6f48865483a395e"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -455,6 +567,15 @@
       "version": "5.0.2",
       "scope": "required",
       "author": "Arm Limited",
+      "manufacturer": {
+        "name": "Arm Limited"
+      },
+      "supplier": {
+        "name": "Arm Limited",
+        "url": [
+          "https://www.arm.com"
+        ]
+      },
       "purl": "pkg:generic/cmsis@5.0.2",
       "description": "Arm CMSIS vendored in Library/CMSIS, including CMSIS-Core(M), CMSIS-Core(A), CMSIS-DSP Library, CMSIS-Driver, CMSIS-RTOS and CMSIS-RTOS2 API headers, CMSIS-DAP firmware sources, SVD, Pack utilities, templates, libraries, and documentation.",
       "licenses": [
@@ -519,7 +640,7 @@
         },
         {
           "name": "bsp:evidence-file",
-          "value": "Document/SBOM/cmsis/sca_cmsis.json"
+          "value": "Document/SBOM/components/ProductView/sca_cmsis.json"
         },
         {
           "name": "bsp:evidence-path",
@@ -529,12 +650,18 @@
           "name": "bsp:version-evidence",
           "value": "Library/CMSIS/Include/cmsis_version.h; Library/CMSIS/Documentation/Core/html/index.html; Library/CMSIS/Core_A/Include/core_ca.h; Library/CMSIS/Include/arm_math.h; Library/CMSIS/RTOS/Template/cmsis_os.h; Library/CMSIS/RTOS2/Include/cmsis_os2.h; Library/CMSIS/Driver/Include/Driver_Common.h; Library/CMSIS/Documentation/Driver/html/index.html; Library/CMSIS/DAP/Firmware/Source/DAP.c"
         }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "92a0cccdb0fbaa7901072abf001455f1d5b7b2e4ef52e3b4d1d8953dc9ac87ea"
+        }
       ]
     }
   ],
   "dependencies": [
     {
-      "ref": "04ed2dbaee1fb902",
+      "ref": "21024b7e1dbb77d1",
       "dependsOn": [
         "m2354bsp:product-component:library-cryptoaccelerator",
         "m2354bsp:product-component:library-device",
@@ -545,5 +672,15 @@
         "m2354bsp:product-component:library-usbhostlib"
       ]
     }
-  ]
+  ],
+  "signature": {
+    "algorithm": "Ed25519",
+    "keyId": "wschang0@nuvoton.com",
+    "publicKey": {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "TgbfwoVHePVjOGkBXjwGXZ8R9W6uukRP7UOt3Sr52QM"
+    },
+    "value": "Wy-gIY-AkgpKIkyPOsv58MccE9C901ai0QU7uw6T0-zl-62tozJHXBPaAceqJQ8PGGDXorfeZ7lPf3vvYxutBw"
+  }
 }
