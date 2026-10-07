@@ -1,0 +1,64 @@
+{
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/boschsensortec/bme680_driver@3.5.10?source=vendored&path=ThirdParty/BME680",
+      "name": "BME680 Sensor API",
+      "version": "3.5.10",
+      "scope": "required",
+      "author": "Bosch Sensortec GmbH",
+      "manufacturer": {
+        "name": "Bosch Sensortec GmbH"
+      },
+      "supplier": {
+        "name": "Bosch Sensortec GmbH",
+        "url": [
+          "https://github.com/BoschSensortec/BME680_driver"
+        ]
+      },
+      "purl": "pkg:github/boschsensortec/bme680_driver@3.5.10",
+      "description": "Bosch Sensortec BME680 gas sensor driver API vendored in ThirdParty/BME680.",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "src_path",
+          "value": "ThirdParty/BME680"
+        },
+        {
+          "name": "integration",
+          "value": "vendored_source"
+        },
+        {
+          "name": "bsp:version-evidence",
+          "value": "ThirdParty/BME680/bme680.h (@version 3.5.10, @date 23 Jan 2020); ThirdParty/BME680/README.md"
+        },
+        {
+          "name": "bsp:license-evidence",
+          "value": "ThirdParty/BME680/LICENSE"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:component-source",
+          "value": "Bosch Sensortec BME680 sensor API"
+        },
+        {
+          "name": "bsp:evidence-file",
+          "value": "Document/SBOM/components/TestSampleView/sca_bme680.json"
+        },
+        {
+          "name": "bsp:evidence-path",
+          "value": "ThirdParty/BME680"
+        }
+      ]
+    }
+  ]
+}

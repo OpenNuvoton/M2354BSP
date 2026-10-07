@@ -6,7 +6,9 @@ This document provides SBOM-ready metadata for the vendored Arm CMSIS component 
 
 - Component name (`name`): `CMSIS`
 - Component type (`type`): `library`
-- Supplier / project: `Arm Limited`
+- Manufacturer (`manufacturer.name`): `Arm Limited`
+- Supplier (`supplier.name`): `Arm Limited`
+- Author (`author`): `Arm Limited`
 - Version: `5.0.2`
 - License: `Apache-2.0` (SPDX)
 - Evidence path: `Library/CMSIS`
@@ -65,6 +67,8 @@ Recommended component fields:
 - `version`: `5.0.2`
 - `scope`: `required`
 - `author`: `Arm Limited`
+- `manufacturer.name`: `Arm Limited`
+- `supplier.name`: `Arm Limited`
 - `description`: `Arm CMSIS vendored in Library/CMSIS, including CMSIS-Core(M), CMSIS-Core(A), CMSIS-DSP Library, CMSIS-Driver, CMSIS-RTOS and CMSIS-RTOS2 API headers, CMSIS-DAP firmware sources, SVD, Pack utilities, templates, libraries, and documentation.`
 - `licenses[0].license.id`: `Apache-2.0`
 - `properties` (recommended custom properties):
@@ -99,6 +103,12 @@ If your internal SBOM naming policy differs, keep naming consistent across all t
   "version": "5.0.2",
   "scope": "required",
   "author": "Arm Limited",
+  "manufacturer": {
+    "name": "Arm Limited"
+  },
+  "supplier": {
+    "name": "Arm Limited"
+  },
   "purl": "pkg:generic/cmsis@5.0.2",
   "description": "Arm CMSIS vendored in Library/CMSIS, including CMSIS-Core(M), CMSIS-Core(A), CMSIS-DSP Library, CMSIS-Driver, CMSIS-RTOS and CMSIS-RTOS2 API headers, CMSIS-DAP firmware sources, SVD, Pack utilities, templates, libraries, and documentation.",
   "licenses": [
@@ -126,6 +136,7 @@ If your internal SBOM naming policy differs, keep naming consistent across all t
 
 ## 7) Compliance Notes
 
+- `manufacturer` identifies Arm Limited as the organization that created this component; `supplier` records Arm Limited as the upstream supplier in this component description.
 - Keep original upstream copyright/license notices.
 - CMSIS in this BSP contains multiple CMSIS subareas, including Core(M), Core(A), DSP Library, Driver, RTOS, RTOS2, DAP firmware sources, SVD, Pack utilities, templates, libraries, and documentation.
 - If producing a finer-grained SBOM, represent major CMSIS subcomponents separately when product policy requires component-level version tracking.

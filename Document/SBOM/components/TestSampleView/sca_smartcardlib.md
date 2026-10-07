@@ -6,7 +6,9 @@ This document provides component metadata for the **SmartcardLib** pre-built lib
 
 - Component name (`name`): `SmartcardLib`
 - Component type (`type`): `library`
-- Supplier / author: `Nuvoton Technology Corporation`
+- Manufacturer (`manufacturer.name`): `Nuvoton Technology Corporation`
+- Supplier (`supplier.name`): `Nuvoton Technology Corporation`
+- Author (`author`): `Nuvoton Technology Corporation`
 - Version: `V3.00`
 - License: `Nuvoton Proprietary`
 - Evidence path: `Library/SmartcardLib`
@@ -69,6 +71,8 @@ Recommended component fields:
 - `version`: `V3.00`
 - `scope`: `required`
 - `author`: `Nuvoton Technology Corporation`
+- `manufacturer.name`: `Nuvoton Technology Corporation`
+- `supplier.name`: `Nuvoton Technology Corporation`
 - `purl`: `pkg:generic/smartcardlib@V3.00`
 - `description`: `SmartcardLib is a first-party pre-built smartcard protocol library for supported NuMicro MCUs. The library provides ISO-7816 smartcard activation, reset, card information, and T=0/T=1 transmission APIs through the SCLIB interface.`
 - `licenses[0].license.name`: `Nuvoton Proprietary`
@@ -82,7 +86,7 @@ Recommended component fields:
   - `bsp:component-origin = first-party`
   - `bsp:component-source = Nuvoton Technology Corporation`
   - `bsp:license-file = Library/SmartcardLib/LICENSE.md`
-  - `bsp:evidence-file = Document/SBOM/components/sca_smartcardlib.json`
+  - `bsp:evidence-file = Document/SBOM/components/TestSampleView/sca_smartcardlib.json`
   - `bsp:evidence-path = Library/SmartcardLib`
   - `bsp:version-evidence = Library/SmartcardLib/Include/sclib.h (@version V3.00)`
 
@@ -103,6 +107,12 @@ Suggested values:
   "version": "V3.00",
   "scope": "required",
   "author": "Nuvoton Technology Corporation",
+  "manufacturer": {
+    "name": "Nuvoton Technology Corporation"
+  },
+  "supplier": {
+    "name": "Nuvoton Technology Corporation"
+  },
   "purl": "pkg:generic/smartcardlib@V3.00",
   "description": "SmartcardLib is a first-party pre-built smartcard protocol library for supported NuMicro MCUs. The library provides ISO-7816 smartcard activation, reset, card information, and T=0/T=1 transmission APIs through the SCLIB interface.",
   "licenses": [
@@ -122,7 +132,7 @@ Suggested values:
     { "name": "bsp:component-origin", "value": "first-party" },
     { "name": "bsp:component-source", "value": "Nuvoton Technology Corporation" },
     { "name": "bsp:license-file", "value": "Library/SmartcardLib/LICENSE.md" },
-    { "name": "bsp:evidence-file", "value": "Document/SBOM/components/sca_smartcardlib.json" },
+    { "name": "bsp:evidence-file", "value": "Document/SBOM/components/TestSampleView/sca_smartcardlib.json" },
     { "name": "bsp:evidence-path", "value": "Library/SmartcardLib" },
     { "name": "bsp:version-evidence", "value": "Library/SmartcardLib/Include/sclib.h (@version V3.00)" },
     { "name": "bsp:sha256:Library/SmartcardLib/libsmartcard.a", "value": "c426c4b9402edb3a8147bcb8ce9f7dbc48a22707eefac4be8d3ce734ec9232e3" },
@@ -136,6 +146,7 @@ Suggested values:
 
 ## 8) Compliance Notes
 
+- `manufacturer` identifies Nuvoton Technology Corporation as the organization that created this component; `supplier` records Nuvoton Technology Corporation as the upstream supplier in this component description.
 - Keep `Library/SmartcardLib/LICENSE.md` with the distributed pre-built libraries.
 - Treat the archive files as first-party vendored binary components in SBOM output.
 - Preserve the SPDX and copyright header in `Library/SmartcardLib/Include/sclib.h`.

@@ -1,0 +1,64 @@
+{
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:github/lora-net/loramac-node@2017?source=vendored&path=ThirdParty/SX1276",
+      "name": "Semtech SX1276 LoRa radio driver (LoRaMac-node subset)",
+      "version": "2017",
+      "scope": "required",
+      "author": "Semtech Corporation",
+      "manufacturer": {
+        "name": "Semtech Corporation"
+      },
+      "supplier": {
+        "name": "Semtech Corporation",
+        "url": [
+          "https://github.com/Lora-net/LoRaMac-node"
+        ]
+      },
+      "purl": "pkg:github/lora-net/loramac-node@2017",
+      "description": "Subset of Semtech LoRaMac-node (SX1276 radio driver, board and system utilities) vendored in ThirdParty/SX1276. No release tag is recorded in the sources; version reflects the '(C)2013-2017 Semtech' source headers.",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "src_path",
+          "value": "ThirdParty/SX1276"
+        },
+        {
+          "name": "integration",
+          "value": "vendored_source"
+        },
+        {
+          "name": "bsp:version-evidence",
+          "value": "ThirdParty/SX1276/radio/sx1276/sx1276.c header '(C)2013-2017 Semtech'; no explicit release version in sources"
+        },
+        {
+          "name": "bsp:license-evidence",
+          "value": "ThirdParty/SX1276/LICENSE; ThirdParty/SX1276/radio/LICENSE (Revised BSD License)"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:component-source",
+          "value": "Semtech LoRaMac-node"
+        },
+        {
+          "name": "bsp:evidence-file",
+          "value": "Document/SBOM/components/TestSampleView/sca_sx1276.json"
+        },
+        {
+          "name": "bsp:evidence-path",
+          "value": "ThirdParty/SX1276"
+        }
+      ]
+    }
+  ]
+}

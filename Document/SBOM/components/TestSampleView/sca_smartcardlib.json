@@ -7,6 +7,12 @@
       "version": "V3.00",
       "scope": "required",
       "author": "Nuvoton Technology Corporation",
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
       "purl": "pkg:generic/smartcardlib@V3.00",
       "description": "SmartcardLib is a first-party pre-built smartcard protocol library for supported NuMicro MCUs. The library provides ISO-7816 smartcard activation, reset, card information, and T=0/T=1 transmission APIs through the SCLIB interface.",
       "licenses": [
@@ -55,7 +61,7 @@
         },
         {
           "name": "bsp:evidence-file",
-          "value": "Document/SBOM/components/sca_smartcardlib.json"
+          "value": "Document/SBOM/components/TestSampleView/sca_smartcardlib.json"
         },
         {
           "name": "bsp:evidence-path",

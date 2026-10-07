@@ -7,6 +7,12 @@
       "version": "2.1.2",
       "scope": "required",
       "author": "Nuvoton Technology Corporation",
+      "manufacturer": {
+        "name": "Nuvoton Technology Corporation"
+      },
+      "supplier": {
+        "name": "Nuvoton Technology Corporation"
+      },
       "purl": "pkg:generic/otaserverdemo-android@2.1.2",
       "description": "Nuvoton OTAServerDemo Android application and related pre-built APK/AAR artifacts under Utilities/androidApp.",
       "licenses": [
@@ -39,7 +45,7 @@
         },
         {
           "name": "bsp:evidence-file",
-          "value": "Document/SBOM/components/sca_androidapp.json"
+          "value": "Document/SBOM/components/TestSampleView/sca_androidapp.json"
         },
         {
           "name": "bsp:evidence-path",

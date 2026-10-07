@@ -1,0 +1,134 @@
+{
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:generic/mbedtls@2.17.0?source=vendored&path=ThirdParty/mbedTLS",
+      "name": "Mbed TLS",
+      "version": "2.17.0",
+      "scope": "required",
+      "author": "Mbed TLS Contributors",
+      "manufacturer": {
+        "name": "Arm Limited"
+      },
+      "supplier": {
+        "name": "Arm Limited",
+        "url": [
+          "https://www.trustedfirmware.org/projects/mbed-tls/"
+        ]
+      },
+      "purl": "pkg:generic/mbedtls@2.17.0",
+      "cpe": "cpe:2.3:a:arm:mbed_tls:2.17.0:*:*:*:*:*:*:*",
+      "description": "Mbed TLS cryptographic and TLS library (CMSIS pack ARM.mbedTLS 1.6.0) vendored in ThirdParty/mbedTLS.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "src_path",
+          "value": "ThirdParty/mbedTLS"
+        },
+        {
+          "name": "integration",
+          "value": "vendored_source"
+        },
+        {
+          "name": "mbedtls_version_number",
+          "value": "0x02110000"
+        },
+        {
+          "name": "bsp:version-evidence",
+          "value": "ThirdParty/mbedTLS/include/mbedtls/version.h; ThirdParty/mbedTLS/ChangeLog; ThirdParty/mbedTLS/ARM.mbedTLS.pdsc"
+        },
+        {
+          "name": "bsp:license-evidence",
+          "value": "ThirdParty/mbedTLS/LICENSE"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:component-source",
+          "value": "Mbed TLS"
+        },
+        {
+          "name": "bsp:evidence-file",
+          "value": "Document/SBOM/components/TestSampleView/sca_mbedtls.json"
+        },
+        {
+          "name": "bsp:evidence-path",
+          "value": "ThirdParty/mbedTLS"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:generic/mbedtls@3.1.0?source=vendored&path=ThirdParty/mbedtls-3.1.0",
+      "name": "Mbed TLS",
+      "version": "3.1.0",
+      "scope": "required",
+      "author": "Mbed TLS Contributors",
+      "manufacturer": {
+        "name": "Arm Limited"
+      },
+      "supplier": {
+        "name": "Arm Limited",
+        "url": [
+          "https://www.trustedfirmware.org/projects/mbed-tls/"
+        ]
+      },
+      "purl": "pkg:generic/mbedtls@3.1.0",
+      "cpe": "cpe:2.3:a:arm:mbed_tls:3.1.0:*:*:*:*:*:*:*",
+      "description": "Mbed TLS cryptographic and TLS library vendored in ThirdParty/mbedtls-3.1.0.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "src_path",
+          "value": "ThirdParty/mbedtls-3.1.0"
+        },
+        {
+          "name": "integration",
+          "value": "vendored_source"
+        },
+        {
+          "name": "mbedtls_version_number",
+          "value": "0x03010000"
+        },
+        {
+          "name": "bsp:version-evidence",
+          "value": "ThirdParty/mbedtls-3.1.0/include/mbedtls/build_info.h; ThirdParty/mbedtls-3.1.0/ChangeLog"
+        },
+        {
+          "name": "bsp:license-evidence",
+          "value": "ThirdParty/mbedtls-3.1.0/LICENSE"
+        },
+        {
+          "name": "bsp:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "bsp:component-source",
+          "value": "Mbed TLS"
+        },
+        {
+          "name": "bsp:evidence-file",
+          "value": "Document/SBOM/components/TestSampleView/sca_mbedtls.json"
+        },
+        {
+          "name": "bsp:evidence-path",
+          "value": "ThirdParty/mbedtls-3.1.0"
+        }
+      ]
+    }
+  ]
+}

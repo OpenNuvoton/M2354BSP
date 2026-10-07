@@ -7,6 +7,15 @@
       "version": "5.0.2",
       "scope": "required",
       "author": "Arm Limited",
+      "manufacturer": {
+        "name": "Arm Limited"
+      },
+      "supplier": {
+        "name": "Arm Limited",
+        "url": [
+          "https://www.arm.com"
+        ]
+      },
       "purl": "pkg:generic/cmsis@5.0.2",
       "description": "Arm CMSIS vendored in Library/CMSIS, including CMSIS-Core(M), CMSIS-Core(A), CMSIS-DSP Library, CMSIS-Driver, CMSIS-RTOS and CMSIS-RTOS2 API headers, CMSIS-DAP firmware sources, SVD, Pack utilities, templates, libraries, and documentation.",
       "licenses": [
@@ -71,7 +80,7 @@
         },
         {
           "name": "bsp:evidence-file",
-          "value": "Document/SBOM/cmsis/sca_cmsis.json"
+          "value": "Document/SBOM/components/ProductView/sca_cmsis.json"
         },
         {
           "name": "bsp:evidence-path",

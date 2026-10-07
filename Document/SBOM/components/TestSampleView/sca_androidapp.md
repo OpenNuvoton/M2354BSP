@@ -6,7 +6,9 @@ This document provides component metadata for the **OTAServerDemo Android applic
 
 - Component name (`name`): `OTAServerDemo Android App`
 - Component type (`type`): `application`
-- Supplier / author: `Nuvoton Technology Corporation`
+- Manufacturer (`manufacturer.name`): `Nuvoton Technology Corporation`
+- Supplier (`supplier.name`): `Nuvoton Technology Corporation`
+- Author (`author`): `Nuvoton Technology Corporation`
 - Version: `2.1.2` (identified from `app/build.gradle`)
 - Package / application ID: `com.nuvoton.otaserverdemo`
 - License: `Apache-2.0` for Nuvoton-owned portions, unless otherwise noted
@@ -81,6 +83,8 @@ Recommended component fields:
 - `version`: `2.1.2`
 - `scope`: `required`
 - `author`: `Nuvoton Technology Corporation`
+- `manufacturer.name`: `Nuvoton Technology Corporation`
+- `supplier.name`: `Nuvoton Technology Corporation`
 - `purl`: `pkg:generic/otaserverdemo-android@2.1.2`
 - `description`: `Nuvoton OTAServerDemo Android application and related pre-built APK/AAR artifacts under Utilities/androidApp.`
 - `licenses[0].license.id`: `Apache-2.0`
@@ -90,7 +94,7 @@ Recommended component fields:
   - `integration = vendored_source_and_binary`
   - `bsp:component-origin = first-party`
   - `bsp:component-source = Nuvoton Technology Corporation`
-  - `bsp:evidence-file = Document/SBOM/components/sca_androidapp.json`
+  - `bsp:evidence-file = Document/SBOM/components/TestSampleView/sca_androidapp.json`
   - `bsp:evidence-path = Utilities/androidApp`
   - `bsp:license-file = Utilities/androidApp/LICENSE.md`
   - `bsp:application-id = com.nuvoton.otaserverdemo`
@@ -117,6 +121,12 @@ Suggested values:
   "version": "2.1.2",
   "scope": "required",
   "author": "Nuvoton Technology Corporation",
+  "manufacturer": {
+    "name": "Nuvoton Technology Corporation"
+  },
+  "supplier": {
+    "name": "Nuvoton Technology Corporation"
+  },
   "purl": "pkg:generic/otaserverdemo-android@2.1.2",
   "description": "Nuvoton OTAServerDemo Android application and related pre-built APK/AAR artifacts under Utilities/androidApp.",
   "licenses": [
@@ -132,7 +142,7 @@ Suggested values:
     { "name": "integration", "value": "vendored_source_and_binary" },
     { "name": "bsp:component-origin", "value": "first-party" },
     { "name": "bsp:component-source", "value": "Nuvoton Technology Corporation" },
-    { "name": "bsp:evidence-file", "value": "Document/SBOM/components/sca_androidapp.json" },
+    { "name": "bsp:evidence-file", "value": "Document/SBOM/components/TestSampleView/sca_androidapp.json" },
     { "name": "bsp:evidence-path", "value": "Utilities/androidApp" },
     { "name": "bsp:license-file", "value": "Utilities/androidApp/LICENSE.md" },
     { "name": "bsp:application-id", "value": "com.nuvoton.otaserverdemo" },
@@ -191,6 +201,7 @@ These dependencies should be represented as separate components if generating a 
 
 ## 10) Compliance Notes
 
+- `manufacturer` identifies Nuvoton Technology Corporation as the organization that created this component; `supplier` records Nuvoton Technology Corporation as the upstream supplier in this component description.
 - Keep `Utilities/androidApp/LICENSE.md` with the distributed Android app materials.
 - The local license applies to Nuvoton-owned portions only; third-party dependencies and build tools require their own license records.
 - `Utilities/androidApp/OTAServerDemo/OTAServerDemo/app/debug/output.json` records `versionName` as `1.0`, while `app/build.gradle` records `versionName "2.1.2"`. Treat `app/build.gradle` as the source version evidence and review pre-built APK metadata if binary-level release version traceability is required.

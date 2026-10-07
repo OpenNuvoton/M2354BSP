@@ -6,7 +6,9 @@ This document provides SBOM-ready metadata for the vendored FreeRTOS component u
 
 - Component name (`name`): `FreeRTOS-Kernel`
 - Component type (`type`): `library`
-- Supplier / project: `FreeRTOS` (Amazon)
+- Manufacturer (`manufacturer.name`): `Amazon.com, Inc.`
+- Supplier (`supplier.name`): `Amazon.com, Inc.`
+- Author (`author`): `Amazon.com, Inc. (FreeRTOS project)`
 - Version: `v10.4.6`
 - License: `MIT` (SPDX)
 - Evidence path: `ThirdParty/FreeRTOS`
@@ -48,6 +50,8 @@ Recommended component fields:
 - `version`: `10.4.6`
 - `scope`: `required`
 - `author`: `Amazon.com, Inc. (FreeRTOS project)`
+- `manufacturer.name`: `Amazon.com, Inc.`
+- `supplier.name`: `Amazon.com, Inc.`
 - `description`: `FreeRTOS Kernel vendored in ThirdParty/FreeRTOS, including kernel source, public headers, ARM_CM0 GCC/IAR portable layers, memory managers, and demo/common example files.`
 - `licenses[0].license.id`: `MIT`
 - `properties` (recommended custom properties):
@@ -74,6 +78,12 @@ If your internal SBOM naming policy differs, keep naming consistent across all t
   "version": "10.4.6",
   "scope": "required",
   "author": "Amazon.com, Inc. (FreeRTOS project)",
+  "manufacturer": {
+    "name": "Amazon.com, Inc."
+  },
+  "supplier": {
+    "name": "Amazon.com, Inc."
+  },
   "purl": "pkg:generic/freertos-kernel@10.4.6",
   "description": "FreeRTOS Kernel vendored in ThirdParty/FreeRTOS, including kernel source, public headers, ARM_CM0 GCC/IAR portable layers, memory managers, and demo/common example files.",
   "licenses": [
@@ -93,6 +103,7 @@ If your internal SBOM naming policy differs, keep naming consistent across all t
 
 ## 7) Compliance Notes
 
+- `manufacturer` identifies Amazon.com, Inc. as the organization that created this component; `supplier` records Amazon.com, Inc. as the upstream supplier in this component description.
 - Keep original upstream copyright/license notices.
 - version and license evidence is taken from the vendored kernel headers and source files.
 - If producing a finer-grained SBOM (for example, app + RTOS + board support), represent each major unit as separate components and declare dependencies between them.
